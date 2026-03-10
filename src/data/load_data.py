@@ -1,7 +1,7 @@
 from pathlib import Path
 import pandas as pd
 
-from src.config import DATA_RAW_DIR
+from src.config import DATA_RAW_SYNTHETIC_DIR
 
 
 def list_csv_files(directory: Path):
@@ -29,7 +29,7 @@ def infer_label_from_path(file_path: Path):
     return "unknown"
 
 
-def build_file_index(directory: Path = DATA_RAW_DIR):
+def build_file_index(directory: Path = DATA_RAW_SYNTHETIC_DIR):
     files = list_csv_files(directory)
 
     rows = []

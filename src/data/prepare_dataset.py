@@ -1,6 +1,6 @@
 import numpy as np
 
-from src.config import DATA_RAW_DIR, LABEL_MAP, WINDOW_SIZE, WINDOW_STRIDE
+from src.config import DATA_RAW_SYNTHETIC_DIR, LABEL_MAP, WINDOW_SIZE, WINDOW_STRIDE
 from src.data.load_data import build_file_index, load_one_csv
 
 
@@ -18,7 +18,7 @@ def create_windows_from_dataframe(df, window_size=WINDOW_SIZE, stride=WINDOW_STR
     return windows
 
 
-def prepare_dataset(data_dir=DATA_RAW_DIR, window_size=WINDOW_SIZE, stride=WINDOW_STRIDE):
+def prepare_dataset(data_dir=DATA_RAW_SYNTHETIC_DIR, window_size=WINDOW_SIZE, stride=WINDOW_STRIDE):
     index_df = build_file_index(data_dir)
 
     X = []
