@@ -2,7 +2,8 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-DATA_RAW_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda_synthetic"
+DATA_RAW_DIR = PROJECT_ROOT / "data" / "raw"
+DATA_RAW_SYNTHETIC_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda_synthetic"
 DATA_SAMPLE_DIR = PROJECT_ROOT / "data" / "sample"
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 
@@ -17,3 +18,38 @@ LABEL_MAP = {
 
 WINDOW_SIZE = 128
 WINDOW_STRIDE = 128
+
+EXPECTED_NUM_COLUMNS = 8
+
+EXPECTED_COLUMNS = [
+    "tachometer",
+    "acc_axial_b1",
+    "acc_radial_b1",
+    "acc_tangential_b1",
+    "acc_axial_b2",
+    "acc_radial_b2",
+    "acc_tangential_b2",
+    "microphone",
+]
+
+MIN_ROWS_PER_FILE = 128
+
+MISSING_RATIO_THRESHOLD = 0.2
+MISSING_FILL_METHOD = "median"
+
+NORMALIZATION_METHOD = "zscore"
+EPSILON = 1e-8
+
+TRAIN_RATIO = 0.7
+VAL_RATIO = 0.15
+TEST_RATIO = 0.15
+
+BATCH_SIZE = 8
+
+NUM_CLASSES = 4
+INPUT_LENGTH = WINDOW_SIZE
+INPUT_CHANNELS = EXPECTED_NUM_COLUMNS
+
+LEARNING_RATE = 1e-3
+NUM_EPOCHS = 10
+HIDDEN_DIM = 64
