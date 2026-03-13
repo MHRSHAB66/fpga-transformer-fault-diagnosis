@@ -1,12 +1,17 @@
+from pathlib import Path
 import pandas as pd
 
-from src.config import DATA_RAW_SYNTHETIC_DIR, DATA_SAMPLE_DIR
+from src.config import DATA_RAW_SYNTHETIC_DIR, DATA_SAMPLE_DIR, PROJECT_ROOT
 from src.data.load_data import build_file_index, load_one_csv
 
 
 def inspect_directory(directory, name="directory"):
-    print(f"\n[INFO] Inspecting {name}: {directory}")
-
+    path = Path(directory).resolve()
+    try:
+        display_path = path.relative_to(PROJECT_ROOT.resolve())
+    except ValueError:
+        display_path = path
+    print(f"\n[INFO] Inspecting {name}: {display_path}")
     index_df = build_file_index(directory)
 
     if len(index_df) == 0:
