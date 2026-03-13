@@ -1,3 +1,5 @@
+from pathlib import Path
+import copy
 import random
 import numpy as np
 import torch
@@ -5,7 +7,7 @@ import torch.backends.cudnn as cudnn
 import torch.nn as nn
 import torch.optim as optim
 
-from src.config import LEARNING_RATE, NUM_EPOCHS, RANDOM_SEED
+from src.config import LEARNING_RATE, NUM_EPOCHS, RANDOM_SEED, PROJECT_ROOT
 from src.data.make_dataloaders import build_dataloaders
 from src.models.mlp_baseline import MLPBaseline
 
@@ -63,6 +65,14 @@ def train():
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
+    best_val_acc = -1.0
+    best_epoch = -1
+    best_model_state = None
+
+    checkpoints_dir = PROJECT_ROOT / "artifacts" / "checkpoints"
+    checkpoints_dir.mkdir(parents=True, exist_ok=True)
+    best_model_path = checkpoints_dir / "mlp_baseline_best.pt"
+
     for epoch in range(NUM_EPOCHS):
         model.train()
 
@@ -93,18 +103,35 @@ def train():
 
         val_loss, val_acc = evaluate(model, val_loader, criterion, device)
 
+        if val_acc > best_val_acc:
+            best_val_acc = val_acc
+            best_epoch = epoch + 1
+            best_model_state = copy.deepcopy(model.state_dict())
+            torch.save(best_model_state, best_model_path)
+            print(f"[INFO] Saved new best model at epoch {best_epoch} -> {str(Path(best_model_path).resolve().relative_to(PROJECT_ROOT))}")
+
         print(
             f"Epoch {epoch + 1}/{NUM_EPOCHS} | "
             f"train_loss={train_loss:.4f} | train_acc={train_acc:.4f} | "
             f"val_loss={val_loss:.4f} | val_acc={val_acc:.4f}"
         )
 
+    if best_model_state is not None:
+        model.load_state_dict(best_model_state)
+        print(f"\n[INFO] Loaded best model from epoch {best_epoch} with val_acc={best_val_acc:.4f}")
     test_loss, test_acc = evaluate(model, test_loader, criterion, device)
 
     print("\nFinal test results:")
+    print(f"best_epoch={best_epoch}")
+    print(f"best_val_acc={best_val_acc:.4f}")
     print(f"test_loss={test_loss:.4f}")
     print(f"test_acc={test_acc:.4f}")
+    try:
+        display_model_path = best_model_path.resolve().relative_to(PROJECT_ROOT.resolve())
+    except ValueError:
+        display_model_path = best_model_path.resolve()
 
+    print(f"best_model_path={display_model_path}")
 
 if __name__ == "__main__":
     train()
