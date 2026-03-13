@@ -6,6 +6,7 @@ import torch
 import torch.backends.cudnn as cudnn
 import torch.nn as nn
 import torch.optim as optim
+import json
 
 from src.config import LEARNING_RATE, NUM_EPOCHS, RANDOM_SEED, PROJECT_ROOT
 from src.data.make_dataloaders import build_dataloaders
@@ -38,6 +39,7 @@ def evaluate(model, dataloader, criterion, device):
 
     return avg_loss, accuracy
 
+
 def set_seed(seed: int):
     random.seed(seed)
     np.random.seed(seed)
@@ -49,6 +51,7 @@ def set_seed(seed: int):
 
     cudnn.deterministic = True
     cudnn.benchmark = False
+
 
 def train():
     set_seed(RANDOM_SEED)
@@ -72,6 +75,18 @@ def train():
     checkpoints_dir = PROJECT_ROOT / "artifacts" / "checkpoints"
     checkpoints_dir.mkdir(parents=True, exist_ok=True)
     best_model_path = checkpoints_dir / "mlp_baseline_best.pt"
+
+    results_dir = PROJECT_ROOT / "artifacts" / "results"
+    results_dir.mkdir(parents=True, exist_ok=True)
+    history_path = results_dir / "mlp_baseline_history.json"
+
+    history = {
+        "epoch": [],
+        "train_loss": [],
+        "train_acc": [],
+        "val_loss": [],
+        "val_acc": [],
+    }
 
     for epoch in range(NUM_EPOCHS):
         model.train()
@@ -103,12 +118,18 @@ def train():
 
         val_loss, val_acc = evaluate(model, val_loader, criterion, device)
 
+        history["epoch"].append(epoch + 1)
+        history["train_loss"].append(train_loss)
+        history["train_acc"].append(train_acc)
+        history["val_loss"].append(val_loss)
+        history["val_acc"].append(val_acc)
+
         if val_acc > best_val_acc:
             best_val_acc = val_acc
             best_epoch = epoch + 1
             best_model_state = copy.deepcopy(model.state_dict())
             torch.save(best_model_state, best_model_path)
-            print(f"[INFO] Saved new best model at epoch {best_epoch} -> {str(Path(best_model_path).resolve().relative_to(PROJECT_ROOT))}")
+            print(f"[INFO] Saved new best model at epoch {best_epoch} -> {best_model_path.relative_to(PROJECT_ROOT)}")
 
         print(
             f"Epoch {epoch + 1}/{NUM_EPOCHS} | "
@@ -119,19 +140,20 @@ def train():
     if best_model_state is not None:
         model.load_state_dict(best_model_state)
         print(f"\n[INFO] Loaded best model from epoch {best_epoch} with val_acc={best_val_acc:.4f}")
+
     test_loss, test_acc = evaluate(model, test_loader, criterion, device)
+
+    with open(history_path, "w") as f:
+        json.dump(history, f, indent=2)
 
     print("\nFinal test results:")
     print(f"best_epoch={best_epoch}")
     print(f"best_val_acc={best_val_acc:.4f}")
     print(f"test_loss={test_loss:.4f}")
     print(f"test_acc={test_acc:.4f}")
-    try:
-        display_model_path = best_model_path.resolve().relative_to(PROJECT_ROOT.resolve())
-    except ValueError:
-        display_model_path = best_model_path.resolve()
+    print(f"best_model_path={best_model_path.relative_to(PROJECT_ROOT)}")
+    print(f"history_path={history_path.relative_to(PROJECT_ROOT)}")
 
-    print(f"best_model_path={display_model_path}")
 
 if __name__ == "__main__":
     train()
