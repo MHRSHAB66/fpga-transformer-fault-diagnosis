@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.optim as optim
 import json
 
-from src.config import LEARNING_RATE, NUM_EPOCHS, RANDOM_SEED, PROJECT_ROOT
+from src.config import LEARNING_RATE, NUM_EPOCHS, RANDOM_SEED, PROJECT_ROOT, NUM_CLASSES
 from src.data.make_dataloaders import build_dataloaders
 from src.models.mlp_baseline import MLPBaseline
 
@@ -38,6 +38,48 @@ def evaluate(model, dataloader, criterion, device):
     accuracy = total_correct / total_samples
 
     return avg_loss, accuracy
+
+def evaluate_with_details(model, dataloader, criterion, device, num_classes):
+    model.eval()
+
+    total_loss = 0.0
+    total_correct = 0
+    total_samples = 0
+
+    confusion = np.zeros((num_classes, num_classes), dtype=int)
+
+    with torch.no_grad():
+        for X_batch, y_batch in dataloader:
+            X_batch = X_batch.to(device)
+            y_batch = y_batch.to(device)
+
+            logits = model(X_batch)
+            loss = criterion(logits, y_batch)
+
+            total_loss += loss.item() * X_batch.size(0)
+
+            preds = torch.argmax(logits, dim=1)
+            total_correct += (preds == y_batch).sum().item()
+            total_samples += X_batch.size(0)
+
+            y_true = y_batch.cpu().numpy()
+            y_pred = preds.cpu().numpy()
+
+            for t, p in zip(y_true, y_pred):
+                confusion[t, p] += 1
+
+    avg_loss = total_loss / total_samples
+    accuracy = total_correct / total_samples
+
+    per_class_accuracy = {}
+    for class_idx in range(num_classes):
+        class_total = confusion[class_idx].sum()
+        if class_total == 0:
+            per_class_accuracy[class_idx] = None
+        else:
+            per_class_accuracy[class_idx] = confusion[class_idx, class_idx] / class_total
+
+    return avg_loss, accuracy, confusion, per_class_accuracy
 
 
 def set_seed(seed: int):
@@ -141,7 +183,9 @@ def train():
         model.load_state_dict(best_model_state)
         print(f"\n[INFO] Loaded best model from epoch {best_epoch} with val_acc={best_val_acc:.4f}")
 
-    test_loss, test_acc = evaluate(model, test_loader, criterion, device)
+    test_loss, test_acc, confusion, per_class_accuracy = evaluate_with_details(
+    model, test_loader, criterion, device, NUM_CLASSES
+    )
 
     with open(history_path, "w") as f:
         json.dump(history, f, indent=2)
@@ -153,7 +197,15 @@ def train():
     print(f"test_acc={test_acc:.4f}")
     print(f"best_model_path={best_model_path.relative_to(PROJECT_ROOT)}")
     print(f"history_path={history_path.relative_to(PROJECT_ROOT)}")
+    print("\nConfusion matrix:")
+    print(confusion)
 
+    print("\nPer-class accuracy:")
+    for class_idx, acc in per_class_accuracy.items():
+        if acc is None:
+            print(f"class_{class_idx}: no samples")
+        else:
+            print(f"class_{class_idx}: {acc:.4f}")
 
 if __name__ == "__main__":
     train()
