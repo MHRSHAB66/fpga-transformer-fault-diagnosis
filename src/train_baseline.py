@@ -1,8 +1,11 @@
+import random
+import numpy as np
 import torch
+import torch.backends.cudnn as cudnn
 import torch.nn as nn
 import torch.optim as optim
 
-from src.config import LEARNING_RATE, NUM_EPOCHS
+from src.config import LEARNING_RATE, NUM_EPOCHS, RANDOM_SEED
 from src.data.make_dataloaders import build_dataloaders
 from src.models.mlp_baseline import MLPBaseline
 
@@ -33,10 +36,22 @@ def evaluate(model, dataloader, criterion, device):
 
     return avg_loss, accuracy
 
+def set_seed(seed: int):
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed(seed)
+        torch.cuda.manual_seed_all(seed)
+
+    cudnn.deterministic = True
+    cudnn.benchmark = False
 
 def train():
+    set_seed(RANDOM_SEED)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("Using device:", device)
+    print(f"Using device: {device}")
 
     train_loader, val_loader, test_loader, stats = build_dataloaders()
 
