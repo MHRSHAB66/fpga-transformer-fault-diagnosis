@@ -1,7 +1,16 @@
 import torch
 import torch.nn as nn
 
-from src.config import INPUT_CHANNELS, INPUT_LENGTH, NUM_CLASSES
+from src.config import (
+    INPUT_CHANNELS,
+    INPUT_LENGTH,
+    NUM_CLASSES,
+    TRANSFORMER_D_MODEL,
+    TRANSFORMER_NHEAD,
+    TRANSFORMER_NUM_LAYERS,
+    TRANSFORMER_DIM_FEEDFORWARD,
+    TRANSFORMER_DROPOUT,
+)
 
 
 class PositionalEncoding(nn.Module):
@@ -21,11 +30,11 @@ class TransformerBaseline(nn.Module):
         input_dim: int = INPUT_CHANNELS,
         seq_len: int = INPUT_LENGTH,
         num_classes: int = NUM_CLASSES,
-        d_model: int = 32,
-        nhead: int = 4,
-        num_layers: int = 2,
-        dim_feedforward: int = 64,
-        dropout: float = 0.1,
+        d_model: int = TRANSFORMER_D_MODEL,
+        nhead: int = TRANSFORMER_NHEAD,
+        num_layers: int = TRANSFORMER_NUM_LAYERS,
+        dim_feedforward: int = TRANSFORMER_DIM_FEEDFORWARD,
+        dropout: float = TRANSFORMER_DROPOUT,
     ):
         super().__init__()
 
