@@ -37,8 +37,8 @@ def check_one_file(file_path):
             f"expected_{EXPECTED_NUM_COLUMNS}_columns_got_{df.shape[1]}"
         )
 
-    if list(df.columns) != EXPECTED_COLUMNS:
-        result["issues"].append("column_names_mismatch")
+    # if list(df.columns) != EXPECTED_COLUMNS:
+    #     result["issues"].append("column_names_mismatch")
 
     non_numeric_columns = []
     for col in df.columns:

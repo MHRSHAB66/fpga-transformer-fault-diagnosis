@@ -53,8 +53,8 @@ def build_file_index(directory: Path = DATA_RAW_SYNTHETIC_DIR):
     return df
 
 
-def load_one_csv(file_path: str):
-    return pd.read_csv(PROJECT_ROOT / file_path)
+def load_one_csv(file_path: str,):
+    return pd.read_csv(PROJECT_ROOT / file_path, header = None)
 
 
 if __name__ == "__main__":
