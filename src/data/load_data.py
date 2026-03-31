@@ -1,7 +1,7 @@
 from pathlib import Path
 import pandas as pd
 
-from src.config import DATA_RAW_SYNTHETIC_DIR, PROJECT_ROOT
+from src.config import DATA_RAW_DIR, PROJECT_ROOT
 
 
 def to_project_relative(path_like):
@@ -24,22 +24,22 @@ def list_csv_files(directory: Path):
     return files
 
 
-def infer_label_from_path(file_path: Path):
-    p = str(file_path).lower()
+def infer_label_from_path(file_path: str) -> str:
+    path_str = str(file_path).lower().replace("\\", "/")
 
-    if "normal" in p:
-        return "normal"
-    if "imbalance" in p:
-        return "imbalance"
-    if "misalignment" in p:
+    if "horizontal-misalignment" in path_str or "vertical-misalignment" in path_str:
         return "misalignment"
-    if "bearing" in p:
+    if "overhang" in path_str or "underhang" in path_str:
         return "bearing_fault"
+    if "imbalance" in path_str:
+        return "imbalance"
+    if "normal" in path_str:
+        return "normal"
 
     return "unknown"
 
 
-def build_file_index(directory: Path = DATA_RAW_SYNTHETIC_DIR):
+def build_file_index(directory: Path = DATA_RAW_DIR):
     files = list_csv_files(directory)
 
     rows = []
@@ -53,8 +53,8 @@ def build_file_index(directory: Path = DATA_RAW_SYNTHETIC_DIR):
     return df
 
 
-def load_one_csv(file_path: str):
-    return pd.read_csv(PROJECT_ROOT / file_path)
+def load_one_csv(file_path: str,):
+    return pd.read_csv(PROJECT_ROOT / file_path, header = None)
 
 
 if __name__ == "__main__":

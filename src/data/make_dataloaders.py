@@ -3,7 +3,7 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader
 
 from src.config import (
-    DATA_RAW_SYNTHETIC_DIR,
+    DATA_RAW_DIR,
     LABEL_MAP,
     RANDOM_SEED,
     WINDOW_SIZE,
@@ -18,13 +18,9 @@ from src.data.prepare_dataset import preprocess_dataframe, create_windows_from_d
 
 
 def split_file_index(index_df):
-    index_df = index_df[index_df["label"].isin(LABEL_MAP.keys())].copy()
-    index_df = index_df.sample(frac=1, random_state=RANDOM_SEED).reset_index(drop=True)
-
     total_files = len(index_df)
     train_size = int(TRAIN_RATIO * total_files)
     val_size = int(VAL_RATIO * total_files)
-    test_size = total_files - train_size - val_size
 
     train_df = index_df.iloc[:train_size].reset_index(drop=True)
     val_df = index_df.iloc[train_size:train_size + val_size].reset_index(drop=True)
@@ -56,7 +52,7 @@ def build_X_y_from_file_index(index_df, window_size=WINDOW_SIZE, stride=WINDOW_S
         windows = create_windows_from_dataframe(
             df,
             window_size=window_size,
-            stride=stride
+            stride=stride,
         )
 
         label_id = LABEL_MAP[label_name]
@@ -71,8 +67,14 @@ def build_X_y_from_file_index(index_df, window_size=WINDOW_SIZE, stride=WINDOW_S
     return X, y, kept_files, dropped_files
 
 
-def build_dataloaders(data_dir=DATA_RAW_SYNTHETIC_DIR):
+def build_dataloaders(data_dir=DATA_RAW_DIR, max_files=None):
     index_df = build_file_index(data_dir)
+
+    index_df = index_df[index_df["label"].isin(LABEL_MAP.keys())].copy()
+    index_df = index_df.sample(frac=1, random_state=RANDOM_SEED).reset_index(drop=True)
+
+    if max_files is not None:
+        index_df = index_df.head(max_files).reset_index(drop=True)
 
     train_index_df, val_index_df, test_index_df = split_file_index(index_df)
 
@@ -82,15 +84,15 @@ def build_dataloaders(data_dir=DATA_RAW_SYNTHETIC_DIR):
 
     train_dataset = TensorDataset(
         torch.tensor(X_train, dtype=torch.float32),
-        torch.tensor(y_train, dtype=torch.long)
+        torch.tensor(y_train, dtype=torch.long),
     )
     val_dataset = TensorDataset(
         torch.tensor(X_val, dtype=torch.float32),
-        torch.tensor(y_val, dtype=torch.long)
+        torch.tensor(y_val, dtype=torch.long),
     )
     test_dataset = TensorDataset(
         torch.tensor(X_test, dtype=torch.float32),
-        torch.tensor(y_test, dtype=torch.long)
+        torch.tensor(y_test, dtype=torch.long),
     )
 
     train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
@@ -98,6 +100,7 @@ def build_dataloaders(data_dir=DATA_RAW_SYNTHETIC_DIR):
     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
     stats = {
+        "total_files_after_filter": len(index_df),
         "train_files_kept": train_kept,
         "train_files_dropped": train_dropped,
         "val_files_kept": val_kept,
