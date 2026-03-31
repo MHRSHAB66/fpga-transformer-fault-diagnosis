@@ -24,17 +24,17 @@ def list_csv_files(directory: Path):
     return files
 
 
-def infer_label_from_path(file_path: Path):
-    p = str(file_path).lower()
+def infer_label_from_path(file_path: str) -> str:
+    path_str = str(file_path).lower().replace("\\", "/")
 
-    if "normal" in p:
-        return "normal"
-    if "imbalance" in p:
-        return "imbalance"
-    if "misalignment" in p:
+    if "horizontal-misalignment" in path_str or "vertical-misalignment" in path_str:
         return "misalignment"
-    if "bearing" in p:
+    if "overhang" in path_str or "underhang" in path_str:
         return "bearing_fault"
+    if "imbalance" in path_str:
+        return "imbalance"
+    if "normal" in path_str:
+        return "normal"
 
     return "unknown"
 
