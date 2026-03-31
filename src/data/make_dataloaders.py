@@ -3,7 +3,7 @@ import torch
 from torch.utils.data import TensorDataset, DataLoader
 
 from src.config import (
-    DATA_RAW_SYNTHETIC_DIR,
+    DATA_RAW_DIR,
     LABEL_MAP,
     RANDOM_SEED,
     WINDOW_SIZE,
@@ -67,7 +67,7 @@ def build_X_y_from_file_index(index_df, window_size=WINDOW_SIZE, stride=WINDOW_S
     return X, y, kept_files, dropped_files
 
 
-def build_dataloaders(data_dir=DATA_RAW_SYNTHETIC_DIR, max_files=1000):
+def build_dataloaders(data_dir=DATA_RAW_DIR, max_files=1000):
     index_df = build_file_index(data_dir)
 
     index_df = index_df[index_df["label"].isin(LABEL_MAP.keys())].copy()

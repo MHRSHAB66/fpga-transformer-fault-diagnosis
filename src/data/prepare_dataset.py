@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 from src.config import (
-    DATA_RAW_SYNTHETIC_DIR,
+    DATA_RAW_DIR,
     LABEL_MAP,
     WINDOW_SIZE,
     WINDOW_STRIDE,
@@ -104,7 +104,7 @@ def preprocess_dataframe(df):
     return df
 
 
-def prepare_dataset(data_dir=DATA_RAW_SYNTHETIC_DIR, window_size=WINDOW_SIZE, stride=WINDOW_STRIDE):
+def prepare_dataset(data_dir=DATA_RAW_DIR, window_size=WINDOW_SIZE, stride=WINDOW_STRIDE):
     index_df = build_file_index(data_dir)
 
     X = []

@@ -2,8 +2,10 @@ from pathlib import Path
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
+# Main dataset
 DATA_RAW_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda"
-DATA_RAW_SYNTHETIC_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda"
+# Synthetic dataset
+# DATA_RAW_SYNTHETIC_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda_synthetic"
 DATA_SAMPLE_DIR = PROJECT_ROOT / "data" / "sample"
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 
@@ -16,8 +18,8 @@ LABEL_MAP = {
     "bearing_fault": 3,
 }
 
-WINDOW_SIZE = 128
-WINDOW_STRIDE = 128
+WINDOW_SIZE = 1024
+WINDOW_STRIDE = 1024
 
 EXPECTED_NUM_COLUMNS = 8
 
@@ -52,7 +54,7 @@ NUM_CLASSES = 4
 INPUT_LENGTH = WINDOW_SIZE
 INPUT_CHANNELS = EXPECTED_NUM_COLUMNS
 LEARNING_RATE = 1e-3
-NUM_EPOCHS = 10
+NUM_EPOCHS = 3
 HIDDEN_DIM = 64
 
 #TRANSFORMER baseline

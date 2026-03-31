@@ -2,7 +2,7 @@ from pathlib import Path
 import pandas as pd
 
 from src.config import (
-    DATA_RAW_SYNTHETIC_DIR,
+    DATA_RAW_DIR,
     EXPECTED_COLUMNS,
     EXPECTED_NUM_COLUMNS,
     MIN_ROWS_PER_FILE,
@@ -63,7 +63,7 @@ def check_one_file(file_path):
     return result
 
 
-def check_dataset_quality(data_dir=DATA_RAW_SYNTHETIC_DIR):
+def check_dataset_quality(data_dir=DATA_RAW_DIR):
     index_df = build_file_index(data_dir)
 
     results = []

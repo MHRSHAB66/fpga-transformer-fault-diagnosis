@@ -1,7 +1,7 @@
 from pathlib import Path
 import pandas as pd
 
-from src.config import DATA_RAW_SYNTHETIC_DIR, PROJECT_ROOT
+from src.config import DATA_RAW_DIR, PROJECT_ROOT
 
 
 def to_project_relative(path_like):
@@ -39,7 +39,7 @@ def infer_label_from_path(file_path: str) -> str:
     return "unknown"
 
 
-def build_file_index(directory: Path = DATA_RAW_SYNTHETIC_DIR):
+def build_file_index(directory: Path = DATA_RAW_DIR):
     files = list_csv_files(directory)
 
     rows = []
