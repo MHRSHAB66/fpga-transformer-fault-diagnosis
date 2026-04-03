@@ -1,10 +1,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Dict, Iterable, List
+from typing import Dict, Iterable, List, Sequence
 
 import numpy as np
 from scipy.signal import resample, wiener
+from scipy.stats import kurtosis, skew
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 try:
@@ -134,3 +135,137 @@ def preprocess_modalities(
 
     return {"audio": audio_scaled, "vibration": vibration_scaled}
 
+
+def extract_mfcc_features(
+    signal: np.ndarray,
+    sample_rate: int,
+    n_mfcc: int = 13,
+    n_fft: int = 2048,
+    hop_length: int = 512,
+) -> np.ndarray:
+    """
+    Extract fixed-length MFCC features by summarizing each coefficient with mean and std.
+    """
+    signal = np.asarray(signal, dtype=np.float32).reshape(-1)
+    if signal.size == 0:
+        return np.zeros(n_mfcc * 2, dtype=np.float32)
+
+    effective_n_fft = min(n_fft, signal.size)
+    effective_n_fft = max(32, effective_n_fft)
+    effective_hop = min(hop_length, max(1, signal.size // 4))
+
+    mfcc = librosa.feature.mfcc(
+        y=signal,
+        sr=sample_rate,
+        n_mfcc=n_mfcc,
+        n_fft=effective_n_fft,
+        hop_length=effective_hop,
+    )
+
+    mfcc_mean = mfcc.mean(axis=1)
+    mfcc_std = mfcc.std(axis=1)
+    return np.concatenate([mfcc_mean, mfcc_std]).astype(np.float32)
+
+
+def compute_rms(signal: np.ndarray) -> float:
+    signal = np.asarray(signal, dtype=np.float32).reshape(-1)
+    if signal.size == 0:
+        return 0.0
+    return float(np.sqrt(np.mean(np.square(signal))))
+
+
+def compute_zero_crossing_rate(signal: np.ndarray) -> float:
+    signal = np.asarray(signal, dtype=np.float32).reshape(-1)
+    if signal.size < 2:
+        return 0.0
+
+    signs = np.signbit(signal)
+    zero_crossings = np.count_nonzero(signs[1:] != signs[:-1])
+    return float(zero_crossings / (signal.size - 1))
+
+
+def compute_skewness(signal: np.ndarray) -> float:
+    signal = np.asarray(signal, dtype=np.float32).reshape(-1)
+    if signal.size < 3 or np.allclose(signal, signal[0]):
+        return 0.0
+    value = skew(signal, bias=False)
+    return float(np.nan_to_num(value))
+
+
+def compute_kurtosis(signal: np.ndarray) -> float:
+    signal = np.asarray(signal, dtype=np.float32).reshape(-1)
+    if signal.size < 4 or np.allclose(signal, signal[0]):
+        return 0.0
+    value = kurtosis(signal, fisher=True, bias=False)
+    return float(np.nan_to_num(value))
+
+
+def extract_vibration_features(signal: np.ndarray) -> np.ndarray:
+    """
+    Extract basic statistical features from one vibration channel.
+    """
+    return np.array(
+        [
+            compute_rms(signal),
+            compute_zero_crossing_rate(signal),
+            compute_skewness(signal),
+            compute_kurtosis(signal),
+        ],
+        dtype=np.float32,
+    )
+
+
+def extract_combined_features(
+    audio_signal: np.ndarray,
+    vibration_signals: Sequence[np.ndarray] | np.ndarray,
+    sample_rate: int,
+    n_mfcc: int = 13,
+) -> np.ndarray:
+    """
+    Combine audio MFCC features with vibration statistics into one flat feature vector.
+    """
+    audio_features = extract_mfcc_features(audio_signal, sample_rate=sample_rate, n_mfcc=n_mfcc)
+
+    vibration_array = np.asarray(vibration_signals, dtype=np.float32)
+    if vibration_array.ndim == 1:
+        vibration_array = vibration_array.reshape(1, -1)
+
+    vibration_features = [
+        extract_vibration_features(channel_signal)
+        for channel_signal in vibration_array
+    ]
+    fused_vibration = (
+        np.concatenate(vibration_features).astype(np.float32)
+        if vibration_features
+        else np.zeros(0, dtype=np.float32)
+    )
+
+    return np.concatenate([audio_features, fused_vibration]).astype(np.float32)
+
+
+def prepare_feature_dataset(
+    audio_signals: Sequence[np.ndarray],
+    vibration_signals: Sequence[Sequence[np.ndarray] | np.ndarray],
+    sample_rate: int,
+    n_mfcc: int = 13,
+) -> np.ndarray:
+    """
+    Build a feature matrix with one row per sample, ready for model input.
+    """
+    if len(audio_signals) != len(vibration_signals):
+        raise ValueError("audio_signals and vibration_signals must have the same number of samples.")
+
+    if len(audio_signals) == 0:
+        return np.empty((0, n_mfcc * 2), dtype=np.float32)
+
+    rows = [
+        extract_combined_features(
+            audio_signal=audio_signal,
+            vibration_signals=vibration_signal,
+            sample_rate=sample_rate,
+            n_mfcc=n_mfcc,
+        )
+        for audio_signal, vibration_signal in zip(audio_signals, vibration_signals)
+    ]
+
+    return np.vstack(rows).astype(np.float32)
