@@ -110,6 +110,7 @@ def train():
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
     best_val_acc = -1.0
+    best_val_loss = float("inf")
     best_epoch = -1
     best_model_state = None
 
@@ -165,12 +166,25 @@ def train():
         history["val_loss"].append(val_loss)
         history["val_acc"].append(val_acc)
 
-        if val_acc > best_val_acc:
+        if val_loss < best_val_loss:
+            best_val_loss = val_loss
             best_val_acc = val_acc
             best_epoch = epoch + 1
             best_model_state = copy.deepcopy(model.state_dict())
-            torch.save(best_model_state, best_model_path)
-            print(f"[INFO] Saved new best model at epoch {best_epoch} -> {best_model_path.relative_to(PROJECT_ROOT)}")
+            torch.save(
+                {
+                    "epoch": best_epoch,
+                    "model_state_dict": best_model_state,
+                    "val_loss": best_val_loss,
+                    "val_acc": best_val_acc,
+                },
+                best_model_path,
+            )
+            print(
+                f"[INFO] Saved new best model at epoch {best_epoch} "
+                f"(val_loss={best_val_loss:.4f}, val_acc={best_val_acc:.4f}) "
+                f"-> {best_model_path.relative_to(PROJECT_ROOT)}"
+            )
 
         print(
             f"Epoch {epoch + 1}/{NUM_EPOCHS} | "
@@ -180,7 +194,10 @@ def train():
 
     if best_model_state is not None:
         model.load_state_dict(best_model_state)
-        print(f"\n[INFO] Loaded best model from epoch {best_epoch} with val_acc={best_val_acc:.4f}")
+        print(
+            f"\n[INFO] Loaded best model from epoch {best_epoch} "
+            f"with val_loss={best_val_loss:.4f} and val_acc={best_val_acc:.4f}"
+        )
 
     test_loss, test_acc, confusion, per_class_accuracy = evaluate_with_details(
         model, test_loader, criterion, device, NUM_CLASSES
@@ -191,6 +208,7 @@ def train():
 
     print("\nFinal test results:")
     print(f"best_epoch={best_epoch}")
+    print(f"best_val_loss={best_val_loss:.4f}")
     print(f"best_val_acc={best_val_acc:.4f}")
     print(f"test_loss={test_loss:.4f}")
     print(f"test_acc={test_acc:.4f}")

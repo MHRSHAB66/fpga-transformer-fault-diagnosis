@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+from sklearn.model_selection import train_test_split
 from torch.utils.data import TensorDataset, DataLoader
 
 from src.config import (
@@ -17,16 +18,44 @@ from src.data.load_data import build_file_index, load_one_csv
 from src.data.prepare_dataset import preprocess_dataframe, create_windows_from_dataframe
 
 
+def safe_train_test_split(index_df, train_size, stratify_labels):
+    try:
+        return train_test_split(
+            index_df,
+            train_size=train_size,
+            random_state=RANDOM_SEED,
+            shuffle=True,
+            stratify=stratify_labels,
+        )
+    except ValueError:
+        return train_test_split(
+            index_df,
+            train_size=train_size,
+            random_state=RANDOM_SEED,
+            shuffle=True,
+            stratify=None,
+        )
+
+
 def split_file_index(index_df):
-    total_files = len(index_df)
-    train_size = int(TRAIN_RATIO * total_files)
-    val_size = int(VAL_RATIO * total_files)
+    if index_df.empty:
+        return index_df.copy(), index_df.copy(), index_df.copy()
 
-    train_df = index_df.iloc[:train_size].reset_index(drop=True)
-    val_df = index_df.iloc[train_size:train_size + val_size].reset_index(drop=True)
-    test_df = index_df.iloc[train_size + val_size:].reset_index(drop=True)
+    labels = index_df["label"]
+    stratify_labels = labels if labels.nunique() > 1 else None
 
-    return train_df, val_df, test_df
+    train_df, temp_df = safe_train_test_split(index_df, TRAIN_RATIO, stratify_labels)
+
+    temp_stratify = temp_df["label"] if temp_df["label"].nunique() > 1 else None
+    val_share_of_temp = VAL_RATIO / (VAL_RATIO + TEST_RATIO)
+
+    val_df, test_df = safe_train_test_split(temp_df, val_share_of_temp, temp_stratify)
+
+    return (
+        train_df.reset_index(drop=True),
+        val_df.reset_index(drop=True),
+        test_df.reset_index(drop=True),
+    )
 
 
 def build_X_y_from_file_index(index_df, window_size=WINDOW_SIZE, stride=WINDOW_STRIDE):
