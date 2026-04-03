@@ -13,7 +13,11 @@ from src.config import (
     VAL_RATIO,
     TEST_RATIO,
     BATCH_SIZE,
+    USE_SMOTE_AUGMENTATION,
+    USE_NOISE_INJECTION,
+    NOISE_INJECTION_STD,
 )
+from src.data.augmentation import augment_training_data
 from src.data.load_data import build_file_index, load_one_csv
 from src.data.prepare_dataset import preprocess_dataframe, create_windows_from_dataframe
 
@@ -96,7 +100,13 @@ def build_X_y_from_file_index(index_df, window_size=WINDOW_SIZE, stride=WINDOW_S
     return X, y, kept_files, dropped_files
 
 
-def build_dataloaders(data_dir=DATA_RAW_DIR, max_files=None):
+def build_dataloaders(
+    data_dir=DATA_RAW_DIR,
+    max_files=None,
+    use_smote=USE_SMOTE_AUGMENTATION,
+    use_noise_injection=USE_NOISE_INJECTION,
+    noise_std=NOISE_INJECTION_STD,
+):
     index_df = build_file_index(data_dir)
 
     index_df = index_df[index_df["label"].isin(LABEL_MAP.keys())].copy()
@@ -110,6 +120,14 @@ def build_dataloaders(data_dir=DATA_RAW_DIR, max_files=None):
     X_train, y_train, train_kept, train_dropped = build_X_y_from_file_index(train_index_df)
     X_val, y_val, val_kept, val_dropped = build_X_y_from_file_index(val_index_df)
     X_test, y_test, test_kept, test_dropped = build_X_y_from_file_index(test_index_df)
+
+    X_train, y_train, augmentation_info = augment_training_data(
+        X_train,
+        y_train,
+        use_smote=use_smote,
+        use_noise_injection=use_noise_injection,
+        noise_std=noise_std,
+    )
 
     train_dataset = TensorDataset(
         torch.tensor(X_train, dtype=torch.float32),
@@ -139,6 +157,7 @@ def build_dataloaders(data_dir=DATA_RAW_DIR, max_files=None):
         "train_samples": len(train_dataset),
         "val_samples": len(val_dataset),
         "test_samples": len(test_dataset),
+        "augmentation": augmentation_info,
     }
 
     return train_loader, val_loader, test_loader, stats
