@@ -1,7 +1,7 @@
 from pathlib import Path
 import pandas as pd
 
-from src.config import DATA_RAW_DIR, DATA_SAMPLE_DIR, PROJECT_ROOT
+from src.config import DATA_RAW_DIR, PROJECT_ROOT
 from src.data.load_data import build_file_index, load_one_csv
 
 
@@ -46,5 +46,5 @@ def inspect_directory(directory, name="directory"):
 
 
 if __name__ == "__main__":
-    inspect_directory(DATA_SAMPLE_DIR, "sample directory")
+    # inspect_directory(DATA_SAMPLE_DIR, "sample directory")
     inspect_directory(DATA_RAW_DIR, "raw directory")

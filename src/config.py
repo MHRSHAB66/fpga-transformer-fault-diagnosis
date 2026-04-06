@@ -1,28 +1,41 @@
+import os
 from pathlib import Path
+from dotenv import load_dotenv
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
+load_dotenv()
 
-# Main dataset
+project_root_env = os.getenv("PROJECT_ROOT")
+if not project_root_env:
+    raise ValueError("PROJECT_ROOT is not set in .env")
+
+PROJECT_ROOT = Path(project_root_env).resolve()
+
+# =========================
+# Paths
+# =========================
 DATA_RAW_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda"
-# Synthetic dataset
-# DATA_RAW_SYNTHETIC_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda_synthetic"
 DATA_SAMPLE_DIR = PROJECT_ROOT / "data" / "sample"
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 
+# =========================
+# Reproducibility
+# =========================
 RANDOM_SEED = 42
 
+# =========================
+# Labels
+# =========================
 LABEL_MAP = {
     "normal": 0,
     "imbalance": 1,
     "misalignment": 2,
     "bearing_fault": 3,
 }
+NUM_CLASSES = len(LABEL_MAP)
 
-WINDOW_SIZE = 1024
-WINDOW_STRIDE = 1024
-
-EXPECTED_NUM_COLUMNS = 8
-
+# =========================
+# Input data shape
+# =========================
 EXPECTED_COLUMNS = [
     "tachometer",
     "acc_axial_b1",
@@ -33,38 +46,61 @@ EXPECTED_COLUMNS = [
     "acc_tangential_b2",
     "microphone",
 ]
+EXPECTED_NUM_COLUMNS = len(EXPECTED_COLUMNS)
 
-MIN_ROWS_PER_FILE = 128
+WINDOW_SIZE = 1024
+WINDOW_STRIDE = 1024
+MIN_ROWS_PER_FILE = WINDOW_SIZE
 
-# Drop file if it it has more than 20% missing.
+# =========================
+# Data quality / preprocessing
+# =========================
 MISSING_RATIO_THRESHOLD = 0.2
 MISSING_FILL_METHOD = "median"
 
 NORMALIZATION_METHOD = "zscore"
 EPSILON = 1e-8
 
+# =========================
+# Dataset split
+# =========================
 TRAIN_RATIO = 0.7
-VAL_RATIO = 0.2
-TEST_RATIO = 0.1
+VAL_RATIO = 0.1
+TEST_RATIO = 0.2
 
+# =========================
+# DataLoader / augmentation
+# =========================
 BATCH_SIZE = 8
 
-# Optional augmentation
 USE_SMOTE_AUGMENTATION = False
 USE_NOISE_INJECTION = False
 NOISE_INJECTION_STD = 0.01
 
-#MLP baseline
-NUM_CLASSES = 4
+# =========================
+# Shared training
+# =========================
+LEARNING_RATE = 1e-3
+NUM_EPOCHS = 6   # temporary for fast testing
+
+# =========================
+# MLP baseline
+# =========================
 INPUT_LENGTH = WINDOW_SIZE
 INPUT_CHANNELS = EXPECTED_NUM_COLUMNS
-LEARNING_RATE = 1e-3
-NUM_EPOCHS = 3
 HIDDEN_DIM = 64
 
-#TRANSFORMER baseline
+# =========================
+# Transformer baseline
+# =========================
 TRANSFORMER_D_MODEL = 32
 TRANSFORMER_NHEAD = 4
 TRANSFORMER_NUM_LAYERS = 2
 TRANSFORMER_DIM_FEEDFORWARD = 64
 TRANSFORMER_DROPOUT = 0.1
+
+# =========================
+# Sanity checks
+# =========================
+if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:
+    raise ValueError("TRAIN_RATIO + VAL_RATIO + TEST_RATIO must be 1.0")
