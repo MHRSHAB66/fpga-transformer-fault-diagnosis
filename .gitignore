@@ -208,3 +208,6 @@ __marimo__/
 
 # dataset
 data/raw/mafaulda/
+data
+src.zip
+test.py

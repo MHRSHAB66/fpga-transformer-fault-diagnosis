@@ -1,9 +1,0 @@
-filepath,label,rows,columns
-data\raw\mafaulda_synthetic\normal\normal_01.csv,normal,512,8
-data\raw\mafaulda_synthetic\normal\normal_02.csv,normal,512,8
-data\raw\mafaulda_synthetic\imbalance\imbalance_01.csv,imbalance,512,8
-data\raw\mafaulda_synthetic\imbalance\imbalance_02.csv,imbalance,512,8
-data\raw\mafaulda_synthetic\misalignment\misalignment_01.csv,misalignment,512,8
-data\raw\mafaulda_synthetic\misalignment\misalignment_02.csv,misalignment,512,8
-data\raw\mafaulda_synthetic\bearing_fault\bearing_fault_01.csv,bearing_fault,512,8
-data\raw\mafaulda_synthetic\bearing_fault\bearing_fault_02.csv,bearing_fault,512,8
