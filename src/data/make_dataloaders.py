@@ -1,6 +1,14 @@
+import sys
+from pathlib import Path
+
 import numpy as np
 import torch
+from sklearn.model_selection import train_test_split
 from torch.utils.data import TensorDataset, DataLoader
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.config import (
     DATA_RAW_DIR,
@@ -12,21 +20,53 @@ from src.config import (
     VAL_RATIO,
     TEST_RATIO,
     BATCH_SIZE,
+    USE_SMOTE_AUGMENTATION,
+    USE_NOISE_INJECTION,
+    NOISE_INJECTION_STD,
 )
+from src.data.augmentation import augment_training_data
 from src.data.load_data import build_file_index, load_one_csv
 from src.data.prepare_dataset import preprocess_dataframe, create_windows_from_dataframe
 
 
+def safe_train_test_split(index_df, train_size, stratify_labels):
+    try:
+        return train_test_split(
+            index_df,
+            train_size=train_size,
+            random_state=RANDOM_SEED,
+            shuffle=True,
+            stratify=stratify_labels,
+        )
+    except ValueError:
+        return train_test_split(
+            index_df,
+            train_size=train_size,
+            random_state=RANDOM_SEED,
+            shuffle=True,
+            stratify=None,
+        )
+
+
 def split_file_index(index_df):
-    total_files = len(index_df)
-    train_size = int(TRAIN_RATIO * total_files)
-    val_size = int(VAL_RATIO * total_files)
+    if index_df.empty:
+        return index_df.copy(), index_df.copy(), index_df.copy()
 
-    train_df = index_df.iloc[:train_size].reset_index(drop=True)
-    val_df = index_df.iloc[train_size:train_size + val_size].reset_index(drop=True)
-    test_df = index_df.iloc[train_size + val_size:].reset_index(drop=True)
+    labels = index_df["label"]
+    stratify_labels = labels if labels.nunique() > 1 else None
 
-    return train_df, val_df, test_df
+    train_df, temp_df = safe_train_test_split(index_df, TRAIN_RATIO, stratify_labels)
+
+    temp_stratify = temp_df["label"] if temp_df["label"].nunique() > 1 else None
+    val_share_of_temp = VAL_RATIO / (VAL_RATIO + TEST_RATIO)
+
+    val_df, test_df = safe_train_test_split(temp_df, val_share_of_temp, temp_stratify)
+
+    return (
+        train_df.reset_index(drop=True),
+        val_df.reset_index(drop=True),
+        test_df.reset_index(drop=True),
+    )
 
 
 def build_X_y_from_file_index(index_df, window_size=WINDOW_SIZE, stride=WINDOW_STRIDE):
@@ -67,7 +107,13 @@ def build_X_y_from_file_index(index_df, window_size=WINDOW_SIZE, stride=WINDOW_S
     return X, y, kept_files, dropped_files
 
 
-def build_dataloaders(data_dir=DATA_RAW_DIR, max_files=None):
+def build_dataloaders(
+    data_dir=DATA_RAW_DIR,
+    max_files=None,
+    use_smote=USE_SMOTE_AUGMENTATION,
+    use_noise_injection=USE_NOISE_INJECTION,
+    noise_std=NOISE_INJECTION_STD,
+):
     index_df = build_file_index(data_dir)
 
     index_df = index_df[index_df["label"].isin(LABEL_MAP.keys())].copy()
@@ -81,6 +127,14 @@ def build_dataloaders(data_dir=DATA_RAW_DIR, max_files=None):
     X_train, y_train, train_kept, train_dropped = build_X_y_from_file_index(train_index_df)
     X_val, y_val, val_kept, val_dropped = build_X_y_from_file_index(val_index_df)
     X_test, y_test, test_kept, test_dropped = build_X_y_from_file_index(test_index_df)
+
+    X_train, y_train, augmentation_info = augment_training_data(
+        X_train,
+        y_train,
+        use_smote=use_smote,
+        use_noise_injection=use_noise_injection,
+        noise_std=noise_std,
+    )
 
     train_dataset = TensorDataset(
         torch.tensor(X_train, dtype=torch.float32),
@@ -110,6 +164,7 @@ def build_dataloaders(data_dir=DATA_RAW_DIR, max_files=None):
         "train_samples": len(train_dataset),
         "val_samples": len(val_dataset),
         "test_samples": len(test_dataset),
+        "augmentation": augmentation_info,
     }
 
     return train_loader, val_loader, test_loader, stats
