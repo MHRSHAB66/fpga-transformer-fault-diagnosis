@@ -1,4 +1,4 @@
-from src.data.signal_preprocessing import (
+from tools.signal_preprocessing import (
     GlobalSignalScaler,
     compute_kurtosis,
     compute_rms,
