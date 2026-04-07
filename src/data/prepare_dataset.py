@@ -1,9 +1,30 @@
+"""
+Dataset preprocessing utilities for the MAFAULDA pipeline.
+
+This module provides reusable helper functions for:
+1. Converting raw CSV DataFrames to numeric values
+2. Dropping files with too many missing values
+3. Filling missing values when needed
+4. Normalizing each feature column
+5. Creating fixed-length windows from a preprocessed DataFrame
+
+Important
+---------
+The main training pipeline should use `src.data.make_dataloaders.py`, which:
+- performs file-level train/validation/test splitting
+- prevents data leakage between splits
+- builds the final PyTorch DataLoaders
+
+This module is intentionally limited to reusable preprocessing and windowing
+helpers.
+"""
+
+from typing import List, Optional
+
 import numpy as np
 import pandas as pd
 
 from src.config import (
-    DATA_RAW_DIR,
-    LABEL_MAP,
     WINDOW_SIZE,
     WINDOW_STRIDE,
     MISSING_RATIO_THRESHOLD,
@@ -11,14 +32,42 @@ from src.config import (
     NORMALIZATION_METHOD,
     EPSILON,
 )
-from src.data.load_data import build_file_index, load_one_csv
 
 
-def create_windows_from_dataframe(df, window_size=WINDOW_SIZE, stride=WINDOW_STRIDE):
-    values = df.values
-    windows = []
+def create_windows_from_dataframe(
+    df: pd.DataFrame,
+    window_size: int = WINDOW_SIZE,
+    stride: int = WINDOW_STRIDE,
+) -> List[np.ndarray]:
+    """
+    Split a preprocessed DataFrame into fixed-length windows.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame with shape [num_rows, num_features].
+    window_size : int, default=WINDOW_SIZE
+        Number of rows per window.
+    stride : int, default=WINDOW_STRIDE
+        Step size between consecutive windows.
+
+    Returns
+    -------
+    list[np.ndarray]
+        List of windows, where each window has shape [window_size, num_features].
+
+    Notes
+    -----
+    - If the DataFrame has fewer rows than `window_size`, the returned list is empty.
+    - With `stride == window_size`, the windows do not overlap.
+    - With `stride < window_size`, the windows overlap.
+    """
+    values = df.to_numpy(copy=True)
+    windows: List[np.ndarray] = []
 
     num_rows = len(values)
+    if num_rows < window_size:
+        return windows
 
     for start in range(0, num_rows - window_size + 1, stride):
         end = start + window_size
@@ -28,7 +77,26 @@ def create_windows_from_dataframe(df, window_size=WINDOW_SIZE, stride=WINDOW_STR
     return windows
 
 
-def convert_dataframe_to_numeric(df):
+def convert_dataframe_to_numeric(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert all DataFrame columns to numeric values.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame read from a raw CSV file.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A copy of the input DataFrame where each column has been converted
+        to numeric values when possible.
+
+    Notes
+    -----
+    Non-numeric values are coerced to NaN using `errors="coerce"`.
+    This makes malformed values explicit so they can be handled later.
+    """
     df = df.copy()
 
     for col in df.columns:
@@ -37,7 +105,25 @@ def convert_dataframe_to_numeric(df):
     return df
 
 
-def should_drop_file(df, missing_ratio_threshold=MISSING_RATIO_THRESHOLD):
+def should_drop_file(
+    df: pd.DataFrame,
+    missing_ratio_threshold: float = MISSING_RATIO_THRESHOLD,
+) -> bool:
+    """
+    Decide whether a file should be dropped based on its missing-value ratio.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame.
+    missing_ratio_threshold : float, default=MISSING_RATIO_THRESHOLD
+        Maximum allowed ratio of missing cells before dropping the file.
+
+    Returns
+    -------
+    bool
+        True if the file should be dropped, otherwise False.
+    """
     total_cells = df.shape[0] * df.shape[1]
     missing_cells = df.isna().sum().sum()
 
@@ -48,7 +134,34 @@ def should_drop_file(df, missing_ratio_threshold=MISSING_RATIO_THRESHOLD):
     return missing_ratio > missing_ratio_threshold
 
 
-def fill_missing_values(df, method=MISSING_FILL_METHOD):
+def fill_missing_values(
+    df: pd.DataFrame,
+    method: str = MISSING_FILL_METHOD,
+) -> pd.DataFrame:
+    """
+    Fill missing values in the DataFrame.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame that may contain NaN values.
+    method : str, default=MISSING_FILL_METHOD
+        Missing-value handling strategy. Supported values:
+        - "median"
+        - "mean"
+        - "ffill"
+        - "bfill"
+
+    Returns
+    -------
+    pandas.DataFrame
+        DataFrame with missing values filled.
+
+    Raises
+    ------
+    ValueError
+        If the method is not supported.
+    """
     df = df.copy()
 
     if method == "median":
@@ -71,7 +184,36 @@ def fill_missing_values(df, method=MISSING_FILL_METHOD):
     return df
 
 
-def normalize_dataframe(df, method=NORMALIZATION_METHOD):
+def normalize_dataframe(
+    df: pd.DataFrame,
+    method: str = NORMALIZATION_METHOD,
+) -> pd.DataFrame:
+    """
+    Normalize each column of the DataFrame.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Input DataFrame.
+    method : str, default=NORMALIZATION_METHOD
+        Normalization strategy. Supported values:
+        - "zscore"
+        - "minmax"
+
+    Returns
+    -------
+    pandas.DataFrame
+        Normalized DataFrame.
+
+    Raises
+    ------
+    ValueError
+        If the method is not supported.
+
+    Notes
+    -----
+    EPSILON is added to denominators to avoid division by zero.
+    """
     df = df.copy()
 
     if method == "zscore":
@@ -92,75 +234,37 @@ def normalize_dataframe(df, method=NORMALIZATION_METHOD):
     return df
 
 
-def preprocess_dataframe(df):
+def preprocess_dataframe(df: pd.DataFrame) -> Optional[pd.DataFrame]:
+    """
+    Run the preprocessing pipeline on a single raw DataFrame.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        Raw DataFrame read from a CSV file.
+
+    Returns
+    -------
+    pandas.DataFrame or None
+        Preprocessed DataFrame if the file is valid.
+        Returns None if the file should be dropped.
+
+    Pipeline
+    --------
+    1. Convert all values to numeric
+    2. Drop the file if the missing-value ratio is too high
+    3. Fill missing values only if NaN values exist
+    4. Normalize each feature column
+    """
     df = convert_dataframe_to_numeric(df)
 
     if should_drop_file(df):
         return None
 
-    df = fill_missing_values(df)
+    # Avoid unnecessary fill operations when the DataFrame is already clean.
+    if df.isna().any().any():
+        df = fill_missing_values(df)
+
     df = normalize_dataframe(df)
 
     return df
-
-
-def prepare_dataset(data_dir=DATA_RAW_DIR, window_size=WINDOW_SIZE, stride=WINDOW_STRIDE):
-    index_df = build_file_index(data_dir)
-
-    X = []
-    y = []
-
-    kept_files = 0
-    dropped_files = 0
-
-    for _, row in index_df.iterrows():
-        file_path = row["filepath"]
-        label_name = row["label"]
-
-        if label_name not in LABEL_MAP:
-            continue
-
-        df = load_one_csv(file_path)
-        df = preprocess_dataframe(df)
-
-        if df is None:
-            dropped_files += 1
-            continue
-
-        kept_files += 1
-
-        file_windows = create_windows_from_dataframe(
-            df,
-            window_size=window_size,
-            stride=stride
-        )
-
-        label_id = LABEL_MAP[label_name]
-
-        for window in file_windows:
-            X.append(window)
-            y.append(label_id)
-
-    X = np.array(X, dtype=np.float32)
-    y = np.array(y, dtype=np.int64)
-
-    return X, y, kept_files, dropped_files
-
-
-if __name__ == "__main__":
-    X, y, kept_files, dropped_files = prepare_dataset()
-
-    print("Kept files:", kept_files)
-    print("Dropped files:", dropped_files)
-
-    print("\nX shape:", X.shape)
-    print("y shape:", y.shape)
-
-    if len(X) > 0:
-        print("\nFirst sample shape:", X[0].shape)
-        print("First sample label:", y[0])
-
-    unique, counts = np.unique(y, return_counts=True)
-    print("\nLabel counts:")
-    for label_id, count in zip(unique, counts):
-        print(f"Label {label_id}: {count}")
