@@ -55,8 +55,16 @@ def compute_class_weights(targets, num_classes):
     return torch.tensor(weights, dtype=torch.float32), counts
 
 
+def get_dataset_targets(dataset):
+    if hasattr(dataset, "tensors"):
+        return dataset.tensors[1].cpu().numpy()
+    if hasattr(dataset, "targets"):
+        return np.asarray(dataset.targets, dtype=np.int64)
+    raise AttributeError("Dataset must expose either tensors[1] or targets for class-weight computation.")
+
+
 def build_loss_function(train_loader, num_classes, device):
-    train_targets = train_loader.dataset.tensors[1].cpu().numpy()
+    train_targets = get_dataset_targets(train_loader.dataset)
     class_weights, class_counts = compute_class_weights(train_targets, num_classes)
 
     imbalance_ratio = 1.0

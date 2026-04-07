@@ -5,9 +5,9 @@ This module is responsible for:
 1. Building a file index from the dataset directory
 2. Filtering valid labels
 3. Splitting files into train/validation/test sets at file level
-4. Converting each file into preprocessed time windows
-5. Applying augmentation to training data only
-6. Creating TensorDataset and DataLoader objects for PyTorch
+4. Converting training files into materialized windows only when augmentation requires it
+5. Keeping validation and test windows lazy by default
+6. Creating Dataset and DataLoader objects for PyTorch
 
 Important
 ---------
@@ -29,6 +29,7 @@ from src.config import (
     RANDOM_SEED,
     WINDOW_SIZE,
     WINDOW_STRIDE,
+    EXPECTED_NUM_COLUMNS,
     TRAIN_RATIO,
     VAL_RATIO,
     TEST_RATIO,
@@ -38,8 +39,36 @@ from src.config import (
     NOISE_INJECTION_STD,
 )
 from src.data.augmentation import augment_training_data
+from src.data.cached_augmentation import (
+    build_train_augmentation_cache_key,
+    get_train_augmentation_cache_path,
+    load_cached_augmented_train_data,
+    save_augmented_train_data_cache,
+)
 from src.data.load_data import build_file_index, load_one_csv
 from src.data.prepare_dataset import preprocess_dataframe, create_windows_from_dataframe
+from src.data.windowed_dataset import WindowedFileDataset
+
+
+def deterministic_small_split(index_df, train_size):
+    """
+    Split very small debug subsets without raising sklearn split errors.
+
+    This is only a fallback path. Normal dataset sizes still use
+    train_test_split with the configured random seed.
+    """
+    shuffled = index_df.sample(frac=1, random_state=RANDOM_SEED).reset_index(drop=True)
+
+    if len(shuffled) < 2:
+        return shuffled.copy(), shuffled.iloc[0:0].copy()
+
+    first_count = int(round(len(shuffled) * train_size))
+    first_count = min(max(first_count, 1), len(shuffled) - 1)
+
+    return (
+        shuffled.iloc[:first_count].reset_index(drop=True),
+        shuffled.iloc[first_count:].reset_index(drop=True),
+    )
 
 
 def safe_train_test_split(index_df, train_size, stratify_labels):
@@ -82,14 +111,19 @@ def safe_train_test_split(index_df, train_size, stratify_labels):
             stratify=stratify_labels,
         )
     except ValueError:
-        print("[WARN] Stratified split failed. Falling back to non-stratified split.")
-        return train_test_split(
-            index_df,
-            train_size=train_size,
-            random_state=RANDOM_SEED,
-            shuffle=True,
-            stratify=None,
-        )
+        if stratify_labels is not None:
+            print("[WARN] Stratified split failed. Falling back to non-stratified split.")
+        try:
+            return train_test_split(
+                index_df,
+                train_size=train_size,
+                random_state=RANDOM_SEED,
+                shuffle=True,
+                stratify=None,
+            )
+        except ValueError:
+            print("[WARN] Split too small for sklearn. Using deterministic debug split.")
+            return deterministic_small_split(index_df, train_size)
 
 
 def split_file_index(index_df):
@@ -211,7 +245,10 @@ def build_X_y_from_file_index(
             X.append(window)
             y.append(label_id)
 
-    X = np.array(X, dtype=np.float32)
+    if X:
+        X = np.array(X, dtype=np.float32)
+    else:
+        X = np.empty((0, window_size, EXPECTED_NUM_COLUMNS), dtype=np.float32)
     y = np.array(y, dtype=np.int64)
 
     return X, y, kept_files, dropped_files
@@ -257,40 +294,75 @@ def build_dataloaders(
     # Keep only labels that are part of the expected training label map.
     index_df = index_df[index_df["label"].isin(LABEL_MAP.keys())].copy()
 
-    '''Inessntial SHUFFLE - already done in safe_train_test_split with shuffle=True.'''
-    # Shuffle file order before splitting so path ordering does not bias the split.
-    # index_df = index_df.sample(frac=1, random_state=RANDOM_SEED).reset_index(drop=True)
-
     if max_files is not None:
+        # Shuffle before truncating so debug subsets are not biased by sorted paths.
+        index_df = index_df.sample(frac=1, random_state=RANDOM_SEED).reset_index(drop=True)
         index_df = index_df.head(max_files)
 
     train_index_df, val_index_df, test_index_df = split_file_index(index_df)
 
-    X_train, y_train, train_kept, train_dropped = build_X_y_from_file_index(train_index_df)
-    X_val, y_val, val_kept, val_dropped = build_X_y_from_file_index(val_index_df)
-    X_test, y_test, test_kept, test_dropped = build_X_y_from_file_index(test_index_df)
+    val_dataset = WindowedFileDataset(val_index_df)
+    test_dataset = WindowedFileDataset(test_index_df)
+    val_kept = val_dataset.kept_files
+    val_dropped = val_dataset.dropped_files
+    test_kept = test_dataset.kept_files
+    test_dropped = test_dataset.dropped_files
+    train_augmentation_cache_used = False
+    train_augmentation_cache_path = None
 
-    # Apply augmentation only to training data.
-    X_train, y_train, augmentation_info = augment_training_data(
-        X_train,
-        y_train,
-        use_smote=use_smote,
-        use_noise_injection=use_noise_injection,
-        noise_std=noise_std,
-    )
+    if use_smote or use_noise_injection:
+        # SMOTE and noise injection operate on arrays, so only the training split
+        # is materialized. Validation and test stay lazy and unaugmented.
+        cache_key = build_train_augmentation_cache_key(
+            train_index_df,
+            use_smote=use_smote,
+            use_noise_injection=use_noise_injection,
+            noise_std=noise_std,
+        )
+        train_augmentation_cache_path = str(get_train_augmentation_cache_path(cache_key))
+        cached_train_data = load_cached_augmented_train_data(cache_key)
 
-    train_dataset = TensorDataset(
-        torch.tensor(X_train, dtype=torch.float32),
-        torch.tensor(y_train, dtype=torch.long),
-    )
-    val_dataset = TensorDataset(
-        torch.tensor(X_val, dtype=torch.float32),
-        torch.tensor(y_val, dtype=torch.long),
-    )
-    test_dataset = TensorDataset(
-        torch.tensor(X_test, dtype=torch.float32),
-        torch.tensor(y_test, dtype=torch.long),
-    )
+        if cached_train_data is not None:
+            X_train, y_train, cache_metadata = cached_train_data
+            augmentation_info = cache_metadata["augmentation_info"]
+            train_kept = int(cache_metadata["train_kept"])
+            train_dropped = int(cache_metadata["train_dropped"])
+            train_augmentation_cache_used = True
+        else:
+            X_train, y_train, train_kept, train_dropped = build_X_y_from_file_index(train_index_df)
+            X_train, y_train, augmentation_info = augment_training_data(
+                X_train,
+                y_train,
+                use_smote=use_smote,
+                use_noise_injection=use_noise_injection,
+                noise_std=noise_std,
+            )
+            save_augmented_train_data_cache(
+                cache_key,
+                X_train,
+                y_train,
+                {
+                    "augmentation_info": augmentation_info,
+                    "train_kept": int(train_kept),
+                    "train_dropped": int(train_dropped),
+                },
+            )
+
+        train_dataset = TensorDataset(
+            torch.tensor(X_train, dtype=torch.float32),
+            torch.tensor(y_train, dtype=torch.long),
+        )
+    else:
+        train_dataset = WindowedFileDataset(train_index_df)
+        train_kept = train_dataset.kept_files
+        train_dropped = train_dataset.dropped_files
+        augmentation_info = {
+            "smote_applied": False,
+            "noise_injection_applied": False,
+            "noise_std": float(noise_std),
+            "original_samples": len(train_dataset),
+            "augmented_samples": len(train_dataset),
+        }
 
     # Shuffle training batches for better learning.
     # Validation and test remain ordered for stable evaluation.
@@ -310,6 +382,8 @@ def build_dataloaders(
         "val_samples": len(val_dataset),
         "test_samples": len(test_dataset),
         "augmentation": augmentation_info,
+        "train_augmentation_cache_used": train_augmentation_cache_used,
+        "train_augmentation_cache_path": train_augmentation_cache_path,
     }
 
     return train_loader, val_loader, test_loader, stats

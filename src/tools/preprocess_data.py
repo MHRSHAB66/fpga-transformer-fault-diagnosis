@@ -8,7 +8,7 @@ import numpy as np
 from src.config import DATA_PROCESSED_DIR, DATA_RAW_DIR
 from src.data.load_data import build_file_index, load_one_csv
 from src.data.prepare_dataset import preprocess_dataframe
-from tools.signal_preprocessing import preprocess_signal
+from src.tools.signal_preprocessing import preprocess_signal
 
 
 MICROPHONE_COLUMN = 7
