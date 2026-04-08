@@ -256,7 +256,7 @@ def build_X_y_from_file_index(
 
 def build_dataloaders(
     data_dir=DATA_RAW_DIR,
-    max_files: Optional[int] = None,
+    max_files: Optional[int] = 50,
     use_smote: bool = USE_SMOTE_AUGMENTATION,
     use_noise_injection: bool = USE_NOISE_INJECTION,
     noise_std: float = NOISE_INJECTION_STD,

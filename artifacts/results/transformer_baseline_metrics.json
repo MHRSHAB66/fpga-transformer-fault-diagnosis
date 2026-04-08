@@ -1,108 +1,110 @@
 {
   "data_stats": {
-    "total_files_after_filter": 1951,
-    "train_files_kept": 1365,
+    "total_files_after_filter": 50,
+    "train_files_kept": 35,
     "train_files_dropped": 0,
-    "val_files_kept": 195,
+    "val_files_kept": 5,
     "val_files_dropped": 0,
-    "test_files_kept": 391,
+    "test_files_kept": 10,
     "test_files_dropped": 0,
-    "train_samples": 333060,
-    "val_samples": 47580,
-    "test_samples": 95404,
+    "train_samples": 26352,
+    "val_samples": 1220,
+    "test_samples": 2440,
     "augmentation": {
-      "smote_applied": false,
-      "noise_injection_applied": false,
+      "smote_applied": true,
+      "noise_injection_applied": true,
       "noise_std": 0.01,
-      "original_samples": 333060,
-      "augmented_samples": 333060
-    }
+      "original_samples": 8540,
+      "augmented_samples": 26352
+    },
+    "train_augmentation_cache_used": false,
+    "train_augmentation_cache_path": "D:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\cache\\train_augmentation\\8a3b05b15e87673fbbab7936076aa4d3cc81ab8e803fc8be2c0ee903304f56df.npz"
   },
   "imbalance_info": {
     "class_counts": [
-      8296,
-      56852,
-      85156,
-      182756
+      0,
+      8784,
+      8784,
+      8784
     ],
-    "imbalance_ratio": 22.02941131591797,
-    "class_weights_applied": true,
+    "imbalance_ratio": 1.0,
+    "class_weights_applied": false,
     "class_weights": [
-      10.036765098571777,
-      1.4645922183990479,
-      0.9777936935424805,
-      0.45560747385025024
+      0.0,
+      0.75,
+      0.75,
+      0.75
     ]
   },
-  "best_epoch": 5,
-  "best_val_loss": 0.05034737644930926,
-  "best_val_acc": 0.9811475409836066,
-  "val_loss": 0.05034737644930926,
-  "val_acc": 0.9811475409836066,
+  "best_epoch": 1,
+  "best_val_loss": 1.978816657146958,
+  "best_val_acc": 0.4565573770491803,
+  "val_loss": 1.978816657146958,
+  "val_acc": 0.4565573770491803,
   "val_confusion_matrix": [
     [
-      1139,
-      1,
-      71,
-      9
-    ],
-    [
-      4,
-      8007,
-      4,
-      37
-    ],
-    [
-      141,
       0,
-      12055,
-      4
-    ],
-    [
-      115,
-      206,
-      305,
-      25482
-    ]
-  ],
-  "val_per_class_accuracy": {
-    "0": 0.9336065573770492,
-    "1": 0.9944113263785395,
-    "2": 0.9881147540983607,
-    "3": 0.9760226750421327
-  },
-  "test_loss": 0.06287771625732892,
-  "test_acc": 0.9760911492180622,
-  "test_confusion_matrix": [
-    [
-      2400,
-      1,
-      39,
+      0,
+      0,
       0
     ],
     [
-      11,
-      16208,
-      37,
-      92
+      0,
+      47,
+      197,
+      0
     ],
     [
-      276,
-      25,
-      23762,
-      93
+      0,
+      0,
+      0,
+      0
     ],
     [
-      160,
-      898,
+      0,
+      211,
+      255,
+      510
+    ]
+  ],
+  "val_per_class_accuracy": {
+    "0": null,
+    "1": 0.19262295081967212,
+    "2": null,
+    "3": 0.5225409836065574
+  },
+  "test_loss": 2.203288332777113,
+  "test_acc": 0.6348360655737705,
+  "test_confusion_matrix": [
+    [
+      0,
+      0,
+      220,
+      24
+    ],
+    [
+      0,
+      210,
+      0,
+      34
+    ],
+    [
+      0,
+      0,
       649,
-      50753
+      83
+    ],
+    [
+      0,
+      408,
+      122,
+      690
     ]
   ],
   "test_per_class_accuracy": {
-    "0": 0.9836065573770492,
-    "1": 0.991436261316369,
-    "2": 0.9836893525418116,
-    "3": 0.9674609226077011
+    "0": 0.0,
+    "1": 0.860655737704918,
+    "2": 0.8866120218579235,
+    "3": 0.5655737704918032
   }
 }
