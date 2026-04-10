@@ -1,8 +1,9 @@
 """
 Lazy PyTorch Dataset for MAFAULDA file-level windowing.
 
-The dataset stores lightweight window metadata only. Raw CSV data is loaded,
-preprocessed, and sliced into a single window on demand in ``__getitem__``.
+The dataset stores lightweight window metadata only. Per-file base-preprocessed
+arrays are loaded from the disk cache on demand and sliced into a single window
+inside ``__getitem__``.
 """
 
 from typing import List, Optional, Tuple
@@ -12,8 +13,7 @@ import torch
 from torch.utils.data import Dataset
 
 from src.config import LABEL_MAP, WINDOW_SIZE, WINDOW_STRIDE
-from src.data.load_data import load_one_csv
-from src.data.prepare_dataset import preprocess_dataframe
+from src.data.preprocessed_cache import load_or_create_preprocessed_array
 
 
 class WindowedFileDataset(Dataset):
@@ -32,10 +32,12 @@ class WindowedFileDataset(Dataset):
     Notes
     -----
     - File-level splitting must happen before creating this dataset.
-    - Only lightweight metadata is stored: file path, integer label, and window
-      start offset.
-    - A one-file cache avoids reloading and preprocessing the same file when
-      consecutive samples come from that file.
+    - Only lightweight metadata is stored in memory:
+      file path, integer label, and window start offset.
+    - Base preprocessing is reused through the per-file disk cache.
+    - A one-file in-memory cache avoids repeatedly loading the same
+      cached preprocessed array when consecutive samples come from
+      the same file.
     """
 
     def __init__(
@@ -47,6 +49,7 @@ class WindowedFileDataset(Dataset):
         self.index_df = index_df.reset_index(drop=True).copy()
         self.window_size = int(window_size)
         self.stride = int(stride)
+
         if self.window_size <= 0:
             raise ValueError("window_size must be positive.")
         if self.stride <= 0:
@@ -63,6 +66,15 @@ class WindowedFileDataset(Dataset):
         self._build_window_index()
 
     def _build_window_index(self) -> None:
+        """
+        Build the in-memory window metadata index.
+
+        For each file in the input split:
+        - load or create the cached preprocessed array
+        - count valid fixed-length windows
+        - store lightweight metadata tuples of
+          (file_path, label_id, window_start)
+        """
         for _, row in self.index_df.iterrows():
             file_path = row["filepath"]
             label_name = row["label"]
@@ -70,16 +82,15 @@ class WindowedFileDataset(Dataset):
             if label_name not in LABEL_MAP:
                 continue
 
-            df = load_one_csv(file_path)
-            df = preprocess_dataframe(df)
+            values = load_or_create_preprocessed_array(file_path)
 
-            if df is None:
+            if values is None:
                 self.dropped_files += 1
                 continue
 
             self.kept_files += 1
 
-            num_rows = len(df)
+            num_rows = len(values)
             if num_rows < self.window_size:
                 continue
 
@@ -89,15 +100,29 @@ class WindowedFileDataset(Dataset):
                 self.targets.append(label_id)
 
     def _load_preprocessed_values(self, file_path: str) -> np.ndarray:
+        """
+        Load one cached preprocessed file array, with a one-file memory cache.
+
+        Parameters
+        ----------
+        file_path : str
+            Path to the raw source file whose preprocessed cache entry should
+            be loaded.
+
+        Returns
+        -------
+        np.ndarray
+            Float32 array with shape [num_rows, num_features].
+        """
         if self._cache_filepath == file_path and self._cache_values is not None:
             return self._cache_values
 
-        df = load_one_csv(file_path)
-        df = preprocess_dataframe(df)
-        if df is None:
-            raise RuntimeError(f"Cached window metadata points to a dropped file: {file_path}")
+        values = load_or_create_preprocessed_array(file_path)
+        if values is None:
+            raise RuntimeError(
+                f"Cached window metadata points to a dropped file: {file_path}"
+            )
 
-        values = df.to_numpy(copy=True).astype(np.float32, copy=False)
         self._cache_filepath = file_path
         self._cache_values = values
         return values
@@ -106,6 +131,19 @@ class WindowedFileDataset(Dataset):
         return len(self.window_index)
 
     def __getitem__(self, idx: int):
+        """
+        Return one window tensor and its label tensor.
+
+        Parameters
+        ----------
+        idx : int
+            Window index inside the lightweight metadata list.
+
+        Returns
+        -------
+        tuple
+            (window_tensor, label_tensor)
+        """
         file_path, label_id, start = self.window_index[idx]
         values = self._load_preprocessed_values(file_path)
 

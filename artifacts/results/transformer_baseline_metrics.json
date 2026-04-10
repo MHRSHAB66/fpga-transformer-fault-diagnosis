@@ -1,46 +1,46 @@
 {
   "data_stats": {
-    "total_files_after_filter": 50,
-    "train_files_kept": 35,
+    "total_files_after_filter": 10,
+    "train_files_kept": 7,
     "train_files_dropped": 0,
-    "val_files_kept": 5,
+    "val_files_kept": 1,
     "val_files_dropped": 0,
-    "test_files_kept": 10,
+    "test_files_kept": 2,
     "test_files_dropped": 0,
-    "train_samples": 26352,
-    "val_samples": 1220,
-    "test_samples": 2440,
+    "train_samples": 1708,
+    "val_samples": 244,
+    "test_samples": 488,
     "augmentation": {
-      "smote_applied": true,
-      "noise_injection_applied": true,
+      "smote_applied": false,
+      "noise_injection_applied": false,
       "noise_std": 0.01,
-      "original_samples": 8540,
-      "augmented_samples": 26352
+      "original_samples": 1708,
+      "augmented_samples": 1708
     },
     "train_augmentation_cache_used": false,
-    "train_augmentation_cache_path": "D:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\cache\\train_augmentation\\8a3b05b15e87673fbbab7936076aa4d3cc81ab8e803fc8be2c0ee903304f56df.npz"
+    "train_augmentation_cache_path": null
   },
   "imbalance_info": {
     "class_counts": [
       0,
-      8784,
-      8784,
-      8784
+      488,
+      244,
+      976
     ],
-    "imbalance_ratio": 1.0,
-    "class_weights_applied": false,
+    "imbalance_ratio": 4.0,
+    "class_weights_applied": true,
     "class_weights": [
       0.0,
-      0.75,
-      0.75,
-      0.75
+      0.875,
+      1.75,
+      0.4375
     ]
   },
-  "best_epoch": 1,
-  "best_val_loss": 1.978816657146958,
-  "best_val_acc": 0.4565573770491803,
-  "val_loss": 1.978816657146958,
-  "val_acc": 0.4565573770491803,
+  "best_epoch": 3,
+  "best_val_loss": 2.11293092321177,
+  "best_val_acc": 0.13524590163934427,
+  "val_loss": 2.11293092321177,
+  "val_acc": 0.13524590163934427,
   "val_confusion_matrix": [
     [
       0,
@@ -50,9 +50,9 @@
     ],
     [
       0,
-      47,
-      197,
-      0
+      33,
+      0,
+      211
     ],
     [
       0,
@@ -62,49 +62,49 @@
     ],
     [
       0,
-      211,
-      255,
-      510
+      0,
+      0,
+      0
     ]
   ],
   "val_per_class_accuracy": {
     "0": null,
-    "1": 0.19262295081967212,
+    "1": 0.13524590163934427,
     "2": null,
-    "3": 0.5225409836065574
+    "3": null
   },
-  "test_loss": 2.203288332777113,
-  "test_acc": 0.6348360655737705,
+  "test_loss": 2.03560091943774,
+  "test_acc": 0.5,
   "test_confusion_matrix": [
     [
       0,
       0,
-      220,
-      24
-    ],
-    [
       0,
-      210,
-      0,
-      34
+      0
     ],
     [
       0,
       0,
-      649,
-      83
+      0,
+      0
     ],
     [
       0,
-      408,
-      122,
-      690
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      244,
+      0,
+      244
     ]
   ],
   "test_per_class_accuracy": {
-    "0": 0.0,
-    "1": 0.860655737704918,
-    "2": 0.8866120218579235,
-    "3": 0.5655737704918032
+    "0": null,
+    "1": null,
+    "2": null,
+    "3": 0.5
   }
 }

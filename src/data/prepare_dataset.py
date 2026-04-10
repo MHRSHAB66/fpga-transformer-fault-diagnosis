@@ -6,7 +6,7 @@ This module provides reusable helper functions for:
 2. Dropping files with too many missing values
 3. Filling missing values when needed
 4. Normalizing each feature column
-5. Creating fixed-length windows from a preprocessed DataFrame
+5. Creating fixed-length windows from a preprocessed DataFrame or ndarray
 
 Important
 ---------
@@ -19,7 +19,7 @@ This module is intentionally limited to reusable preprocessing and windowing
 helpers.
 """
 
-from typing import List, Optional
+from typing import List, Optional, Union
 
 import numpy as np
 import pandas as pd
@@ -35,17 +35,20 @@ from src.config import (
 
 
 def create_windows_from_dataframe(
-    df: pd.DataFrame,
+    df: Union[pd.DataFrame, np.ndarray],
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
 ) -> List[np.ndarray]:
     """
-    Split a preprocessed DataFrame into fixed-length windows.
+    Split a preprocessed DataFrame or ndarray into fixed-length windows.
 
     Parameters
     ----------
-    df : pandas.DataFrame
-        Input DataFrame with shape [num_rows, num_features].
+    df : pandas.DataFrame or np.ndarray
+        Input tabular time-series data with shape [num_rows, num_features].
+        The input may be either:
+        - a preprocessed pandas DataFrame
+        - a preprocessed NumPy array
     window_size : int, default=WINDOW_SIZE
         Number of rows per window.
     stride : int, default=WINDOW_STRIDE
@@ -54,15 +57,23 @@ def create_windows_from_dataframe(
     Returns
     -------
     list[np.ndarray]
-        List of windows, where each window has shape [window_size, num_features].
+        List of windows, where each window has shape
+        [window_size, num_features].
 
     Notes
     -----
-    - If the DataFrame has fewer rows than `window_size`, the returned list is empty.
+    - If the input has fewer rows than `window_size`, the returned list is empty.
     - With `stride == window_size`, the windows do not overlap.
     - With `stride < window_size`, the windows overlap.
+    - The function preserves the original row order of the input.
+    - Supporting both DataFrame and ndarray inputs allows reuse with
+      disk-cached preprocessed arrays without changing the windowing logic.
     """
-    values = df.to_numpy(copy=True)
+    if hasattr(df, "to_numpy"):
+        values = df.to_numpy(copy=True)
+    else:
+        values = np.asarray(df, dtype=np.float32)
+
     windows: List[np.ndarray] = []
 
     num_rows = len(values)

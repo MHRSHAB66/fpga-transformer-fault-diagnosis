@@ -5,15 +5,18 @@ This module is responsible for:
 1. Building a file index from the dataset directory
 2. Filtering valid labels
 3. Splitting files into train/validation/test sets at file level
-4. Converting training files into materialized windows only when augmentation requires it
-5. Keeping validation and test windows lazy by default
-6. Creating Dataset and DataLoader objects for PyTorch
+4. Reusing disk-cached base-preprocessed files for window creation
+5. Materializing training windows only when augmentation requires arrays
+6. Keeping validation and test datasets lazy by default
+7. Creating Dataset and DataLoader objects for PyTorch
 
 Important
 ---------
-Splitting is performed at file level before window creation.
-This is necessary to reduce data leakage between train, validation, and test
-sets, since multiple windows extracted from the same file are highly related.
+- Splitting is performed at file level before window creation.
+- This reduces leakage between train, validation, and test because
+  multiple windows extracted from the same file are highly related.
+- Base preprocessing is cached per file on disk and reused across splits.
+- Augmentation cache remains train-only.
 """
 
 from typing import Optional, Tuple
@@ -22,6 +25,7 @@ import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, TensorDataset
+import time
 
 from src.config import (
     DATA_RAW_DIR,
@@ -34,6 +38,7 @@ from src.config import (
     VAL_RATIO,
     TEST_RATIO,
     BATCH_SIZE,
+    DATALOADER_NUM_WORKERS,
     USE_SMOTE_AUGMENTATION,
     USE_NOISE_INJECTION,
     NOISE_INJECTION_STD,
@@ -45,8 +50,12 @@ from src.data.cached_augmentation import (
     load_cached_augmented_train_data,
     save_augmented_train_data_cache,
 )
-from src.data.load_data import build_file_index, load_one_csv
-from src.data.prepare_dataset import preprocess_dataframe, create_windows_from_dataframe
+from src.data.load_data import build_file_index
+from src.data.prepare_dataset import create_windows_from_dataframe
+from src.data.preprocessed_cache import (
+    load_or_create_preprocessed_array,
+    CACHE_DIR as PREPROCESSED_CACHE_DIR,
+)
 from src.data.windowed_dataset import WindowedFileDataset
 
 
@@ -176,7 +185,7 @@ def build_X_y_from_file_index(
     stride: int = WINDOW_STRIDE,
 ) -> Tuple[np.ndarray, np.ndarray, int, int]:
     """
-    Build X and y arrays from a file index DataFrame.
+    Materialize windowed training arrays from a file index DataFrame.
 
     Parameters
     ----------
@@ -195,7 +204,8 @@ def build_X_y_from_file_index(
         (X, y, kept_files, dropped_files)
 
         - X : np.ndarray
-            Windowed input data with dtype float32
+            Windowed input data with dtype float32 and shape
+            [num_windows, window_size, num_features]
         - y : np.ndarray
             Integer labels with dtype int64
         - kept_files : int
@@ -205,8 +215,10 @@ def build_X_y_from_file_index(
 
     Notes
     -----
-    Each file is assigned one label, and all windows extracted from that file
-    receive the same label.
+    - Base preprocessing is loaded from the per-file preprocessing cache
+      when available, or created once and then cached on disk.
+    - Each file is assigned one label, and all windows extracted from that file
+      receive the same label.
     """
     X = []
     y = []
@@ -222,17 +234,16 @@ def build_X_y_from_file_index(
         if label_name not in LABEL_MAP:
             continue
 
-        df = load_one_csv(file_path)
-        df = preprocess_dataframe(df)
+        values = load_or_create_preprocessed_array(file_path)
 
-        if df is None:
+        if values is None:
             dropped_files += 1
             continue
 
         kept_files += 1
 
         windows = create_windows_from_dataframe(
-            df,
+            values,
             window_size=window_size,
             stride=stride,
         )
@@ -249,6 +260,7 @@ def build_X_y_from_file_index(
         X = np.array(X, dtype=np.float32)
     else:
         X = np.empty((0, window_size, EXPECTED_NUM_COLUMNS), dtype=np.float32)
+
     y = np.array(y, dtype=np.int64)
 
     return X, y, kept_files, dropped_files
@@ -256,10 +268,11 @@ def build_X_y_from_file_index(
 
 def build_dataloaders(
     data_dir=DATA_RAW_DIR,
-    max_files: Optional[int] = 50,
+    max_files: Optional[int] = None,
     use_smote: bool = USE_SMOTE_AUGMENTATION,
     use_noise_injection: bool = USE_NOISE_INJECTION,
     noise_std: float = NOISE_INJECTION_STD,
+    num_workers: int = DATALOADER_NUM_WORKERS,
 ):
     """
     Build train, validation, and test DataLoaders.
@@ -276,6 +289,8 @@ def build_dataloaders(
         Whether to apply noise injection to training data.
     noise_std : float, default=NOISE_INJECTION_STD
         Standard deviation used for noise injection.
+    num_workers : int, default=DATALOADER_NUM_WORKERS
+        Number of worker processes used by PyTorch DataLoader.
 
     Returns
     -------
@@ -287,12 +302,27 @@ def build_dataloaders(
         - test_loader : DataLoader
         - stats : dict
             Summary information about file counts, sample counts,
-            and augmentation.
+            augmentation usage, preprocessing cache usage, and
+            DataLoader settings.
+
+    Notes
+    -----
+    - File-level split happens before window creation.
+    - Validation and test remain clean and unaugmented.
+    - Base preprocessing is reused through the per-file disk cache.
+    - Training is only materialized into arrays when augmentation requires it.
     """
     index_df = build_file_index(data_dir)
+    if index_df.empty:
+        raise ValueError(f"No CSV files were found under dataset directory: {data_dir}")
 
     # Keep only labels that are part of the expected training label map.
     index_df = index_df[index_df["label"].isin(LABEL_MAP.keys())].copy()
+    if index_df.empty:
+        raise ValueError(
+            "No files remained after filtering labels with LABEL_MAP. "
+            "Check dataset structure and label parsing."
+        )
 
     if max_files is not None:
         # Shuffle before truncating so debug subsets are not biased by sorted paths.
@@ -301,14 +331,32 @@ def build_dataloaders(
 
     train_index_df, val_index_df, test_index_df = split_file_index(index_df)
 
+    if train_index_df.empty:
+        raise ValueError("Train split is empty after file-level splitting.")
+    if val_index_df.empty:
+        raise ValueError("Validation split is empty after file-level splitting.")
+    if test_index_df.empty:
+        raise ValueError("Test split is empty after file-level splitting.")
+
     val_dataset = WindowedFileDataset(val_index_df)
     test_dataset = WindowedFileDataset(test_index_df)
+
     val_kept = val_dataset.kept_files
     val_dropped = val_dataset.dropped_files
     test_kept = test_dataset.kept_files
     test_dropped = test_dataset.dropped_files
+
     train_augmentation_cache_used = False
     train_augmentation_cache_path = None
+
+    if len(val_dataset) == 0:
+        raise ValueError(
+            "Validation dataset contains zero windows after preprocessing/windowing."
+        )
+    if len(test_dataset) == 0:
+        raise ValueError(
+            "Test dataset contains zero windows after preprocessing/windowing."
+        )
 
     if use_smote or use_noise_injection:
         # SMOTE and noise injection operate on arrays, so only the training split
@@ -329,7 +377,9 @@ def build_dataloaders(
             train_dropped = int(cache_metadata["train_dropped"])
             train_augmentation_cache_used = True
         else:
-            X_train, y_train, train_kept, train_dropped = build_X_y_from_file_index(train_index_df)
+            X_train, y_train, train_kept, train_dropped = build_X_y_from_file_index(
+                train_index_df
+            )
             X_train, y_train, augmentation_info = augment_training_data(
                 X_train,
                 y_train,
@@ -352,10 +402,21 @@ def build_dataloaders(
             torch.tensor(X_train, dtype=torch.float32),
             torch.tensor(y_train, dtype=torch.long),
         )
+
+        if len(train_dataset) == 0:
+            raise ValueError(
+                "Training dataset contains zero samples after materialization/augmentation."
+            )
     else:
         train_dataset = WindowedFileDataset(train_index_df)
         train_kept = train_dataset.kept_files
         train_dropped = train_dataset.dropped_files
+
+        if len(train_dataset) == 0:
+            raise ValueError(
+                "Training dataset contains zero windows after preprocessing/windowing."
+            )
+
         augmentation_info = {
             "smote_applied": False,
             "noise_injection_applied": False,
@@ -366,11 +427,43 @@ def build_dataloaders(
 
     # Shuffle training batches for better learning.
     # Validation and test remain ordered for stable evaluation.
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
-    test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
+    pin_memory = torch.cuda.is_available()
+    persistent_workers = num_workers > 0
+
+    train_loader = DataLoader(
+        train_dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=True,
+        num_workers=num_workers,
+        pin_memory=pin_memory,
+        persistent_workers=persistent_workers,
+    )
+
+    val_loader = DataLoader(
+        val_dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=False,
+        num_workers=num_workers,
+        pin_memory=pin_memory,
+        persistent_workers=persistent_workers,
+    )
+
+    test_loader = DataLoader(
+        test_dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=False,
+        num_workers=num_workers,
+        pin_memory=pin_memory,
+        persistent_workers=persistent_workers,
+    )
+
+    preprocessing_cache_enabled = True
+    preprocessing_cache_path = str(PREPROCESSED_CACHE_DIR)
+    train_augmented = bool(use_smote or use_noise_injection)
 
     stats = {
+        "data_dir": str(data_dir),
+        "max_files": None if max_files is None else int(max_files),
         "total_files_after_filter": len(index_df),
         "train_files_kept": train_kept,
         "train_files_dropped": train_dropped,
@@ -381,27 +474,52 @@ def build_dataloaders(
         "train_samples": len(train_dataset),
         "val_samples": len(val_dataset),
         "test_samples": len(test_dataset),
+        "train_augmented": train_augmented,
         "augmentation": augmentation_info,
         "train_augmentation_cache_used": train_augmentation_cache_used,
         "train_augmentation_cache_path": train_augmentation_cache_path,
+        "preprocessing_cache_enabled": preprocessing_cache_enabled,
+        "preprocessing_cache_path": preprocessing_cache_path,
+        "num_workers": int(num_workers),
+        "pin_memory": bool(pin_memory),
+        "persistent_workers": bool(persistent_workers),
     }
 
     return train_loader, val_loader, test_loader, stats
 
 
 if __name__ == "__main__":
+    t0 = time.perf_counter()
+
     train_loader, val_loader, test_loader, stats = build_dataloaders()
+
+    t1 = time.perf_counter()
+
+    train_iter = iter(train_loader)
+    x_batch, y_batch = next(train_iter)
+
+    t2 = time.perf_counter()
+
+    try:
+        _ = next(train_iter)
+        t3 = time.perf_counter()
+    except StopIteration:
+        t3 = t2
 
     print("Stats:")
     for key, value in stats.items():
         print(f"{key}: {value}")
 
+    print("\nTiming:")
+    print(f"build_dataloaders_seconds: {t1 - t0:.3f}")
+    print(f"first_train_batch_seconds: {t2 - t1:.3f}")
+    print(f"second_train_batch_seconds: {t3 - t2:.10f}")
+    print(f"total_seconds: {t3 - t0:.3f}")
+
     print("\nNumber of batches:")
     print("train:", len(train_loader))
     print("val:", len(val_loader))
     print("test:", len(test_loader))
-
-    x_batch, y_batch = next(iter(train_loader))
 
     print("\nBatch X shape:", x_batch.shape)
     print("Batch y shape:", y_batch.shape)
