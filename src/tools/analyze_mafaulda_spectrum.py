@@ -5,11 +5,11 @@ This script uses the same file-indexing logic as the main project pipeline,
 then analyzes frequency content for each expected signal channel with Welch PSD.
 
 It produces:
-- combined overall PSD plot for all channels
-- combined overall cumulative-energy plot for all channels
-- per-channel per-label PSD plots
-- per-channel per-label cumulative-energy plots
-- JSON report with cutoff frequencies and suggested sample rates
+1. Overall channel-wise average PSD and cumulative-energy plots
+2. Per-channel per-label average PSD and cumulative-energy plots
+3. Representative per-label time-domain plots (one sample per label)
+4. Representative per-label PSD plots (one sample per label)
+5. JSON report with cutoff frequencies and suggested sample rates
 
 Examples
 --------
@@ -174,9 +174,6 @@ def average_psd(
 
 
 def cumulative_energy_curve(psd: np.ndarray) -> np.ndarray:
-    """
-    Convert PSD values into a normalized cumulative energy curve.
-    """
     cumulative = np.cumsum(psd)
     if cumulative[-1] <= 0:
         return np.zeros_like(cumulative)
@@ -188,18 +185,12 @@ def energy_cutoff_frequency(
     cumulative_energy: np.ndarray,
     fraction: float,
 ) -> float:
-    """
-    Find the frequency below which a target energy fraction is contained.
-    """
     idx = int(np.searchsorted(cumulative_energy, fraction, side="left"))
     idx = min(max(idx, 0), len(freqs) - 1)
     return float(freqs[idx])
 
 
 def suggest_target_rates(cutoff_hz: float) -> Dict[str, int]:
-    """
-    Suggest conservative target sample rates from an energy cutoff frequency.
-    """
     strict_nyquist = max(1, int(math.ceil(2.0 * cutoff_hz)))
     mild_margin = max(1, int(math.ceil(4.0 * cutoff_hz)))
 
@@ -219,9 +210,6 @@ def suggest_target_rates(cutoff_hz: float) -> Dict[str, int]:
 
 
 def summarize_psd(freqs: np.ndarray, mean_psd: np.ndarray) -> Dict[str, object]:
-    """
-    Build a frequency-summary dictionary from one average PSD.
-    """
     cumulative = cumulative_energy_curve(mean_psd)
     cut90 = energy_cutoff_frequency(freqs, cumulative, 0.90)
     cut95 = energy_cutoff_frequency(freqs, cumulative, 0.95)
@@ -293,11 +281,6 @@ def save_per_channel_per_label_plots(
     Save per-channel plots with label overlays:
     - PSD
     - cumulative energy
-
-    Returns
-    -------
-    list[str]
-        Saved plot paths as strings.
     """
     output_dir.mkdir(parents=True, exist_ok=True)
     saved_paths: List[str] = []
@@ -346,6 +329,99 @@ def save_per_channel_per_label_plots(
     return saved_paths
 
 
+def pick_representative_filepaths_by_label(sampled_df: pd.DataFrame) -> Dict[str, Path]:
+    """
+    Pick one representative file per label.
+    Current rule: first file in sampled_df order for each label.
+    """
+    reps: Dict[str, Path] = {}
+    for label in LABEL_MAP.keys():
+        label_rows = sampled_df[sampled_df["label"] == label]
+        if label_rows.empty:
+            continue
+        reps[label] = Path(label_rows.iloc[0]["filepath"])
+    return reps
+
+
+def save_representative_time_domain_plots(
+    representative_signals: Dict[str, Dict[str, np.ndarray]],
+    sample_rate: int,
+    output_dir: Path,
+    max_seconds: float,
+) -> List[str]:
+    """
+    Save representative time-domain plots for each channel, overlaid by label.
+    """
+    output_dir.mkdir(parents=True, exist_ok=True)
+    saved_paths: List[str] = []
+
+    for col, label_signals in representative_signals.items():
+        if not label_signals:
+            continue
+
+        safe_col = col.replace("/", "_")
+        plot_path = output_dir / f"{safe_col}_representative_time_domain.png"
+
+        plt.figure(figsize=(12, 6))
+        for label, signal in label_signals.items():
+            max_points = min(len(signal), int(max_seconds * sample_rate))
+            x = signal[:max_points]
+            t = np.arange(max_points) / sample_rate
+            plt.plot(t, x, label=label)
+        plt.xlabel("Time (s)")
+        plt.ylabel("Amplitude")
+        plt.title(f"Representative time-domain signals by label - {col}")
+        plt.grid(True, alpha=0.3)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(plot_path, dpi=180)
+        plt.close()
+
+        saved_paths.append(str(plot_path))
+
+    return saved_paths
+
+
+def save_representative_psd_plots(
+    representative_signals: Dict[str, Dict[str, np.ndarray]],
+    sample_rate: int,
+    nperseg: int,
+    output_dir: Path,
+) -> List[str]:
+    """
+    Save representative PSD plots for each channel, overlaid by label.
+    """
+    output_dir.mkdir(parents=True, exist_ok=True)
+    saved_paths: List[str] = []
+
+    for col, label_signals in representative_signals.items():
+        if not label_signals:
+            continue
+
+        safe_col = col.replace("/", "_")
+        plot_path = output_dir / f"{safe_col}_representative_psd.png"
+
+        plt.figure(figsize=(12, 6))
+        for label, signal in label_signals.items():
+            try:
+                freqs, psd = welch_psd(signal, sample_rate=sample_rate, nperseg=nperseg)
+            except ValueError:
+                continue
+            plt.semilogy(freqs, psd + 1e-20, label=label)
+        plt.xlabel("Frequency (Hz)")
+        plt.ylabel("PSD")
+        plt.title(f"Representative PSD by label - {col}")
+        plt.grid(True, alpha=0.3)
+        plt.legend()
+        plt.tight_layout()
+        plt.savefig(plot_path, dpi=180)
+        plt.close()
+
+        saved_paths.append(str(plot_path))
+
+    return saved_paths
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -387,6 +463,12 @@ def main() -> None:
         type=int,
         default=4096,
         help="Welch segment length",
+    )
+    parser.add_argument(
+        "--representative-seconds",
+        type=float,
+        default=0.1,
+        help="Duration shown in representative time-domain plots",
     )
     args = parser.parse_args()
 
@@ -502,19 +584,49 @@ def main() -> None:
                 **summarize_psd(freqs, mean_psd),
             }
 
+    representative_paths_by_label = pick_representative_filepaths_by_label(sampled_df)
+    representative_signals: Dict[str, Dict[str, np.ndarray]] = {
+        col: {} for col in channels
+    }
+
+    representative_file_report: Dict[str, str] = {}
+
+    for label, rep_path in representative_paths_by_label.items():
+        representative_file_report[label] = str(rep_path)
+        channel_data = load_signal_columns(rep_path, channels)
+        for col, values in channel_data.items():
+            if values is not None:
+                representative_signals[col][label] = values
+
     overall_dir = args.output_dir / "overall"
     per_label_dir = args.output_dir / "per_channel_per_label"
+    representative_dir = args.output_dir / "representative"
 
     overall_psd_path, overall_cum_path = save_overall_plots(overall_results, overall_dir)
     per_label_plot_paths = save_per_channel_per_label_plots(
         results_by_channel_and_label,
         per_label_dir,
     )
+    rep_time_paths = save_representative_time_domain_plots(
+        representative_signals=representative_signals,
+        sample_rate=args.sample_rate,
+        output_dir=representative_dir / "time_domain",
+        max_seconds=args.representative_seconds,
+    )
+    rep_psd_paths = save_representative_psd_plots(
+        representative_signals=representative_signals,
+        sample_rate=args.sample_rate,
+        nperseg=args.nperseg,
+        output_dir=representative_dir / "psd",
+    )
 
+    report["representative_files"] = representative_file_report
     report["plots"] = {
         "overall_average_psd": str(overall_psd_path),
         "overall_cumulative_energy": str(overall_cum_path),
         "per_channel_per_label_plots": per_label_plot_paths,
+        "representative_time_domain_plots": rep_time_paths,
+        "representative_psd_plots": rep_psd_paths,
     }
 
     report_path = args.output_dir / "spectrum_report.json"
@@ -538,7 +650,7 @@ def main() -> None:
     print(f"- {overall_cum_path}")
     print(f"- {report_path}")
     print(f"- per-channel/per-label plots saved under: {per_label_dir}")
+    print(f"- representative plots saved under: {representative_dir}")
 
-
-if __name__ == "__main__":
-    main()
+    if __name__ == "__main__":
+        main()
