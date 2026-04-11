@@ -962,6 +962,12 @@
       }
     }
   },
+  "representative_files": {
+    "normal": "data\\raw\\mafaulda\\normal\\12.288.csv",
+    "imbalance": "data\\raw\\mafaulda\\imbalance\\10g\\13.9264.csv",
+    "misalignment": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\12.288.csv",
+    "bearing_fault": "data\\raw\\mafaulda\\overhang\\ball_fault\\0g\\12.9024.csv"
+  },
   "plots": {
     "overall_average_psd": "artifacts\\results\\spectrum_analysis\\overall\\overall_channels_average_psd.png",
     "overall_cumulative_energy": "artifacts\\results\\spectrum_analysis\\overall\\overall_channels_cumulative_energy.png",
@@ -982,6 +988,26 @@
       "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b2_per_label_cumulative_energy.png",
       "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\microphone_per_label_psd.png",
       "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\microphone_per_label_cumulative_energy.png"
+    ],
+    "representative_time_domain_plots": [
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\tachometer_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_axial_b1_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_radial_b1_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_tangential_b1_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_axial_b2_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_radial_b2_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_tangential_b2_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\microphone_representative_time_domain.png"
+    ],
+    "representative_psd_plots": [
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\tachometer_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_axial_b1_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_radial_b1_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_tangential_b1_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_axial_b2_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_radial_b2_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_tangential_b2_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\microphone_representative_psd.png"
     ]
   }
 }

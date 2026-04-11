@@ -50,6 +50,186 @@ SEARCH_SPACE = {
 DEFAULT_NUM_TRIALS = 6
 
 
+def _save_trial_metric_plot(trials, metric_key, output_path, title, ylabel):
+    """
+    Save a line plot for a per-trial scalar metric, skipping missing entries.
+    """
+    trial_indices = []
+    metric_values = []
+
+    for trial in trials:
+        trial_index = trial.get("trial")
+        metric_value = trial.get(metric_key)
+        if trial_index is None or metric_value is None:
+            continue
+
+        try:
+            numeric_value = float(metric_value)
+        except (TypeError, ValueError):
+            continue
+
+        trial_indices.append(int(trial_index))
+        metric_values.append(numeric_value)
+
+    if not metric_values:
+        return
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.plot(trial_indices, metric_values, marker="o")
+    ax.set_title(title)
+    ax.set_xlabel("Trial")
+    ax.set_ylabel(ylabel)
+    ax.grid(True, linestyle="--", linewidth=0.5, alpha=0.4)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _save_top_trials_plot(trials, output_path, top_k=5):
+    """
+    Save a bar chart for the best trials by validation loss.
+    """
+    valid_trials = []
+    for trial in trials:
+        best_val_loss = trial.get("best_val_loss")
+        trial_index = trial.get("trial")
+        if best_val_loss is None or trial_index is None:
+            continue
+
+        try:
+            numeric_loss = float(best_val_loss)
+        except (TypeError, ValueError):
+            continue
+
+        valid_trials.append((int(trial_index), numeric_loss))
+
+    if not valid_trials:
+        return
+
+    top_trials = sorted(valid_trials, key=lambda item: item[1])[: max(1, min(top_k, len(valid_trials)))]
+    labels = [f"trial_{trial_index}" for trial_index, _ in top_trials]
+    values = [loss for _, loss in top_trials]
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(7, 4))
+    bars = ax.bar(labels, values, color="#4C78A8")
+    ax.set_title("Top Trials By Best Validation Loss")
+    ax.set_xlabel("Trial")
+    ax.set_ylabel("Best Validation Loss")
+    ax.grid(axis="y", linestyle="--", linewidth=0.5, alpha=0.4)
+
+    for bar, value in zip(bars, values):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height(),
+            f"{value:.4f}",
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _save_trial_scatter_plot(trials, x_key, y_key, output_path, title, xlabel, ylabel):
+    """
+    Save a scatter plot for two per-trial scalar metrics, skipping missing entries.
+    """
+    x_values = []
+    y_values = []
+
+    for trial in trials:
+        x_value = trial.get(x_key)
+        y_value = trial.get(y_key)
+        if x_value is None or y_value is None:
+            continue
+
+        try:
+            numeric_x = float(x_value)
+            numeric_y = float(y_value)
+        except (TypeError, ValueError):
+            continue
+
+        x_values.append(numeric_x)
+        y_values.append(numeric_y)
+
+    if not x_values:
+        return
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(6, 4))
+    ax.scatter(x_values, y_values, color="#4C78A8")
+    ax.set_title(title)
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.grid(True, linestyle="--", linewidth=0.5, alpha=0.4)
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _save_tuning_plots(trials):
+    """
+    Save tuning summary plots after all trials are complete.
+    """
+    if not trials:
+        return
+
+    results_dir = PROJECT_ROOT / "artifacts" / "results"
+    results_dir.mkdir(parents=True, exist_ok=True)
+
+    _save_trial_metric_plot(
+        trials,
+        "best_val_loss",
+        results_dir / "transformer_tuning_val_loss_by_trial.png",
+        "Best Validation Loss By Trial",
+        "Best Validation Loss",
+    )
+    _save_trial_metric_plot(
+        trials,
+        "val_acc_at_best_val_loss",
+        results_dir / "transformer_tuning_val_acc_by_trial.png",
+        "Validation Accuracy At Best Validation Loss By Trial",
+        "Validation Accuracy",
+    )
+    _save_trial_metric_plot(
+        trials,
+        "trial_seconds",
+        results_dir / "transformer_tuning_trial_seconds.png",
+        "Trial Duration By Trial",
+        "Seconds",
+    )
+    _save_top_trials_plot(
+        trials,
+        results_dir / "transformer_tuning_top_trials_by_val_loss.png",
+        top_k=min(10, max(5, len(trials))) if trials else 5,
+    )
+    _save_trial_scatter_plot(
+        trials,
+        "trial_seconds",
+        "best_val_loss",
+        results_dir / "transformer_tuning_seconds_vs_val_loss.png",
+        "Trial Duration vs Best Validation Loss",
+        "Trial Duration (Seconds)",
+        "Best Validation Loss",
+    )
+
+
 def sample_hyperparameters(rng):
     """
     Sample one valid hyperparameter configuration.
@@ -173,6 +353,8 @@ def tune(num_trials=DEFAULT_NUM_TRIALS):
         "best_trial": best_trial,
         "trials": trials,
     }
+
+    _save_tuning_plots(trials)
 
     with open(tuning_path, "w") as f:
         json.dump(payload, f, indent=2)

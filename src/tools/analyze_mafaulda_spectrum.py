@@ -652,5 +652,5 @@ def main() -> None:
     print(f"- per-channel/per-label plots saved under: {per_label_dir}")
     print(f"- representative plots saved under: {representative_dir}")
 
-    if __name__ == "__main__":
-        main()
+if __name__ == "__main__":
+    main()

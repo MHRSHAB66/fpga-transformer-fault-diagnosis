@@ -30,9 +30,230 @@ import torch.backends.cudnn as cudnn
 import torch.nn as nn
 import torch.optim as optim
 
-from src.config import LEARNING_RATE, NUM_EPOCHS, RANDOM_SEED, PROJECT_ROOT, NUM_CLASSES
+from src.config import (
+    LEARNING_RATE,
+    NUM_EPOCHS,
+    RANDOM_SEED,
+    PROJECT_ROOT,
+    NUM_CLASSES,
+    LABEL_MAP,
+)
 from src.data.make_dataloaders import build_dataloaders
 from src.models.transformer_baseline import TransformerBaseline
+
+
+def _get_class_labels(num_classes):
+    """
+    Build readable class labels from LABEL_MAP when available.
+    """
+    labels_by_idx = {class_idx: f"class_{class_idx}" for class_idx in range(num_classes)}
+    for label_name, class_idx in LABEL_MAP.items():
+        if 0 <= class_idx < num_classes:
+            labels_by_idx[class_idx] = label_name
+    return [labels_by_idx[class_idx] for class_idx in range(num_classes)]
+
+
+def _save_history_plots(history):
+    """
+    Save training history plots if the expected arrays are available.
+    """
+    if not history:
+        return
+
+    epochs = history.get("epoch")
+    train_loss = history.get("train_loss")
+    val_loss = history.get("val_loss")
+    train_acc = history.get("train_acc")
+    val_acc = history.get("val_acc")
+
+    if not epochs:
+        return
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    output_dir = PROJECT_ROOT / "artifacts" / "results"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    if train_loss is not None and val_loss is not None:
+        fig, ax = plt.subplots(figsize=(7, 4))
+        ax.plot(epochs, train_loss, label="train_loss")
+        ax.plot(epochs, val_loss, label="val_loss")
+        ax.set_title("Transformer Baseline Loss Curve")
+        ax.set_xlabel("Epoch")
+        ax.set_ylabel("Loss")
+        ax.grid(True, linestyle="--", linewidth=0.5, alpha=0.4)
+        ax.legend()
+        fig.tight_layout()
+        fig.savefig(
+            output_dir / "transformer_baseline_loss_curve.png",
+            dpi=150,
+            bbox_inches="tight",
+        )
+        plt.close(fig)
+
+    if train_acc is not None and val_acc is not None:
+        fig, ax = plt.subplots(figsize=(7, 4))
+        ax.plot(epochs, train_acc, label="train_acc")
+        ax.plot(epochs, val_acc, label="val_acc")
+        ax.set_title("Transformer Baseline Accuracy Curve")
+        ax.set_xlabel("Epoch")
+        ax.set_ylabel("Accuracy")
+        ax.grid(True, linestyle="--", linewidth=0.5, alpha=0.4)
+        ax.legend()
+        fig.tight_layout()
+        fig.savefig(
+            output_dir / "transformer_baseline_accuracy_curve.png",
+            dpi=150,
+            bbox_inches="tight",
+        )
+        plt.close(fig)
+
+
+def _save_confusion_matrix_plot(confusion_matrix, output_path, title, class_labels):
+    """
+    Save a confusion matrix plot if matrix data is available and valid.
+    """
+    if confusion_matrix is None:
+        return
+
+    matrix = np.asarray(confusion_matrix)
+    if matrix.ndim != 2 or matrix.shape[0] == 0 or matrix.shape[1] == 0:
+        return
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(6, 5))
+    image = ax.imshow(matrix, cmap="Blues")
+    fig.colorbar(image, ax=ax, fraction=0.046, pad=0.04)
+    ax.set_title(title)
+    ax.set_xlabel("Predicted label")
+    ax.set_ylabel("True label")
+
+    x_labels = class_labels[: matrix.shape[1]]
+    y_labels = class_labels[: matrix.shape[0]]
+    ax.set_xticks(range(matrix.shape[1]))
+    ax.set_xticklabels(x_labels, rotation=45, ha="right")
+    ax.set_yticks(range(matrix.shape[0]))
+    ax.set_yticklabels(y_labels)
+
+    max_value = float(matrix.max()) if matrix.size > 0 else 0.0
+    threshold = max_value / 2.0 if max_value > 0 else 0.0
+    for row_idx in range(matrix.shape[0]):
+        for col_idx in range(matrix.shape[1]):
+            value = matrix[row_idx, col_idx]
+            ax.text(
+                col_idx,
+                row_idx,
+                str(int(value)),
+                ha="center",
+                va="center",
+                color="white" if value > threshold else "black",
+                fontsize=9,
+            )
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _save_per_class_accuracy_plot(per_class_accuracy, output_path, title, class_labels):
+    """
+    Save a per-class accuracy bar plot, skipping missing values safely.
+    """
+    if not per_class_accuracy:
+        return
+
+    labels = []
+    values = []
+
+    for class_idx in sorted(per_class_accuracy):
+        value = per_class_accuracy[class_idx]
+        if value is None:
+            continue
+
+        try:
+            numeric_value = float(value)
+        except (TypeError, ValueError):
+            continue
+
+        label = class_labels[class_idx] if 0 <= class_idx < len(class_labels) else f"class_{class_idx}"
+        labels.append(label)
+        values.append(numeric_value)
+
+    if not values:
+        return
+
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    fig, ax = plt.subplots(figsize=(7, 4))
+    bars = ax.bar(labels, values, color="#4C78A8")
+    ax.set_title(title)
+    ax.set_xlabel("Class")
+    ax.set_ylabel("Accuracy")
+    ax.set_ylim(0.0, 1.0)
+    ax.grid(axis="y", linestyle="--", linewidth=0.5, alpha=0.4)
+
+    for bar, value in zip(bars, values):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2,
+            bar.get_height(),
+            f"{value:.3f}",
+            ha="center",
+            va="bottom",
+            fontsize=9,
+        )
+
+    fig.tight_layout()
+    fig.savefig(output_path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+
+
+def _save_result_plots(results, num_classes):
+    """
+    Save all supported result plots, skipping unavailable data safely.
+    """
+    if not results:
+        return
+
+    output_dir = PROJECT_ROOT / "artifacts" / "results"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    class_labels = _get_class_labels(num_classes)
+
+    _save_history_plots(results.get("history"))
+    _save_confusion_matrix_plot(
+        results.get("val_confusion_matrix"),
+        output_dir / "transformer_baseline_val_confusion_matrix.png",
+        "Transformer Baseline Validation Confusion Matrix",
+        class_labels,
+    )
+    _save_confusion_matrix_plot(
+        results.get("test_confusion_matrix"),
+        output_dir / "transformer_baseline_test_confusion_matrix.png",
+        "Transformer Baseline Test Confusion Matrix",
+        class_labels,
+    )
+    _save_per_class_accuracy_plot(
+        results.get("val_per_class_accuracy"),
+        output_dir / "transformer_baseline_val_per_class_accuracy.png",
+        "Transformer Baseline Validation Per-Class Accuracy",
+        class_labels,
+    )
+    _save_per_class_accuracy_plot(
+        results.get("test_per_class_accuracy"),
+        output_dir / "transformer_baseline_test_per_class_accuracy.png",
+        "Transformer Baseline Test Per-Class Accuracy",
+        class_labels,
+    )
 
 
 def evaluate(model, dataloader, criterion, device):
@@ -347,6 +568,8 @@ def run_training(
     }
 
     timing_info = {
+        # This measures the full first optimization step of epoch 1:
+        # first batch retrieval from the DataLoader + forward/backward/update.
         "first_train_step_seconds": None,
         "val_seconds_history": [],
         "total_training_seconds": None,
@@ -384,6 +607,8 @@ def run_training(
 
         if epoch == 0:
             try:
+                # This timing intentionally includes more than data loading alone.
+                # It covers first batch retrieval plus the first training step.
                 first_batch_start = time.perf_counter()
                 X_batch, y_batch = next(train_iter)
                 loss_value, batch_correct, batch_size = train_one_batch(X_batch, y_batch)
@@ -540,6 +765,8 @@ def train():
         checkpoint_path=best_model_path,
     )
 
+    _save_result_plots(results, NUM_CLASSES)
+
     with open(history_path, "w") as f:
         json.dump(results["history"], f, indent=2)
 
@@ -566,7 +793,7 @@ def train():
             indent=2,
         )
 
-    print("\nFinal test results:")
+    print("\nFinal evaluation results:")
     print(f"best_epoch={results['best_epoch']}")
     print(f"best_val_loss={results['best_val_loss']:.4f}")
     print(f"val_acc_at_best_val_loss={results['val_acc_at_best_val_loss']:.4f}")

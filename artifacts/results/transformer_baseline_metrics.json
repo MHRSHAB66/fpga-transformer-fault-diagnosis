@@ -1,110 +1,131 @@
 {
   "data_stats": {
-    "total_files_after_filter": 10,
-    "train_files_kept": 7,
+    "data_dir": "D:\\aut\\project\\fpga_fault_diagnosis\\data\\raw\\mafaulda",
+    "max_files": null,
+    "total_files_after_filter": 1951,
+    "train_files_kept": 1365,
     "train_files_dropped": 0,
-    "val_files_kept": 1,
+    "val_files_kept": 195,
     "val_files_dropped": 0,
-    "test_files_kept": 2,
+    "test_files_kept": 391,
     "test_files_dropped": 0,
-    "train_samples": 1708,
-    "val_samples": 244,
-    "test_samples": 488,
+    "train_samples": 333060,
+    "val_samples": 47580,
+    "test_samples": 95404,
+    "train_augmented": false,
     "augmentation": {
       "smote_applied": false,
       "noise_injection_applied": false,
       "noise_std": 0.01,
-      "original_samples": 1708,
-      "augmented_samples": 1708
+      "original_samples": 333060,
+      "augmented_samples": 333060
     },
     "train_augmentation_cache_used": false,
-    "train_augmentation_cache_path": null
+    "train_augmentation_cache_path": null,
+    "preprocessing_cache_enabled": true,
+    "preprocessing_cache_path": "D:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\cache\\preprocessed_files",
+    "num_workers": 4,
+    "pin_memory": true,
+    "persistent_workers": true
+  },
+  "dataloader_build_seconds": 150.44980930001475,
+  "timing_info": {
+    "first_train_step_seconds": 1.1527448000269942,
+    "val_seconds_history": [
+      64.43823110003723,
+      32.400225300050806,
+      31.675979599996936,
+      31.66777810000349,
+      33.98163779999595,
+      33.89327920001233
+    ],
+    "total_training_seconds": 27410.938195500057
   },
   "imbalance_info": {
     "class_counts": [
-      0,
-      488,
-      244,
-      976
+      8296,
+      56852,
+      85156,
+      182756
     ],
-    "imbalance_ratio": 4.0,
+    "imbalance_ratio": 22.02941131591797,
     "class_weights_applied": true,
     "class_weights": [
-      0.0,
-      0.875,
-      1.75,
-      0.4375
+      10.036765098571777,
+      1.4645922183990479,
+      0.9777936935424805,
+      0.45560747385025024
     ]
   },
-  "best_epoch": 3,
-  "best_val_loss": 2.11293092321177,
-  "best_val_acc": 0.13524590163934427,
-  "val_loss": 2.11293092321177,
-  "val_acc": 0.13524590163934427,
+  "best_epoch": 6,
+  "best_val_loss": 0.057558881304044116,
+  "val_acc_at_best_val_loss": 0.9820092475830181,
+  "val_loss": 0.057558881304044116,
+  "val_acc": 0.9820092475830181,
   "val_confusion_matrix": [
     [
-      0,
-      0,
-      0,
+      1213,
+      3,
+      4,
       0
     ],
     [
       0,
-      33,
-      0,
-      211
+      7992,
+      3,
+      57
     ],
     [
-      0,
-      0,
-      0,
-      0
+      47,
+      18,
+      11976,
+      159
     ],
     [
-      0,
-      0,
-      0,
-      0
+      105,
+      307,
+      153,
+      25543
     ]
   ],
   "val_per_class_accuracy": {
-    "0": null,
-    "1": 0.13524590163934427,
-    "2": null,
-    "3": null
+    "0": 0.9942622950819672,
+    "1": 0.992548435171386,
+    "2": 0.981639344262295,
+    "3": 0.9783591236402636
   },
-  "test_loss": 2.03560091943774,
-  "test_acc": 0.5,
+  "test_loss": 0.05464588844287047,
+  "test_acc": 0.9812481656953587,
   "test_confusion_matrix": [
     [
-      0,
-      0,
-      0,
-      0
+      2399,
+      5,
+      19,
+      17
     ],
     [
-      0,
-      0,
-      0,
-      0
+      2,
+      15981,
+      1,
+      364
     ],
     [
-      0,
-      0,
-      0,
-      0
+      251,
+      113,
+      23574,
+      218
     ],
     [
-      0,
-      244,
-      0,
-      244
+      112,
+      519,
+      168,
+      51661
     ]
   ],
   "test_per_class_accuracy": {
-    "0": null,
-    "1": null,
-    "2": null,
-    "3": 0.5
+    "0": 0.9831967213114754,
+    "1": 0.9775507707364816,
+    "2": 0.975906607054148,
+    "3": 0.9847693480747236
   }
 }
