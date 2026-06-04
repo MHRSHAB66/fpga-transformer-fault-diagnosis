@@ -6,8 +6,8 @@ This module is responsible for:
 2. Filtering valid labels
 3. Splitting files into train/validation/test sets at file level
 4. Reusing disk-cached base-preprocessed files for window creation
-5. Materializing training windows only when augmentation requires arrays
-6. Keeping validation and test datasets lazy by default
+5. Materializing split windows from the preprocessed cache
+6. Keeping validation and test datasets clean and unaugmented
 7. Creating Dataset and DataLoader objects for PyTorch
 
 Important
@@ -30,6 +30,7 @@ import time
 
 from src.config import (
     DATA_RAW_DIR,
+    PROJECT_ROOT,
     LABEL_MAP,
     RANDOM_SEED,
     WINDOW_SIZE,
@@ -57,7 +58,6 @@ from src.data.preprocessed_cache import (
     load_or_create_preprocessed_array,
     CACHE_DIR as PREPROCESSED_CACHE_DIR,
 )
-from src.data.windowed_dataset import WindowedFileDataset
 
 
 def _save_bar_plot(
@@ -119,7 +119,7 @@ def _save_direct_run_plots(stats: dict, timings: dict) -> None:
     """
     Save lightweight summary plots for direct execution only.
     """
-    output_dir = Path("artifacts") / "results"
+    output_dir = PROJECT_ROOT / "artifacts" / "results"
     output_dir.mkdir(parents=True, exist_ok=True)
 
     _save_bar_plot(
@@ -416,7 +416,7 @@ def build_dataloaders(
     - File-level split happens before window creation.
     - Validation and test remain clean and unaugmented.
     - Base preprocessing is reused through the per-file disk cache.
-    - Training is only materialized into arrays when augmentation requires it.
+    - All splits are materialized from the per-file preprocessing cache.
     """
     index_df = build_file_index(data_dir)
     if index_df.empty:
@@ -444,29 +444,12 @@ def build_dataloaders(
     if test_index_df.empty:
         raise ValueError("Test split is empty after file-level splitting.")
 
-    val_dataset = WindowedFileDataset(val_index_df)
-    test_dataset = WindowedFileDataset(test_index_df)
-
-    val_kept = val_dataset.kept_files
-    val_dropped = val_dataset.dropped_files
-    test_kept = test_dataset.kept_files
-    test_dropped = test_dataset.dropped_files
-
     train_augmentation_cache_used = False
     train_augmentation_cache_path = None
 
-    if len(val_dataset) == 0:
-        raise ValueError(
-            "Validation dataset contains zero windows after preprocessing/windowing."
-        )
-    if len(test_dataset) == 0:
-        raise ValueError(
-            "Test dataset contains zero windows after preprocessing/windowing."
-        )
-
     if use_smote or use_noise_injection:
-        # SMOTE and noise injection operate on arrays, so only the training split
-        # is materialized. Validation and test stay lazy and unaugmented.
+        # SMOTE and noise injection operate on arrays, so training is materialized
+        # before augmentation. Validation and test remain clean and unaugmented.
         cache_key = build_train_augmentation_cache_key(
             train_index_df,
             use_smote=use_smote,
@@ -505,8 +488,8 @@ def build_dataloaders(
             )
 
         train_dataset = TensorDataset(
-            torch.tensor(X_train, dtype=torch.float32),
-            torch.tensor(y_train, dtype=torch.long),
+            torch.from_numpy(X_train),
+            torch.from_numpy(y_train),
         )
 
         if len(train_dataset) == 0:
@@ -514,22 +497,47 @@ def build_dataloaders(
                 "Training dataset contains zero samples after materialization/augmentation."
             )
     else:
-        train_dataset = WindowedFileDataset(train_index_df)
-        train_kept = train_dataset.kept_files
-        train_dropped = train_dataset.dropped_files
+        X_train, y_train, train_kept, train_dropped = build_X_y_from_file_index(
+            train_index_df
+        )
+        train_dataset = TensorDataset(
+            torch.from_numpy(X_train),
+            torch.from_numpy(y_train),
+        )
 
         if len(train_dataset) == 0:
             raise ValueError(
-                "Training dataset contains zero windows after preprocessing/windowing."
+                "Training dataset contains zero samples after preprocessing/windowing."
             )
 
         augmentation_info = {
             "smote_applied": False,
             "noise_injection_applied": False,
             "noise_std": float(noise_std),
-            "original_samples": len(train_dataset),
-            "augmented_samples": len(train_dataset),
+            "original_samples": len(X_train),
+            "augmented_samples": len(X_train),
         }
+
+    X_val, y_val, val_kept, val_dropped = build_X_y_from_file_index(val_index_df)
+    val_dataset = TensorDataset(
+        torch.from_numpy(X_val),
+        torch.from_numpy(y_val),
+    )
+
+    X_test, y_test, test_kept, test_dropped = build_X_y_from_file_index(test_index_df)
+    test_dataset = TensorDataset(
+        torch.from_numpy(X_test),
+        torch.from_numpy(y_test),
+    )
+
+    if len(val_dataset) == 0:
+        raise ValueError(
+            "Validation dataset contains zero windows after preprocessing/windowing."
+        )
+    if len(test_dataset) == 0:
+        raise ValueError(
+            "Test dataset contains zero windows after preprocessing/windowing."
+        )
 
     # Shuffle training batches for better learning.
     # Validation and test remain ordered for stable evaluation.

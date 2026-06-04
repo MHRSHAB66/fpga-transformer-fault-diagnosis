@@ -72,7 +72,7 @@ TEST_RATIO = 0.2
 # DataLoader / augmentation
 # =========================
 BATCH_SIZE = 8
-DATALOADER_NUM_WORKERS = 4
+DATALOADER_NUM_WORKERS = 0
 
 USE_SMOTE_AUGMENTATION = False
 USE_NOISE_INJECTION = False
