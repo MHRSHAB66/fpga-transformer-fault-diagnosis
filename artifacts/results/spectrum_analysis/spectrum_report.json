@@ -1,7 +1,8 @@
 {
   "sample_rate_hz": 50000,
+  "nperseg": 4096,
+  "files_requested": 1951,
   "files_used": 1951,
-  "valid_files_used": 1951,
   "label_counts": {
     "bearing_fault": 1071,
     "misalignment": 498,
@@ -962,6 +963,52 @@
       }
     }
   },
+  "resampling_recommendation": {
+    "per_channel_cutoffs_hz": {
+      "acc_axial_b1": {
+        "cut90_hz": 22021.5,
+        "cut95_hz": 22033.7,
+        "cut99_hz": 22058.1
+      },
+      "acc_radial_b1": {
+        "cut90_hz": 3186.0,
+        "cut95_hz": 10266.1,
+        "cut99_hz": 22033.7
+      },
+      "acc_tangential_b1": {
+        "cut90_hz": 4870.6,
+        "cut95_hz": 5481.0,
+        "cut99_hz": 9692.4
+      },
+      "acc_axial_b2": {
+        "cut90_hz": 524.9,
+        "cut95_hz": 634.8,
+        "cut99_hz": 1208.5
+      },
+      "acc_radial_b2": {
+        "cut90_hz": 329.6,
+        "cut95_hz": 366.2,
+        "cut99_hz": 549.3
+      },
+      "acc_tangential_b2": {
+        "cut90_hz": 3320.3,
+        "cut95_hz": 3833.0,
+        "cut99_hz": 5224.6
+      }
+    },
+    "conservative_reference": {
+      "basis": "maximum 95% energy cutoff across all vibration channels",
+      "max_90pct_hz": 22021.5,
+      "max_95pct_hz": 22033.7,
+      "max_99pct_hz": 22058.1
+    },
+    "recommendation": {
+      "suggested_LOWPASS_CUTOFF_HZ": 22033.7,
+      "suggested_RESAMPLE_TARGET_SR_strict_nyquist_hz": 44068,
+      "suggested_RESAMPLE_TARGET_SR_practical_hz": 48000,
+      "note": "The most demanding vibration channel reaches 95 % of its spectral energy at 22034 Hz.  Set LOWPASS_CUTOFF_HZ = 22034 as the anti-aliasing cutoff.  Strict Nyquist requires RESAMPLE_TARGET_SR >= 44068 Hz; the nearest practical common rate with a 4\u00d7 safety margin is 48000 Hz."
+    }
+  },
   "representative_files": {
     "normal": "data\\raw\\mafaulda\\normal\\12.288.csv",
     "imbalance": "data\\raw\\mafaulda\\imbalance\\10g\\13.9264.csv",
@@ -969,45 +1016,45 @@
     "bearing_fault": "data\\raw\\mafaulda\\overhang\\ball_fault\\0g\\12.9024.csv"
   },
   "plots": {
-    "overall_average_psd": "artifacts\\results\\spectrum_analysis\\overall\\overall_channels_average_psd.png",
-    "overall_cumulative_energy": "artifacts\\results\\spectrum_analysis\\overall\\overall_channels_cumulative_energy.png",
-    "per_channel_per_label_plots": [
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\tachometer_per_label_psd.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\tachometer_per_label_cumulative_energy.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b1_per_label_psd.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b1_per_label_cumulative_energy.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b1_per_label_psd.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b1_per_label_cumulative_energy.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b1_per_label_psd.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b1_per_label_cumulative_energy.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b2_per_label_psd.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b2_per_label_cumulative_energy.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b2_per_label_psd.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b2_per_label_cumulative_energy.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b2_per_label_psd.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b2_per_label_cumulative_energy.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\microphone_per_label_psd.png",
-      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\microphone_per_label_cumulative_energy.png"
+    "overall_average_psd": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\overall\\overall_channels_average_psd.png",
+    "overall_cumulative_energy": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\overall\\overall_channels_cumulative_energy.png",
+    "per_channel_per_label": [
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\tachometer_per_label_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\tachometer_per_label_cumulative_energy.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b1_per_label_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b1_per_label_cumulative_energy.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b1_per_label_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b1_per_label_cumulative_energy.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b1_per_label_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b1_per_label_cumulative_energy.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b2_per_label_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b2_per_label_cumulative_energy.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b2_per_label_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b2_per_label_cumulative_energy.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b2_per_label_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b2_per_label_cumulative_energy.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\microphone_per_label_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\per_channel_per_label\\microphone_per_label_cumulative_energy.png"
     ],
-    "representative_time_domain_plots": [
-      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\tachometer_representative_time_domain.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_axial_b1_representative_time_domain.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_radial_b1_representative_time_domain.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_tangential_b1_representative_time_domain.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_axial_b2_representative_time_domain.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_radial_b2_representative_time_domain.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_tangential_b2_representative_time_domain.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\microphone_representative_time_domain.png"
+    "representative_time_domain": [
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\time_domain\\tachometer_representative_time_domain.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_axial_b1_representative_time_domain.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_radial_b1_representative_time_domain.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_tangential_b1_representative_time_domain.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_axial_b2_representative_time_domain.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_radial_b2_representative_time_domain.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_tangential_b2_representative_time_domain.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\time_domain\\microphone_representative_time_domain.png"
     ],
-    "representative_psd_plots": [
-      "artifacts\\results\\spectrum_analysis\\representative\\psd\\tachometer_representative_psd.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_axial_b1_representative_psd.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_radial_b1_representative_psd.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_tangential_b1_representative_psd.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_axial_b2_representative_psd.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_radial_b2_representative_psd.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_tangential_b2_representative_psd.png",
-      "artifacts\\results\\spectrum_analysis\\representative\\psd\\microphone_representative_psd.png"
+    "representative_psd": [
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\psd\\tachometer_representative_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_axial_b1_representative_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_radial_b1_representative_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_tangential_b1_representative_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_axial_b2_representative_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_radial_b2_representative_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_tangential_b2_representative_psd.png",
+      "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\spectrum_analysis\\representative\\psd\\microphone_representative_psd.png"
     ]
   }
 }
