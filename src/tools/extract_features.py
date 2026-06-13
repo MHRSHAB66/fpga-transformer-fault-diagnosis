@@ -6,8 +6,8 @@ from pathlib import Path
 import numpy as np
 
 from src.config import DATA_PROCESSED_DIR
-from tools.preprocess_data import preprocess_dataset
-from tools.signal_preprocessing import prepare_feature_dataset
+from src.tools.preprocess_data import preprocess_dataset
+from src.tools.signal_preprocessing import prepare_feature_dataset
 
 
 def extract_feature_dataset(output_dir: Path = DATA_PROCESSED_DIR) -> dict:

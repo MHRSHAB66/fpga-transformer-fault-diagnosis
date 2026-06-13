@@ -72,6 +72,7 @@ TEST_RATIO = 0.2
 # DataLoader / augmentation
 # =========================
 BATCH_SIZE = 8
+DATALOADER_NUM_WORKERS = 0
 
 USE_SMOTE_AUGMENTATION = False
 USE_NOISE_INJECTION = False
@@ -98,6 +99,47 @@ TRANSFORMER_NHEAD = 4
 TRANSFORMER_NUM_LAYERS = 2
 TRANSFORMER_DIM_FEEDFORWARD = 64
 TRANSFORMER_DROPOUT = 0.1
+
+# =========================
+# Optional signal processing (Stage 2 experiments)
+# All flags default to False/disabled to preserve the existing pipeline.
+# Enabling any flag will create new cache entries (old entries remain but
+# are no longer used).
+# =========================
+
+# Documented acquisition sample rate for MAFAULDA channels (Hz).
+# Used as the reference when resampling or filtering is enabled.
+MAFAULDA_SAMPLE_RATE = 50000
+
+# Optional FFT-based downsampling of the time axis.
+# When enabled, each file's time axis is resampled from MAFAULDA_SAMPLE_RATE
+# to RESAMPLE_TARGET_SR before windowing. WINDOW_SIZE stays in samples;
+# the time duration covered per window changes proportionally.
+# The FPGA input path must use the same sample rate as the software pipeline.
+RESAMPLE_ENABLED = False
+RESAMPLE_TARGET_SR = 10000  # Hz
+
+# Optional zero-phase Butterworth lowpass filter applied per column.
+# Applied before normalization. Useful for suppressing high-frequency noise
+# above the fault-relevant band (see spectrum analysis report for cutoff choice).
+# Note: filtfilt is non-causal; a hardware equivalent would need a causal filter.
+LOWPASS_FILTER_ENABLED = False
+LOWPASS_CUTOFF_HZ = 5000.0  # Hz
+LOWPASS_FILTER_ORDER = 4
+
+# Optional Wiener per-column denoising applied before normalization.
+WIENER_FILTER_ENABLED = False
+WIENER_KERNEL_SIZE = 29
+
+# Optional removal of low-energy segments from the time axis.
+# Energy is measured as RMS over non-overlapping segments of LOW_ENERGY_SEGMENT_SIZE
+# samples on the selected channel. Segments below the threshold are discarded.
+# For z-score-normalized vibration signals, a threshold near zero selects
+# nearly-constant (low-information) regions.
+LOW_ENERGY_FILTER_ENABLED = False
+LOW_ENERGY_CHANNEL_IDX = 7      # 7 = microphone column by default
+LOW_ENERGY_THRESHOLD_RMS = 0.01
+LOW_ENERGY_SEGMENT_SIZE = 512
 
 # =========================
 # Sanity checks

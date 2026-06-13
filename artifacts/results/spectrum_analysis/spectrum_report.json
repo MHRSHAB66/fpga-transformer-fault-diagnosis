@@ -1,0 +1,1013 @@
+{
+  "sample_rate_hz": 50000,
+  "files_used": 1951,
+  "valid_files_used": 1951,
+  "label_counts": {
+    "bearing_fault": 1071,
+    "misalignment": 498,
+    "imbalance": 333,
+    "normal": 49
+  },
+  "channels": {
+    "tachometer": {
+      "overall": {
+        "signal_count": 1951,
+        "energy_cutoff_hz": {
+          "90_percent": 329.58984374999994,
+          "95_percent": 659.1796874999999,
+          "99_percent": 3002.9296874999995
+        },
+        "suggested_rates_from_90_percent": {
+          "strict_nyquist_hz": 660,
+          "mild_margin_hz": 1319,
+          "practical_common_rate_hz": 2000
+        },
+        "suggested_rates_from_95_percent": {
+          "strict_nyquist_hz": 1319,
+          "mild_margin_hz": 2637,
+          "practical_common_rate_hz": 4000
+        },
+        "suggested_rates_from_99_percent": {
+          "strict_nyquist_hz": 6006,
+          "mild_margin_hz": 12012,
+          "practical_common_rate_hz": 16000
+        }
+      },
+      "per_label": {
+        "normal": {
+          "signal_count": 49,
+          "energy_cutoff_hz": {
+            "90_percent": 292.96874999999994,
+            "95_percent": 622.5585937499999,
+            "99_percent": 2917.4804687499995
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 586,
+            "mild_margin_hz": 1172,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 1246,
+            "mild_margin_hz": 2491,
+            "practical_common_rate_hz": 4000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 5835,
+            "mild_margin_hz": 11670,
+            "practical_common_rate_hz": 12000
+          }
+        },
+        "imbalance": {
+          "signal_count": 333,
+          "energy_cutoff_hz": {
+            "90_percent": 280.76171874999994,
+            "95_percent": 585.9374999999999,
+            "99_percent": 2783.2031249999995
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 562,
+            "mild_margin_hz": 1124,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 1172,
+            "mild_margin_hz": 2344,
+            "practical_common_rate_hz": 4000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 5567,
+            "mild_margin_hz": 11133,
+            "practical_common_rate_hz": 12000
+          }
+        },
+        "misalignment": {
+          "signal_count": 498,
+          "energy_cutoff_hz": {
+            "90_percent": 292.96874999999994,
+            "95_percent": 610.3515624999999,
+            "99_percent": 2893.0664062499995
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 586,
+            "mild_margin_hz": 1172,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 1221,
+            "mild_margin_hz": 2442,
+            "practical_common_rate_hz": 4000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 5787,
+            "mild_margin_hz": 11573,
+            "practical_common_rate_hz": 12000
+          }
+        },
+        "bearing_fault": {
+          "signal_count": 1071,
+          "energy_cutoff_hz": {
+            "90_percent": 354.00390624999994,
+            "95_percent": 720.2148437499999,
+            "99_percent": 3124.9999999999995
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 709,
+            "mild_margin_hz": 1417,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 1441,
+            "mild_margin_hz": 2881,
+            "practical_common_rate_hz": 4000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 6250,
+            "mild_margin_hz": 12500,
+            "practical_common_rate_hz": 16000
+          }
+        }
+      }
+    },
+    "acc_axial_b1": {
+      "overall": {
+        "signal_count": 1951,
+        "energy_cutoff_hz": {
+          "90_percent": 22021.484374999996,
+          "95_percent": 22033.691406249996,
+          "99_percent": 22058.105468749996
+        },
+        "suggested_rates_from_90_percent": {
+          "strict_nyquist_hz": 44043,
+          "mild_margin_hz": 88086,
+          "practical_common_rate_hz": 48000
+        },
+        "suggested_rates_from_95_percent": {
+          "strict_nyquist_hz": 44068,
+          "mild_margin_hz": 88135,
+          "practical_common_rate_hz": 48000
+        },
+        "suggested_rates_from_99_percent": {
+          "strict_nyquist_hz": 44117,
+          "mild_margin_hz": 88233,
+          "practical_common_rate_hz": 48000
+        }
+      },
+      "per_label": {
+        "normal": {
+          "signal_count": 49,
+          "energy_cutoff_hz": {
+            "90_percent": 22033.691406249996,
+            "95_percent": 22033.691406249996,
+            "99_percent": 22253.417968749996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 44068,
+            "mild_margin_hz": 88135,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 44068,
+            "mild_margin_hz": 88135,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 44507,
+            "mild_margin_hz": 89014,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "imbalance": {
+          "signal_count": 333,
+          "energy_cutoff_hz": {
+            "90_percent": 22045.898437499996,
+            "95_percent": 22045.898437499996,
+            "99_percent": 22131.347656249996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 44092,
+            "mild_margin_hz": 88184,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 44092,
+            "mild_margin_hz": 88184,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 44263,
+            "mild_margin_hz": 88526,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "misalignment": {
+          "signal_count": 498,
+          "energy_cutoff_hz": {
+            "90_percent": 22058.105468749996,
+            "95_percent": 22106.933593749996,
+            "99_percent": 22229.003906249996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 44117,
+            "mild_margin_hz": 88233,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 44214,
+            "mild_margin_hz": 88428,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 44459,
+            "mild_margin_hz": 88917,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "bearing_fault": {
+          "signal_count": 1071,
+          "energy_cutoff_hz": {
+            "90_percent": 3332.5195312499995,
+            "95_percent": 22021.484374999996,
+            "99_percent": 22045.898437499996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 6666,
+            "mild_margin_hz": 13331,
+            "practical_common_rate_hz": 16000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 44043,
+            "mild_margin_hz": 88086,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 44092,
+            "mild_margin_hz": 88184,
+            "practical_common_rate_hz": 48000
+          }
+        }
+      }
+    },
+    "acc_radial_b1": {
+      "overall": {
+        "signal_count": 1951,
+        "energy_cutoff_hz": {
+          "90_percent": 3186.0351562499995,
+          "95_percent": 10266.113281249998,
+          "99_percent": 22033.691406249996
+        },
+        "suggested_rates_from_90_percent": {
+          "strict_nyquist_hz": 6373,
+          "mild_margin_hz": 12745,
+          "practical_common_rate_hz": 16000
+        },
+        "suggested_rates_from_95_percent": {
+          "strict_nyquist_hz": 20533,
+          "mild_margin_hz": 41065,
+          "practical_common_rate_hz": 48000
+        },
+        "suggested_rates_from_99_percent": {
+          "strict_nyquist_hz": 44068,
+          "mild_margin_hz": 88135,
+          "practical_common_rate_hz": 48000
+        }
+      },
+      "per_label": {
+        "normal": {
+          "signal_count": 49,
+          "energy_cutoff_hz": {
+            "90_percent": 22033.691406249996,
+            "95_percent": 22033.691406249996,
+            "99_percent": 22058.105468749996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 44068,
+            "mild_margin_hz": 88135,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 44068,
+            "mild_margin_hz": 88135,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 44117,
+            "mild_margin_hz": 88233,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "imbalance": {
+          "signal_count": 333,
+          "energy_cutoff_hz": {
+            "90_percent": 3283.6914062499995,
+            "95_percent": 22033.691406249996,
+            "99_percent": 22045.898437499996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 6568,
+            "mild_margin_hz": 13135,
+            "practical_common_rate_hz": 16000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 44068,
+            "mild_margin_hz": 88135,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 44092,
+            "mild_margin_hz": 88184,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "misalignment": {
+          "signal_count": 498,
+          "energy_cutoff_hz": {
+            "90_percent": 22045.898437499996,
+            "95_percent": 22058.105468749996,
+            "99_percent": 22143.554687499996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 44092,
+            "mild_margin_hz": 88184,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 44117,
+            "mild_margin_hz": 88233,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 44288,
+            "mild_margin_hz": 88575,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "bearing_fault": {
+          "signal_count": 1071,
+          "energy_cutoff_hz": {
+            "90_percent": 2832.0312499999995,
+            "95_percent": 7250.976562499999,
+            "99_percent": 22033.691406249996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 5665,
+            "mild_margin_hz": 11329,
+            "practical_common_rate_hz": 12000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 14502,
+            "mild_margin_hz": 29004,
+            "practical_common_rate_hz": 32000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 44068,
+            "mild_margin_hz": 88135,
+            "practical_common_rate_hz": 48000
+          }
+        }
+      }
+    },
+    "acc_tangential_b1": {
+      "overall": {
+        "signal_count": 1951,
+        "energy_cutoff_hz": {
+          "90_percent": 4870.605468749999,
+          "95_percent": 5480.957031249999,
+          "99_percent": 9692.382812499998
+        },
+        "suggested_rates_from_90_percent": {
+          "strict_nyquist_hz": 9742,
+          "mild_margin_hz": 19483,
+          "practical_common_rate_hz": 24000
+        },
+        "suggested_rates_from_95_percent": {
+          "strict_nyquist_hz": 10962,
+          "mild_margin_hz": 21924,
+          "practical_common_rate_hz": 24000
+        },
+        "suggested_rates_from_99_percent": {
+          "strict_nyquist_hz": 19385,
+          "mild_margin_hz": 38770,
+          "practical_common_rate_hz": 48000
+        }
+      },
+      "per_label": {
+        "normal": {
+          "signal_count": 49,
+          "energy_cutoff_hz": {
+            "90_percent": 5664.062499999999,
+            "95_percent": 9228.515624999998,
+            "99_percent": 22033.691406249996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 11329,
+            "mild_margin_hz": 22657,
+            "practical_common_rate_hz": 24000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 18458,
+            "mild_margin_hz": 36915,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 44068,
+            "mild_margin_hz": 88135,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "imbalance": {
+          "signal_count": 333,
+          "energy_cutoff_hz": {
+            "90_percent": 4528.808593749999,
+            "95_percent": 5493.164062499999,
+            "99_percent": 10424.804687499998
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 9058,
+            "mild_margin_hz": 18116,
+            "practical_common_rate_hz": 24000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 10987,
+            "mild_margin_hz": 21973,
+            "practical_common_rate_hz": 24000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 20850,
+            "mild_margin_hz": 41700,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "misalignment": {
+          "signal_count": 498,
+          "energy_cutoff_hz": {
+            "90_percent": 6237.792968749999,
+            "95_percent": 8862.304687499998,
+            "99_percent": 12036.132812499998
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 12476,
+            "mild_margin_hz": 24952,
+            "practical_common_rate_hz": 32000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 17725,
+            "mild_margin_hz": 35450,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 24073,
+            "mild_margin_hz": 48145,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "bearing_fault": {
+          "signal_count": 1071,
+          "energy_cutoff_hz": {
+            "90_percent": 4846.191406249999,
+            "95_percent": 5444.335937499999,
+            "99_percent": 9655.761718749998
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 9693,
+            "mild_margin_hz": 19385,
+            "practical_common_rate_hz": 24000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 10889,
+            "mild_margin_hz": 21778,
+            "practical_common_rate_hz": 24000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 19312,
+            "mild_margin_hz": 38624,
+            "practical_common_rate_hz": 48000
+          }
+        }
+      }
+    },
+    "acc_axial_b2": {
+      "overall": {
+        "signal_count": 1951,
+        "energy_cutoff_hz": {
+          "90_percent": 524.9023437499999,
+          "95_percent": 634.7656249999999,
+          "99_percent": 1208.4960937499998
+        },
+        "suggested_rates_from_90_percent": {
+          "strict_nyquist_hz": 1050,
+          "mild_margin_hz": 2100,
+          "practical_common_rate_hz": 4000
+        },
+        "suggested_rates_from_95_percent": {
+          "strict_nyquist_hz": 1270,
+          "mild_margin_hz": 2540,
+          "practical_common_rate_hz": 4000
+        },
+        "suggested_rates_from_99_percent": {
+          "strict_nyquist_hz": 2417,
+          "mild_margin_hz": 4834,
+          "practical_common_rate_hz": 5000
+        }
+      },
+      "per_label": {
+        "normal": {
+          "signal_count": 49,
+          "energy_cutoff_hz": {
+            "90_percent": 354.00390624999994,
+            "95_percent": 476.07421874999994,
+            "99_percent": 1879.8828124999998
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 709,
+            "mild_margin_hz": 1417,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 953,
+            "mild_margin_hz": 1905,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 3760,
+            "mild_margin_hz": 7520,
+            "practical_common_rate_hz": 8000
+          }
+        },
+        "imbalance": {
+          "signal_count": 333,
+          "energy_cutoff_hz": {
+            "90_percent": 195.31249999999997,
+            "95_percent": 305.17578124999994,
+            "99_percent": 683.5937499999999
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 391,
+            "mild_margin_hz": 782,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 611,
+            "mild_margin_hz": 1221,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 1368,
+            "mild_margin_hz": 2735,
+            "practical_common_rate_hz": 4000
+          }
+        },
+        "misalignment": {
+          "signal_count": 498,
+          "energy_cutoff_hz": {
+            "90_percent": 366.21093749999994,
+            "95_percent": 451.66015624999994,
+            "99_percent": 2465.8203124999995
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 733,
+            "mild_margin_hz": 1465,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 904,
+            "mild_margin_hz": 1807,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 4932,
+            "mild_margin_hz": 9864,
+            "practical_common_rate_hz": 10000
+          }
+        },
+        "bearing_fault": {
+          "signal_count": 1071,
+          "energy_cutoff_hz": {
+            "90_percent": 524.9023437499999,
+            "95_percent": 634.7656249999999,
+            "99_percent": 1208.4960937499998
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 1050,
+            "mild_margin_hz": 2100,
+            "practical_common_rate_hz": 4000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 1270,
+            "mild_margin_hz": 2540,
+            "practical_common_rate_hz": 4000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 2417,
+            "mild_margin_hz": 4834,
+            "practical_common_rate_hz": 5000
+          }
+        }
+      }
+    },
+    "acc_radial_b2": {
+      "overall": {
+        "signal_count": 1951,
+        "energy_cutoff_hz": {
+          "90_percent": 329.58984374999994,
+          "95_percent": 366.21093749999994,
+          "99_percent": 549.3164062499999
+        },
+        "suggested_rates_from_90_percent": {
+          "strict_nyquist_hz": 660,
+          "mild_margin_hz": 1319,
+          "practical_common_rate_hz": 2000
+        },
+        "suggested_rates_from_95_percent": {
+          "strict_nyquist_hz": 733,
+          "mild_margin_hz": 1465,
+          "practical_common_rate_hz": 2000
+        },
+        "suggested_rates_from_99_percent": {
+          "strict_nyquist_hz": 1099,
+          "mild_margin_hz": 2198,
+          "practical_common_rate_hz": 4000
+        }
+      },
+      "per_label": {
+        "normal": {
+          "signal_count": 49,
+          "energy_cutoff_hz": {
+            "90_percent": 952.1484374999999,
+            "95_percent": 1574.7070312499998,
+            "99_percent": 7897.949218749999
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 1905,
+            "mild_margin_hz": 3809,
+            "practical_common_rate_hz": 4000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 3150,
+            "mild_margin_hz": 6299,
+            "practical_common_rate_hz": 8000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 15796,
+            "mild_margin_hz": 31592,
+            "practical_common_rate_hz": 32000
+          }
+        },
+        "imbalance": {
+          "signal_count": 333,
+          "energy_cutoff_hz": {
+            "90_percent": 756.8359374999999,
+            "95_percent": 1342.7734374999998,
+            "99_percent": 6140.136718749999
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 1514,
+            "mild_margin_hz": 3028,
+            "practical_common_rate_hz": 4000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 2686,
+            "mild_margin_hz": 5372,
+            "practical_common_rate_hz": 8000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 12281,
+            "mild_margin_hz": 24561,
+            "practical_common_rate_hz": 32000
+          }
+        },
+        "misalignment": {
+          "signal_count": 498,
+          "energy_cutoff_hz": {
+            "90_percent": 683.5937499999999,
+            "95_percent": 1184.0820312499998,
+            "99_percent": 5395.507812499999
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 1368,
+            "mild_margin_hz": 2735,
+            "practical_common_rate_hz": 4000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 2369,
+            "mild_margin_hz": 4737,
+            "practical_common_rate_hz": 5000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 10792,
+            "mild_margin_hz": 21583,
+            "practical_common_rate_hz": 24000
+          }
+        },
+        "bearing_fault": {
+          "signal_count": 1071,
+          "energy_cutoff_hz": {
+            "90_percent": 329.58984374999994,
+            "95_percent": 366.21093749999994,
+            "99_percent": 549.3164062499999
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 660,
+            "mild_margin_hz": 1319,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 733,
+            "mild_margin_hz": 1465,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 1099,
+            "mild_margin_hz": 2198,
+            "practical_common_rate_hz": 4000
+          }
+        }
+      }
+    },
+    "acc_tangential_b2": {
+      "overall": {
+        "signal_count": 1951,
+        "energy_cutoff_hz": {
+          "90_percent": 3320.3124999999995,
+          "95_percent": 3833.0078124999995,
+          "99_percent": 5224.609374999999
+        },
+        "suggested_rates_from_90_percent": {
+          "strict_nyquist_hz": 6641,
+          "mild_margin_hz": 13282,
+          "practical_common_rate_hz": 16000
+        },
+        "suggested_rates_from_95_percent": {
+          "strict_nyquist_hz": 7667,
+          "mild_margin_hz": 15333,
+          "practical_common_rate_hz": 16000
+        },
+        "suggested_rates_from_99_percent": {
+          "strict_nyquist_hz": 10450,
+          "mild_margin_hz": 20899,
+          "practical_common_rate_hz": 24000
+        }
+      },
+      "per_label": {
+        "normal": {
+          "signal_count": 49,
+          "energy_cutoff_hz": {
+            "90_percent": 2880.8593749999995,
+            "95_percent": 3857.4218749999995,
+            "99_percent": 22021.484374999996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 5762,
+            "mild_margin_hz": 11524,
+            "practical_common_rate_hz": 12000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 7715,
+            "mild_margin_hz": 15430,
+            "practical_common_rate_hz": 16000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 44043,
+            "mild_margin_hz": 88086,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "imbalance": {
+          "signal_count": 333,
+          "energy_cutoff_hz": {
+            "90_percent": 85.44921874999999,
+            "95_percent": 219.72656249999997,
+            "99_percent": 2844.2382812499995
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 171,
+            "mild_margin_hz": 342,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 440,
+            "mild_margin_hz": 879,
+            "practical_common_rate_hz": 2000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 5689,
+            "mild_margin_hz": 11377,
+            "practical_common_rate_hz": 12000
+          }
+        },
+        "misalignment": {
+          "signal_count": 498,
+          "energy_cutoff_hz": {
+            "90_percent": 3344.7265624999995,
+            "95_percent": 3759.7656249999995,
+            "99_percent": 22021.484374999996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 6690,
+            "mild_margin_hz": 13379,
+            "practical_common_rate_hz": 16000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 7520,
+            "mild_margin_hz": 15040,
+            "practical_common_rate_hz": 16000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 44043,
+            "mild_margin_hz": 88086,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "bearing_fault": {
+          "signal_count": 1071,
+          "energy_cutoff_hz": {
+            "90_percent": 3430.1757812499995,
+            "95_percent": 3955.0781249999995,
+            "99_percent": 5261.230468749999
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 6861,
+            "mild_margin_hz": 13721,
+            "practical_common_rate_hz": 16000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 7911,
+            "mild_margin_hz": 15821,
+            "practical_common_rate_hz": 16000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 10523,
+            "mild_margin_hz": 21045,
+            "practical_common_rate_hz": 24000
+          }
+        }
+      }
+    },
+    "microphone": {
+      "overall": {
+        "signal_count": 1951,
+        "energy_cutoff_hz": {
+          "90_percent": 22033.691406249996,
+          "95_percent": 22570.800781249996,
+          "99_percent": 24291.992187499996
+        },
+        "suggested_rates_from_90_percent": {
+          "strict_nyquist_hz": 44068,
+          "mild_margin_hz": 88135,
+          "practical_common_rate_hz": 48000
+        },
+        "suggested_rates_from_95_percent": {
+          "strict_nyquist_hz": 45142,
+          "mild_margin_hz": 90284,
+          "practical_common_rate_hz": 48000
+        },
+        "suggested_rates_from_99_percent": {
+          "strict_nyquist_hz": 48584,
+          "mild_margin_hz": 97168,
+          "practical_common_rate_hz": 48000
+        }
+      },
+      "per_label": {
+        "normal": {
+          "signal_count": 49,
+          "energy_cutoff_hz": {
+            "90_percent": 22033.691406249996,
+            "95_percent": 22119.140624999996,
+            "99_percent": 22790.527343749996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 44068,
+            "mild_margin_hz": 88135,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 44239,
+            "mild_margin_hz": 88477,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 45582,
+            "mild_margin_hz": 91163,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "imbalance": {
+          "signal_count": 333,
+          "energy_cutoff_hz": {
+            "90_percent": 22058.105468749996,
+            "95_percent": 23291.015624999996,
+            "99_percent": 24511.718749999996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 44117,
+            "mild_margin_hz": 88233,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 46583,
+            "mild_margin_hz": 93165,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 49024,
+            "mild_margin_hz": 98047,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "misalignment": {
+          "signal_count": 498,
+          "energy_cutoff_hz": {
+            "90_percent": 22058.105468749996,
+            "95_percent": 22131.347656249996,
+            "99_percent": 22741.699218749996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 44117,
+            "mild_margin_hz": 88233,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 44263,
+            "mild_margin_hz": 88526,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 45484,
+            "mild_margin_hz": 90967,
+            "practical_common_rate_hz": 48000
+          }
+        },
+        "bearing_fault": {
+          "signal_count": 1071,
+          "energy_cutoff_hz": {
+            "90_percent": 21899.414062499996,
+            "95_percent": 22229.003906249996,
+            "99_percent": 24194.335937499996
+          },
+          "suggested_rates_from_90_percent": {
+            "strict_nyquist_hz": 43799,
+            "mild_margin_hz": 87598,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_95_percent": {
+            "strict_nyquist_hz": 44459,
+            "mild_margin_hz": 88917,
+            "practical_common_rate_hz": 48000
+          },
+          "suggested_rates_from_99_percent": {
+            "strict_nyquist_hz": 48389,
+            "mild_margin_hz": 96778,
+            "practical_common_rate_hz": 48000
+          }
+        }
+      }
+    }
+  },
+  "representative_files": {
+    "normal": "data\\raw\\mafaulda\\normal\\12.288.csv",
+    "imbalance": "data\\raw\\mafaulda\\imbalance\\10g\\13.9264.csv",
+    "misalignment": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\12.288.csv",
+    "bearing_fault": "data\\raw\\mafaulda\\overhang\\ball_fault\\0g\\12.9024.csv"
+  },
+  "plots": {
+    "overall_average_psd": "artifacts\\results\\spectrum_analysis\\overall\\overall_channels_average_psd.png",
+    "overall_cumulative_energy": "artifacts\\results\\spectrum_analysis\\overall\\overall_channels_cumulative_energy.png",
+    "per_channel_per_label_plots": [
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\tachometer_per_label_psd.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\tachometer_per_label_cumulative_energy.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b1_per_label_psd.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b1_per_label_cumulative_energy.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b1_per_label_psd.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b1_per_label_cumulative_energy.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b1_per_label_psd.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b1_per_label_cumulative_energy.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b2_per_label_psd.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_axial_b2_per_label_cumulative_energy.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b2_per_label_psd.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_radial_b2_per_label_cumulative_energy.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b2_per_label_psd.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\acc_tangential_b2_per_label_cumulative_energy.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\microphone_per_label_psd.png",
+      "artifacts\\results\\spectrum_analysis\\per_channel_per_label\\microphone_per_label_cumulative_energy.png"
+    ],
+    "representative_time_domain_plots": [
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\tachometer_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_axial_b1_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_radial_b1_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_tangential_b1_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_axial_b2_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_radial_b2_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\acc_tangential_b2_representative_time_domain.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\time_domain\\microphone_representative_time_domain.png"
+    ],
+    "representative_psd_plots": [
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\tachometer_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_axial_b1_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_radial_b1_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_tangential_b1_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_axial_b2_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_radial_b2_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\acc_tangential_b2_representative_psd.png",
+      "artifacts\\results\\spectrum_analysis\\representative\\psd\\microphone_representative_psd.png"
+    ]
+  }
+}
