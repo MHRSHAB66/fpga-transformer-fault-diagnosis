@@ -29,9 +29,27 @@ from src.config import (
     MISSING_RATIO_THRESHOLD,
     NORMALIZATION_METHOD,
     PROJECT_ROOT,
+    MAFAULDA_SAMPLE_RATE,
+    RESAMPLE_ENABLED,
+    RESAMPLE_TARGET_SR,
+    LOWPASS_FILTER_ENABLED,
+    LOWPASS_CUTOFF_HZ,
+    LOWPASS_FILTER_ORDER,
+    WIENER_FILTER_ENABLED,
+    WIENER_KERNEL_SIZE,
+    LOW_ENERGY_FILTER_ENABLED,
+    LOW_ENERGY_CHANNEL_IDX,
+    LOW_ENERGY_THRESHOLD_RMS,
+    LOW_ENERGY_SEGMENT_SIZE,
 )
 from src.data.load_data import load_one_csv
-from src.data.prepare_dataset import preprocess_dataframe
+from src.data.prepare_dataset import (
+    preprocess_dataframe,
+    apply_lowpass_filter,
+    apply_wiener_filter,
+    apply_resample_array,
+    apply_low_energy_filter,
+)
 
 
 CACHE_DIR = PROJECT_ROOT / "artifacts" / "cache" / "preprocessed_files"
@@ -78,6 +96,27 @@ def _build_preprocessed_cache_key(file_path) -> str:
         "normalization_method": str(NORMALIZATION_METHOD),
         "epsilon": float(EPSILON),
     }
+
+    # Optional signal processing flags are only added to the payload when they
+    # are enabled. This keeps the hash identical to the original when all flags
+    # are False, so existing cache entries remain valid.
+    if LOWPASS_FILTER_ENABLED:
+        payload["lowpass_filter_enabled"] = True
+        payload["lowpass_cutoff_hz"] = float(LOWPASS_CUTOFF_HZ)
+        payload["lowpass_filter_order"] = int(LOWPASS_FILTER_ORDER)
+        payload["mafaulda_sample_rate"] = int(MAFAULDA_SAMPLE_RATE)
+    if WIENER_FILTER_ENABLED:
+        payload["wiener_filter_enabled"] = True
+        payload["wiener_kernel_size"] = int(WIENER_KERNEL_SIZE)
+    if RESAMPLE_ENABLED:
+        payload["resample_enabled"] = True
+        payload["mafaulda_sample_rate"] = int(MAFAULDA_SAMPLE_RATE)
+        payload["resample_target_sr"] = int(RESAMPLE_TARGET_SR)
+    if LOW_ENERGY_FILTER_ENABLED:
+        payload["low_energy_filter_enabled"] = True
+        payload["low_energy_channel_idx"] = int(LOW_ENERGY_CHANNEL_IDX)
+        payload["low_energy_threshold_rms"] = float(LOW_ENERGY_THRESHOLD_RMS)
+        payload["low_energy_segment_size"] = int(LOW_ENERGY_SEGMENT_SIZE)
 
     payload_json = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(payload_json.encode("utf-8")).hexdigest()
@@ -192,5 +231,18 @@ def load_or_create_preprocessed_array(file_path) -> Optional[np.ndarray]:
         return None
 
     values = df.to_numpy(copy=True).astype(np.float32, copy=False)
+
+    # Optional signal processing steps, applied after per-file normalization.
+    # All disabled by default; enable via config flags.
+    # Order: lowpass → Wiener → resample → low-energy filter.
+    if LOWPASS_FILTER_ENABLED:
+        values = apply_lowpass_filter(values, LOWPASS_CUTOFF_HZ, MAFAULDA_SAMPLE_RATE, LOWPASS_FILTER_ORDER)
+    if WIENER_FILTER_ENABLED:
+        values = apply_wiener_filter(values, WIENER_KERNEL_SIZE)
+    if RESAMPLE_ENABLED:
+        values = apply_resample_array(values, MAFAULDA_SAMPLE_RATE, RESAMPLE_TARGET_SR)
+    if LOW_ENERGY_FILTER_ENABLED:
+        values = apply_low_energy_filter(values, LOW_ENERGY_CHANNEL_IDX, LOW_ENERGY_THRESHOLD_RMS, LOW_ENERGY_SEGMENT_SIZE)
+
     save_preprocessed_array_cache(file_path, values)
     return values

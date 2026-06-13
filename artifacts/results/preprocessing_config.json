@@ -1,0 +1,77 @@
+{
+  "dataset": {
+    "name": "MAFAULDA",
+    "original_sample_rate_hz": 50000,
+    "channels": [
+      "tachometer",
+      "acc_axial_b1",
+      "acc_radial_b1",
+      "acc_tangential_b1",
+      "acc_axial_b2",
+      "acc_radial_b2",
+      "acc_tangential_b2",
+      "microphone"
+    ],
+    "num_channels": 8,
+    "label_map": {
+      "normal": 0,
+      "imbalance": 1,
+      "misalignment": 2,
+      "bearing_fault": 3
+    },
+    "num_classes": 4
+  },
+  "split": {
+    "method": "file_level_stratified",
+    "train_ratio": 0.7,
+    "val_ratio": 0.1,
+    "test_ratio": 0.2,
+    "random_seed": 42
+  },
+  "quality_filtering": {
+    "missing_ratio_threshold": 0.2,
+    "missing_fill_method": "median"
+  },
+  "signal_processing": {
+    "lowpass_filter_enabled": false,
+    "lowpass_cutoff_hz": null,
+    "lowpass_filter_order": null,
+    "wiener_filter_enabled": false,
+    "wiener_kernel_size": null,
+    "resample_enabled": false,
+    "resample_target_sr_hz": null,
+    "low_energy_filter_enabled": false,
+    "low_energy_channel_idx": null,
+    "low_energy_threshold_rms": null,
+    "low_energy_segment_size": null
+  },
+  "normalization": {
+    "method": "zscore",
+    "scope": "per_file_per_channel",
+    "epsilon": 1e-08,
+    "note": "Statistics are computed per file; not globally fitted on train split."
+  },
+  "windowing": {
+    "window_size_samples": 1024,
+    "window_stride_samples": 1024,
+    "active_sample_rate_hz": 50000,
+    "window_duration_seconds": 0.02048,
+    "overlap_samples": 0
+  },
+  "augmentation": {
+    "smote_enabled": false,
+    "noise_injection_enabled": false,
+    "noise_injection_std": 0.01,
+    "scope": "train_split_only"
+  },
+  "dataloader": {
+    "batch_size": 8,
+    "num_workers": 0
+  },
+  "tensor_shape": {
+    "description": "[batch_size, window_size, num_channels]",
+    "window_size": 1024,
+    "num_channels": 8,
+    "dtype": "float32"
+  }
+}

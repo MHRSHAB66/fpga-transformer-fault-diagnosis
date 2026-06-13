@@ -32,6 +32,7 @@ from src.config import (
     DATA_RAW_DIR,
     PROJECT_ROOT,
     LABEL_MAP,
+    NUM_CLASSES,
     RANDOM_SEED,
     WINDOW_SIZE,
     WINDOW_STRIDE,
@@ -575,6 +576,19 @@ def build_dataloaders(
     preprocessing_cache_path = str(PREPROCESSED_CACHE_DIR)
     train_augmented = bool(use_smote or use_noise_injection)
 
+    # Per-class window counts for distribution reporting.
+    label_names_by_id = {v: k for k, v in LABEL_MAP.items()}
+
+    def _class_window_counts(y: np.ndarray) -> dict:
+        if len(y) == 0:
+            return {label_names_by_id.get(i, f"class_{i}"): 0 for i in range(NUM_CLASSES)}
+        raw = np.bincount(y, minlength=NUM_CLASSES)
+        return {label_names_by_id.get(i, f"class_{i}"): int(raw[i]) for i in range(NUM_CLASSES)}
+
+    train_class_window_counts = _class_window_counts(y_train)
+    val_class_window_counts = _class_window_counts(y_val)
+    test_class_window_counts = _class_window_counts(y_test)
+
     stats = {
         "data_dir": str(data_dir),
         "max_files": None if max_files is None else int(max_files),
@@ -588,6 +602,10 @@ def build_dataloaders(
         "train_samples": len(train_dataset),
         "val_samples": len(val_dataset),
         "test_samples": len(test_dataset),
+        "window_shape": [WINDOW_SIZE, EXPECTED_NUM_COLUMNS],
+        "train_class_window_counts": train_class_window_counts,
+        "val_class_window_counts": val_class_window_counts,
+        "test_class_window_counts": test_class_window_counts,
         "train_augmented": train_augmented,
         "augmentation": augmentation_info,
         "train_augmentation_cache_used": train_augmentation_cache_used,
