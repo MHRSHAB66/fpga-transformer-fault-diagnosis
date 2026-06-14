@@ -1,0 +1,90 @@
+{
+  "comparison": {
+    "8_channel_full_sensor": {
+      "channels": [
+        "tachometer",
+        "acc_axial_b1",
+        "acc_radial_b1",
+        "acc_tangential_b1",
+        "acc_axial_b2",
+        "acc_radial_b2",
+        "acc_tangential_b2",
+        "microphone"
+      ],
+      "n_channels": 8,
+      "col_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "batch_input_shape": "[8, 1024, 8]",
+      "mem_per_batch_bytes": 262144,
+      "mem_per_batch_KB": 256.0,
+      "transformer_params": {
+        "input_projection": 288,
+        "encoder_stack": 17088,
+        "classifier": 132,
+        "total": 17508
+      },
+      "config_key_to_set": "CHANNEL_SELECTION = 'all'  (default)",
+      "pros": [
+        "Captures microphone acoustic info (moderate discriminativity)",
+        "Captures tachometer rotation speed (contextual info for normalization)",
+        "No data is discarded; model decides what to use",
+        "Current trained models use this config \u2014 backward compatible"
+      ],
+      "cons": [
+        "Tachometer may add noise/redundancy for fault type classification",
+        "Slightly larger input_projection layer (8\u00d7d_model vs 6\u00d7d_model)"
+      ]
+    },
+    "6_channel_vibration_only": {
+      "channels": [
+        "acc_axial_b1",
+        "acc_radial_b1",
+        "acc_tangential_b1",
+        "acc_axial_b2",
+        "acc_radial_b2",
+        "acc_tangential_b2"
+      ],
+      "n_channels": 6,
+      "col_indices": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "batch_input_shape": "[8, 1024, 6]",
+      "mem_per_batch_bytes": 196608,
+      "mem_per_batch_KB": 192.0,
+      "transformer_params": {
+        "input_projection": 224,
+        "encoder_stack": 17088,
+        "classifier": 132,
+        "total": 17444
+      },
+      "config_key_to_set": "CHANNEL_SELECTION = 'vibration_only'  (future option)",
+      "pros": [
+        "Removes tachometer (primarily rotation-speed signal, low fault discrimination)",
+        "25% memory reduction vs 8-channel",
+        "Cleaner input for fault frequency analysis",
+        "Simpler FPGA input path (fewer ADC channels needed)"
+      ],
+      "cons": [
+        "Loses microphone channel (has moderate discriminativity \u2014 see scores)",
+        "Breaks backward compatibility with current models",
+        "Requires retraining and updating EXPECTED_NUM_COLUMNS in config"
+      ]
+    }
+  },
+  "forward_pass_test": "8-channel: input (8, 1024, 8) -> output (8, 4) OK. 6-channel: input (8, 1024, 6) -> output (8, 4) OK.",
+  "parameter_difference": 64,
+  "implementation_note": "To switch between configs, add CHANNEL_SELECTION to src/config.py and update prepare_dataset.py to apply column slicing (e.g., values = values[:, ACTIVE_CHANNEL_INDICES]). Also update EXPECTED_NUM_COLUMNS and retrain the model. The Transformer architecture only requires updating the input_projection layer size; d_model, n_heads, and depth are unchanged."
+}

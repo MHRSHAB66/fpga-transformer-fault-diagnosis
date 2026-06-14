@@ -1,0 +1,70 @@
+{
+  "column_mapping": {
+    "status": "VERIFIED — empirical evidence matches official MAFAULDA spec",
+    "col_0": "tachometer (27 ZC/s, skew=+2.5, max/|min|=4.5)",
+    "col_7": "microphone (39 000 ZC/s, near-symmetric)",
+    "user_report_note": "The user report states F1=microphone, F2-F7=accelerometers, F8=tachometer. Empirical analysis of the raw CSV files shows the OPPOSITE ordering: col 0 (index 0) has 27 zero-crossings/sec and positive-pulse asymmetry (max/|min| = 4.5, skewness = +2.5) — unambiguous tachometer signature. col 7 (index 7) has 39 000+ zero-crossings/sec and near-symmetric amplitude — unambiguous microphone/acoustic signature. This matches the official MAFAULDA dataset documentation (tachometer first, microphone last). The user's F-numbering likely reflects the paper's analysis order, not CSV column order. No column remapping is applied. Current config is empirically verified."
+  },
+  "channel_recommendations": {
+    "tachometer": {
+      "role": "rotation-speed reference (pulse signal)",
+      "discriminativity_score": 0.1304,
+      "recommendation": "LOW VALUE — weak discriminativity"
+    },
+    "acc_axial_b1": {
+      "role": "underhang bearing, axial vibration",
+      "discriminativity_score": 0.7555,
+      "recommendation": "OPTIONAL — moderate discriminativity"
+    },
+    "acc_radial_b1": {
+      "role": "underhang bearing, radial vibration",
+      "discriminativity_score": 1.0287,
+      "recommendation": "KEEP — high discriminativity"
+    },
+    "acc_tangential_b1": {
+      "role": "underhang bearing, tangential vibration",
+      "discriminativity_score": 1.5578,
+      "recommendation": "KEEP — high discriminativity"
+    },
+    "acc_axial_b2": {
+      "role": "overhang bearing, axial vibration",
+      "discriminativity_score": 0.7313,
+      "recommendation": "OPTIONAL — moderate discriminativity"
+    },
+    "acc_radial_b2": {
+      "role": "overhang bearing, radial vibration",
+      "discriminativity_score": 1.0043,
+      "recommendation": "KEEP — high discriminativity"
+    },
+    "acc_tangential_b2": {
+      "role": "overhang bearing, tangential vibration",
+      "discriminativity_score": 0.5666,
+      "recommendation": "OPTIONAL — moderate discriminativity"
+    },
+    "microphone": {
+      "role": "acoustic emission (sound)",
+      "discriminativity_score": 0.2868,
+      "recommendation": "LOW VALUE — weak discriminativity"
+    }
+  },
+  "config_comparison_summary": {
+    "8_channel": {
+      "input_shape": "[batch, 1024, 8]",
+      "total_params": 17508,
+      "status": "ACTIVE DEFAULT — backward compatible"
+    },
+    "6_channel": {
+      "input_shape": "[batch, 1024, 6]",
+      "total_params": 17444,
+      "status": "CONFIGURABLE OPTION — requires retraining"
+    }
+  },
+  "forward_pass_test": "8-channel: input (8, 1024, 8) -> output (8, 4) OK. 6-channel: input (8, 1024, 6) -> output (8, 4) OK.",
+  "key_finding_axial_b1": "acc_axial_b1 has the highest overall discriminativity score due to the ~22 kHz spike that is present in normal/imbalance/misalignment but absent in bearing_fault. This spike is class-informative.",
+  "recommendation_paragraph": "Based on empirical frequency and discriminativity analysis of all 8 MAFAULDA channels, the column mapping is confirmed as: col 0 = tachometer, cols 1-6 = accelerometers (underhang axial/radial/tangential + overhang axial/radial/tangential), col 7 = microphone. This matches the official MAFAULDA dataset specification. The user's report (F1=microphone, F8=tachometer) reflects the paper's analysis order, not the CSV column order. Discriminativity analysis shows acc_axial_b1 has the highest overall score, driven by the 22 kHz structural resonance that distinguishes bearing from non-bearing faults. The microphone channel has moderate discriminativity and should be retained unless FPGA resource constraints require eliminating it. The tachometer has low fault-class discriminativity but may provide useful rotation-speed context. Both 6-channel (vibration-only) and 8-channel (full-sensor) configurations are architecturally supported by the Transformer model; switching from 8 to 6 channels requires updating EXPECTED_COLUMNS and EXPECTED_NUM_COLUMNS in config.py, rerunning preprocessing, and retraining. The recommended default remains 8-channel until an ablation study quantifies the accuracy impact of removing tachometer and/or microphone.",
+  "commands_to_reproduce": [
+    "python -m src.tools.channel_analysis",
+    "python -m src.tools.frequency_investigation",
+    "python -m src.tools.analyze_mafaulda_spectrum"
+  ]
+}

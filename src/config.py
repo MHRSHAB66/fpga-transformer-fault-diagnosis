@@ -142,6 +142,35 @@ LOW_ENERGY_THRESHOLD_RMS = 0.01
 LOW_ENERGY_SEGMENT_SIZE = 512
 
 # =========================
+# Channel selection
+# =========================
+# "all"            — use all 8 columns: tachometer + 6 accel + microphone (default)
+# "vibration_only" — use only the 6 accelerometer columns (cols 1-6)
+#
+# Empirically verified MAFAULDA column order:
+#   col 0 = tachometer   (27 ZC/s, skew=+2.5, asymmetric positive pulses)
+#   col 1 = acc_axial_b1         (underhang bearing, axial)
+#   col 2 = acc_radial_b1        (underhang bearing, radial)
+#   col 3 = acc_tangential_b1    (underhang bearing, tangential)
+#   col 4 = acc_axial_b2         (overhang bearing, axial)
+#   col 5 = acc_radial_b2        (overhang bearing, radial)
+#   col 6 = acc_tangential_b2    (overhang bearing, tangential)
+#   col 7 = microphone           (39 000+ ZC/s, acoustic)
+CHANNEL_SELECTION = "all"   # "all" | "vibration_only"
+
+_VIBRATION_CHANNEL_INDICES = [1, 2, 3, 4, 5, 6]  # accelerometer columns only
+
+if CHANNEL_SELECTION == "vibration_only":
+    ACTIVE_CHANNEL_INDICES: list = _VIBRATION_CHANNEL_INDICES
+elif CHANNEL_SELECTION == "all":
+    ACTIVE_CHANNEL_INDICES = list(range(EXPECTED_NUM_COLUMNS))   # 0-7
+else:
+    raise ValueError(f"Unknown CHANNEL_SELECTION: {CHANNEL_SELECTION!r}. "
+                     "Valid values are 'all' and 'vibration_only'.")
+
+NUM_ACTIVE_CHANNELS = len(ACTIVE_CHANNEL_INDICES)
+
+# =========================
 # Sanity checks
 # =========================
 if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:

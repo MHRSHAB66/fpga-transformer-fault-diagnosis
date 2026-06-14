@@ -9,11 +9,11 @@ from scipy.stats import kurtosis, skew
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 try:
-    import librosa
-except ImportError as exc:  # pragma: no cover
-    raise ImportError(
-        "librosa is required for silence removal. Install it with `pip install librosa`."
-    ) from exc
+    import librosa as _librosa
+    _LIBROSA_AVAILABLE = True
+except ImportError:
+    _librosa = None  # type: ignore[assignment]
+    _LIBROSA_AVAILABLE = False
 
 
 def remove_silence_librosa(
@@ -26,8 +26,13 @@ def remove_silence_librosa(
     """
     Remove low-energy (silent) regions using librosa's frame-energy splitter.
     """
+    if not _LIBROSA_AVAILABLE:
+        raise ImportError(
+            "librosa is required for silence removal. "
+            "Install it with: pip install librosa"
+        )
     signal = np.asarray(signal, dtype=np.float32).reshape(-1)
-    intervals = librosa.effects.split(
+    intervals = _librosa.effects.split(
         signal,
         top_db=top_db,
         frame_length=frame_length,
@@ -154,7 +159,9 @@ def extract_mfcc_features(
     effective_n_fft = max(32, effective_n_fft)
     effective_hop = min(hop_length, max(1, signal.size // 4))
 
-    mfcc = librosa.feature.mfcc(
+    if not _LIBROSA_AVAILABLE:
+        raise ImportError("librosa is required for MFCC. Install it with: pip install librosa")
+    mfcc = _librosa.feature.mfcc(
         y=signal,
         sr=sample_rate,
         n_mfcc=n_mfcc,

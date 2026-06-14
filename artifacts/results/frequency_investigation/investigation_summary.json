@@ -1,0 +1,161 @@
+{
+  "column_mapping": {
+    "status": "VERIFIED",
+    "official_order": [
+      "tachometer",
+      "underhang_axial",
+      "underhang_radial",
+      "underhang_tangential",
+      "overhang_axial",
+      "overhang_radial",
+      "overhang_tangential",
+      "microphone"
+    ],
+    "project_names": [
+      "tachometer",
+      "acc_axial_b1",
+      "acc_radial_b1",
+      "acc_tangential_b1",
+      "acc_axial_b2",
+      "acc_radial_b2",
+      "acc_tangential_b2",
+      "microphone"
+    ],
+    "match": true
+  },
+  "why_our_result_differs_from_paper": "Our cumulative-energy analysis and the paper's spectrum plot show related but different views of the same data. (1) The paper plots one-sided FFT magnitude vs frequency — showing signal strength at each individual frequency bin. (2) Our analysis plots Welch PSD averaged over the full dataset, then computes cumulative energy = what fraction of total signal power is below each frequency. For acc_axial_b1, a massive spike at ~22 kHz dominates the total power. The cumulative energy stays near zero until it reaches the 22 kHz spike, then jumps sharply — which is why '90% energy' requires going all the way to 22 kHz. The paper's spectrum plots, using log scale and possibly different channel selection, would show this same spike but the eye perceives log-scale differently. Neither analysis is wrong; they answer different questions: 'at which frequency does the signal live?' vs 'how much power must I capture?'.",
+  "acc_axial_b1_investigation": {
+    "verdict": "CLASS-DISCRIMINATIVE — not simple noise/artifact",
+    "avg_pct_energy_22_23kHz_band": {
+      "normal": 86.6,
+      "imbalance": 83.2,
+      "misalignment": 82.7,
+      "bearing_fault": 3.2
+    },
+    "avg_pct_energy_below_10kHz": {
+      "normal": 10.9,
+      "imbalance": 13.6,
+      "misalignment": 15.2,
+      "bearing_fault": 96.7
+    },
+    "conclusion": "CONCLUSION for acc_axial_b1: CLASS-DISCRIMINATIVE, not simple noise. The ~22 kHz spike is a strong structural/acoustic resonance of the test rig, excited by the bearing's normal rolling motion. In bearing_fault recordings this resonance is significantly damped (only 2-4% energy in 22-23 kHz band) while fault harmonics appear below 10 kHz. In normal/imbalance/misalignment recordings, the spike dominates (80-90% of energy in 22-23 kHz band). Therefore the 22 kHz spike IS informative for classification. Downsampling below 44 kHz without lowpass filtering would ALIAS this peak and corrupt the low-frequency fault harmonics. Downsampling with a lowpass at <11 kHz would REMOVE the spike and lose a discriminative feature. An ablation study (train at 50 kHz vs 24 kHz) is needed to quantify the accuracy impact."
+  },
+  "resampling_recommendation": {
+    "conservative": "Keep 50 kHz until ablation study is done.",
+    "moderate": "24 kHz with 11 kHz anti-aliasing lowpass is feasible if ablation shows <2% accuracy drop.",
+    "fpga_comment": "Lower sample rate reduces FPGA input bandwidth and memory, but must not alias the 22 kHz discriminative feature."
+  },
+  "resampling_configs": [
+    {
+      "config": "original",
+      "sample_rate_hz": 50000,
+      "nyquist_hz": 25000,
+      "lowpass_hz": null,
+      "window_size_samples": 1024,
+      "window_duration_ms": 20.48,
+      "rows_per_file": 250000,
+      "windows_per_file": 244,
+      "mem_per_file_MB": 7.63,
+      "mem_total_dataset_GB": 14.5,
+      "batch_input_shape": "[batch, 1024, 8]",
+      "transformer_input_unchanged": true,
+      "acc_axial_b1_22kHz_spike": "no aliasing issue"
+    },
+    {
+      "config": "48kHz",
+      "sample_rate_hz": 48000,
+      "nyquist_hz": 24000,
+      "lowpass_hz": 24000,
+      "window_size_samples": 1024,
+      "window_duration_ms": 21.33,
+      "rows_per_file": 240000,
+      "windows_per_file": 234,
+      "mem_per_file_MB": 7.32,
+      "mem_total_dataset_GB": 14.0,
+      "batch_input_shape": "[batch, 1024, 8]",
+      "transformer_input_unchanged": true,
+      "acc_axial_b1_22kHz_spike": "preserved"
+    },
+    {
+      "config": "24kHz_11k",
+      "sample_rate_hz": 24000,
+      "nyquist_hz": 12000,
+      "lowpass_hz": 11000,
+      "window_size_samples": 1024,
+      "window_duration_ms": 42.67,
+      "rows_per_file": 120000,
+      "windows_per_file": 117,
+      "mem_per_file_MB": 3.66,
+      "mem_total_dataset_GB": 7.0,
+      "batch_input_shape": "[batch, 1024, 8]",
+      "transformer_input_unchanged": true,
+      "acc_axial_b1_22kHz_spike": "REMOVED by lowpass at 11000 Hz"
+    },
+    {
+      "config": "16kHz_7k",
+      "sample_rate_hz": 16000,
+      "nyquist_hz": 8000,
+      "lowpass_hz": 7000,
+      "window_size_samples": 1024,
+      "window_duration_ms": 64.0,
+      "rows_per_file": 80000,
+      "windows_per_file": 78,
+      "mem_per_file_MB": 2.44,
+      "mem_total_dataset_GB": 4.7,
+      "batch_input_shape": "[batch, 1024, 8]",
+      "transformer_input_unchanged": true,
+      "acc_axial_b1_22kHz_spike": "REMOVED by lowpass at 7000 Hz"
+    },
+    {
+      "config": "12kHz_5k",
+      "sample_rate_hz": 12000,
+      "nyquist_hz": 6000,
+      "lowpass_hz": 5000,
+      "window_size_samples": 1024,
+      "window_duration_ms": 85.33,
+      "rows_per_file": 60000,
+      "windows_per_file": 58,
+      "mem_per_file_MB": 1.83,
+      "mem_total_dataset_GB": 3.5,
+      "batch_input_shape": "[batch, 1024, 8]",
+      "transformer_input_unchanged": true,
+      "acc_axial_b1_22kHz_spike": "REMOVED by lowpass at 5000 Hz"
+    }
+  ],
+  "report_paragraph": "Frequency analysis of the full MAFAULDA dataset (1951 files, 50 kHz) reveals that the six vibration channels have fundamentally different spectral characteristics. Five channels (acc_radial_b1, acc_tangential_b1, acc_axial_b2, acc_radial_b2, acc_tangential_b2) concentrate 95% of their energy below 11 kHz, consistent with mechanical vibration harmonics of a machine running at 1200–3000 RPM. The sixth channel, acc_axial_b1 (underhang bearing, axial), exhibits a strong spectral peak at approximately 22 kHz. Crucially, this peak is present in normal, imbalance, and misalignment recordings (contributing 80–90% of total signal energy) but is largely absent in bearing_fault recordings (only 2–4% of energy). This difference is class-discriminative: the 22 kHz peak likely represents a structural resonance of the test rig that is excited during normal bearing operation and suppressed when a bearing fault changes the rolling dynamics. Our cumulative-energy result differs from the paper's frequency-spectrum plot because cumulative energy shows the integrated spectral power (dominated by the 22 kHz spike in acc_axial_b1), while the paper's spectrum shows relative magnitude at each frequency, which may use log scale or a different channel selection. Downsampling below 44 kHz without a preceding anti-aliasing filter would fold the 22 kHz spike into the low-frequency band and corrupt bearing-fault harmonics. Downsampling to 24 kHz with a 11 kHz lowpass filter would eliminate the spike entirely and remove a discriminative feature. Until an ablation study comparing model accuracy at 50 kHz versus 24 kHz is completed, the conservative recommendation is to retain the original 50 kHz rate. Resampling is kept as a configurable option to facilitate future experiments.",
+  "plots": {
+    "paper_style_fft": [
+      "artifacts\\results\\frequency_investigation\\paper_style_fft\\acc_axial_b1_fft_per_class.png",
+      "artifacts\\results\\frequency_investigation\\paper_style_fft\\acc_radial_b1_fft_per_class.png",
+      "artifacts\\results\\frequency_investigation\\paper_style_fft\\acc_tangential_b1_fft_per_class.png",
+      "artifacts\\results\\frequency_investigation\\paper_style_fft\\acc_axial_b2_fft_per_class.png",
+      "artifacts\\results\\frequency_investigation\\paper_style_fft\\acc_radial_b2_fft_per_class.png",
+      "artifacts\\results\\frequency_investigation\\paper_style_fft\\acc_tangential_b2_fft_per_class.png",
+      "artifacts\\results\\frequency_investigation\\paper_style_fft\\all_vibration_channels_normal_fft.png"
+    ],
+    "spectrum_vs_cumulative": [
+      "artifacts\\results\\frequency_investigation\\spectrum_vs_cumulative\\acc_axial_b1_spectrum_vs_cumulative.png",
+      "artifacts\\results\\frequency_investigation\\spectrum_vs_cumulative\\acc_radial_b2_spectrum_vs_cumulative.png"
+    ],
+    "axial_b1_investigation": [
+      "artifacts\\results\\frequency_investigation\\axial_b1_investigation\\axial_b1_psd_per_class.png",
+      "artifacts\\results\\frequency_investigation\\axial_b1_investigation\\axial_b1_energy_bands_per_class.png",
+      "artifacts\\results\\frequency_investigation\\axial_b1_investigation\\axial_b1_normal_vs_bearing_fault.png"
+    ]
+  },
+  "commands_to_reproduce": [
+    "python -m src.tools.frequency_investigation",
+    "python -m src.tools.analyze_mafaulda_spectrum"
+  ],
+  "files_changed_or_created": [
+    "src/tools/frequency_investigation.py  (this script, NEW)",
+    "src/tools/analyze_mafaulda_spectrum.py  (improved, report figures added)",
+    "src/tools/signal_preprocessing.py  (fixed librosa hard-import)",
+    "src/config.py  (optional signal processing flags added)",
+    "src/data/prepare_dataset.py  (lowpass/wiener/resample/low-energy helpers)",
+    "src/data/preprocessed_cache.py  (conditional cache key, optional steps)",
+    "src/data/make_dataloaders.py  (class window counts in stats)",
+    "src/data/pipeline_validation.py  (NEW: validation utilities)",
+    "src/tools/test_pipeline.py  (NEW: smoke test)"
+  ]
+}
