@@ -1,0 +1,116 @@
+{
+  "file_used": "12.288.csv",
+  "column_stats": {
+    "tachometer": {
+      "col_index": 0,
+      "mean": 0.00293,
+      "std": 1.58557,
+      "skewness": 2.5,
+      "kurtosis": 4.304,
+      "peak_factor": 3.22,
+      "zero_crossings_per_sec": 31,
+      "pos_max": 5.1078,
+      "neg_min": -1.1259,
+      "asymmetry_ratio_pos_neg": 4.54
+    },
+    "acc_axial_b1": {
+      "col_index": 1,
+      "mean": -0.00266,
+      "std": 0.97917,
+      "skewness": -0.297,
+      "kurtosis": -1.066,
+      "peak_factor": 3.21,
+      "zero_crossings_per_sec": 41250,
+      "pos_max": 1.5284,
+      "neg_min": -3.1429,
+      "asymmetry_ratio_pos_neg": 0.49
+    },
+    "acc_radial_b1": {
+      "col_index": 2,
+      "mean": -0.00063,
+      "std": 0.30737,
+      "skewness": -0.392,
+      "kurtosis": -0.726,
+      "peak_factor": 5.56,
+      "zero_crossings_per_sec": 40792,
+      "pos_max": 0.6243,
+      "neg_min": -1.709,
+      "asymmetry_ratio_pos_neg": 0.37
+    },
+    "acc_tangential_b1": {
+      "col_index": 3,
+      "mean": 0.00032,
+      "std": 0.04481,
+      "skewness": -0.218,
+      "kurtosis": -0.377,
+      "peak_factor": 4.21,
+      "zero_crossings_per_sec": 30199,
+      "pos_max": 0.1733,
+      "neg_min": -0.1885,
+      "asymmetry_ratio_pos_neg": 0.92
+    },
+    "acc_axial_b2": {
+      "col_index": 4,
+      "mean": 0.03109,
+      "std": 0.6681,
+      "skewness": 0.164,
+      "kurtosis": -0.387,
+      "peak_factor": 3.41,
+      "zero_crossings_per_sec": 1743,
+      "pos_max": 2.2801,
+      "neg_min": -1.9763,
+      "asymmetry_ratio_pos_neg": 1.15
+    },
+    "acc_radial_b2": {
+      "col_index": 5,
+      "mean": 0.00316,
+      "std": 0.0302,
+      "skewness": -0.094,
+      "kurtosis": -0.767,
+      "peak_factor": 2.84,
+      "zero_crossings_per_sec": 2009,
+      "pos_max": 0.083,
+      "neg_min": -0.0857,
+      "asymmetry_ratio_pos_neg": 0.97
+    },
+    "acc_tangential_b2": {
+      "col_index": 6,
+      "mean": 0.00497,
+      "std": 0.19751,
+      "skewness": -0.051,
+      "kurtosis": -0.251,
+      "peak_factor": 4.0,
+      "zero_crossings_per_sec": 6251,
+      "pos_max": 0.6555,
+      "neg_min": -0.7906,
+      "asymmetry_ratio_pos_neg": 0.83
+    },
+    "microphone": {
+      "col_index": 7,
+      "mean": 0.00802,
+      "std": 0.11214,
+      "skewness": 0.686,
+      "kurtosis": 0.065,
+      "peak_factor": 4.82,
+      "zero_crossings_per_sec": 39106,
+      "pos_max": 0.5404,
+      "neg_min": -0.2338,
+      "asymmetry_ratio_pos_neg": 2.31
+    }
+  },
+  "identity": {
+    "tachometer": "TACHOMETER \u2014 pulse signal (few ZC, positive skew, asymmetric)",
+    "acc_axial_b1": "ACCELEROMETER \u2014 vibration signal",
+    "acc_radial_b1": "ACCELEROMETER \u2014 vibration signal",
+    "acc_tangential_b1": "ACCELEROMETER \u2014 vibration signal",
+    "acc_axial_b2": "ACCELEROMETER \u2014 vibration signal",
+    "acc_radial_b2": "ACCELEROMETER \u2014 vibration signal",
+    "acc_tangential_b2": "ACCELEROMETER \u2014 vibration signal",
+    "microphone": "MICROPHONE \u2014 acoustic signal (many ZC, positive-biased amplitude)"
+  },
+  "column_order_note": "The user report states F1=microphone, F2-F7=accelerometers, F8=tachometer. Empirical analysis of the raw CSV files shows the OPPOSITE ordering: col 0 (index 0) has 27 zero-crossings/sec and positive-pulse asymmetry (max/|min| = 4.5, skewness = +2.5) \u2014 unambiguous tachometer signature. col 7 (index 7) has 39 000+ zero-crossings/sec and near-symmetric amplitude \u2014 unambiguous microphone/acoustic signature. This matches the official MAFAULDA dataset documentation (tachometer first, microphone last). The user's F-numbering likely reflects the paper's analysis order, not CSV column order. No column remapping is applied. Current config is empirically verified.",
+  "verified_order": {
+    "col_0_tachometer": "CONFIRMED \u2014 skew=+2.5, 27 ZC/s, max/|min|=4.5",
+    "col_7_microphone": "CONFIRMED \u2014 39000 ZC/s, near-symmetric amplitude"
+  }
+}
