@@ -1,0 +1,10 @@
+{
+  "input_dim": 8,
+  "seq_len": 1024,
+  "num_classes": 4,
+  "d_model": 32,
+  "nhead": 4,
+  "num_layers": 2,
+  "dim_feedforward": 64,
+  "dropout": 0.1
+}

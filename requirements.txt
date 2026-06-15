@@ -1,7 +1,18 @@
+# Core runtime dependencies for the main software pipeline:
+#   config -> load_data -> make_dataloaders -> transformer -> train -> evaluate
+# Versions are intentionally unpinned to stay compatible with both local
+# environments and Kaggle (which ships its own pinned scientific stack).
+python-dotenv      # src/config.py: load_dotenv() reads PROJECT_ROOT from .env
 numpy
 pandas
-scikit-learn
-matplotlib
-torch
-scipy
-librosa
+scikit-learn       # train/val/test split, evaluation metrics, augmentation (NearestNeighbors)
+scipy              # signal processing: butter/filtfilt, wiener, resample, welch
+matplotlib         # training history / confusion-matrix / analysis plots
+torch              # Transformer model, training, and inference
+
+# Optional / experimental only — NOT required by the main MAFAULDA pipeline.
+# Used solely by the experimental sound/MFCC feature-extraction scripts
+# (src/tools/signal_preprocessing.py, extract_features.py, preprocess_data.py),
+# which are imported lazily and guarded by try/except. Install only if you run
+# those experiments:
+#   librosa

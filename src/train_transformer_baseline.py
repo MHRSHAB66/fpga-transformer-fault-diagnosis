@@ -40,6 +40,12 @@ from src.config import (
 )
 from src.data.make_dataloaders import build_dataloaders
 from src.models.transformer_baseline import TransformerBaseline
+from src.experiment_config import (
+    build_model_config,
+    build_training_config,
+    build_preprocessing_config,
+    save_experiment_config_files,
+)
 
 
 def _get_class_labels(num_classes):
@@ -554,6 +560,13 @@ def run_training(
     criterion, imbalance_info = build_loss_function(train_loader, num_classes, device)
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
+    # Record the loss actually used so the saved config matches the run.
+    loss_name = (
+        "weighted_cross_entropy"
+        if imbalance_info.get("class_weights_applied")
+        else "cross_entropy"
+    )
+
     val_acc_at_best_val_loss = -1.0
     best_val_loss = float("inf")
     best_epoch = -1
@@ -654,8 +667,14 @@ def run_training(
                     {
                         "epoch": best_epoch,
                         "model_state_dict": best_model_state,
+                        "optimizer_state_dict": optimizer.state_dict(),
                         "val_loss": best_val_loss,
+                        "best_val_loss": best_val_loss,
                         "val_acc_at_best_val_loss": val_acc_at_best_val_loss,
+                        # Full reproducibility snapshot, all read from config.py.
+                        "model_config": build_model_config(),
+                        "training_config": build_training_config(loss=loss_name),
+                        "preprocessing_config": build_preprocessing_config(),
                     },
                     checkpoint_path,
                 )
@@ -766,6 +785,22 @@ def train():
     )
 
     _save_result_plots(results, NUM_CLASSES)
+
+    # Reproducibility: export standalone config snapshots next to the
+    # checkpoint/results. The same dicts are also embedded in the checkpoint.
+    loss_name = (
+        "weighted_cross_entropy"
+        if results["imbalance_info"].get("class_weights_applied")
+        else "cross_entropy"
+    )
+    model_config_path, experiment_config_path = save_experiment_config_files(
+        loss=loss_name,
+        checkpoints_dir=checkpoints_dir,
+        results_dir=results_dir,
+    )
+    print("[INFO] Saved model_config and experiment_config for reproducibility.")
+    print(f"model_config_path={model_config_path.relative_to(PROJECT_ROOT)}")
+    print(f"experiment_config_path={experiment_config_path.relative_to(PROJECT_ROOT)}")
 
     with open(history_path, "w") as f:
         json.dump(results["history"], f, indent=2)

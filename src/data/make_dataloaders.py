@@ -36,6 +36,8 @@ from src.config import (
     RANDOM_SEED,
     WINDOW_SIZE,
     WINDOW_STRIDE,
+    INCLUDE_TAIL_WINDOW,
+    TAIL_WINDOW_MODE,
     EXPECTED_NUM_COLUMNS,
     TRAIN_RATIO,
     VAL_RATIO,
@@ -54,7 +56,7 @@ from src.data.cached_augmentation import (
     save_augmented_train_data_cache,
 )
 from src.data.load_data import build_file_index
-from src.data.prepare_dataset import create_windows_from_dataframe
+from src.data.prepare_dataset import create_windows_from_dataframe, count_normal_windows
 from src.data.preprocessed_cache import (
     load_or_create_preprocessed_array,
     CACHE_DIR as PREPROCESSED_CACHE_DIR,
@@ -290,7 +292,9 @@ def build_X_y_from_file_index(
     index_df,
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
-) -> Tuple[np.ndarray, np.ndarray, int, int]:
+    include_tail: bool = INCLUDE_TAIL_WINDOW,
+    tail_mode: str = TAIL_WINDOW_MODE,
+) -> Tuple[np.ndarray, np.ndarray, int, int, dict]:
     """
     Materialize windowed training arrays from a file index DataFrame.
 
@@ -304,11 +308,16 @@ def build_X_y_from_file_index(
         Number of rows per time window.
     stride : int, default=WINDOW_STRIDE
         Step size between consecutive windows.
+    include_tail : bool, default=INCLUDE_TAIL_WINDOW
+        Whether to add a backshift tail window per file when trailing samples
+        would otherwise be discarded.
+    tail_mode : str, default=TAIL_WINDOW_MODE
+        Tail strategy passed through to ``create_windows_from_dataframe``.
 
     Returns
     -------
     tuple
-        (X, y, kept_files, dropped_files)
+        (X, y, kept_files, dropped_files, window_counts)
 
         - X : np.ndarray
             Windowed input data with dtype float32 and shape
@@ -319,6 +328,9 @@ def build_X_y_from_file_index(
             Number of files kept after preprocessing
         - dropped_files : int
             Number of files dropped during preprocessing
+        - window_counts : dict
+            {"normal": int, "tail": int, "total": int} window counts
+            aggregated over all kept files in this split.
 
     Notes
     -----
@@ -332,6 +344,8 @@ def build_X_y_from_file_index(
 
     kept_files = 0
     dropped_files = 0
+    normal_windows = 0
+    tail_windows = 0
 
     for _, row in index_df.iterrows():
         file_path = row["filepath"]
@@ -353,7 +367,15 @@ def build_X_y_from_file_index(
             values,
             window_size=window_size,
             stride=stride,
+            include_tail=include_tail,
+            tail_mode=tail_mode,
         )
+
+        # The backshift policy appends at most one extra window per file, so the
+        # tail count for this file is whatever exceeds the standard window count.
+        file_normal = count_normal_windows(len(values), window_size, stride)
+        normal_windows += file_normal
+        tail_windows += max(0, len(windows) - file_normal)
 
         label_id = LABEL_MAP[label_name]
 
@@ -370,7 +392,13 @@ def build_X_y_from_file_index(
 
     y = np.array(y, dtype=np.int64)
 
-    return X, y, kept_files, dropped_files
+    window_counts = {
+        "normal": int(normal_windows),
+        "tail": int(tail_windows),
+        "total": int(normal_windows + tail_windows),
+    }
+
+    return X, y, kept_files, dropped_files, window_counts
 
 
 def build_dataloaders(
@@ -380,6 +408,8 @@ def build_dataloaders(
     use_noise_injection: bool = USE_NOISE_INJECTION,
     noise_std: float = NOISE_INJECTION_STD,
     num_workers: int = DATALOADER_NUM_WORKERS,
+    include_tail: bool = INCLUDE_TAIL_WINDOW,
+    tail_mode: str = TAIL_WINDOW_MODE,
 ):
     """
     Build train, validation, and test DataLoaders.
@@ -398,6 +428,12 @@ def build_dataloaders(
         Standard deviation used for noise injection.
     num_workers : int, default=DATALOADER_NUM_WORKERS
         Number of worker processes used by PyTorch DataLoader.
+    include_tail : bool, default=INCLUDE_TAIL_WINDOW
+        Whether to add a backshift tail window per file so trailing samples that
+        would otherwise be discarded are still used. Applied identically to all
+        splits; overlap stays within a file because splitting is file-level.
+    tail_mode : str, default=TAIL_WINDOW_MODE
+        Tail strategy. Only "backshift" is supported.
 
     Returns
     -------
@@ -456,6 +492,8 @@ def build_dataloaders(
             use_smote=use_smote,
             use_noise_injection=use_noise_injection,
             noise_std=noise_std,
+            include_tail=include_tail,
+            tail_mode=tail_mode,
         )
         train_augmentation_cache_path = str(get_train_augmentation_cache_path(cache_key))
         cached_train_data = load_cached_augmented_train_data(cache_key)
@@ -465,10 +503,17 @@ def build_dataloaders(
             augmentation_info = cache_metadata["augmentation_info"]
             train_kept = int(cache_metadata["train_kept"])
             train_dropped = int(cache_metadata["train_dropped"])
+            # Pre-augmentation window counts are stored in the cache metadata.
+            # Older caches predate this field; fall back to zeros if absent.
+            train_window_counts = cache_metadata.get(
+                "window_counts", {"normal": 0, "tail": 0, "total": 0}
+            )
             train_augmentation_cache_used = True
         else:
-            X_train, y_train, train_kept, train_dropped = build_X_y_from_file_index(
-                train_index_df
+            X_train, y_train, train_kept, train_dropped, train_window_counts = (
+                build_X_y_from_file_index(
+                    train_index_df, include_tail=include_tail, tail_mode=tail_mode
+                )
             )
             X_train, y_train, augmentation_info = augment_training_data(
                 X_train,
@@ -485,6 +530,7 @@ def build_dataloaders(
                     "augmentation_info": augmentation_info,
                     "train_kept": int(train_kept),
                     "train_dropped": int(train_dropped),
+                    "window_counts": train_window_counts,
                 },
             )
 
@@ -498,8 +544,10 @@ def build_dataloaders(
                 "Training dataset contains zero samples after materialization/augmentation."
             )
     else:
-        X_train, y_train, train_kept, train_dropped = build_X_y_from_file_index(
-            train_index_df
+        X_train, y_train, train_kept, train_dropped, train_window_counts = (
+            build_X_y_from_file_index(
+                train_index_df, include_tail=include_tail, tail_mode=tail_mode
+            )
         )
         train_dataset = TensorDataset(
             torch.from_numpy(X_train),
@@ -519,13 +567,17 @@ def build_dataloaders(
             "augmented_samples": len(X_train),
         }
 
-    X_val, y_val, val_kept, val_dropped = build_X_y_from_file_index(val_index_df)
+    X_val, y_val, val_kept, val_dropped, val_window_counts = build_X_y_from_file_index(
+        val_index_df, include_tail=include_tail, tail_mode=tail_mode
+    )
     val_dataset = TensorDataset(
         torch.from_numpy(X_val),
         torch.from_numpy(y_val),
     )
 
-    X_test, y_test, test_kept, test_dropped = build_X_y_from_file_index(test_index_df)
+    X_test, y_test, test_kept, test_dropped, test_window_counts = build_X_y_from_file_index(
+        test_index_df, include_tail=include_tail, tail_mode=tail_mode
+    )
     test_dataset = TensorDataset(
         torch.from_numpy(X_test),
         torch.from_numpy(y_test),
@@ -603,6 +655,23 @@ def build_dataloaders(
         "val_samples": len(val_dataset),
         "test_samples": len(test_dataset),
         "window_shape": [WINDOW_SIZE, EXPECTED_NUM_COLUMNS],
+        "tail_window_info": {
+            "enabled": bool(include_tail),
+            "mode": tail_mode if include_tail else None,
+            "train": train_window_counts,
+            "val": val_window_counts,
+            "test": test_window_counts,
+            "total_normal": (
+                train_window_counts["normal"]
+                + val_window_counts["normal"]
+                + test_window_counts["normal"]
+            ),
+            "total_tail": (
+                train_window_counts["tail"]
+                + val_window_counts["tail"]
+                + test_window_counts["tail"]
+            ),
+        },
         "train_class_window_counts": train_class_window_counts,
         "val_class_window_counts": val_class_window_counts,
         "test_class_window_counts": test_class_window_counts,

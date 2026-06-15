@@ -1,0 +1,33 @@
+{
+  "model_config": {
+    "input_dim": 8,
+    "seq_len": 1024,
+    "num_classes": 4,
+    "d_model": 32,
+    "nhead": 4,
+    "num_layers": 2,
+    "dim_feedforward": 64,
+    "dropout": 0.1
+  },
+  "training_config": {
+    "batch_size": 8,
+    "learning_rate": 0.001,
+    "num_epochs": 6,
+    "optimizer": "Adam",
+    "loss": "weighted_cross_entropy",
+    "random_seed": 42
+  },
+  "preprocessing_config": {
+    "window_size": 1024,
+    "window_stride": 1024,
+    "normalization": "zscore",
+    "missing_ratio_threshold": 0.2,
+    "fill_method": "median",
+    "include_tail_window": false,
+    "tail_window_mode": null,
+    "resample_enabled": false,
+    "lowpass_enabled": false,
+    "wiener_enabled": false
+  },
+  "channel_selection": "all"
+}

@@ -52,6 +52,17 @@ WINDOW_SIZE = 1024
 WINDOW_STRIDE = 1024
 MIN_ROWS_PER_FILE = WINDOW_SIZE
 
+# Tail-window handling.
+# When a file's length is not an exact multiple of the windowing schedule, the
+# trailing samples shorter than WINDOW_SIZE are normally discarded. When
+# INCLUDE_TAIL_WINDOW is True, one extra full-size window aligned to the end of
+# the file ("backshift") is added so those trailing real samples are still used.
+# The tail window may overlap the previous window; this is acceptable because
+# train/val/test splitting is file-level, so overlap never crosses splits.
+# Default False preserves the original windowing behavior.
+INCLUDE_TAIL_WINDOW = False
+TAIL_WINDOW_MODE = "backshift"   # only "backshift" is currently supported
+
 # =========================
 # Data quality / preprocessing
 # =========================
@@ -88,7 +99,6 @@ NUM_EPOCHS = 6   # temporary for fast testing
 # MLP baseline
 # =========================
 INPUT_LENGTH = WINDOW_SIZE
-INPUT_CHANNELS = EXPECTED_NUM_COLUMNS
 HIDDEN_DIM = 64
 
 # =========================
@@ -157,18 +167,28 @@ LOW_ENERGY_SEGMENT_SIZE = 512
 #   col 6 = acc_tangential_b2    (overhang bearing, tangential)
 #   col 7 = microphone           (39 000+ ZC/s, acoustic)
 CHANNEL_SELECTION = "all"   # "all" | "vibration_only"
+# NOTE: "vibration_only" (6 accelerometer columns) is defined here but not yet
+# wired into the data pipeline. Only "all" is currently supported.
 
 _VIBRATION_CHANNEL_INDICES = [1, 2, 3, 4, 5, 6]  # accelerometer columns only
 
 if CHANNEL_SELECTION == "vibration_only":
-    ACTIVE_CHANNEL_INDICES: list = _VIBRATION_CHANNEL_INDICES
+    raise NotImplementedError(
+        "CHANNEL_SELECTION='vibration_only' is not yet implemented in the data "
+        "pipeline (prepare_dataset.py / make_dataloaders.py). "
+        "Set CHANNEL_SELECTION='all' to use all 8 channels."
+    )
 elif CHANNEL_SELECTION == "all":
-    ACTIVE_CHANNEL_INDICES = list(range(EXPECTED_NUM_COLUMNS))   # 0-7
+    ACTIVE_CHANNEL_INDICES: list = list(range(EXPECTED_NUM_COLUMNS))   # 0-7
 else:
     raise ValueError(f"Unknown CHANNEL_SELECTION: {CHANNEL_SELECTION!r}. "
-                     "Valid values are 'all' and 'vibration_only'.")
+                     "Valid values: 'all'.")
 
 NUM_ACTIVE_CHANNELS = len(ACTIVE_CHANNEL_INDICES)
+
+# INPUT_CHANNELS is the number of channels the model receives.
+# Equals NUM_ACTIVE_CHANNELS (8 for the current default "all" selection).
+INPUT_CHANNELS = NUM_ACTIVE_CHANNELS
 
 # =========================
 # Sanity checks

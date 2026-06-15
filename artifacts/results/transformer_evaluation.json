@@ -1,0 +1,200 @@
+{
+  "checkpoint_path": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\checkpoints\\transformer_baseline_best.pt",
+  "model_config": {},
+  "data_stats": {
+    "data_dir": "G:\\aut\\project\\fpga_fault_diagnosis\\data\\raw\\mafaulda",
+    "max_files": null,
+    "total_files_after_filter": 1951,
+    "train_files_kept": 1365,
+    "train_files_dropped": 0,
+    "val_files_kept": 195,
+    "val_files_dropped": 0,
+    "test_files_kept": 391,
+    "test_files_dropped": 0,
+    "train_samples": 333060,
+    "val_samples": 47580,
+    "test_samples": 95404,
+    "window_shape": [
+      1024,
+      8
+    ],
+    "train_class_window_counts": {
+      "normal": 8296,
+      "imbalance": 56852,
+      "misalignment": 85156,
+      "bearing_fault": 182756
+    },
+    "val_class_window_counts": {
+      "normal": 1220,
+      "imbalance": 8052,
+      "misalignment": 12200,
+      "bearing_fault": 26108
+    },
+    "test_class_window_counts": {
+      "normal": 2440,
+      "imbalance": 16348,
+      "misalignment": 24156,
+      "bearing_fault": 52460
+    },
+    "train_augmented": false,
+    "augmentation": {
+      "smote_applied": false,
+      "noise_injection_applied": false,
+      "noise_std": 0.01,
+      "original_samples": 333060,
+      "augmented_samples": 333060
+    },
+    "train_augmentation_cache_used": false,
+    "train_augmentation_cache_path": null,
+    "preprocessing_cache_enabled": true,
+    "preprocessing_cache_path": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\cache\\preprocessed_files",
+    "num_workers": 0,
+    "pin_memory": true,
+    "persistent_workers": false
+  },
+  "imbalance_info": {
+    "class_counts": [
+      8296,
+      56852,
+      85156,
+      182756
+    ],
+    "imbalance_ratio": 22.02941131591797,
+    "class_weights_applied": true,
+    "class_weights": [
+      10.036765098571777,
+      1.4645922183990479,
+      0.9777936935424805,
+      0.45560747385025024
+    ]
+  },
+  "best_epoch": 6,
+  "val_loss": 0.06099151581526986,
+  "val_acc": 0.9820722992854141,
+  "val_confusion_matrix": [
+    [
+      1204,
+      5,
+      11,
+      0
+    ],
+    [
+      0,
+      7985,
+      21,
+      46
+    ],
+    [
+      7,
+      9,
+      12091,
+      93
+    ],
+    [
+      65,
+      333,
+      263,
+      25447
+    ]
+  ],
+  "val_per_class_accuracy": {
+    "0": 0.9868852459016394,
+    "1": 0.991679085941381,
+    "2": 0.9910655737704918,
+    "3": 0.9746820897809101
+  },
+  "val_per_class_f1": {
+    "normal": {
+      "precision": 0.9436,
+      "recall": 0.9869,
+      "f1": 0.9647,
+      "support": 1220
+    },
+    "imbalance": {
+      "precision": 0.9584,
+      "recall": 0.9917,
+      "f1": 0.9747,
+      "support": 8052
+    },
+    "misalignment": {
+      "precision": 0.9762,
+      "recall": 0.9911,
+      "f1": 0.9836,
+      "support": 12200
+    },
+    "bearing_fault": {
+      "precision": 0.9946,
+      "recall": 0.9747,
+      "f1": 0.9845,
+      "support": 26108
+    }
+  },
+  "val_macro_f1": 0.9769,
+  "val_weighted_f1": 0.9821,
+  "val_macro_precision": 0.9682,
+  "val_macro_recall": 0.9861,
+  "test_loss": 0.056754310277357306,
+  "test_acc": 0.9820762232191522,
+  "test_confusion_matrix": [
+    [
+      2333,
+      10,
+      80,
+      17
+    ],
+    [
+      0,
+      16066,
+      11,
+      271
+    ],
+    [
+      33,
+      73,
+      23960,
+      90
+    ],
+    [
+      64,
+      725,
+      336,
+      51335
+    ]
+  ],
+  "test_per_class_accuracy": {
+    "0": 0.9561475409836065,
+    "1": 0.982750183508686,
+    "2": 0.991886073853287,
+    "3": 0.9785550895920702
+  },
+  "test_per_class_f1": {
+    "normal": {
+      "precision": 0.9601,
+      "recall": 0.9561,
+      "f1": 0.9581,
+      "support": 2440
+    },
+    "imbalance": {
+      "precision": 0.9521,
+      "recall": 0.9828,
+      "f1": 0.9672,
+      "support": 16348
+    },
+    "misalignment": {
+      "precision": 0.9825,
+      "recall": 0.9919,
+      "f1": 0.9872,
+      "support": 24156
+    },
+    "bearing_fault": {
+      "precision": 0.9927,
+      "recall": 0.9786,
+      "f1": 0.9856,
+      "support": 52460
+    }
+  },
+  "test_macro_f1": 0.9745,
+  "test_weighted_f1": 0.9821,
+  "test_macro_precision": 0.9718,
+  "test_macro_recall": 0.9773
+}

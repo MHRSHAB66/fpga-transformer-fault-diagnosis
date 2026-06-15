@@ -15,12 +15,14 @@ import numpy as np
 from src.config import (
     EPSILON,
     EXPECTED_NUM_COLUMNS,
+    INCLUDE_TAIL_WINDOW,
     LABEL_MAP,
     MISSING_FILL_METHOD,
     MISSING_RATIO_THRESHOLD,
     NORMALIZATION_METHOD,
     PROJECT_ROOT,
     RANDOM_SEED,
+    TAIL_WINDOW_MODE,
     WINDOW_SIZE,
     WINDOW_STRIDE,
 )
@@ -34,6 +36,8 @@ def build_train_augmentation_cache_key(
     use_smote: bool,
     use_noise_injection: bool,
     noise_std: float,
+    include_tail: bool = INCLUDE_TAIL_WINDOW,
+    tail_mode: str = TAIL_WINDOW_MODE,
 ) -> str:
     """
     Build a stable fingerprint for augmented training arrays.
@@ -64,6 +68,11 @@ def build_train_augmentation_cache_key(
         "use_noise_injection": bool(use_noise_injection),
         "noise_std": float(noise_std),
     }
+    # Only add tail-window keys when enabled so existing caches built before this
+    # option remain valid when the tail window is off (the default).
+    if include_tail:
+        payload["include_tail_window"] = True
+        payload["tail_window_mode"] = str(tail_mode)
     payload_json = json.dumps(payload, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(payload_json.encode("utf-8")).hexdigest()
 

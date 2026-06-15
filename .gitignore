@@ -216,3 +216,15 @@ data/raw/mafaulda/
 src.zip
 test.py
 /paper/
+
+# Office temporary / lock files (e.g. ~$presentation_progress.pptx)
+~$*
+
+# Work-in-progress presentation binary (regenerate via tools/make_presentation.py)
+docs/presentation_progress.pptx
+
+# Large background reference papers (PDF). CLAUDE.md treats these as
+# background-only; the diff-able markdown extractions under
+# docs/**/extracted/ are kept in version control instead.
+docs/references/raw/
+docs/project_definition/raw/

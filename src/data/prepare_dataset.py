@@ -27,6 +27,8 @@ import pandas as pd
 from src.config import (
     WINDOW_SIZE,
     WINDOW_STRIDE,
+    INCLUDE_TAIL_WINDOW,
+    TAIL_WINDOW_MODE,
     MISSING_RATIO_THRESHOLD,
     MISSING_FILL_METHOD,
     NORMALIZATION_METHOD,
@@ -46,10 +48,36 @@ from src.config import (
 )
 
 
+def count_normal_windows(num_rows: int, window_size: int, stride: int) -> int:
+    """
+    Number of full non-overlapping/striding windows produced before any tail.
+
+    Parameters
+    ----------
+    num_rows : int
+        Number of rows available in the file.
+    window_size : int
+        Window length in samples.
+    stride : int
+        Step size between consecutive windows.
+
+    Returns
+    -------
+    int
+        Count of standard windows (excluding any backshift tail window).
+        0 when the file is shorter than one window.
+    """
+    if num_rows < window_size:
+        return 0
+    return (num_rows - window_size) // stride + 1
+
+
 def create_windows_from_dataframe(
     df: Union[pd.DataFrame, np.ndarray],
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
+    include_tail: bool = INCLUDE_TAIL_WINDOW,
+    tail_mode: str = TAIL_WINDOW_MODE,
 ) -> List[np.ndarray]:
     """
     Split a preprocessed DataFrame or ndarray into fixed-length windows.
@@ -65,6 +93,13 @@ def create_windows_from_dataframe(
         Number of rows per window.
     stride : int, default=WINDOW_STRIDE
         Step size between consecutive windows.
+    include_tail : bool, default=INCLUDE_TAIL_WINDOW
+        When True, add one extra full-size window aligned to the end of the file
+        if the standard windowing left trailing samples shorter than a window.
+    tail_mode : str, default=TAIL_WINDOW_MODE
+        Tail strategy. Only "backshift" is supported: the extra window starts at
+        ``num_rows - window_size`` so it ends exactly at the last row, using only
+        real samples (no padding).
 
     Returns
     -------
@@ -75,9 +110,14 @@ def create_windows_from_dataframe(
     Notes
     -----
     - If the input has fewer rows than `window_size`, the returned list is empty.
-    - With `stride == window_size`, the windows do not overlap.
-    - With `stride < window_size`, the windows overlap.
+    - With `stride == window_size`, the standard windows do not overlap.
+    - With `stride < window_size`, the standard windows overlap.
     - The function preserves the original row order of the input.
+    - The backshift tail window is added only when the standard windows do not
+      already reach the last row, i.e. when ``(num_rows - window_size)`` is
+      strictly greater than the last standard window's start index. That single
+      condition simultaneously guarantees a non-zero remainder exists and that
+      the tail window is not a duplicate of the last standard window.
     - Supporting both DataFrame and ndarray inputs allows reuse with
       disk-cached preprocessed arrays without changing the windowing logic.
     """
@@ -92,10 +132,23 @@ def create_windows_from_dataframe(
     if num_rows < window_size:
         return windows
 
+    last_start = 0
     for start in range(0, num_rows - window_size + 1, stride):
         end = start + window_size
-        window = values[start:end]
-        windows.append(window)
+        windows.append(values[start:end])
+        last_start = start
+
+    if include_tail:
+        if tail_mode != "backshift":
+            raise ValueError(
+                f"Unsupported tail_mode: {tail_mode!r}. Only 'backshift' is supported."
+            )
+        # tail_start > last_start means the last standard window does not reach
+        # the end of the file (a non-zero remainder exists) AND the tail window
+        # starts at a different index, so it cannot duplicate the last window.
+        tail_start = num_rows - window_size
+        if tail_start > last_start:
+            windows.append(values[tail_start:num_rows])
 
     return windows
 
