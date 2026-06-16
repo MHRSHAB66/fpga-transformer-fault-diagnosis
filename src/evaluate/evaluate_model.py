@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+from datetime import datetime
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -18,10 +20,15 @@ from src.config import (
     TRANSFORMER_NUM_LAYERS,
     TRANSFORMER_DIM_FEEDFORWARD,
     TRANSFORMER_DROPOUT,
+    RUNS_DIR,
 )
 from src.data.make_dataloaders import build_dataloaders
 from src.models.transformer_baseline import TransformerBaseline
 from src.experiment_config import build_model_config
+from src.evaluation_metrics import (
+    fault_vs_normal_summary,
+    precision_recall_fbeta_from_confusion,
+)
 from src.train_transformer_baseline import build_loss_function, evaluate_with_details, set_seed
 
 # Ordered label names matching LABEL_MAP integer keys
@@ -94,10 +101,12 @@ def _build_model_from_config(model_config: dict, device) -> TransformerBaseline:
     ).to(device)
 
 
-def evaluate_saved_model():
+def evaluate_saved_model(checkpoint_path=None, output_dir=None, max_files=None):
     set_seed(RANDOM_SEED)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    checkpoint_path = PROJECT_ROOT / "artifacts" / "checkpoints" / "transformer_baseline_best.pt"
+    checkpoint_path = Path(checkpoint_path) if checkpoint_path else (
+        PROJECT_ROOT / "artifacts" / "checkpoints" / "transformer_baseline_best.pt"
+    )
 
     if not checkpoint_path.exists():
         raise FileNotFoundError(
@@ -105,7 +114,7 @@ def evaluate_saved_model():
             "Run `python -m src.train_transformer_baseline` first."
         )
 
-    train_loader, val_loader, test_loader, stats = build_dataloaders()
+    train_loader, val_loader, test_loader, stats = build_dataloaders(max_files=max_files)
     criterion, imbalance_info = build_loss_function(train_loader, NUM_CLASSES, device)
 
     checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
@@ -137,6 +146,14 @@ def evaluate_saved_model():
 
     val_metrics  = _confusion_to_f1(val_confusion,  _CLASS_NAMES)
     test_metrics = _confusion_to_f1(test_confusion, _CLASS_NAMES)
+    val_f2_metrics = precision_recall_fbeta_from_confusion(
+        val_confusion, _CLASS_NAMES, beta=2.0
+    )
+    test_f2_metrics = precision_recall_fbeta_from_confusion(
+        test_confusion, _CLASS_NAMES, beta=2.0
+    )
+    val_fault_summary = fault_vs_normal_summary(val_confusion, normal_class_idx=0)
+    test_fault_summary = fault_vs_normal_summary(test_confusion, normal_class_idx=0)
 
     results = {
         "checkpoint_path": str(checkpoint_path),
@@ -154,6 +171,10 @@ def evaluate_saved_model():
         "val_weighted_f1":        val_metrics["weighted"]["f1"],
         "val_macro_precision":    val_metrics["macro"]["precision"],
         "val_macro_recall":       val_metrics["macro"]["recall"],
+        "val_f2_metrics":         val_f2_metrics,
+        "val_macro_f2":           val_f2_metrics["macro"]["f2"],
+        "val_weighted_f2":        val_f2_metrics["weighted"]["f2"],
+        "val_fault_vs_normal":    val_fault_summary,
         # Test
         "test_loss":               float(test_loss),
         "test_acc":                float(test_acc),
@@ -164,11 +185,19 @@ def evaluate_saved_model():
         "test_weighted_f1":        test_metrics["weighted"]["f1"],
         "test_macro_precision":    test_metrics["macro"]["precision"],
         "test_macro_recall":       test_metrics["macro"]["recall"],
+        "test_f2_metrics":         test_f2_metrics,
+        "test_macro_f2":           test_f2_metrics["macro"]["f2"],
+        "test_weighted_f2":        test_f2_metrics["weighted"]["f2"],
+        "test_fault_vs_normal":    test_fault_summary,
     }
 
-    results_dir = PROJECT_ROOT / "artifacts" / "results"
+    if output_dir is None:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        results_dir = RUNS_DIR / f"{timestamp}_evaluation" / "results"
+    else:
+        results_dir = Path(output_dir)
     results_dir.mkdir(parents=True, exist_ok=True)
-    output_path = results_dir / "transformer_evaluation.json"
+    output_path = results_dir / "evaluation.json"
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
 
@@ -185,7 +214,7 @@ def evaluate_saved_model():
                 "Retrain to embed model_config in the checkpoint."
             ),
         }
-    config_path = checkpoint_path.parent / "transformer_baseline_model_config.json"
+    config_path = results_dir / "model_config.json"
     with open(config_path, "w", encoding="utf-8") as f:
         json.dump(config_to_save, f, indent=2)
 
@@ -199,6 +228,10 @@ def evaluate_saved_model():
     print(f"Val  macro F1    : {val_metrics['macro']['f1']:.4f}")
     print(f"Test macro F1    : {test_metrics['macro']['f1']:.4f}")
     print(f"Test weighted F1 : {test_metrics['weighted']['f1']:.4f}")
+    print(f"Test macro F2    : {test_f2_metrics['macro']['f2']:.4f}")
+    print(f"Test weighted F2 : {test_f2_metrics['weighted']['f2']:.4f}")
+    print(f"Missed faults    : {test_fault_summary['missed_faults']}")
+    print(f"False alarms     : {test_fault_summary['false_alarms']}")
     print()
     print("Per-class test metrics:")
     print(f"  {'Class':<16} {'Precision':>10} {'Recall':>8} {'F1':>8} {'Support':>9}")

@@ -16,6 +16,8 @@ PROJECT_ROOT = Path(project_root_env).resolve()
 DATA_RAW_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda"
 DATA_SAMPLE_DIR = PROJECT_ROOT / "data" / "sample"
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+RUNS_DIR = PROJECT_ROOT / "artifacts" / "runs"
+DEFAULT_RUN_NAME = "transformer_final_t4"
 
 # =========================
 # Reproducibility
@@ -70,6 +72,7 @@ MISSING_RATIO_THRESHOLD = 0.2
 MISSING_FILL_METHOD = "median"
 
 NORMALIZATION_METHOD = "zscore"
+NORMALIZATION_SCOPE = "per_window"  # "per_file" | "per_window" | "global_train"
 EPSILON = 1e-8
 
 # =========================
@@ -82,7 +85,7 @@ TEST_RATIO = 0.2
 # =========================
 # DataLoader / augmentation
 # =========================
-BATCH_SIZE = 8
+BATCH_SIZE = 64
 DATALOADER_NUM_WORKERS = 0
 
 USE_SMOTE_AUGMENTATION = False
@@ -93,7 +96,8 @@ NOISE_INJECTION_STD = 0.01
 # Shared training
 # =========================
 LEARNING_RATE = 1e-3
-NUM_EPOCHS = 6   # temporary for fast testing
+NUM_EPOCHS = 30
+EARLY_STOPPING_PATIENCE = 6
 
 # =========================
 # MLP baseline
@@ -195,3 +199,9 @@ INPUT_CHANNELS = NUM_ACTIVE_CHANNELS
 # =========================
 if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:
     raise ValueError("TRAIN_RATIO + VAL_RATIO + TEST_RATIO must be 1.0")
+
+if NORMALIZATION_SCOPE not in {"per_file", "per_window", "global_train"}:
+    raise ValueError(
+        "NORMALIZATION_SCOPE must be one of: "
+        "'per_file', 'per_window', 'global_train'"
+    )

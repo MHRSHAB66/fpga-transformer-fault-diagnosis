@@ -7,6 +7,7 @@ test datasets remain lazy and never use this module.
 
 import hashlib
 import json
+import os
 from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
@@ -20,6 +21,7 @@ from src.config import (
     MISSING_FILL_METHOD,
     MISSING_RATIO_THRESHOLD,
     NORMALIZATION_METHOD,
+    NORMALIZATION_SCOPE,
     PROJECT_ROOT,
     RANDOM_SEED,
     TAIL_WINDOW_MODE,
@@ -36,6 +38,10 @@ def build_train_augmentation_cache_key(
     use_smote: bool,
     use_noise_injection: bool,
     noise_std: float,
+    window_size: int = WINDOW_SIZE,
+    window_stride: int = WINDOW_STRIDE,
+    normalization_scope: str = NORMALIZATION_SCOPE,
+    normalization_method: str = NORMALIZATION_METHOD,
     include_tail: bool = INCLUDE_TAIL_WINDOW,
     tail_mode: str = TAIL_WINDOW_MODE,
 ) -> str:
@@ -53,15 +59,16 @@ def build_train_augmentation_cache_key(
         for _, row in train_index_df.reset_index(drop=True).iterrows()
     ]
     payload = {
-        "cache_version": 1,
+        "cache_version": 2,
         "train_files": train_files,
         "random_seed": int(RANDOM_SEED),
-        "window_size": int(WINDOW_SIZE),
-        "window_stride": int(WINDOW_STRIDE),
+        "window_size": int(window_size),
+        "window_stride": int(window_stride),
         "expected_num_columns": int(EXPECTED_NUM_COLUMNS),
         "missing_ratio_threshold": float(MISSING_RATIO_THRESHOLD),
         "missing_fill_method": str(MISSING_FILL_METHOD),
-        "normalization_method": str(NORMALIZATION_METHOD),
+        "normalization_method": str(normalization_method),
+        "normalization_scope": str(normalization_scope),
         "epsilon": float(EPSILON),
         "label_map": LABEL_MAP,
         "use_smote": bool(use_smote),
@@ -110,7 +117,7 @@ def save_augmented_train_data_cache(
 ) -> Path:
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
     cache_path = get_train_augmentation_cache_path(cache_key)
-    tmp_path = cache_path.with_suffix(".tmp")
+    tmp_path = cache_path.with_name(f"{cache_path.stem}.{os.getpid()}.tmp")
 
     with open(tmp_path, "wb") as f:
         np.savez_compressed(

@@ -1,0 +1,16 @@
+{
+  "passed": true,
+  "mode": "full",
+  "max_files": null,
+  "errors": [],
+  "code_root": "/kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-src",
+  "dataset_path": "/kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda",
+  "cuda_available": true,
+  "gpu_name": "Tesla T4",
+  "training_summary": {
+    "run_dir": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4",
+    "metrics_path": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4/results/metrics.json",
+    "checkpoint_path": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4/checkpoints/transformer_best.pt",
+    "normalization_constants_path": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4/results/normalization_constants.json"
+  }
+}

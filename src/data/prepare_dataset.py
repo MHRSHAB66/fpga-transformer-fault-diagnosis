@@ -32,6 +32,7 @@ from src.config import (
     MISSING_RATIO_THRESHOLD,
     MISSING_FILL_METHOD,
     NORMALIZATION_METHOD,
+    NORMALIZATION_SCOPE,
     EPSILON,
     MAFAULDA_SAMPLE_RATE,
     RESAMPLE_ENABLED,
@@ -310,6 +311,95 @@ def normalize_dataframe(
     return df
 
 
+def normalize_array(
+    values: np.ndarray,
+    method: str = NORMALIZATION_METHOD,
+    stats: Optional[dict] = None,
+    epsilon: float = EPSILON,
+) -> np.ndarray:
+    """
+    Normalize a 2D time-series array per channel.
+
+    ``stats`` is optional for per-file fitting and required when applying
+    constants fitted on the training split.
+    """
+    values = np.asarray(values, dtype=np.float32)
+    if values.size == 0:
+        return values.astype(np.float32, copy=False)
+
+    if method == "zscore":
+        if stats is None:
+            mean = values.mean(axis=0)
+            std = values.std(axis=0, ddof=1) if values.shape[0] > 1 else values.std(axis=0)
+        else:
+            mean = np.asarray(stats["mean"], dtype=np.float32)
+            std = np.asarray(stats["std"], dtype=np.float32)
+        safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
+        return ((values - mean) / safe_std).astype(np.float32)
+
+    if method == "minmax":
+        if stats is None:
+            min_val = values.min(axis=0)
+            max_val = values.max(axis=0)
+        else:
+            min_val = np.asarray(stats["min"], dtype=np.float32)
+            max_val = np.asarray(stats["max"], dtype=np.float32)
+        denom = max_val - min_val
+        safe_denom = np.where(np.abs(denom) < epsilon, 1.0, denom)
+        return ((values - min_val) / safe_denom).astype(np.float32)
+
+    raise ValueError(f"Unsupported normalization method: {method}")
+
+
+def normalize_windows_array(
+    windows: np.ndarray,
+    method: str = NORMALIZATION_METHOD,
+    scope: str = NORMALIZATION_SCOPE,
+    global_stats: Optional[dict] = None,
+    epsilon: float = EPSILON,
+) -> np.ndarray:
+    """
+    Normalize a stack of windows according to the selected scope.
+
+    The final candidate is ``per_window`` z-score: mean/std are computed per
+    channel inside each individual window, which is reproducible for FPGA
+    inference from the 1024-sample input buffer.
+    """
+    windows = np.asarray(windows, dtype=np.float32)
+    if windows.size == 0:
+        return windows.astype(np.float32, copy=False)
+
+    if scope == "per_file":
+        return windows.astype(np.float32, copy=False)
+
+    if scope == "global_train":
+        if global_stats is None:
+            raise ValueError("global_train normalization requires global_stats.")
+        shape = (1, 1, windows.shape[-1])
+        if method == "zscore":
+            mean = np.asarray(global_stats["mean"], dtype=np.float32).reshape(shape)
+            std = np.asarray(global_stats["std"], dtype=np.float32).reshape(shape)
+            safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
+            return ((windows - mean) / safe_std).astype(np.float32)
+        if method == "minmax":
+            min_val = np.asarray(global_stats["min"], dtype=np.float32).reshape(shape)
+            max_val = np.asarray(global_stats["max"], dtype=np.float32).reshape(shape)
+            denom = max_val - min_val
+            safe_denom = np.where(np.abs(denom) < epsilon, 1.0, denom)
+            return ((windows - min_val) / safe_denom).astype(np.float32)
+        raise ValueError(f"Unsupported normalization method: {method}")
+
+    if scope == "per_window":
+        if method != "zscore":
+            raise ValueError("per_window normalization currently supports zscore only.")
+        mean = windows.mean(axis=1, keepdims=True)
+        std = windows.std(axis=1, keepdims=True)
+        safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
+        return ((windows - mean) / safe_std).astype(np.float32)
+
+    raise ValueError(f"Unsupported normalization scope: {scope}")
+
+
 def apply_lowpass_filter(
     values: np.ndarray,
     cutoff_hz: float = LOWPASS_CUTOFF_HZ,
@@ -477,7 +567,7 @@ def apply_low_energy_filter(
     return filtered.astype(np.float32)
 
 
-def preprocess_dataframe(df: pd.DataFrame) -> Optional[pd.DataFrame]:
+def preprocess_dataframe(df: pd.DataFrame, normalize: bool = True) -> Optional[pd.DataFrame]:
     """
     Run the preprocessing pipeline on a single raw DataFrame.
 
@@ -497,7 +587,7 @@ def preprocess_dataframe(df: pd.DataFrame) -> Optional[pd.DataFrame]:
     1. Convert all values to numeric
     2. Drop the file if the missing-value ratio is too high
     3. Fill missing values only if NaN values exist
-    4. Normalize each feature column
+    4. Optionally normalize each feature column
     """
     df = convert_dataframe_to_numeric(df)
 
@@ -508,6 +598,7 @@ def preprocess_dataframe(df: pd.DataFrame) -> Optional[pd.DataFrame]:
     if df.isna().any().any():
         df = fill_missing_values(df)
 
-    df = normalize_dataframe(df)
+    if normalize:
+        df = normalize_dataframe(df)
 
     return df

@@ -23,6 +23,7 @@ from typing import Optional
 from src.config import (
     BATCH_SIZE,
     CHANNEL_SELECTION,
+    EARLY_STOPPING_PATIENCE,
     INCLUDE_TAIL_WINDOW,
     INPUT_CHANNELS,
     INPUT_LENGTH,
@@ -31,6 +32,7 @@ from src.config import (
     MISSING_FILL_METHOD,
     MISSING_RATIO_THRESHOLD,
     NORMALIZATION_METHOD,
+    NORMALIZATION_SCOPE,
     NUM_CLASSES,
     NUM_EPOCHS,
     PROJECT_ROOT,
@@ -43,14 +45,23 @@ from src.config import (
     TRANSFORMER_NHEAD,
     TRANSFORMER_NUM_LAYERS,
     WIENER_FILTER_ENABLED,
+    LOW_ENERGY_FILTER_ENABLED,
     WINDOW_SIZE,
     WINDOW_STRIDE,
 )
 
 
-def build_model_config() -> dict:
+def _apply_overrides(config_dict: dict, overrides: Optional[dict] = None) -> dict:
+    if not overrides:
+        return config_dict
+    merged = dict(config_dict)
+    merged.update({key: value for key, value in overrides.items() if value is not None})
+    return merged
+
+
+def build_model_config(overrides: Optional[dict] = None) -> dict:
     """Transformer architecture, mirroring ``TransformerBaseline`` defaults."""
-    return {
+    return _apply_overrides({
         "input_dim": INPUT_CHANNELS,
         "seq_len": INPUT_LENGTH,
         "num_classes": NUM_CLASSES,
@@ -59,10 +70,13 @@ def build_model_config() -> dict:
         "num_layers": TRANSFORMER_NUM_LAYERS,
         "dim_feedforward": TRANSFORMER_DIM_FEEDFORWARD,
         "dropout": TRANSFORMER_DROPOUT,
-    }
+    }, overrides)
 
 
-def build_training_config(loss: str = "weighted_cross_entropy") -> dict:
+def build_training_config(
+    loss: str = "weighted_cross_entropy",
+    overrides: Optional[dict] = None,
+) -> dict:
     """
     Optimizer / schedule / seed.
 
@@ -72,22 +86,25 @@ def build_training_config(loss: str = "weighted_cross_entropy") -> dict:
         The loss actually used for the run. Pass "cross_entropy" or
         "weighted_cross_entropy" based on whether class weighting was applied.
     """
-    return {
+    return _apply_overrides({
         "batch_size": BATCH_SIZE,
         "learning_rate": LEARNING_RATE,
         "num_epochs": NUM_EPOCHS,
+        "early_stopping_patience": EARLY_STOPPING_PATIENCE,
+        "early_stopping_monitor": "val_loss",
         "optimizer": "Adam",
         "loss": loss,
         "random_seed": RANDOM_SEED,
-    }
+    }, overrides)
 
 
-def build_preprocessing_config() -> dict:
+def build_preprocessing_config(overrides: Optional[dict] = None) -> dict:
     """Windowing, normalization, and optional signal-processing flags."""
-    return {
+    return _apply_overrides({
         "window_size": WINDOW_SIZE,
         "window_stride": WINDOW_STRIDE,
         "normalization": NORMALIZATION_METHOD,
+        "normalization_scope": NORMALIZATION_SCOPE,
         "missing_ratio_threshold": MISSING_RATIO_THRESHOLD,
         "fill_method": MISSING_FILL_METHOD,
         "include_tail_window": INCLUDE_TAIL_WINDOW,
@@ -95,23 +112,39 @@ def build_preprocessing_config() -> dict:
         "resample_enabled": RESAMPLE_ENABLED,
         "lowpass_enabled": LOWPASS_FILTER_ENABLED,
         "wiener_enabled": WIENER_FILTER_ENABLED,
-    }
+        "low_energy_filter_enabled": LOW_ENERGY_FILTER_ENABLED,
+        "outlier_clipping_enabled": False,
+        "silence_removal_enabled": False,
+    }, overrides)
 
 
-def build_experiment_config(loss: str = "weighted_cross_entropy") -> dict:
+def build_experiment_config(
+    loss: str = "weighted_cross_entropy",
+    model_overrides: Optional[dict] = None,
+    training_overrides: Optional[dict] = None,
+    preprocessing_overrides: Optional[dict] = None,
+    runtime_info: Optional[dict] = None,
+) -> dict:
     """Full experiment snapshot: model + training + preprocessing."""
-    return {
-        "model_config": build_model_config(),
-        "training_config": build_training_config(loss=loss),
-        "preprocessing_config": build_preprocessing_config(),
+    config = {
+        "model_config": build_model_config(model_overrides),
+        "training_config": build_training_config(loss=loss, overrides=training_overrides),
+        "preprocessing_config": build_preprocessing_config(preprocessing_overrides),
         "channel_selection": CHANNEL_SELECTION,
     }
+    if runtime_info is not None:
+        config["runtime_info"] = runtime_info
+    return config
 
 
 def save_experiment_config_files(
     loss: str = "weighted_cross_entropy",
     checkpoints_dir: Optional[Path] = None,
     results_dir: Optional[Path] = None,
+    model_overrides: Optional[dict] = None,
+    training_overrides: Optional[dict] = None,
+    preprocessing_overrides: Optional[dict] = None,
+    runtime_info: Optional[dict] = None,
 ) -> tuple[Path, Path]:
     """
     Write the standalone reproducibility JSON files.
@@ -131,10 +164,20 @@ def save_experiment_config_files(
     experiment_config_path = results_dir / "transformer_experiment_config.json"
 
     model_config_path.write_text(
-        json.dumps(build_model_config(), indent=2), encoding="utf-8"
+        json.dumps(build_model_config(model_overrides), indent=2), encoding="utf-8"
     )
     experiment_config_path.write_text(
-        json.dumps(build_experiment_config(loss=loss), indent=2), encoding="utf-8"
+        json.dumps(
+            build_experiment_config(
+                loss=loss,
+                model_overrides=model_overrides,
+                training_overrides=training_overrides,
+                preprocessing_overrides=preprocessing_overrides,
+                runtime_info=runtime_info,
+            ),
+            indent=2,
+        ),
+        encoding="utf-8",
     )
     return model_config_path, experiment_config_path
 

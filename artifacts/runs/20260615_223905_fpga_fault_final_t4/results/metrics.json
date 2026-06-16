@@ -1,0 +1,351 @@
+{
+  "run_dir": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4",
+  "data_stats": {
+    "data_dir": "/kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda",
+    "max_files": null,
+    "total_files_after_filter": 1951,
+    "train_files_total": 1365,
+    "val_files_total": 195,
+    "test_files_total": 391,
+    "train_files_kept": 1365,
+    "train_files_dropped": 0,
+    "val_files_kept": 195,
+    "val_files_dropped": 0,
+    "test_files_kept": 391,
+    "test_files_dropped": 0,
+    "train_samples": 333060,
+    "val_samples": 47580,
+    "test_samples": 95404,
+    "window_shape": [
+      1024,
+      8
+    ],
+    "window_size": 1024,
+    "window_stride": 1024,
+    "batch_size": 64,
+    "normalization": {
+      "scope": "per_window",
+      "method": "zscore",
+      "epsilon": 1e-08,
+      "global_stats": null,
+      "global_stats_fitted_on": null
+    },
+    "tail_window_info": {
+      "enabled": false,
+      "mode": null,
+      "train": {
+        "normal": 333060,
+        "tail": 0,
+        "total": 333060
+      },
+      "val": {
+        "normal": 47580,
+        "tail": 0,
+        "total": 47580
+      },
+      "test": {
+        "normal": 95404,
+        "tail": 0,
+        "total": 95404
+      },
+      "total_normal": 476044,
+      "total_tail": 0
+    },
+    "train_class_window_counts": {
+      "normal": 8296,
+      "imbalance": 56852,
+      "misalignment": 85156,
+      "bearing_fault": 182756
+    },
+    "val_class_window_counts": {
+      "normal": 1220,
+      "imbalance": 8052,
+      "misalignment": 12200,
+      "bearing_fault": 26108
+    },
+    "test_class_window_counts": {
+      "normal": 2440,
+      "imbalance": 16348,
+      "misalignment": 24156,
+      "bearing_fault": 52460
+    },
+    "train_augmented": false,
+    "augmentation": {
+      "smote_applied": false,
+      "noise_injection_applied": false,
+      "noise_std": 0.01,
+      "original_samples": 333060,
+      "augmented_samples": 333060
+    },
+    "train_augmentation_cache_used": false,
+    "train_augmentation_cache_path": null,
+    "preprocessing_cache_enabled": true,
+    "preprocessing_cache_path": "/kaggle/working/artifacts/cache/preprocessed_files",
+    "preprocessing_timing_seconds": {
+      "global_normalization_fit": 0.0,
+      "split_materialization": {
+        "train": 1071.3654188300002,
+        "val": 150.03265792399998,
+        "test": 301.103018434
+      },
+      "total_split_materialization": 1522.5010951880001
+    },
+    "estimated_materialized_ram_bytes": {
+      "train": 10916374560,
+      "val": 1559482080,
+      "test": 3126961504,
+      "total": 15602818144
+    },
+    "estimated_materialized_ram_gib": {
+      "train": 10.167,
+      "val": 1.452,
+      "test": 2.912,
+      "total": 14.531
+    },
+    "num_workers": 0,
+    "pin_memory": true,
+    "persistent_workers": false
+  },
+  "dataloader_build_seconds": 1525.297784595,
+  "resource_info": {
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "device": "cuda",
+    "peak_gpu_memory_bytes": 303979520,
+    "peak_gpu_memory_gib": 0.28310298919677734,
+    "batch_size": 64,
+    "normalization_scope": "per_window"
+  },
+  "timing_info": {
+    "first_train_step_seconds": 1.5334260320000794,
+    "val_seconds_history": [
+      26.59825061499987,
+      26.700465597999937,
+      26.5930586759996,
+      26.645891191999908,
+      26.740971110999453,
+      26.639158943999973,
+      26.533778623001126,
+      26.49553585099966,
+      26.579184661999534,
+      26.660612486999526,
+      26.50962163999975,
+      26.536065262000193,
+      26.739140097999552,
+      26.64412908000122,
+      26.601444081999944,
+      26.75487681099912
+    ],
+    "train_seconds_history": [
+      919.40457926,
+      923.1390780729998,
+      923.6498342479995,
+      923.2467401889999,
+      923.6858144200005,
+      923.2384133109999,
+      921.7485884840007,
+      922.4180066289991,
+      922.3858298380001,
+      922.9359095230011,
+      922.6977191759997,
+      921.9629106320008,
+      923.435821441999,
+      923.1698326779988,
+      922.2971844029998,
+      923.2128382599985
+    ],
+    "total_training_seconds": 15188.712006414,
+    "evaluation_seconds": {
+      "val": 26.81429367199962,
+      "test": 53.57834002099844
+    }
+  },
+  "imbalance_info": {
+    "class_counts": [
+      8296,
+      56852,
+      85156,
+      182756
+    ],
+    "imbalance_ratio": 22.02941131591797,
+    "class_weights_applied": true,
+    "class_weights": [
+      10.036765098571777,
+      1.4645922183990479,
+      0.9777936935424805,
+      0.45560747385025024
+    ]
+  },
+  "best_epoch": 10,
+  "best_val_loss": 0.03525530488663179,
+  "stopped_epoch": 16,
+  "early_stopped": true,
+  "early_stopping_patience": 6,
+  "val_acc_at_best_val_loss": 0.9868011769651114,
+  "val_loss": 0.03525530488663179,
+  "val_acc": 0.9868011769651114,
+  "val_confusion_matrix": [
+    [
+      1218,
+      0,
+      2,
+      0
+    ],
+    [
+      16,
+      8012,
+      13,
+      11
+    ],
+    [
+      37,
+      0,
+      12101,
+      62
+    ],
+    [
+      53,
+      174,
+      260,
+      25621
+    ]
+  ],
+  "val_per_class_accuracy": {
+    "0": 0.9983606557377049,
+    "1": 0.9950322901142573,
+    "2": 0.9918852459016393,
+    "3": 0.9813467136509882
+  },
+  "val_f2_metrics": {
+    "per_class": {
+      "normal": {
+        "precision": 0.9199395770392749,
+        "recall": 0.9983606557377049,
+        "f2": 0.9816247582205029,
+        "support": 1220
+      },
+      "imbalance": {
+        "precision": 0.9787441974102126,
+        "recall": 0.9950322901142573,
+        "f2": 0.991731445264148,
+        "support": 8052
+      },
+      "misalignment": {
+        "precision": 0.9777795733678086,
+        "recall": 0.9918852459016393,
+        "f2": 0.98903164639728,
+        "support": 12200
+      },
+      "bearing_fault": {
+        "precision": 0.9971588697750448,
+        "recall": 0.9813467136509882,
+        "f2": 0.9844688993744526,
+        "support": 26108
+      }
+    },
+    "macro": {
+      "precision": 0.9684055543980852,
+      "recall": 0.9916562263511475,
+      "f2": 0.9867141873140959
+    },
+    "weighted": {
+      "precision": 0.9870935083797622,
+      "recall": 0.9868011769651114,
+      "f2": 0.9867949540397427
+    }
+  },
+  "val_macro_f2": 0.9867141873140959,
+  "val_weighted_f2": 0.9867949540397427,
+  "val_fault_vs_normal": {
+    "captured_faults": 46254,
+    "missed_faults": 106,
+    "false_alarms": 2,
+    "actual_faults": 46360,
+    "actual_normal": 1220,
+    "fault_recall": 0.9977135461604831,
+    "false_alarm_rate": 0.001639344262295082
+  },
+  "test_loss": 0.046769618185536176,
+  "test_acc": 0.9821705588864199,
+  "test_confusion_matrix": [
+    [
+      2383,
+      3,
+      52,
+      2
+    ],
+    [
+      21,
+      16159,
+      40,
+      128
+    ],
+    [
+      152,
+      42,
+      23856,
+      106
+    ],
+    [
+      63,
+      670,
+      422,
+      51305
+    ]
+  ],
+  "test_per_class_accuracy": {
+    "0": 0.976639344262295,
+    "1": 0.9884389527770981,
+    "2": 0.9875807252856433,
+    "3": 0.9779832253145253
+  },
+  "test_f2_metrics": {
+    "per_class": {
+      "normal": {
+        "precision": 0.9098892707140129,
+        "recall": 0.976639344262295,
+        "f2": 0.9625171661685112,
+        "support": 2440
+      },
+      "imbalance": {
+        "precision": 0.9576271186440678,
+        "recall": 0.9884389527770981,
+        "f2": 0.9821189798944887,
+        "support": 16348
+      },
+      "misalignment": {
+        "precision": 0.9789084940500615,
+        "recall": 0.9875807252856433,
+        "f2": 0.9858340082979321,
+        "support": 24156
+      },
+      "bearing_fault": {
+        "precision": 0.9954211210492617,
+        "recall": 0.9779832253145253,
+        "f2": 0.9814217559807331,
+        "support": 52460
+      }
+    },
+    "macro": {
+      "precision": 0.9604615011143509,
+      "recall": 0.9826605619098905,
+      "f2": 0.9779729775854163
+    },
+    "weighted": {
+      "precision": 0.9825764490865474,
+      "recall": 0.9821705588864199,
+      "f2": 0.9821749045318894
+    }
+  },
+  "test_macro_f2": 0.9779729775854163,
+  "test_weighted_f2": 0.9821749045318894,
+  "test_fault_vs_normal": {
+    "captured_faults": 92728,
+    "missed_faults": 236,
+    "false_alarms": 57,
+    "actual_faults": 92964,
+    "actual_normal": 2440,
+    "fault_recall": 0.9974613829009079,
+    "false_alarm_rate": 0.02336065573770492
+  }
+}

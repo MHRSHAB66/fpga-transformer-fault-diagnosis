@@ -12,7 +12,8 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 
-from src.config import LABEL_MAP, WINDOW_SIZE, WINDOW_STRIDE
+from src.config import LABEL_MAP, WINDOW_SIZE, WINDOW_STRIDE, NORMALIZATION_METHOD, NORMALIZATION_SCOPE
+from src.data.prepare_dataset import normalize_array, normalize_windows_array
 from src.data.preprocessed_cache import load_or_create_preprocessed_array
 
 
@@ -45,10 +46,16 @@ class WindowedFileDataset(Dataset):
         index_df,
         window_size: int = WINDOW_SIZE,
         stride: int = WINDOW_STRIDE,
+        normalization_scope: str = NORMALIZATION_SCOPE,
+        normalization_method: str = NORMALIZATION_METHOD,
+        global_normalization_stats: Optional[dict] = None,
     ):
         self.index_df = index_df.reset_index(drop=True).copy()
         self.window_size = int(window_size)
         self.stride = int(stride)
+        self.normalization_scope = normalization_scope
+        self.normalization_method = normalization_method
+        self.global_normalization_stats = global_normalization_stats
 
         if self.window_size <= 0:
             raise ValueError("window_size must be positive.")
@@ -122,6 +129,8 @@ class WindowedFileDataset(Dataset):
             raise RuntimeError(
                 f"Cached window metadata points to a dropped file: {file_path}"
             )
+        if self.normalization_scope == "per_file":
+            values = normalize_array(values, method=self.normalization_method)
 
         self._cache_filepath = file_path
         self._cache_values = values
@@ -152,6 +161,14 @@ class WindowedFileDataset(Dataset):
 
         if window.shape[0] != self.window_size:
             raise RuntimeError(f"Invalid window shape for {file_path}: {window.shape}")
+
+        if self.normalization_scope in {"per_window", "global_train"}:
+            window = normalize_windows_array(
+                window.reshape(1, self.window_size, window.shape[-1]),
+                method=self.normalization_method,
+                scope=self.normalization_scope,
+                global_stats=self.global_normalization_stats,
+            )[0]
 
         window_tensor = torch.tensor(window, dtype=torch.float32)
         label_tensor = torch.tensor(label_id, dtype=torch.long)

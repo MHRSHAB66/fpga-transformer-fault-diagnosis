@@ -228,3 +228,24 @@ docs/presentation_progress.pptx
 # docs/**/extracted/ are kept in version control instead.
 docs/references/raw/
 docs/project_definition/raw/
+
+# Generated cache / preprocessed windows (can be multi-GB)
+*.npz
+**/preprocessed_files/
+
+# Kaggle kernel output download directories (large, regeneratable)
+kaggle/final_train/smoke_out/
+kaggle/final_train/final_out/
+kaggle/kernel/res/
+kaggle/kernel/gpures/
+kaggle/kernel/pulled/
+kaggle/kernel/pulled2/
+kaggle/**/__pycache__/
+
+# Scratch / verification workspace (temporary debugging artifacts)
+verification_workspace/
+
+# Slide handoff ZIP and duplicated assets (regenerate from docs/slide_handoff/)
+slide_handoff_package.zip
+docs/slide_handoff/presentation_progress.pptx
+docs/slide_handoff/*.json

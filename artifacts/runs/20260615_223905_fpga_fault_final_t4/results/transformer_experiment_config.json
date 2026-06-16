@@ -1,0 +1,45 @@
+{
+  "model_config": {
+    "input_dim": 8,
+    "seq_len": 1024,
+    "num_classes": 4,
+    "d_model": 32,
+    "nhead": 4,
+    "num_layers": 2,
+    "dim_feedforward": 64,
+    "dropout": 0.1
+  },
+  "training_config": {
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "num_epochs": 30,
+    "early_stopping_patience": 6,
+    "early_stopping_monitor": "val_loss",
+    "optimizer": "Adam",
+    "loss": "weighted_cross_entropy",
+    "random_seed": 42
+  },
+  "preprocessing_config": {
+    "window_size": 1024,
+    "window_stride": 1024,
+    "normalization": "zscore",
+    "normalization_scope": "per_window",
+    "missing_ratio_threshold": 0.2,
+    "fill_method": "median",
+    "include_tail_window": false,
+    "tail_window_mode": null,
+    "resample_enabled": false,
+    "lowpass_enabled": false,
+    "wiener_enabled": false,
+    "low_energy_filter_enabled": false,
+    "outlier_clipping_enabled": false,
+    "silence_removal_enabled": false
+  },
+  "channel_selection": "all",
+  "runtime_info": {
+    "run_dir": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4",
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "device": "cuda"
+  }
+}

@@ -39,6 +39,9 @@ from src.config import (
     INCLUDE_TAIL_WINDOW,
     TAIL_WINDOW_MODE,
     EXPECTED_NUM_COLUMNS,
+    NORMALIZATION_METHOD,
+    NORMALIZATION_SCOPE,
+    EPSILON,
     TRAIN_RATIO,
     VAL_RATIO,
     TEST_RATIO,
@@ -56,7 +59,12 @@ from src.data.cached_augmentation import (
     save_augmented_train_data_cache,
 )
 from src.data.load_data import build_file_index
-from src.data.prepare_dataset import create_windows_from_dataframe, count_normal_windows
+from src.data.prepare_dataset import (
+    create_windows_from_dataframe,
+    count_normal_windows,
+    normalize_array,
+    normalize_windows_array,
+)
 from src.data.preprocessed_cache import (
     load_or_create_preprocessed_array,
     CACHE_DIR as PREPROCESSED_CACHE_DIR,
@@ -288,12 +296,101 @@ def split_file_index(index_df):
     )
 
 
+def fit_global_normalization_stats(
+    index_df,
+    method: str = NORMALIZATION_METHOD,
+    epsilon: float = EPSILON,
+) -> dict:
+    """
+    Fit per-channel normalization constants from training files only.
+
+    Validation/test files are never inspected here, which keeps
+    ``global_train`` leakage-free.
+    """
+    total_rows = 0
+    kept_files = 0
+    dropped_files = 0
+    sum_values = None
+    sum_squares = None
+    min_values = None
+    max_values = None
+
+    for _, row in index_df.iterrows():
+        values = load_or_create_preprocessed_array(row["filepath"])
+        if values is None:
+            dropped_files += 1
+            continue
+        if values.size == 0:
+            continue
+
+        values64 = values.astype(np.float64, copy=False)
+        kept_files += 1
+        total_rows += int(values64.shape[0])
+
+        file_sum = values64.sum(axis=0)
+        file_sum_squares = np.square(values64).sum(axis=0)
+        file_min = values64.min(axis=0)
+        file_max = values64.max(axis=0)
+
+        if sum_values is None:
+            sum_values = file_sum
+            sum_squares = file_sum_squares
+            min_values = file_min
+            max_values = file_max
+        else:
+            sum_values += file_sum
+            sum_squares += file_sum_squares
+            min_values = np.minimum(min_values, file_min)
+            max_values = np.maximum(max_values, file_max)
+
+    if total_rows == 0 or sum_values is None:
+        raise ValueError("Could not fit global normalization stats: no training rows.")
+
+    if method == "zscore":
+        mean = sum_values / total_rows
+        variance = np.maximum((sum_squares / total_rows) - np.square(mean), 0.0)
+        std = np.sqrt(variance)
+        safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
+        return {
+            "scope": "global_train",
+            "method": method,
+            "fitted_on": "train",
+            "files_used": int(kept_files),
+            "files_dropped": int(dropped_files),
+            "rows_used": int(total_rows),
+            "epsilon": float(epsilon),
+            "mean": mean.astype(float).tolist(),
+            "std": safe_std.astype(float).tolist(),
+        }
+
+    if method == "minmax":
+        denom = max_values - min_values
+        safe_denom = np.where(np.abs(denom) < epsilon, 1.0, denom)
+        return {
+            "scope": "global_train",
+            "method": method,
+            "fitted_on": "train",
+            "files_used": int(kept_files),
+            "files_dropped": int(dropped_files),
+            "rows_used": int(total_rows),
+            "epsilon": float(epsilon),
+            "min": min_values.astype(float).tolist(),
+            "max": max_values.astype(float).tolist(),
+            "range": safe_denom.astype(float).tolist(),
+        }
+
+    raise ValueError(f"Unsupported normalization method: {method}")
+
+
 def build_X_y_from_file_index(
     index_df,
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
     include_tail: bool = INCLUDE_TAIL_WINDOW,
     tail_mode: str = TAIL_WINDOW_MODE,
+    normalization_scope: str = NORMALIZATION_SCOPE,
+    normalization_method: str = NORMALIZATION_METHOD,
+    global_normalization_stats: Optional[dict] = None,
 ) -> Tuple[np.ndarray, np.ndarray, int, int, dict]:
     """
     Materialize windowed training arrays from a file index DataFrame.
@@ -313,6 +410,12 @@ def build_X_y_from_file_index(
         would otherwise be discarded.
     tail_mode : str, default=TAIL_WINDOW_MODE
         Tail strategy passed through to ``create_windows_from_dataframe``.
+    normalization_scope : str, default=NORMALIZATION_SCOPE
+        "per_file", "per_window", or "global_train".
+    normalization_method : str, default=NORMALIZATION_METHOD
+        Current supported final method is "zscore".
+    global_normalization_stats : dict or None
+        Required when normalization_scope is "global_train".
 
     Returns
     -------
@@ -363,6 +466,9 @@ def build_X_y_from_file_index(
 
         kept_files += 1
 
+        if normalization_scope == "per_file":
+            values = normalize_array(values, method=normalization_method)
+
         windows = create_windows_from_dataframe(
             values,
             window_size=window_size,
@@ -381,6 +487,14 @@ def build_X_y_from_file_index(
 
         # Preserve alignment between inputs and labels:
         # every appended window gets its matching file-level label.
+        if windows:
+            windows = normalize_windows_array(
+                np.asarray(windows, dtype=np.float32),
+                method=normalization_method,
+                scope=normalization_scope,
+                global_stats=global_normalization_stats,
+            )
+
         for window in windows:
             X.append(window)
             y.append(label_id)
@@ -404,6 +518,11 @@ def build_X_y_from_file_index(
 def build_dataloaders(
     data_dir=DATA_RAW_DIR,
     max_files: Optional[int] = None,
+    batch_size: int = BATCH_SIZE,
+    window_size: int = WINDOW_SIZE,
+    stride: int = WINDOW_STRIDE,
+    normalization_scope: str = NORMALIZATION_SCOPE,
+    normalization_method: str = NORMALIZATION_METHOD,
     use_smote: bool = USE_SMOTE_AUGMENTATION,
     use_noise_injection: bool = USE_NOISE_INJECTION,
     noise_std: float = NOISE_INJECTION_STD,
@@ -420,6 +539,16 @@ def build_dataloaders(
         Root directory of the dataset.
     max_files : int or None, default=None
         Optional limit on the number of files used. Useful for debugging.
+    batch_size : int, default=BATCH_SIZE
+        DataLoader batch size.
+    window_size : int, default=WINDOW_SIZE
+        Number of rows per time window.
+    stride : int, default=WINDOW_STRIDE
+        Step size between consecutive windows.
+    normalization_scope : str, default=NORMALIZATION_SCOPE
+        "per_file", "per_window", or "global_train".
+    normalization_method : str, default=NORMALIZATION_METHOD
+        Normalization method. The final pipeline uses "zscore".
     use_smote : bool, default=USE_SMOTE_AUGMENTATION
         Whether to apply SMOTE-based augmentation to training data.
     use_noise_injection : bool, default=USE_NOISE_INJECTION
@@ -455,6 +584,11 @@ def build_dataloaders(
     - Base preprocessing is reused through the per-file disk cache.
     - All splits are materialized from the per-file preprocessing cache.
     """
+    if normalization_scope not in {"per_file", "per_window", "global_train"}:
+        raise ValueError(f"Unsupported normalization_scope: {normalization_scope!r}")
+    if normalization_scope == "per_window" and normalization_method != "zscore":
+        raise ValueError("per_window normalization currently supports zscore only.")
+
     index_df = build_file_index(data_dir)
     if index_df.empty:
         raise ValueError(f"No CSV files were found under dataset directory: {data_dir}")
@@ -483,6 +617,17 @@ def build_dataloaders(
 
     train_augmentation_cache_used = False
     train_augmentation_cache_path = None
+    global_normalization_stats = None
+    normalization_fit_seconds = 0.0
+    split_materialization_seconds = {}
+
+    if normalization_scope == "global_train":
+        fit_start = time.perf_counter()
+        global_normalization_stats = fit_global_normalization_stats(
+            train_index_df,
+            method=normalization_method,
+        )
+        normalization_fit_seconds = time.perf_counter() - fit_start
 
     if use_smote or use_noise_injection:
         # SMOTE and noise injection operate on arrays, so training is materialized
@@ -492,6 +637,10 @@ def build_dataloaders(
             use_smote=use_smote,
             use_noise_injection=use_noise_injection,
             noise_std=noise_std,
+            window_size=window_size,
+            window_stride=stride,
+            normalization_scope=normalization_scope,
+            normalization_method=normalization_method,
             include_tail=include_tail,
             tail_mode=tail_mode,
         )
@@ -509,12 +658,22 @@ def build_dataloaders(
                 "window_counts", {"normal": 0, "tail": 0, "total": 0}
             )
             train_augmentation_cache_used = True
+            split_materialization_seconds["train"] = 0.0
         else:
+            train_materialize_start = time.perf_counter()
             X_train, y_train, train_kept, train_dropped, train_window_counts = (
                 build_X_y_from_file_index(
-                    train_index_df, include_tail=include_tail, tail_mode=tail_mode
+                    train_index_df,
+                    window_size=window_size,
+                    stride=stride,
+                    include_tail=include_tail,
+                    tail_mode=tail_mode,
+                    normalization_scope=normalization_scope,
+                    normalization_method=normalization_method,
+                    global_normalization_stats=global_normalization_stats,
                 )
             )
+            split_materialization_seconds["train"] = time.perf_counter() - train_materialize_start
             X_train, y_train, augmentation_info = augment_training_data(
                 X_train,
                 y_train,
@@ -544,11 +703,20 @@ def build_dataloaders(
                 "Training dataset contains zero samples after materialization/augmentation."
             )
     else:
+        train_materialize_start = time.perf_counter()
         X_train, y_train, train_kept, train_dropped, train_window_counts = (
             build_X_y_from_file_index(
-                train_index_df, include_tail=include_tail, tail_mode=tail_mode
+                train_index_df,
+                window_size=window_size,
+                stride=stride,
+                include_tail=include_tail,
+                tail_mode=tail_mode,
+                normalization_scope=normalization_scope,
+                normalization_method=normalization_method,
+                global_normalization_stats=global_normalization_stats,
             )
         )
+        split_materialization_seconds["train"] = time.perf_counter() - train_materialize_start
         train_dataset = TensorDataset(
             torch.from_numpy(X_train),
             torch.from_numpy(y_train),
@@ -567,17 +735,35 @@ def build_dataloaders(
             "augmented_samples": len(X_train),
         }
 
+    val_materialize_start = time.perf_counter()
     X_val, y_val, val_kept, val_dropped, val_window_counts = build_X_y_from_file_index(
-        val_index_df, include_tail=include_tail, tail_mode=tail_mode
+        val_index_df,
+        window_size=window_size,
+        stride=stride,
+        include_tail=include_tail,
+        tail_mode=tail_mode,
+        normalization_scope=normalization_scope,
+        normalization_method=normalization_method,
+        global_normalization_stats=global_normalization_stats,
     )
+    split_materialization_seconds["val"] = time.perf_counter() - val_materialize_start
     val_dataset = TensorDataset(
         torch.from_numpy(X_val),
         torch.from_numpy(y_val),
     )
 
+    test_materialize_start = time.perf_counter()
     X_test, y_test, test_kept, test_dropped, test_window_counts = build_X_y_from_file_index(
-        test_index_df, include_tail=include_tail, tail_mode=tail_mode
+        test_index_df,
+        window_size=window_size,
+        stride=stride,
+        include_tail=include_tail,
+        tail_mode=tail_mode,
+        normalization_scope=normalization_scope,
+        normalization_method=normalization_method,
+        global_normalization_stats=global_normalization_stats,
     )
+    split_materialization_seconds["test"] = time.perf_counter() - test_materialize_start
     test_dataset = TensorDataset(
         torch.from_numpy(X_test),
         torch.from_numpy(y_test),
@@ -599,7 +785,7 @@ def build_dataloaders(
 
     train_loader = DataLoader(
         train_dataset,
-        batch_size=BATCH_SIZE,
+        batch_size=batch_size,
         shuffle=True,
         num_workers=num_workers,
         pin_memory=pin_memory,
@@ -608,7 +794,7 @@ def build_dataloaders(
 
     val_loader = DataLoader(
         val_dataset,
-        batch_size=BATCH_SIZE,
+        batch_size=batch_size,
         shuffle=False,
         num_workers=num_workers,
         pin_memory=pin_memory,
@@ -617,7 +803,7 @@ def build_dataloaders(
 
     test_loader = DataLoader(
         test_dataset,
-        batch_size=BATCH_SIZE,
+        batch_size=batch_size,
         shuffle=False,
         num_workers=num_workers,
         pin_memory=pin_memory,
@@ -641,10 +827,29 @@ def build_dataloaders(
     val_class_window_counts = _class_window_counts(y_val)
     test_class_window_counts = _class_window_counts(y_test)
 
+    def _estimated_split_bytes(num_windows: int) -> int:
+        input_bytes = int(num_windows) * int(window_size) * int(EXPECTED_NUM_COLUMNS) * 4
+        label_bytes = int(num_windows) * 8
+        return input_bytes + label_bytes
+
+    estimated_ram_bytes = {
+        "train": _estimated_split_bytes(len(train_dataset)),
+        "val": _estimated_split_bytes(len(val_dataset)),
+        "test": _estimated_split_bytes(len(test_dataset)),
+    }
+    estimated_ram_bytes["total"] = sum(estimated_ram_bytes.values())
+    estimated_ram_gib = {
+        key: round(value / (1024 ** 3), 3)
+        for key, value in estimated_ram_bytes.items()
+    }
+
     stats = {
         "data_dir": str(data_dir),
         "max_files": None if max_files is None else int(max_files),
         "total_files_after_filter": len(index_df),
+        "train_files_total": int(len(train_index_df)),
+        "val_files_total": int(len(val_index_df)),
+        "test_files_total": int(len(test_index_df)),
         "train_files_kept": train_kept,
         "train_files_dropped": train_dropped,
         "val_files_kept": val_kept,
@@ -654,7 +859,19 @@ def build_dataloaders(
         "train_samples": len(train_dataset),
         "val_samples": len(val_dataset),
         "test_samples": len(test_dataset),
-        "window_shape": [WINDOW_SIZE, EXPECTED_NUM_COLUMNS],
+        "window_shape": [int(window_size), EXPECTED_NUM_COLUMNS],
+        "window_size": int(window_size),
+        "window_stride": int(stride),
+        "batch_size": int(batch_size),
+        "normalization": {
+            "scope": str(normalization_scope),
+            "method": str(normalization_method),
+            "epsilon": float(EPSILON),
+            "global_stats": global_normalization_stats,
+            "global_stats_fitted_on": (
+                "train" if normalization_scope == "global_train" else None
+            ),
+        },
         "tail_window_info": {
             "enabled": bool(include_tail),
             "mode": tail_mode if include_tail else None,
@@ -681,6 +898,16 @@ def build_dataloaders(
         "train_augmentation_cache_path": train_augmentation_cache_path,
         "preprocessing_cache_enabled": preprocessing_cache_enabled,
         "preprocessing_cache_path": preprocessing_cache_path,
+        "preprocessing_timing_seconds": {
+            "global_normalization_fit": float(normalization_fit_seconds),
+            "split_materialization": {
+                key: float(value)
+                for key, value in split_materialization_seconds.items()
+            },
+            "total_split_materialization": float(sum(split_materialization_seconds.values())),
+        },
+        "estimated_materialized_ram_bytes": estimated_ram_bytes,
+        "estimated_materialized_ram_gib": estimated_ram_gib,
         "num_workers": int(num_workers),
         "pin_memory": bool(pin_memory),
         "persistent_workers": bool(persistent_workers),

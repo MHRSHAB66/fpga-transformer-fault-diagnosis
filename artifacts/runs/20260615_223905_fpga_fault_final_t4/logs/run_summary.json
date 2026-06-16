@@ -1,0 +1,17 @@
+{
+  "run_dir": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4",
+  "history_path": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4/results/history.json",
+  "metrics_path": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4/results/metrics.json",
+  "checkpoint_path": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4/checkpoints/transformer_best.pt",
+  "normalization_constants_path": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4/results/normalization_constants.json",
+  "plots_dir": "/kaggle/working/artifacts/runs/20260615_223905_fpga_fault_final_t4/plots",
+  "resource_info": {
+    "cuda_available": true,
+    "gpu_name": "Tesla T4",
+    "device": "cuda",
+    "peak_gpu_memory_bytes": 303979520,
+    "peak_gpu_memory_gib": 0.28310298919677734,
+    "batch_size": 64,
+    "normalization_scope": "per_window"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "scope": "per_window",
+  "method": "zscore",
+  "epsilon": 1e-08,
+  "global_stats": null,
+  "global_stats_fitted_on": null
+}

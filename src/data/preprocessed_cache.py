@@ -1,8 +1,10 @@
 """
 Disk cache helpers for base per-file preprocessing.
 
-This module caches the output of the shared preprocessing path:
-raw CSV -> load_one_csv -> preprocess_dataframe -> float32 ndarray
+This module caches the output of the shared preprocessing path before
+normalization scope is applied:
+raw CSV -> load_one_csv -> numeric/missing handling -> optional signal processing
+-> float32 ndarray
 
 The cache is reused by both:
 - materialized training array construction
@@ -19,6 +21,7 @@ from pathlib import Path
 from typing import Optional
 import hashlib
 import json
+import os
 
 import numpy as np
 
@@ -28,6 +31,7 @@ from src.config import (
     MISSING_FILL_METHOD,
     MISSING_RATIO_THRESHOLD,
     NORMALIZATION_METHOD,
+    NORMALIZATION_SCOPE,
     PROJECT_ROOT,
     MAFAULDA_SAMPLE_RATE,
     RESAMPLE_ENABLED,
@@ -53,7 +57,7 @@ from src.data.prepare_dataset import (
 
 
 CACHE_DIR = PROJECT_ROOT / "artifacts" / "cache" / "preprocessed_files"
-CACHE_VERSION = 1
+CACHE_VERSION = 2
 
 
 def _build_preprocessed_cache_key(file_path) -> str:
@@ -94,6 +98,8 @@ def _build_preprocessed_cache_key(file_path) -> str:
         "missing_ratio_threshold": float(MISSING_RATIO_THRESHOLD),
         "missing_fill_method": str(MISSING_FILL_METHOD),
         "normalization_method": str(NORMALIZATION_METHOD),
+        "normalization_scope": str(NORMALIZATION_SCOPE),
+        "cache_value_stage": "pre_normalization_cleaned_array",
         "epsilon": float(EPSILON),
     }
 
@@ -192,7 +198,7 @@ def save_preprocessed_array_cache(file_path, values: np.ndarray) -> Path:
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
     cache_path = get_preprocessed_cache_path(file_path)
-    tmp_path = cache_path.with_suffix(".tmp")
+    tmp_path = cache_path.with_name(f"{cache_path.stem}.{os.getpid()}.tmp")
 
     values = np.asarray(values, dtype=np.float32)
 
@@ -225,14 +231,14 @@ def load_or_create_preprocessed_array(file_path) -> Optional[np.ndarray]:
         return cached
 
     df = load_one_csv(file_path)
-    df = preprocess_dataframe(df)
+    df = preprocess_dataframe(df, normalize=False)
 
     if df is None:
         return None
 
     values = df.to_numpy(copy=True).astype(np.float32, copy=False)
 
-    # Optional signal processing steps, applied after per-file normalization.
+    # Optional signal processing steps, applied before scope normalization.
     # All disabled by default; enable via config flags.
     # Order: lowpass → Wiener → resample → low-energy filter.
     if LOWPASS_FILTER_ENABLED:
