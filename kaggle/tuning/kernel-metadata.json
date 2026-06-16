@@ -1,0 +1,16 @@
+{
+  "id": "mehrdadsheikhabbasi/fpga-fault-tuning",
+  "title": "FPGA Fault Tuning",
+  "code_file": "fpga-fault-tuning.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": [
+    "mehrdadsheikhabbasi/fpga-fault-src",
+    "vuxuancu/mafaulda-full"
+  ]
+}
