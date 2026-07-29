@@ -1,0 +1,38 @@
+{
+  "stage": "6b_fixed_point_simulation",
+  "scheme": "hybrid: int matmul, float softmax/LayerNorm/GELU (HLS-style)",
+  "checkpoint": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\runs\\20260615_223905_fpga_fault_final_t4\\checkpoints\\transformer_best.pt",
+  "device": "cuda",
+  "weight_bits": 16,
+  "act_bits": 16,
+  "numerical_crosscheck": {
+    "max_abs_logit_diff_vs_pytorch": 2.384185791015625e-06,
+    "argmax_match": true
+  },
+  "test_subset": {
+    "total_test_files": 391,
+    "test_files_used": 20,
+    "test_files_dropped": 0,
+    "windows": 4880
+  },
+  "float32": {
+    "accuracy": 0.9844262295081967,
+    "per_class_accuracy": {
+      "normal": null,
+      "imbalance": 0.9665300546448088,
+      "misalignment": 0.9924863387978142,
+      "bearing_fault": 0.9918032786885246
+    }
+  },
+  "fixed_point": {
+    "accuracy": 0.9846311475409836,
+    "accuracy_drop_vs_float": -0.0002049180327868827,
+    "prediction_agreement_vs_float": 0.9997950819672131,
+    "per_class_accuracy": {
+      "normal": null,
+      "imbalance": 0.9665300546448088,
+      "misalignment": 0.9924863387978142,
+      "bearing_fault": 0.9923155737704918
+    }
+  }
+}

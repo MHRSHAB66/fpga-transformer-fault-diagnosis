@@ -1,0 +1,48 @@
+{
+  "stage": "6d_golden_vectors",
+  "checkpoint": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\runs\\20260615_223905_fpga_fault_final_t4\\checkpoints\\transformer_best.pt",
+  "num_vectors": 16,
+  "per_class": 4,
+  "weight_bits": 16,
+  "act_bits": 16,
+  "window_shape": [
+    1024,
+    8
+  ],
+  "flatten_order": "row-major [sequence, channel]; channel order = EXPECTED_COLUMNS",
+  "channel_order": [
+    "tachometer",
+    "acc_axial_b1",
+    "acc_radial_b1",
+    "acc_tangential_b1",
+    "acc_axial_b2",
+    "acc_radial_b2",
+    "acc_tangential_b2",
+    "microphone"
+  ],
+  "class_map": {
+    "normal": 0,
+    "imbalance": 1,
+    "misalignment": 2,
+    "bearing_fault": 3
+  },
+  "normalization": {
+    "scope": "per_window",
+    "method": "zscore"
+  },
+  "golden_output_source": "int16 fixed-point simulator (Stage 6b)",
+  "match_criteria": {
+    "class": "exact",
+    "logit_abs_tolerance": 0.05
+  },
+  "self_check": {
+    "fixed_point_correct": 16,
+    "fixed_point_vs_float_agree": 16
+  },
+  "files": {
+    "arrays": "golden_vectors.npz",
+    "input_normalized": "golden_input_normalized.txt",
+    "input_raw": "golden_input_raw.txt",
+    "expected": "golden_expected.txt"
+  }
+}

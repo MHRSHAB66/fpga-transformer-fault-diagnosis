@@ -1,0 +1,107 @@
+{
+  "stage": "6a_weight_quantization_accuracy",
+  "scope_note": "weight-only fake-quant; activations/LayerNorm/softmax/GELU still float",
+  "checkpoint": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\runs\\20260615_223905_fpga_fault_final_t4\\checkpoints\\transformer_best.pt",
+  "device": "cuda",
+  "model_config": {
+    "input_dim": 8,
+    "seq_len": 1024,
+    "num_classes": 4,
+    "d_model": 32,
+    "nhead": 4,
+    "num_layers": 2,
+    "dim_feedforward": 64,
+    "dropout": 0.1
+  },
+  "normalization_scope": "per_window",
+  "test_subset": {
+    "total_test_files": 391,
+    "test_files_used": 120,
+    "test_files_dropped": 0,
+    "windows": 29280
+  },
+  "quantized_weight_tensors": [
+    "input_projection.weight",
+    "encoder_layers.0.self_attention.in_proj_weight",
+    "encoder_layers.0.self_attention.out_proj.weight",
+    "encoder_layers.0.feedforward.0.weight",
+    "encoder_layers.0.feedforward.3.weight",
+    "encoder_layers.1.self_attention.in_proj_weight",
+    "encoder_layers.1.self_attention.out_proj.weight",
+    "encoder_layers.1.feedforward.0.weight",
+    "encoder_layers.1.feedforward.3.weight",
+    "classifier.1.weight",
+    "classifier.4.weight"
+  ],
+  "float32": {
+    "accuracy": 0.9814207650273225,
+    "per_class_accuracy": {
+      "normal": 0.9680327868852459,
+      "imbalance": 0.9817622950819672,
+      "misalignment": 0.9865871833084948,
+      "bearing_fault": 0.9796404019037547
+    }
+  },
+  "quantized_results": [
+    {
+      "name": "int16_per_tensor",
+      "n_bits": 16,
+      "per_channel": false,
+      "accuracy": 0.9814207650273225,
+      "accuracy_drop_vs_float": 0.0,
+      "per_class_accuracy": {
+        "normal": 0.9680327868852459,
+        "imbalance": 0.9817622950819672,
+        "misalignment": 0.9865871833084948,
+        "bearing_fault": 0.9796404019037547
+      },
+      "tensors_quantized": 11,
+      "params_quantized": 17216
+    },
+    {
+      "name": "int16_per_channel",
+      "n_bits": 16,
+      "per_channel": true,
+      "accuracy": 0.9814207650273225,
+      "accuracy_drop_vs_float": 0.0,
+      "per_class_accuracy": {
+        "normal": 0.9680327868852459,
+        "imbalance": 0.9817622950819672,
+        "misalignment": 0.9865871833084948,
+        "bearing_fault": 0.9796404019037547
+      },
+      "tensors_quantized": 11,
+      "params_quantized": 17216
+    },
+    {
+      "name": "int8_per_tensor",
+      "n_bits": 8,
+      "per_channel": false,
+      "accuracy": 0.9809426229508197,
+      "accuracy_drop_vs_float": 0.0004781420765027633,
+      "per_class_accuracy": {
+        "normal": 0.9672131147540983,
+        "imbalance": 0.9807377049180328,
+        "misalignment": 0.9854694485842027,
+        "bearing_fault": 0.9797065044949762
+      },
+      "tensors_quantized": 11,
+      "params_quantized": 17216
+    },
+    {
+      "name": "int8_per_channel",
+      "n_bits": 8,
+      "per_channel": true,
+      "accuracy": 0.9812841530054645,
+      "accuracy_drop_vs_float": 0.0001366120218579958,
+      "per_class_accuracy": {
+        "normal": 0.9680327868852459,
+        "imbalance": 0.982172131147541,
+        "misalignment": 0.9867113760556383,
+        "bearing_fault": 0.9791776837652036
+      },
+      "tensors_quantized": 11,
+      "params_quantized": 17216
+    }
+  ]
+}

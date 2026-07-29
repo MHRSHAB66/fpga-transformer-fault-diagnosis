@@ -1,0 +1,370 @@
+{
+  "stage": "6c_weight_export",
+  "checkpoint": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\runs\\20260615_223905_fpga_fault_final_t4\\checkpoints\\transformer_best.pt",
+  "weight_bits": 16,
+  "weight_quantization": "symmetric_per_tensor_int16",
+  "value_formula": "real = int_code * scale (per-tensor)",
+  "model_config": {
+    "input_dim": 8,
+    "seq_len": 1024,
+    "num_classes": 4,
+    "d_model": 32,
+    "nhead": 4,
+    "num_layers": 2,
+    "dim_feedforward": 64,
+    "dropout": 0.1
+  },
+  "class_map": {
+    "normal": 0,
+    "imbalance": 1,
+    "misalignment": 2,
+    "bearing_fault": 3
+  },
+  "normalization_contract": {
+    "scope": "per_window",
+    "method": "zscore",
+    "epsilon": 1e-08,
+    "note": "per_window z-score: hardware must compute mean/std over each 1024-sample window per channel before the model, matching training."
+  },
+  "memory_summary": {
+    "int16_weight_values": 17216,
+    "int16_weight_bytes": 34432,
+    "float32_values": 33588,
+    "float32_bytes": 134352
+  },
+  "parameters": {
+    "input_projection.weight": {
+      "role": "weight_matrix",
+      "shape": [
+        32,
+        8
+      ],
+      "dtype": "int16",
+      "quant": "symmetric_per_tensor",
+      "n_bits": 16,
+      "scale": 3.057965659536421e-05,
+      "value_formula": "code * scale"
+    },
+    "input_projection.bias": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "positional_encoding.pe": {
+      "role": "pe_buffer",
+      "shape": [
+        1,
+        1024,
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.0.self_attention.in_proj_weight": {
+      "role": "weight_matrix",
+      "shape": [
+        96,
+        32
+      ],
+      "dtype": "int16",
+      "quant": "symmetric_per_tensor",
+      "n_bits": 16,
+      "scale": 4.061515210196376e-05,
+      "value_formula": "code * scale"
+    },
+    "encoder_layers.0.self_attention.in_proj_bias": {
+      "role": "vector_float",
+      "shape": [
+        96
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.0.self_attention.out_proj.weight": {
+      "role": "weight_matrix",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "int16",
+      "quant": "symmetric_per_tensor",
+      "n_bits": 16,
+      "scale": 2.9075816200929694e-05,
+      "value_formula": "code * scale"
+    },
+    "encoder_layers.0.self_attention.out_proj.bias": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.0.attention_norm.weight": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.0.attention_norm.bias": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.0.feedforward.0.weight": {
+      "role": "weight_matrix",
+      "shape": [
+        64,
+        32
+      ],
+      "dtype": "int16",
+      "quant": "symmetric_per_tensor",
+      "n_bits": 16,
+      "scale": 2.4153290723916143e-05,
+      "value_formula": "code * scale"
+    },
+    "encoder_layers.0.feedforward.0.bias": {
+      "role": "vector_float",
+      "shape": [
+        64
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.0.feedforward.3.weight": {
+      "role": "weight_matrix",
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "int16",
+      "quant": "symmetric_per_tensor",
+      "n_bits": 16,
+      "scale": 2.5190225642290898e-05,
+      "value_formula": "code * scale"
+    },
+    "encoder_layers.0.feedforward.3.bias": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.0.feedforward_norm.weight": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.0.feedforward_norm.bias": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.1.self_attention.in_proj_weight": {
+      "role": "weight_matrix",
+      "shape": [
+        96,
+        32
+      ],
+      "dtype": "int16",
+      "quant": "symmetric_per_tensor",
+      "n_bits": 16,
+      "scale": 2.8927146558999084e-05,
+      "value_formula": "code * scale"
+    },
+    "encoder_layers.1.self_attention.in_proj_bias": {
+      "role": "vector_float",
+      "shape": [
+        96
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.1.self_attention.out_proj.weight": {
+      "role": "weight_matrix",
+      "shape": [
+        32,
+        32
+      ],
+      "dtype": "int16",
+      "quant": "symmetric_per_tensor",
+      "n_bits": 16,
+      "scale": 2.1992365873302333e-05,
+      "value_formula": "code * scale"
+    },
+    "encoder_layers.1.self_attention.out_proj.bias": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.1.attention_norm.weight": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.1.attention_norm.bias": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.1.feedforward.0.weight": {
+      "role": "weight_matrix",
+      "shape": [
+        64,
+        32
+      ],
+      "dtype": "int16",
+      "quant": "symmetric_per_tensor",
+      "n_bits": 16,
+      "scale": 3.298601950518787e-05,
+      "value_formula": "code * scale"
+    },
+    "encoder_layers.1.feedforward.0.bias": {
+      "role": "vector_float",
+      "shape": [
+        64
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.1.feedforward.3.weight": {
+      "role": "weight_matrix",
+      "shape": [
+        32,
+        64
+      ],
+      "dtype": "int16",
+      "quant": "symmetric_per_tensor",
+      "n_bits": 16,
+      "scale": 3.302183540654369e-05,
+      "value_formula": "code * scale"
+    },
+    "encoder_layers.1.feedforward.3.bias": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.1.feedforward_norm.weight": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "encoder_layers.1.feedforward_norm.bias": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "classifier.0.weight": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "classifier.0.bias": {
+      "role": "vector_float",
+      "shape": [
+        32
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "classifier.1.weight": {
+      "role": "weight_matrix",
+      "shape": [
+        16,
+        32
+      ],
+      "dtype": "int16",
+      "quant": "symmetric_per_tensor",
+      "n_bits": 16,
+      "scale": 2.567290903243702e-05,
+      "value_formula": "code * scale"
+    },
+    "classifier.1.bias": {
+      "role": "vector_float",
+      "shape": [
+        16
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    },
+    "classifier.4.weight": {
+      "role": "weight_matrix",
+      "shape": [
+        4,
+        16
+      ],
+      "dtype": "int16",
+      "quant": "symmetric_per_tensor",
+      "n_bits": 16,
+      "scale": 4.471248757909052e-05,
+      "value_formula": "code * scale"
+    },
+    "classifier.4.bias": {
+      "role": "vector_float",
+      "shape": [
+        4
+      ],
+      "dtype": "float32",
+      "quant": "none",
+      "note": "kept high precision; fixed-point form set in Stage 6b"
+    }
+  },
+  "npz_file": "transformer_int16_weights.npz"
+}
