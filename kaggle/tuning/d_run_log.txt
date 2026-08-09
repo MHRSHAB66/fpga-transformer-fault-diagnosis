@@ -1,0 +1,70 @@
+[{"stream_name":"stdout","time":5.341443529,"data":"[   0.0m] Tuning run directory : /kaggle/working/tuning_20260801_055346\n"}
+,{"stream_name":"stdout","time":5.341489307,"data":"[   0.0m] Time budget          : 8.0 h\n"}
+,{"stream_name":"stdout","time":5.341495271,"data":"[   0.0m] Configs planned      : 6\n"}
+,{"stream_name":"stdout","time":6.770787973,"data":"[   0.0m] code_root=/kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-src\n"}
+,{"stream_name":"stdout","time":6.770819718,"data":"[   0.0m] raw_dir  =/kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda\n"}
+,{"stream_name":"stdout","time":7.06618555,"data":"[   0.0m] device=cuda  (Tesla T4)\n"}
+,{"stream_name":"stdout","time":7.066215363,"data":"[   0.0m] Building DataLoaders (preprocessing runs once; all configs share the tensors)...\n"}
+,{"stream_name":"stdout","time":9.957688957,"data":"[INFO] Found 1951 CSV files in /kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda\n"}
+,{"stream_name":"stdout","time":1402.340794671,"data":"[  23.3m] DataLoaders ready in 23.3m\n"}
+,{"stream_name":"stdout","time":1402.341223589,"data":"[  23.3m]   train=333,060  val=47,580  test=95,404  windows\n"}
+,{"stream_name":"stdout","time":1402.659607457,"data":"[  23.3m]   Class weights: [10.037, 1.465, 0.978, 0.456]\n"}
+,{"stream_name":"stdout","time":1402.659631904,"data":"[  23.3m] TUNING_RUN_ONLY active -\u003e running ['D_d64_slow']\n"}
+,{"stream_name":"stdout","time":1402.659638859,"data":"[  23.3m] ============================================================\n"}
+,{"stream_name":"stdout","time":1402.659643976,"data":"[  23.3m] Config D_d64_slow  |  Largest config; lr=5e-4; strong upper bound but heavier HW cost\n"}
+,{"stream_name":"stdout","time":1402.659680017,"data":"[  23.3m]   arch: d_model=64 nhead=4 layers=2 ffn=128 dropout=0.1 lr=0.0005\n"}
+,{"stream_name":"stdout","time":1402.727359395,"data":"[  23.3m]   Parameters: 69,860\n"}
+,{"stream_name":"stdout","time":2487.90371728,"data":"[  41.4m]   Ep 01/12  train_loss=0.2995  train_acc=0.8868  val_loss=0.2340  val_acc=0.9086  [1080s]\n"}
+,{"stream_name":"stdout","time":3574.647854165,"data":"[  59.5m]   Ep 02/12  train_loss=0.1250  train_acc=0.9537  val_loss=0.2786  val_acc=0.8993  [1087s]\n"}
+,{"stream_name":"stdout","time":4661.588899779,"data":"[  77.6m]   Ep 03/12  train_loss=0.0920  train_acc=0.9663  val_loss=0.0804  val_acc=0.9707  [1087s]\n"}
+,{"stream_name":"stdout","time":5748.349969833,"data":"[  95.7m]   Ep 04/12  train_loss=0.0765  train_acc=0.9722  val_loss=0.0768  val_acc=0.9741  [1087s]\n"}
+,{"stream_name":"stdout","time":6835.152457228,"data":"[ 113.8m]   Ep 05/12  train_loss=0.0609  train_acc=0.9781  val_loss=0.0778  val_acc=0.9720  [1087s]\n"}
+,{"stream_name":"stdout","time":7921.982408301,"data":"[ 131.9m]   Ep 06/12  train_loss=0.0544  train_acc=0.9807  val_loss=0.1448  val_acc=0.9558  [1087s]\n"}
+,{"stream_name":"stdout","time":9008.777303357,"data":"[ 150.1m]   Ep 07/12  train_loss=0.0437  train_acc=0.9844  val_loss=0.0357  val_acc=0.9869  [1087s]\n"}
+,{"stream_name":"stdout","time":10095.601042091,"data":"[ 168.2m]   Ep 08/12  train_loss=0.0395  train_acc=0.9863  val_loss=0.0268  val_acc=0.9898  [1087s]\n"}
+,{"stream_name":"stdout","time":11182.327419722,"data":"[ 186.3m]   Ep 09/12  train_loss=0.0319  train_acc=0.9889  val_loss=0.0436  val_acc=0.9834  [1087s]\n"}
+,{"stream_name":"stdout","time":12269.187352069,"data":"[ 204.4m]   Ep 10/12  train_loss=0.0294  train_acc=0.9899  val_loss=0.0174  val_acc=0.9932  [1087s]\n"}
+,{"stream_name":"stdout","time":13356.151713428,"data":"[ 222.5m]   Ep 11/12  train_loss=0.0242  train_acc=0.9915  val_loss=0.0095  val_acc=0.9966  [1087s]\n"}
+,{"stream_name":"stdout","time":14443.062319545,"data":"[ 240.6m]   Ep 12/12  train_loss=0.0222  train_acc=0.9924  val_loss=0.0137  val_acc=0.9951  [1087s]\n"}
+,{"stream_name":"stdout","time":14443.080413831,"data":"[ 240.6m] Config D_d64_slow done  |  val_acc=0.9966  val_macro_f2=0.9965  best_epoch=11  runtime=217.3m\n"}
+,{"stream_name":"stdout","time":14443.081408499,"data":"\n"}
+,{"stream_name":"stdout","time":14443.081425082,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":14443.081429948,"data":"HYPERPARAMETER TUNING  --  VALIDATION SUMMARY\n"}
+,{"stream_name":"stdout","time":14443.081434129,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":14443.081437888,"data":"Config           Params  BestEp  ValLoss   ValAcc  MacroF2   WtdF2  FaultRec  FalseAlm  Runtime       FPGA\n"}
+,{"stream_name":"stdout","time":14443.081441566,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":14443.081445368,"data":"  D_d64_slow     69,860      11   0.0095   0.9966   0.9965  0.9966    0.9996    0.0008   217.3m       good \u003c BEST\n"}
+,{"stream_name":"stdout","time":14443.081449219,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":14443.08145307,"data":"[ 240.6m] \n"}
+,{"stream_name":"stdout","time":14443.08145667,"data":"Selected best config : D_d64_slow  (by val_macro_f2 then val_acc)\n"}
+,{"stream_name":"stdout","time":14443.081460747,"data":"[ 240.6m] Running test set evaluation for D_d64_slow...\n"}
+,{"stream_name":"stdout","time":14506.337348495,"data":"\n"}
+,{"stream_name":"stdout","time":14506.337417371,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":14506.33742502,"data":"  TEST SET COMPARISON  --  D_d64_slow  vs  Baseline\n"}
+,{"stream_name":"stdout","time":14506.337429815,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":14506.337434292,"data":"  Metric                  Best Config     Baseline      Delta\n"}
+,{"stream_name":"stdout","time":14506.337438989,"data":"  ------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":14506.337443633,"data":"  test_acc                     0.9930       0.9822    +0.0108\n"}
+,{"stream_name":"stdout","time":14506.337448109,"data":"  test_macro_f2                0.9910       0.9780    +0.0130\n"}
+,{"stream_name":"stdout","time":14506.337458175,"data":"  fault_recall                 0.9992       0.9975    +0.0017\n"}
+,{"stream_name":"stdout","time":14506.337461578,"data":"  false_alarm_rate             0.0082       0.0234    -0.0152\n"}
+,{"stream_name":"stdout","time":14506.337464613,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":14506.337467705,"data":"[ 241.7m] \n"}
+,{"stream_name":"stdout","time":14506.337470708,"data":"Decision: CONSIDER REPLACING with D_d64_slow (Dacc=+0.0108, Dfault_recall=+0.0017, Dmacro_f2=+0.0130). FPGA suitability: good. Verify Stage 8 resource budget before committing.\n"}
+,{"stream_name":"stdout","time":14506.338178462,"data":"[ 241.7m] \n"}
+,{"stream_name":"stdout","time":14506.338191894,"data":"Final report saved -\u003e /kaggle/working/tuning_20260801_055346/tuning_final_report.json\n"}
+,{"stream_name":"stdout","time":14506.339321884,"data":"\n"}
+,{"stream_name":"stdout","time":14506.339337771,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":14506.339345167,"data":"  DECISION\n"}
+,{"stream_name":"stdout","time":14506.339348134,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":14506.339376454,"data":"  CONSIDER REPLACING with D_d64_slow (Dacc=+0.0108, Dfault_recall=+0.0017, Dmacro_f2=+0.0130). FPGA suitability: good. Verify Stage 8 resource budget before committing.\n"}
+,{"stream_name":"stdout","time":14506.339381906,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":14506.339385777,"data":"\n"}
+,{"stream_name":"stdout","time":14506.339389617,"data":"Total runtime: 241.7m\n"}
+,{"stream_name":"stderr","time":14511.459447511,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":14511.459475661,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":14511.715894584,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":14511.71592529,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":14512.376313099,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":14513.63959392,"data":"[NbConvertApp] Writing 439575 bytes to __results__.html\n"}
+]

@@ -1,0 +1,88 @@
+[   0.0m] Tuning run directory : /kaggle/working/tuning_20260731_143537
+[   0.0m] Time budget          : 8.0 h
+[   0.0m] Configs planned      : 6
+[   0.0m] code_root=/kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-src
+[   0.0m] raw_dir  =/kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda
+[   0.0m] device=cuda  (Tesla T4)
+[   0.0m] Building DataLoaders (preprocessing runs once; all configs share the tensors)...
+[INFO] Found 1951 CSV files in /kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda
+[  25.0m] DataLoaders ready in 25.0m
+[  25.0m]   train=333,060  val=47,580  test=95,404  windows
+[  25.0m]   Class weights: [10.037, 1.465, 0.978, 0.456]
+[  25.0m] TUNING_RUN_ONLY active -> running ['E_3layers', 'C_d48', 'D_d64_slow']
+[  25.0m] ============================================================
+[  25.0m] Config E_3layers  |  Depth 2->3; moderate HW cost; useful if attention diversity helps
+[  25.0m]   arch: d_model=32 nhead=4 layers=3 ffn=64 dropout=0.1 lr=0.001
+[  25.0m]   Parameters: 26,580
+[  48.5m]   Ep 01/12  train_loss=0.3304  train_acc=0.8765  val_loss=0.1655  val_acc=0.9413  [1403s]
+[  72.0m]   Ep 02/12  train_loss=0.1431  train_acc=0.9485  val_loss=0.1986  val_acc=0.9291  [1409s]
+[  95.5m]   Ep 03/12  train_loss=0.1116  train_acc=0.9610  val_loss=0.1252  val_acc=0.9558  [1409s]
+[ 119.0m]   Ep 04/12  train_loss=0.0934  train_acc=0.9672  val_loss=0.0994  val_acc=0.9647  [1408s]
+[ 142.5m]   Ep 05/12  train_loss=0.0791  train_acc=0.9726  val_loss=0.0843  val_acc=0.9686  [1408s]
+[ 165.9m]   Ep 06/12  train_loss=0.0722  train_acc=0.9758  val_loss=0.1055  val_acc=0.9631  [1408s]
+[ 189.4m]   Ep 07/12  train_loss=0.0676  train_acc=0.9764  val_loss=0.0946  val_acc=0.9666  [1408s]
+[ 212.9m]   Ep 08/12  train_loss=0.0592  train_acc=0.9794  val_loss=0.0638  val_acc=0.9763  [1409s]
+[ 236.3m]   Ep 09/12  train_loss=0.0544  train_acc=0.9809  val_loss=0.0932  val_acc=0.9704  [1408s]
+[ 259.8m]   Ep 10/12  train_loss=0.0522  train_acc=0.9819  val_loss=0.0375  val_acc=0.9873  [1407s]
+[ 283.2m]   Ep 11/12  train_loss=0.0484  train_acc=0.9835  val_loss=0.0753  val_acc=0.9739  [1407s]
+[ 306.7m]   Ep 12/12  train_loss=0.0470  train_acc=0.9834  val_loss=0.0386  val_acc=0.9861  [1407s]
+[ 306.7m] Config E_3layers done  |  val_acc=0.9873  val_macro_f2=0.9852  best_epoch=10  runtime=281.6m
+[ 306.7m] ============================================================
+[ 306.7m] Config C_d48  |  d_model=48 (non-pow2); FPGA fixed-point layout less clean
+[ 306.7m]   arch: d_model=48 nhead=4 layers=2 ffn=96 dropout=0.1 lr=0.001
+[ 306.7m]   Parameters: 39,724
+[ 324.7m]   Ep 01/12  train_loss=0.3056  train_acc=0.8811  val_loss=0.4879  val_acc=0.8189  [1083s]
+[ 342.8m]   Ep 02/12  train_loss=0.1395  train_acc=0.9484  val_loss=0.0941  val_acc=0.9653  [1081s]
+[ 360.8m]   Ep 03/12  train_loss=0.1076  train_acc=0.9617  val_loss=0.1350  val_acc=0.9536  [1083s]
+[ 378.9m]   Ep 04/12  train_loss=0.0942  train_acc=0.9664  val_loss=0.1445  val_acc=0.9496  [1084s]
+[ 396.9m]   Ep 05/12  train_loss=0.0785  train_acc=0.9728  val_loss=0.0797  val_acc=0.9689  [1084s]
+[ 415.0m]   Ep 06/12  train_loss=0.0715  train_acc=0.9748  val_loss=0.0516  val_acc=0.9813  [1084s]
+[ 433.1m]   Ep 07/12  train_loss=0.0619  train_acc=0.9783  val_loss=0.0467  val_acc=0.9823  [1085s]
+[ 451.1m]   Ep 08/12  train_loss=0.0570  train_acc=0.9805  val_loss=0.0845  val_acc=0.9700  [1084s]
+[ 469.2m]   Ep 09/12  train_loss=0.0516  train_acc=0.9826  val_loss=0.0455  val_acc=0.9841  [1083s]
+[ 487.2m]   Ep 10/12  train_loss=0.0488  train_acc=0.9835  val_loss=0.0422  val_acc=0.9841  [1082s]
+[ 505.3m]   Ep 11/12  train_loss=0.0434  train_acc=0.9850  val_loss=0.0216  val_acc=0.9927  [1082s]
+[ 523.3m]   Ep 12/12  train_loss=0.0387  train_acc=0.9868  val_loss=0.0605  val_acc=0.9810  [1083s]
+[ 523.3m] Config C_d48 done  |  val_acc=0.9927  val_macro_f2=0.9898  best_epoch=11  runtime=216.6m
+[ 523.3m] [BUDGET] -43.3m remaining < 80m threshold -- skipping D_d64_slow and all subsequent configs.
+
+----------------------------------------------------------------------------------------------------
+HYPERPARAMETER TUNING  --  VALIDATION SUMMARY
+----------------------------------------------------------------------------------------------------
+Config           Params  BestEp  ValLoss   ValAcc  MacroF2   WtdF2  FaultRec  FalseAlm  Runtime       FPGA
+----------------------------------------------------------------------------------------------------
+  E_3layers      26,580      10   0.0375   0.9873   0.9852  0.9874    0.9977    0.0057   281.6m       good
+  C_d48          39,724      11   0.0216   0.9927   0.9898  0.9927    0.9982    0.0098   216.6m   ~limited < BEST
+----------------------------------------------------------------------------------------------------
+[ 523.3m] 
+Selected best config : C_d48  (by val_macro_f2 then val_acc)
+[ 523.3m] Running test set evaluation for C_d48...
+
+================================================================
+  TEST SET COMPARISON  --  C_d48  vs  Baseline
+================================================================
+  Metric                  Best Config     Baseline      Delta
+  ------------------------------------------------------------
+  test_acc                     0.9875       0.9822    +0.0053
+  test_macro_f2                0.9835       0.9780    +0.0055
+  fault_recall                 0.9977       0.9975    +0.0002
+  false_alarm_rate             0.0143       0.0234    -0.0091
+================================================================
+[ 525.2m] 
+Decision: CONSIDER REPLACING with C_d48 (Dacc=+0.0053, Dfault_recall=+0.0002, Dmacro_f2=+0.0055). FPGA suitability: ~limited. Verify Stage 8 resource budget before committing.
+[ 525.2m] 
+Final report saved -> /kaggle/working/tuning_20260731_143537/tuning_final_report.json
+
+================================================================
+  DECISION
+================================================================
+  CONSIDER REPLACING with C_d48 (Dacc=+0.0053, Dfault_recall=+0.0002, Dmacro_f2=+0.0055). FPGA suitability: ~limited. Verify Stage 8 resource budget before committing.
+================================================================
+
+Total runtime: 525.2m
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __script__.ipynb to html
+[NbConvertApp] Writing 439632 bytes to __results__.html

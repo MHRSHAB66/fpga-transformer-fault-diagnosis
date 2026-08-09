@@ -1,0 +1,69 @@
+[   0.0m] Tuning run directory : /kaggle/working/tuning_20260801_055346
+[   0.0m] Time budget          : 8.0 h
+[   0.0m] Configs planned      : 6
+[   0.0m] code_root=/kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-src
+[   0.0m] raw_dir  =/kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda
+[   0.0m] device=cuda  (Tesla T4)
+[   0.0m] Building DataLoaders (preprocessing runs once; all configs share the tensors)...
+[INFO] Found 1951 CSV files in /kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda
+[  23.3m] DataLoaders ready in 23.3m
+[  23.3m]   train=333,060  val=47,580  test=95,404  windows
+[  23.3m]   Class weights: [10.037, 1.465, 0.978, 0.456]
+[  23.3m] TUNING_RUN_ONLY active -> running ['D_d64_slow']
+[  23.3m] ============================================================
+[  23.3m] Config D_d64_slow  |  Largest config; lr=5e-4; strong upper bound but heavier HW cost
+[  23.3m]   arch: d_model=64 nhead=4 layers=2 ffn=128 dropout=0.1 lr=0.0005
+[  23.3m]   Parameters: 69,860
+[  41.4m]   Ep 01/12  train_loss=0.2995  train_acc=0.8868  val_loss=0.2340  val_acc=0.9086  [1080s]
+[  59.5m]   Ep 02/12  train_loss=0.1250  train_acc=0.9537  val_loss=0.2786  val_acc=0.8993  [1087s]
+[  77.6m]   Ep 03/12  train_loss=0.0920  train_acc=0.9663  val_loss=0.0804  val_acc=0.9707  [1087s]
+[  95.7m]   Ep 04/12  train_loss=0.0765  train_acc=0.9722  val_loss=0.0768  val_acc=0.9741  [1087s]
+[ 113.8m]   Ep 05/12  train_loss=0.0609  train_acc=0.9781  val_loss=0.0778  val_acc=0.9720  [1087s]
+[ 131.9m]   Ep 06/12  train_loss=0.0544  train_acc=0.9807  val_loss=0.1448  val_acc=0.9558  [1087s]
+[ 150.1m]   Ep 07/12  train_loss=0.0437  train_acc=0.9844  val_loss=0.0357  val_acc=0.9869  [1087s]
+[ 168.2m]   Ep 08/12  train_loss=0.0395  train_acc=0.9863  val_loss=0.0268  val_acc=0.9898  [1087s]
+[ 186.3m]   Ep 09/12  train_loss=0.0319  train_acc=0.9889  val_loss=0.0436  val_acc=0.9834  [1087s]
+[ 204.4m]   Ep 10/12  train_loss=0.0294  train_acc=0.9899  val_loss=0.0174  val_acc=0.9932  [1087s]
+[ 222.5m]   Ep 11/12  train_loss=0.0242  train_acc=0.9915  val_loss=0.0095  val_acc=0.9966  [1087s]
+[ 240.6m]   Ep 12/12  train_loss=0.0222  train_acc=0.9924  val_loss=0.0137  val_acc=0.9951  [1087s]
+[ 240.6m] Config D_d64_slow done  |  val_acc=0.9966  val_macro_f2=0.9965  best_epoch=11  runtime=217.3m
+
+----------------------------------------------------------------------------------------------------
+HYPERPARAMETER TUNING  --  VALIDATION SUMMARY
+----------------------------------------------------------------------------------------------------
+Config           Params  BestEp  ValLoss   ValAcc  MacroF2   WtdF2  FaultRec  FalseAlm  Runtime       FPGA
+----------------------------------------------------------------------------------------------------
+  D_d64_slow     69,860      11   0.0095   0.9966   0.9965  0.9966    0.9996    0.0008   217.3m       good < BEST
+----------------------------------------------------------------------------------------------------
+[ 240.6m] 
+Selected best config : D_d64_slow  (by val_macro_f2 then val_acc)
+[ 240.6m] Running test set evaluation for D_d64_slow...
+
+================================================================
+  TEST SET COMPARISON  --  D_d64_slow  vs  Baseline
+================================================================
+  Metric                  Best Config     Baseline      Delta
+  ------------------------------------------------------------
+  test_acc                     0.9930       0.9822    +0.0108
+  test_macro_f2                0.9910       0.9780    +0.0130
+  fault_recall                 0.9992       0.9975    +0.0017
+  false_alarm_rate             0.0082       0.0234    -0.0152
+================================================================
+[ 241.7m] 
+Decision: CONSIDER REPLACING with D_d64_slow (Dacc=+0.0108, Dfault_recall=+0.0017, Dmacro_f2=+0.0130). FPGA suitability: good. Verify Stage 8 resource budget before committing.
+[ 241.7m] 
+Final report saved -> /kaggle/working/tuning_20260801_055346/tuning_final_report.json
+
+================================================================
+  DECISION
+================================================================
+  CONSIDER REPLACING with D_d64_slow (Dacc=+0.0108, Dfault_recall=+0.0017, Dmacro_f2=+0.0130). FPGA suitability: good. Verify Stage 8 resource budget before committing.
+================================================================
+
+Total runtime: 241.7m
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __script__.ipynb to html
+[NbConvertApp] Writing 439575 bytes to __results__.html

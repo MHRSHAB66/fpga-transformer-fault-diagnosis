@@ -1,0 +1,189 @@
+{
+  "generated": "2026-08-01 19:03",
+  "source": "Kaggle kernel fpga-fault-tuning v2 (TUNING_RUN_ONLY=E,C,D); metrics parsed from run log",
+  "fixed_settings": {
+    "window_size": 1024,
+    "stride": 1024,
+    "normalization": "per_window/zscore",
+    "batch_size": 64,
+    "max_epochs": 12,
+    "patience": 3,
+    "seed": 42
+  },
+  "completed_now": [
+    "E_3layers",
+    "C_d48",
+    "D_d64_slow",
+    "P_prior_like"
+  ],
+  "skipped_now": [],
+  "skip_reason": "8h budget consumed (E=281.6m, C=216.6m); D_d64_slow needs its own session",
+  "new_results": {
+    "E_3layers": {
+      "name": "E_3layers",
+      "n_params": 26580,
+      "best_epoch": 10,
+      "best_val_loss": 0.0375,
+      "val_acc": 0.9873,
+      "val_macro_f2": 0.9852,
+      "val_weighted_f2": 0.9874,
+      "val_fault_recall": 0.9977,
+      "val_false_alarm": 0.0057,
+      "runtime_min": 281.6,
+      "fpga": "good",
+      "config": {
+        "d_model": 32,
+        "nhead": 4,
+        "num_layers": 3,
+        "dim_feedforward": 64,
+        "lr": 0.001
+      }
+    },
+    "C_d48": {
+      "name": "C_d48",
+      "n_params": 39724,
+      "best_epoch": 11,
+      "best_val_loss": 0.0216,
+      "val_acc": 0.9927,
+      "val_macro_f2": 0.9898,
+      "val_weighted_f2": 0.9927,
+      "val_fault_recall": 0.9982,
+      "val_false_alarm": 0.0098,
+      "runtime_min": 216.6,
+      "fpga": "~limited",
+      "config": {
+        "d_model": 48,
+        "nhead": 4,
+        "num_layers": 2,
+        "dim_feedforward": 96,
+        "lr": 0.001
+      }
+    },
+    "D_d64_slow": {
+      "name": "D_d64_slow",
+      "n_params": 69860,
+      "best_epoch": 11,
+      "best_val_loss": 0.0095,
+      "val_acc": 0.9966,
+      "val_macro_f2": 0.9965,
+      "val_weighted_f2": 0.9966,
+      "val_fault_recall": 0.9996,
+      "val_false_alarm": 0.0008,
+      "runtime_min": 217.3,
+      "fpga": "good",
+      "config": {
+        "d_model": 64,
+        "nhead": 4,
+        "num_layers": 2,
+        "dim_feedforward": 128,
+        "lr": 0.0005
+      },
+      "test": {
+        "test_acc": 0.993,
+        "test_macro_f2": 0.991,
+        "fault_recall": 0.9992,
+        "false_alarm_rate": 0.0082
+      }
+    },
+    "P_prior_like": {
+      "name": "P_prior_like",
+      "n_params": 1582,
+      "best_epoch": 6,
+      "best_val_loss": 0.3025,
+      "val_acc": 0.8926,
+      "val_macro_f2": 0.8662,
+      "val_weighted_f2": 0.8932,
+      "val_fault_recall": 0.9665,
+      "val_false_alarm": 0.0656,
+      "runtime_min": 69.6,
+      "fpga": "excellent",
+      "config": {
+        "d_model": 8,
+        "nhead": 2,
+        "num_layers": 2,
+        "dim_feedforward": 8,
+        "lr": 0.001,
+        "classifier_hidden": 50,
+        "model": "prior_like",
+        "note": "paper-inspired; width 8 no projection; key_dim approx; no pos-enc"
+      },
+      "test": {
+        "test_acc": 0.8926,
+        "test_macro_f2": 0.8734,
+        "fault_recall": 0.9744,
+        "false_alarm_rate": 0.0652
+      },
+      "note": "complete rerun (kernel v5, test-reload bug fixed); val differs slightly from first run (GPU nondeterminism)"
+    }
+  },
+  "C_d48_test_vs_baseline": {
+    "C_d48": {
+      "test_macro_f2": 0.9835,
+      "fault_recall": 0.9977,
+      "false_alarm_rate": 0.0143
+    },
+    "baseline": {
+      "test_macro_f2": 0.978,
+      "fault_recall": 0.9975,
+      "false_alarm_rate": 0.0234
+    }
+  },
+  "all_completed_val_ranked": [
+    {
+      "name": "D_d64_slow",
+      "n_params": 69860,
+      "val_acc": 0.9966,
+      "val_macro_f2": 0.9965,
+      "val_fault_recall": 0.9996,
+      "val_false_alarm": 0.0008
+    },
+    {
+      "name": "C_d48",
+      "n_params": 39724,
+      "val_acc": 0.9927,
+      "val_macro_f2": 0.9898,
+      "val_fault_recall": 0.9982,
+      "val_false_alarm": 0.0098
+    },
+    {
+      "name": "E_3layers",
+      "n_params": 26580,
+      "val_acc": 0.9873,
+      "val_macro_f2": 0.9852,
+      "val_fault_recall": 0.9977,
+      "val_false_alarm": 0.0057
+    },
+    {
+      "name": "A_baseline",
+      "n_params": 18036,
+      "val_acc": 0.9819041614123581,
+      "val_macro_f2": 0.9822635788463078,
+      "val_fault_recall": 0.9969585849870578,
+      "val_false_alarm": 0.002459016393442623
+    },
+    {
+      "name": "F_1layer",
+      "n_params": 9492,
+      "val_acc": 0.9828499369482976,
+      "val_macro_f2": 0.9737132055546196,
+      "val_fault_recall": 0.9930112165660052,
+      "val_false_alarm": 0.010655737704918032
+    },
+    {
+      "name": "B_wide_ffn",
+      "n_params": 26356,
+      "val_acc": 0.9745691467002943,
+      "val_macro_f2": 0.967938591893585,
+      "val_fault_recall": 0.9928386540120794,
+      "val_false_alarm": 0.004098360655737705
+    },
+    {
+      "name": "P_prior_like",
+      "n_params": 1582,
+      "val_acc": 0.8926,
+      "val_macro_f2": 0.8662,
+      "val_fault_recall": 0.9665,
+      "val_false_alarm": 0.0656
+    }
+  ]
+}

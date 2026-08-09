@@ -1,0 +1,68 @@
+[{"stream_name":"stdout","time":6.7617258,"data":"[   0.0m] Tuning run directory : /kaggle/working/tuning_20260801_135307\n"}
+,{"stream_name":"stdout","time":6.76179374,"data":"[   0.0m] Time budget          : 8.0 h\n"}
+,{"stream_name":"stdout","time":6.761798128,"data":"[   0.0m] Configs planned      : 7\n"}
+,{"stream_name":"stdout","time":8.104192966,"data":"[   0.0m] code_root=/kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-src\n"}
+,{"stream_name":"stdout","time":8.104229999,"data":"[   0.0m] raw_dir  =/kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda\n"}
+,{"stream_name":"stdout","time":8.413926369,"data":"[   0.0m] device=cuda  (Tesla T4)\n"}
+,{"stream_name":"stdout","time":8.413966325,"data":"[   0.0m] Building DataLoaders (preprocessing runs once; all configs share the tensors)...\n"}
+,{"stream_name":"stdout","time":12.217974303,"data":"[INFO] Found 1951 CSV files in /kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda\n"}
+,{"stream_name":"stdout","time":1392.353132822,"data":"[  23.1m] DataLoaders ready in 23.1m\n"}
+,{"stream_name":"stdout","time":1392.358243786,"data":"[  23.1m]   train=333,060  val=47,580  test=95,404  windows\n"}
+,{"stream_name":"stdout","time":1392.730974766,"data":"[  23.1m]   Class weights: [10.037, 1.465, 0.978, 0.456]\n"}
+,{"stream_name":"stdout","time":1392.731012153,"data":"[  23.1m] TUNING_RUN_ONLY active -\u003e running ['P_prior_like']\n"}
+,{"stream_name":"stdout","time":1392.731016834,"data":"[  23.1m] ============================================================\n"}
+,{"stream_name":"stdout","time":1392.731020162,"data":"[  23.1m] Config P_prior_like  |  prior-work-inspired: width 8 (no proj), ReLU FFN 8-\u003e8, GAP, Dense 8-\u003e50-\u003e4; key_dim approx (4/head) + no pos-enc\n"}
+,{"stream_name":"stdout","time":1392.731024628,"data":"[  23.1m]   arch: d_model=8 nhead=2 layers=2 ffn=8 dropout=0.2 lr=0.001\n"}
+,{"stream_name":"stdout","time":1392.767016348,"data":"[  23.1m]   Parameters: 1,582\n"}
+,{"stream_name":"stdout","time":1858.239133988,"data":"[  30.9m]   Ep 01/12  train_loss=0.6059  train_acc=0.7524  val_loss=0.7093  val_acc=0.7278  [460s]\n"}
+,{"stream_name":"stdout","time":2321.824335112,"data":"[  38.6m]   Ep 02/12  train_loss=0.3722  train_acc=0.8585  val_loss=0.4713  val_acc=0.8232  [464s]\n"}
+,{"stream_name":"stdout","time":2784.894828792,"data":"[  46.3m]   Ep 03/12  train_loss=0.3184  train_acc=0.8765  val_loss=0.5543  val_acc=0.8033  [463s]\n"}
+,{"stream_name":"stdout","time":3249.13161068,"data":"[  54.0m]   Ep 04/12  train_loss=0.2820  train_acc=0.8889  val_loss=0.3559  val_acc=0.8724  [464s]\n"}
+,{"stream_name":"stdout","time":3712.759699379,"data":"[  61.8m]   Ep 05/12  train_loss=0.2566  train_acc=0.8988  val_loss=0.3944  val_acc=0.8629  [464s]\n"}
+,{"stream_name":"stdout","time":4175.876581927,"data":"[  69.5m]   Ep 06/12  train_loss=0.2441  train_acc=0.9033  val_loss=0.3025  val_acc=0.8926  [463s]\n"}
+,{"stream_name":"stdout","time":4639.38098684,"data":"[  77.2m]   Ep 07/12  train_loss=0.2330  train_acc=0.9085  val_loss=0.4114  val_acc=0.8556  [464s]\n"}
+,{"stream_name":"stdout","time":5102.840200719,"data":"[  84.9m]   Ep 08/12  train_loss=0.2213  train_acc=0.9124  val_loss=0.3966  val_acc=0.8613  [463s]\n"}
+,{"stream_name":"stdout","time":5566.599942452,"data":"[  92.7m]   Ep 09/12  train_loss=0.2150  train_acc=0.9157  val_loss=0.4208  val_acc=0.8482  [464s]\n"}
+,{"stream_name":"stdout","time":5566.599988209,"data":"[  92.7m]   Early stopping at epoch 9\n"}
+,{"stream_name":"stdout","time":5566.627728549,"data":"[  92.7m] Config P_prior_like done  |  val_acc=0.8926  val_macro_f2=0.8662  best_epoch=6  runtime=69.6m\n"}
+,{"stream_name":"stdout","time":5566.628748648,"data":"\n"}
+,{"stream_name":"stdout","time":5566.628763236,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":5566.628785776,"data":"HYPERPARAMETER TUNING  --  VALIDATION SUMMARY\n"}
+,{"stream_name":"stdout","time":5566.628788823,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":5566.628791248,"data":"Config           Params  BestEp  ValLoss   ValAcc  MacroF2   WtdF2  FaultRec  FalseAlm  Runtime       FPGA\n"}
+,{"stream_name":"stdout","time":5566.628793634,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":5566.628795893,"data":"  P_prior_like    1,582       6   0.3025   0.8926   0.8662  0.8932    0.9665    0.0656    69.6m  excellent \u003c BEST\n"}
+,{"stream_name":"stdout","time":5566.628798836,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":5566.628801184,"data":"[  92.7m] \n"}
+,{"stream_name":"stdout","time":5566.628803598,"data":"Selected best config : P_prior_like  (by val_macro_f2 then val_acc)\n"}
+,{"stream_name":"stdout","time":5566.628805836,"data":"[  92.7m] Running test set evaluation for P_prior_like...\n"}
+,{"stream_name":"stdout","time":5614.412313995,"data":"\n"}
+,{"stream_name":"stdout","time":5614.412362009,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":5614.41236791,"data":"  TEST SET COMPARISON  --  P_prior_like  vs  Baseline\n"}
+,{"stream_name":"stdout","time":5614.412372662,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":5614.412377195,"data":"  Metric                  Best Config     Baseline      Delta\n"}
+,{"stream_name":"stdout","time":5614.412381602,"data":"  ------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":5614.41238613,"data":"  test_acc                     0.8926       0.9822    -0.0896\n"}
+,{"stream_name":"stdout","time":5614.412390555,"data":"  test_macro_f2                0.8734       0.9780    -0.1046\n"}
+,{"stream_name":"stdout","time":5614.412394992,"data":"  fault_recall                 0.9744       0.9975    -0.0231\n"}
+,{"stream_name":"stdout","time":5614.412399531,"data":"  false_alarm_rate             0.0652       0.0234    +0.0418\n"}
+,{"stream_name":"stdout","time":5614.412403809,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":5614.412408476,"data":"[  93.5m] \n"}
+,{"stream_name":"stdout","time":5614.412412923,"data":"Decision: KEEP ORIGINAL BASELINE -- P_prior_like degrades safety metrics (fault_recall D=-0.0231, false_alarm D=+0.0418).\n"}
+,{"stream_name":"stdout","time":5614.413193091,"data":"[  93.5m] \n"}
+,{"stream_name":"stdout","time":5614.413211856,"data":"Final report saved -\u003e /kaggle/working/tuning_20260801_135307/tuning_final_report.json\n"}
+,{"stream_name":"stdout","time":5614.413663302,"data":"\n"}
+,{"stream_name":"stdout","time":5614.413679643,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":5614.413685136,"data":"  DECISION\n"}
+,{"stream_name":"stdout","time":5614.413689993,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":5614.413694881,"data":"  KEEP ORIGINAL BASELINE -- P_prior_like degrades safety metrics (fault_recall D=-0.0231, false_alarm D=+0.0418).\n"}
+,{"stream_name":"stdout","time":5614.413700363,"data":"================================================================\n"}
+,{"stream_name":"stdout","time":5614.413721616,"data":"\n"}
+,{"stream_name":"stdout","time":5614.413725559,"data":"Total runtime: 93.5m\n"}
+,{"stream_name":"stderr","time":5620.605727398,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":5620.605786087,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":5620.946536897,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":5620.94656808,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":5621.770106607,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":5623.191926397,"data":"[NbConvertApp] Writing 454508 bytes to __results__.html\n"}
+]

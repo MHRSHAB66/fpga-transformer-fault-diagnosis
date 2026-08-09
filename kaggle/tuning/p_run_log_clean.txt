@@ -1,0 +1,56 @@
+[   0.0m] Tuning run directory : /kaggle/working/tuning_20260801_105744
+[   0.0m] Time budget          : 8.0 h
+[   0.0m] Configs planned      : 7
+[   0.0m] code_root=/kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-src
+[   0.0m] raw_dir  =/kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda
+[   0.0m] device=cuda  (Tesla T4)
+[   0.0m] Building DataLoaders (preprocessing runs once; all configs share the tensors)...
+[INFO] Found 1951 CSV files in /kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda
+[  23.4m] DataLoaders ready in 23.4m
+[  23.4m]   train=333,060  val=47,580  test=95,404  windows
+[  23.4m]   Class weights: [10.037, 1.465, 0.978, 0.456]
+[  23.4m] TUNING_RUN_ONLY active -> running ['P_prior_like']
+[  23.4m] ============================================================
+[  23.4m] Config P_prior_like  |  prior-work-inspired: width 8 (no proj), ReLU FFN 8->8, GAP, Dense 8->50->4; key_dim approx (4/head) + no pos-enc
+[  23.4m]   arch: d_model=8 nhead=2 layers=2 ffn=8 dropout=0.2 lr=0.001
+[  23.4m]   Parameters: 1,582
+[  31.2m]   Ep 01/12  train_loss=0.6090  train_acc=0.7503  val_loss=0.6492  val_acc=0.7464  [463s]
+[  39.0m]   Ep 02/12  train_loss=0.3735  train_acc=0.8579  val_loss=0.4529  val_acc=0.8311  [469s]
+[  46.9m]   Ep 03/12  train_loss=0.3142  train_acc=0.8799  val_loss=0.5225  val_acc=0.8141  [470s]
+[  54.7m]   Ep 04/12  train_loss=0.2795  train_acc=0.8911  val_loss=0.3694  val_acc=0.8673  [469s]
+[  62.5m]   Ep 05/12  train_loss=0.2586  train_acc=0.8988  val_loss=0.3920  val_acc=0.8629  [468s]
+[  70.3m]   Ep 06/12  train_loss=0.2443  train_acc=0.9041  val_loss=0.3146  val_acc=0.8887  [468s]
+[  78.1m]   Ep 07/12  train_loss=0.2331  train_acc=0.9091  val_loss=0.3803  val_acc=0.8637  [468s]
+[  85.9m]   Ep 08/12  train_loss=0.2207  train_acc=0.9130  val_loss=0.4058  val_acc=0.8607  [468s]
+[  93.7m]   Ep 09/12  train_loss=0.2151  train_acc=0.9161  val_loss=0.3933  val_acc=0.8631  [469s]
+[  93.7m]   Early stopping at epoch 9
+[  93.7m] Config P_prior_like done  |  val_acc=0.8887  val_macro_f2=0.8563  best_epoch=6  runtime=70.3m
+
+----------------------------------------------------------------------------------------------------
+HYPERPARAMETER TUNING  --  VALIDATION SUMMARY
+----------------------------------------------------------------------------------------------------
+Config           Params  BestEp  ValLoss   ValAcc  MacroF2   WtdF2  FaultRec  FalseAlm  Runtime       FPGA
+----------------------------------------------------------------------------------------------------
+  P_prior_like    1,582       6   0.3146   0.8887   0.8563  0.8898    0.9624    0.0648    70.3m  excellent < BEST
+----------------------------------------------------------------------------------------------------
+[  93.7m] 
+Selected best config : P_prior_like  (by val_macro_f2 then val_acc)
+[  93.7m] Running test set evaluation for P_prior_like...
+Traceback (most recent call last):
+  File "/kaggle/src/script.py", line 950, in <module>
+    main()
+  File "/kaggle/src/script.py", line 870, in main
+    best_model.load_state_dict(ckpt["model_state_dict"])
+  File "/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py", line 2635, in load_state_dict
+    raise RuntimeError(
+RuntimeError: Error(s) in loading state_dict for TuningTransformer:
+	Missing key(s) in state_dict: "input_proj.weight", "input_proj.bias", "pos_enc.pe", "encoder.0.attn.in_proj_weight", "encoder.0.attn.in_proj_bias", "encoder.0.attn.out_proj.weight", "encoder.0.attn.out_proj.bias", "encoder.0.attn_norm.weight", "encoder.0.attn_norm.bias", "encoder.0.ffn.0.weight", "encoder.0.ffn.0.bias", "encoder.0.ffn.3.weight", "encoder.0.ffn.3.bias", "encoder.0.ffn_norm.weight", "encoder.0.ffn_norm.bias", "encoder.1.attn.in_proj_weight", "encoder.1.attn.in_proj_bias", "encoder.1.attn.out_proj.weight", "encoder.1.attn.out_proj.bias", "encoder.1.attn_norm.weight", "encoder.1.attn_norm.bias", "encoder.1.ffn.0.weight", "encoder.1.ffn.0.bias", "encoder.1.ffn.3.weight", "encoder.1.ffn.3.bias", "encoder.1.ffn_norm.weight", "encoder.1.ffn_norm.bias", "classifier.1.weight", "classifier.1.bias", "classifier.4.weight", "classifier.4.bias". 
+	Unexpected key(s) in state_dict: "blocks.0.norm1.weight", "blocks.0.norm1.bias", "blocks.0.attn.in_proj_weight", "blocks.0.attn.in_proj_bias", "blocks.0.attn.out_proj.weight", "blocks.0.attn.out_proj.bias", "blocks.0.norm2.weight", "blocks.0.norm2.bias", "blocks.0.ffn.0.weight", "blocks.0.ffn.0.bias", "blocks.0.ffn.3.weight", "blocks.0.ffn.3.bias", "blocks.1.norm1.weight", "blocks.1.norm1.bias", "blocks.1.attn.in_proj_weight", "blocks.1.attn.in_proj_bias", "blocks.1.attn.out_proj.weight", "blocks.1.attn.out_proj.bias", "blocks.1.norm2.weight", "blocks.1.norm2.bias", "blocks.1.ffn.0.weight", "blocks.1.ffn.0.bias", "blocks.1.ffn.3.weight", "blocks.1.ffn.3.bias", "classifier.3.weight", "classifier.3.bias". 
+	size mismatch for classifier.0.weight: copying a param with shape torch.Size([50, 8]) from checkpoint, the shape in current model is torch.Size([8]).
+	size mismatch for classifier.0.bias: copying a param with shape torch.Size([50]) from checkpoint, the shape in current model is torch.Size([8]).
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __script__.ipynb to html
+[NbConvertApp] Writing 455431 bytes to __results__.html

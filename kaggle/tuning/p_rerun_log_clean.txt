@@ -1,0 +1,67 @@
+[   0.0m] Tuning run directory : /kaggle/working/tuning_20260801_135307
+[   0.0m] Time budget          : 8.0 h
+[   0.0m] Configs planned      : 7
+[   0.0m] code_root=/kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-src
+[   0.0m] raw_dir  =/kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda
+[   0.0m] device=cuda  (Tesla T4)
+[   0.0m] Building DataLoaders (preprocessing runs once; all configs share the tensors)...
+[INFO] Found 1951 CSV files in /kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda
+[  23.1m] DataLoaders ready in 23.1m
+[  23.1m]   train=333,060  val=47,580  test=95,404  windows
+[  23.1m]   Class weights: [10.037, 1.465, 0.978, 0.456]
+[  23.1m] TUNING_RUN_ONLY active -> running ['P_prior_like']
+[  23.1m] ============================================================
+[  23.1m] Config P_prior_like  |  prior-work-inspired: width 8 (no proj), ReLU FFN 8->8, GAP, Dense 8->50->4; key_dim approx (4/head) + no pos-enc
+[  23.1m]   arch: d_model=8 nhead=2 layers=2 ffn=8 dropout=0.2 lr=0.001
+[  23.1m]   Parameters: 1,582
+[  30.9m]   Ep 01/12  train_loss=0.6059  train_acc=0.7524  val_loss=0.7093  val_acc=0.7278  [460s]
+[  38.6m]   Ep 02/12  train_loss=0.3722  train_acc=0.8585  val_loss=0.4713  val_acc=0.8232  [464s]
+[  46.3m]   Ep 03/12  train_loss=0.3184  train_acc=0.8765  val_loss=0.5543  val_acc=0.8033  [463s]
+[  54.0m]   Ep 04/12  train_loss=0.2820  train_acc=0.8889  val_loss=0.3559  val_acc=0.8724  [464s]
+[  61.8m]   Ep 05/12  train_loss=0.2566  train_acc=0.8988  val_loss=0.3944  val_acc=0.8629  [464s]
+[  69.5m]   Ep 06/12  train_loss=0.2441  train_acc=0.9033  val_loss=0.3025  val_acc=0.8926  [463s]
+[  77.2m]   Ep 07/12  train_loss=0.2330  train_acc=0.9085  val_loss=0.4114  val_acc=0.8556  [464s]
+[  84.9m]   Ep 08/12  train_loss=0.2213  train_acc=0.9124  val_loss=0.3966  val_acc=0.8613  [463s]
+[  92.7m]   Ep 09/12  train_loss=0.2150  train_acc=0.9157  val_loss=0.4208  val_acc=0.8482  [464s]
+[  92.7m]   Early stopping at epoch 9
+[  92.7m] Config P_prior_like done  |  val_acc=0.8926  val_macro_f2=0.8662  best_epoch=6  runtime=69.6m
+
+----------------------------------------------------------------------------------------------------
+HYPERPARAMETER TUNING  --  VALIDATION SUMMARY
+----------------------------------------------------------------------------------------------------
+Config           Params  BestEp  ValLoss   ValAcc  MacroF2   WtdF2  FaultRec  FalseAlm  Runtime       FPGA
+----------------------------------------------------------------------------------------------------
+  P_prior_like    1,582       6   0.3025   0.8926   0.8662  0.8932    0.9665    0.0656    69.6m  excellent < BEST
+----------------------------------------------------------------------------------------------------
+[  92.7m] 
+Selected best config : P_prior_like  (by val_macro_f2 then val_acc)
+[  92.7m] Running test set evaluation for P_prior_like...
+
+================================================================
+  TEST SET COMPARISON  --  P_prior_like  vs  Baseline
+================================================================
+  Metric                  Best Config     Baseline      Delta
+  ------------------------------------------------------------
+  test_acc                     0.8926       0.9822    -0.0896
+  test_macro_f2                0.8734       0.9780    -0.1046
+  fault_recall                 0.9744       0.9975    -0.0231
+  false_alarm_rate             0.0652       0.0234    +0.0418
+================================================================
+[  93.5m] 
+Decision: KEEP ORIGINAL BASELINE -- P_prior_like degrades safety metrics (fault_recall D=-0.0231, false_alarm D=+0.0418).
+[  93.5m] 
+Final report saved -> /kaggle/working/tuning_20260801_135307/tuning_final_report.json
+
+================================================================
+  DECISION
+================================================================
+  KEEP ORIGINAL BASELINE -- P_prior_like degrades safety metrics (fault_recall D=-0.0231, false_alarm D=+0.0418).
+================================================================
+
+Total runtime: 93.5m
+/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\|'
+  cells[i][c] = re.sub('\\\\\|', '|', cell)
+/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\_'
+  text = re.sub(r'_', '\_', text) # Escape underscores in display text
+[NbConvertApp] Converting notebook __script__.ipynb to html
+[NbConvertApp] Writing 454508 bytes to __results__.html

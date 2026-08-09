@@ -136,7 +136,25 @@ TUNING_CONFIGS = [
         "dropout": 0.1, "lr": 5e-4,
         "note": "Largest config; lr=5e-4; strong upper bound but heavier HW cost",
     },
+    # -- P: prior-work-inspired (Koutoulas 4.5.9) -- width 8, no input projection,
+    #    ReLU FFN 8->8, GAP, Dense 8->50->4. Very light; excellent FPGA fit. -----
+    {
+        "name": "P_prior_like",
+        "model": "prior_like",
+        "d_model": 8, "nhead": 2, "num_layers": 2, "dim_feedforward": 8,
+        "dropout": 0.2, "lr": 1e-3, "classifier_hidden": 50,
+        "note": "prior-work-inspired: width 8 (no proj), ReLU FFN 8->8, GAP, "
+                "Dense 8->50->4; key_dim approx (4/head) + no pos-enc",
+    },
 ]
+
+# === Which configs to run ======================================================
+# Default: the three configs that the 8 h time budget skipped in the first
+# session (F_1layer / A_baseline / B_wide_ffn already have saved results).
+# - To run the full six-config grid instead, set this to [].
+# - To run a single leftover config, e.g. ["D_d64_slow"].
+# - The env var TUNING_RUN_ONLY (comma-separated) overrides this at runtime.
+RUN_ONLY_DEFAULT = ["P_prior_like"]  # F/A/B/E/C/D done; now the prior-work-inspired model
 
 # Fixed training hyperparameters (per user spec -- do not change)
 WINDOW_SIZE  = 1024
@@ -261,6 +279,80 @@ class TuningTransformer(nn.Module):
         return self.classifier(x.mean(dim=1))
 
 
+# -- Prior-work-inspired model (Koutoulas thesis, sec 4.5.9) --------------------
+# Encoder-only, but the residual stream stays at the INPUT width (no 8->d_model
+# projection), ReLU FFN d->d, global-average pooling, and a Dense d->hidden->C
+# head. This is *prior-work-inspired*, not an exact reconstruction:
+#   - PyTorch MHA ties per-head dim = d_model/nhead, so with d_model=8/nhead=2 the
+#     per-head key dim is 4, not the paper's key_dim=8 (documented approximation);
+#   - no positional encoding (matching the Keras timeseries-transformer template
+#     the paper follows).
+class _PriorBlock(nn.Module):
+    def __init__(self, d_model, nhead, dim_feedforward, dropout):
+        super().__init__()
+        self.norm1 = nn.LayerNorm(d_model)
+        self.attn = nn.MultiheadAttention(d_model, nhead, dropout=dropout, batch_first=True)
+        self.drop1 = nn.Dropout(dropout)
+        self.norm2 = nn.LayerNorm(d_model)
+        self.ffn = nn.Sequential(
+            nn.Linear(d_model, dim_feedforward),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(dim_feedforward, d_model),
+        )
+        self.drop2 = nn.Dropout(dropout)
+
+    def forward(self, x):
+        h = self.norm1(x)                       # pre-norm, as in the paper
+        a, _ = self.attn(h, h, h, need_weights=False)
+        x = x + self.drop1(a)
+        h = self.norm2(x)
+        x = x + self.drop2(self.ffn(h))
+        return x
+
+
+class PriorLikeTransformer(nn.Module):
+    def __init__(self, d_model, nhead, num_layers, dim_feedforward, dropout,
+                 input_dim=IN_CHANNELS, seq_len=WINDOW_SIZE, num_classes=NUM_CLASSES,
+                 classifier_hidden=50):
+        super().__init__()
+        if d_model % nhead != 0:
+            raise ValueError(f"d_model ({d_model}) must be divisible by nhead ({nhead})")
+        # No input projection when the width already equals the channel count.
+        self.input_proj = None if d_model == input_dim else nn.Linear(input_dim, d_model)
+        self.blocks = nn.ModuleList([
+            _PriorBlock(d_model, nhead, dim_feedforward, dropout)
+            for _ in range(num_layers)
+        ])
+        self.classifier = nn.Sequential(
+            nn.Linear(d_model, classifier_hidden),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(classifier_hidden, num_classes),
+        )
+
+    def forward(self, x):
+        if self.input_proj is not None:
+            x = self.input_proj(x)
+        for b in self.blocks:
+            x = b(x)
+        return self.classifier(x.mean(dim=1))   # global average pooling over seq
+
+
+def build_model(cfg, device):
+    """Pick the model class per config (default = TuningTransformer)."""
+    if cfg.get("model") == "prior_like":
+        return PriorLikeTransformer(
+            d_model=cfg["d_model"], nhead=cfg["nhead"], num_layers=cfg["num_layers"],
+            dim_feedforward=cfg["dim_feedforward"], dropout=cfg["dropout"],
+            classifier_hidden=cfg.get("classifier_hidden", 50),
+        ).to(device)
+    return TuningTransformer(
+        d_model=cfg["d_model"], nhead=cfg["nhead"], num_layers=cfg["num_layers"],
+        dim_feedforward=cfg["dim_feedforward"], dropout=cfg["dropout"],
+    ).to(device)
+
+
 # -- Loss -----------------------------------------------------------------------
 def build_criterion(train_labels: np.ndarray, device: torch.device) -> nn.Module:
     counts = np.bincount(train_labels.astype(np.int64), minlength=NUM_CLASSES).astype(np.float32)
@@ -371,13 +463,7 @@ def train_one_config(
     t_config_start = time.perf_counter()
 
     set_seed(SEED)
-    model = TuningTransformer(
-        d_model=cfg["d_model"],
-        nhead=cfg["nhead"],
-        num_layers=cfg["num_layers"],
-        dim_feedforward=cfg["dim_feedforward"],
-        dropout=cfg["dropout"],
-    ).to(device)
+    model = build_model(cfg, device)
     n_params = count_params(model)
     log(f"  Parameters: {n_params:,}")
 
@@ -703,10 +789,20 @@ def main():
     log(f"  Class weights: {[round(w, 3) for w in criterion.weight.cpu().tolist()]}")
 
     # -- Config sweep -----------------------------------------------------------
+    # Optional subset: to re-run only specific configs (e.g. the ones skipped by
+    # the time budget last session), set the env var
+    #   TUNING_RUN_ONLY="E_3layers,C_d48,D_d64_slow"
+    # An empty/unset value runs the full grid (original behaviour).
+    run_only = ([c.strip() for c in os.environ.get("TUNING_RUN_ONLY", "").split(",")
+                 if c.strip()] or RUN_ONLY_DEFAULT)
+    configs_to_run = [c for c in TUNING_CONFIGS if (not run_only or c["name"] in run_only)]
+    if run_only:
+        log(f"TUNING_RUN_ONLY active -> running {[c['name'] for c in configs_to_run]}")
+
     all_results: list = []
     skipped:     list = []
 
-    for cfg in TUNING_CONFIGS:
+    for cfg in configs_to_run:
         rem = remaining_seconds()
         if rem < MIN_PER_CONFIG_SECONDS:
             log(
@@ -764,13 +860,7 @@ def main():
     log(f"Running test set evaluation for {best_name}...")
     ckpt = torch.load(best_result["checkpoint_path"], map_location=device)
     set_seed(SEED)
-    best_model = TuningTransformer(
-        d_model=best_cfg["d_model"],
-        nhead=best_cfg["nhead"],
-        num_layers=best_cfg["num_layers"],
-        dim_feedforward=best_cfg["dim_feedforward"],
-        dropout=best_cfg["dropout"],
-    ).to(device)
+    best_model = build_model(best_cfg, device)   # honours cfg["model"] (e.g. prior_like)
     best_model.load_state_dict(ckpt["model_state_dict"])
 
     _, test_acc, test_cm = eval_loop(best_model, test_loader, criterion, device)
@@ -817,7 +907,7 @@ def main():
             "seed":           SEED,
         },
         "official_baseline":    OFFICIAL_BASELINE,
-        "configs_attempted":    len(TUNING_CONFIGS),
+        "configs_attempted":    len(configs_to_run),
         "configs_completed":    [r["name"] for r in valid_results],
         "configs_failed":       [r["name"] for r in all_results if r.get("error")],
         "configs_skipped":      skipped,

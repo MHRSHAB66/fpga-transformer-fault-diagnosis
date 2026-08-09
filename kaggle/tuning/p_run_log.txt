@@ -1,0 +1,57 @@
+[{"stream_name":"stdout","time":7.432065765,"data":"[   0.0m] Tuning run directory : /kaggle/working/tuning_20260801_105744\n"}
+,{"stream_name":"stdout","time":7.432112939,"data":"[   0.0m] Time budget          : 8.0 h\n"}
+,{"stream_name":"stdout","time":7.432119329,"data":"[   0.0m] Configs planned      : 7\n"}
+,{"stream_name":"stdout","time":8.393866483,"data":"[   0.0m] code_root=/kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-src\n"}
+,{"stream_name":"stdout","time":8.39390776,"data":"[   0.0m] raw_dir  =/kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda\n"}
+,{"stream_name":"stdout","time":8.703769331,"data":"[   0.0m] device=cuda  (Tesla T4)\n"}
+,{"stream_name":"stdout","time":8.703806375,"data":"[   0.0m] Building DataLoaders (preprocessing runs once; all configs share the tensors)...\n"}
+,{"stream_name":"stdout","time":12.726579421,"data":"[INFO] Found 1951 CSV files in /kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda\n"}
+,{"stream_name":"stdout","time":1411.799217588,"data":"[  23.4m] DataLoaders ready in 23.4m\n"}
+,{"stream_name":"stdout","time":1411.803388023,"data":"[  23.4m]   train=333,060  val=47,580  test=95,404  windows\n"}
+,{"stream_name":"stdout","time":1412.19600045,"data":"[  23.4m]   Class weights: [10.037, 1.465, 0.978, 0.456]\n"}
+,{"stream_name":"stdout","time":1412.196058553,"data":"[  23.4m] TUNING_RUN_ONLY active -\u003e running ['P_prior_like']\n"}
+,{"stream_name":"stdout","time":1412.196063654,"data":"[  23.4m] ============================================================\n"}
+,{"stream_name":"stdout","time":1412.196067311,"data":"[  23.4m] Config P_prior_like  |  prior-work-inspired: width 8 (no proj), ReLU FFN 8-\u003e8, GAP, Dense 8-\u003e50-\u003e4; key_dim approx (4/head) + no pos-enc\n"}
+,{"stream_name":"stdout","time":1412.196071345,"data":"[  23.4m]   arch: d_model=8 nhead=2 layers=2 ffn=8 dropout=0.2 lr=0.001\n"}
+,{"stream_name":"stdout","time":1412.237176272,"data":"[  23.4m]   Parameters: 1,582\n"}
+,{"stream_name":"stdout","time":1880.724206608,"data":"[  31.2m]   Ep 01/12  train_loss=0.6090  train_acc=0.7503  val_loss=0.6492  val_acc=0.7464  [463s]\n"}
+,{"stream_name":"stdout","time":2349.790795859,"data":"[  39.0m]   Ep 02/12  train_loss=0.3735  train_acc=0.8579  val_loss=0.4529  val_acc=0.8311  [469s]\n"}
+,{"stream_name":"stdout","time":2820.046730354,"data":"[  46.9m]   Ep 03/12  train_loss=0.3142  train_acc=0.8799  val_loss=0.5225  val_acc=0.8141  [470s]\n"}
+,{"stream_name":"stdout","time":3289.431532845,"data":"[  54.7m]   Ep 04/12  train_loss=0.2795  train_acc=0.8911  val_loss=0.3694  val_acc=0.8673  [469s]\n"}
+,{"stream_name":"stdout","time":3757.611540021,"data":"[  62.5m]   Ep 05/12  train_loss=0.2586  train_acc=0.8988  val_loss=0.3920  val_acc=0.8629  [468s]\n"}
+,{"stream_name":"stdout","time":4225.1967603,"data":"[  70.3m]   Ep 06/12  train_loss=0.2443  train_acc=0.9041  val_loss=0.3146  val_acc=0.8887  [468s]\n"}
+,{"stream_name":"stdout","time":4692.916290162,"data":"[  78.1m]   Ep 07/12  train_loss=0.2331  train_acc=0.9091  val_loss=0.3803  val_acc=0.8637  [468s]\n"}
+,{"stream_name":"stdout","time":5160.45759614,"data":"[  85.9m]   Ep 08/12  train_loss=0.2207  train_acc=0.9130  val_loss=0.4058  val_acc=0.8607  [468s]\n"}
+,{"stream_name":"stdout","time":5629.396377225,"data":"[  93.7m]   Ep 09/12  train_loss=0.2151  train_acc=0.9161  val_loss=0.3933  val_acc=0.8631  [469s]\n"}
+,{"stream_name":"stdout","time":5629.396427026,"data":"[  93.7m]   Early stopping at epoch 9\n"}
+,{"stream_name":"stdout","time":5629.418697899,"data":"[  93.7m] Config P_prior_like done  |  val_acc=0.8887  val_macro_f2=0.8563  best_epoch=6  runtime=70.3m\n"}
+,{"stream_name":"stdout","time":5629.419718169,"data":"\n"}
+,{"stream_name":"stdout","time":5629.419733389,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":5629.419752648,"data":"HYPERPARAMETER TUNING  --  VALIDATION SUMMARY\n"}
+,{"stream_name":"stdout","time":5629.419757607,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":5629.419761892,"data":"Config           Params  BestEp  ValLoss   ValAcc  MacroF2   WtdF2  FaultRec  FalseAlm  Runtime       FPGA\n"}
+,{"stream_name":"stdout","time":5629.419766762,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":5629.41977121,"data":"  P_prior_like    1,582       6   0.3146   0.8887   0.8563  0.8898    0.9624    0.0648    70.3m  excellent \u003c BEST\n"}
+,{"stream_name":"stdout","time":5629.419776188,"data":"----------------------------------------------------------------------------------------------------\n"}
+,{"stream_name":"stdout","time":5629.419780609,"data":"[  93.7m] \n"}
+,{"stream_name":"stdout","time":5629.419784082,"data":"Selected best config : P_prior_like  (by val_macro_f2 then val_acc)\n"}
+,{"stream_name":"stdout","time":5629.419787798,"data":"[  93.7m] Running test set evaluation for P_prior_like...\n"}
+,{"stream_name":"stderr","time":5629.488623217,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":5629.488657272,"data":"  File \"/kaggle/src/script.py\", line 950, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":5629.489013256,"data":"    main()\n"}
+,{"stream_name":"stderr","time":5629.489532809,"data":"  File \"/kaggle/src/script.py\", line 870, in main\n"}
+,{"stream_name":"stderr","time":5629.489557163,"data":"    best_model.load_state_dict(ckpt[\"model_state_dict\"])\n"}
+,{"stream_name":"stderr","time":5629.489571341,"data":"  File \"/usr/local/lib/python3.12/dist-packages/torch/nn/modules/module.py\", line 2635, in load_state_dict\n"}
+,{"stream_name":"stderr","time":5629.492806769,"data":"    raise RuntimeError(\n"}
+,{"stream_name":"stderr","time":5629.492822639,"data":"RuntimeError: Error(s) in loading state_dict for TuningTransformer:\n"}
+,{"stream_name":"stderr","time":5629.492839079,"data":"\tMissing key(s) in state_dict: \"input_proj.weight\", \"input_proj.bias\", \"pos_enc.pe\", \"encoder.0.attn.in_proj_weight\", \"encoder.0.attn.in_proj_bias\", \"encoder.0.attn.out_proj.weight\", \"encoder.0.attn.out_proj.bias\", \"encoder.0.attn_norm.weight\", \"encoder.0.attn_norm.bias\", \"encoder.0.ffn.0.weight\", \"encoder.0.ffn.0.bias\", \"encoder.0.ffn.3.weight\", \"encoder.0.ffn.3.bias\", \"encoder.0.ffn_norm.weight\", \"encoder.0.ffn_norm.bias\", \"encoder.1.attn.in_proj_weight\", \"encoder.1.attn.in_proj_bias\", \"encoder.1.attn.out_proj.weight\", \"encoder.1.attn.out_proj.bias\", \"encoder.1.attn_norm.weight\", \"encoder.1.attn_norm.bias\", \"encoder.1.ffn.0.weight\", \"encoder.1.ffn.0.bias\", \"encoder.1.ffn.3.weight\", \"encoder.1.ffn.3.bias\", \"encoder.1.ffn_norm.weight\", \"encoder.1.ffn_norm.bias\", \"classifier.1.weight\", \"classifier.1.bias\", \"classifier.4.weight\", \"classifier.4.bias\". \n"}
+,{"stream_name":"stderr","time":5629.492850515,"data":"\tUnexpected key(s) in state_dict: \"blocks.0.norm1.weight\", \"blocks.0.norm1.bias\", \"blocks.0.attn.in_proj_weight\", \"blocks.0.attn.in_proj_bias\", \"blocks.0.attn.out_proj.weight\", \"blocks.0.attn.out_proj.bias\", \"blocks.0.norm2.weight\", \"blocks.0.norm2.bias\", \"blocks.0.ffn.0.weight\", \"blocks.0.ffn.0.bias\", \"blocks.0.ffn.3.weight\", \"blocks.0.ffn.3.bias\", \"blocks.1.norm1.weight\", \"blocks.1.norm1.bias\", \"blocks.1.attn.in_proj_weight\", \"blocks.1.attn.in_proj_bias\", \"blocks.1.attn.out_proj.weight\", \"blocks.1.attn.out_proj.bias\", \"blocks.1.norm2.weight\", \"blocks.1.norm2.bias\", \"blocks.1.ffn.0.weight\", \"blocks.1.ffn.0.bias\", \"blocks.1.ffn.3.weight\", \"blocks.1.ffn.3.bias\", \"classifier.3.weight\", \"classifier.3.bias\". \n"}
+,{"stream_name":"stderr","time":5629.49286929,"data":"\tsize mismatch for classifier.0.weight: copying a param with shape torch.Size([50, 8]) from checkpoint, the shape in current model is torch.Size([8]).\n"}
+,{"stream_name":"stderr","time":5629.492873969,"data":"\tsize mismatch for classifier.0.bias: copying a param with shape torch.Size([50]) from checkpoint, the shape in current model is torch.Size([8]).\n"}
+,{"stream_name":"stderr","time":5636.405335492,"data":"/usr/local/lib/python3.12/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":5636.405376289,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":5636.778561486,"data":"/usr/local/lib/python3.12/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":5636.778596834,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":5637.602180764,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":5639.144674847,"data":"[NbConvertApp] Writing 455431 bytes to __results__.html\n"}
+]
