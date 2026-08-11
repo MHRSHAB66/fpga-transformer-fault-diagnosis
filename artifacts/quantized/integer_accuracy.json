@@ -1,0 +1,35 @@
+{
+  "stage": "6f_full_integer",
+  "scheme": "integer-only: int16 act/weight, int softmax/LayerNorm/GELU via LUT",
+  "checkpoint": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\runs\\20260615_223905_fpga_fault_final_t4\\checkpoints\\transformer_best.pt",
+  "float_crosscheck": {
+    "max_abs_logit_diff": 3.2419464357502648e-06,
+    "argmax_match": true
+  },
+  "test_subset": {
+    "total_test_files": 391,
+    "test_files_used": 12,
+    "test_files_dropped": 0,
+    "windows": 2928
+  },
+  "float32": {
+    "accuracy": 0.9829234972677595,
+    "per_class_accuracy": {
+      "normal": null,
+      "imbalance": 0.9528688524590164,
+      "misalignment": 0.990983606557377,
+      "bearing_fault": 0.9868852459016394
+    }
+  },
+  "integer": {
+    "accuracy": 0.9818989071038251,
+    "accuracy_drop_vs_float": 0.0010245901639344135,
+    "prediction_agreement_vs_float": 0.992827868852459,
+    "per_class_accuracy": {
+      "normal": null,
+      "imbalance": 0.9631147540983607,
+      "misalignment": 0.9918032786885246,
+      "bearing_fault": 0.9795081967213115
+    }
+  }
+}

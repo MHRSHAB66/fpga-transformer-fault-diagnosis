@@ -1,6 +1,6 @@
 {
   "stage": "7_hls_export",
-  "input_scale": 0.000788917684699122,
+  "input_scale": 0.0009643967275991756,
   "act_bits": 16,
   "weight_bits": 16,
   "attn_bits": 16,
