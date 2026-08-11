@@ -1,0 +1,21 @@
+{
+  "stage": "7_hls_export",
+  "input_scale": 0.000788917684699122,
+  "act_bits": 16,
+  "weight_bits": 16,
+  "attn_bits": 16,
+  "exp_frac": 15,
+  "rsqrt_frac": 15,
+  "seq_len": 1024,
+  "in_channels": 8,
+  "d_model": 32,
+  "nhead": 4,
+  "num_layers": 2,
+  "dim_feedforward": 64,
+  "num_classes": 4,
+  "golden": {
+    "count": 16,
+    "correct": 16
+  },
+  "note": "requant/affine constants are float64 here (bit-exact with the Python reference); convert to fixed-point per target board."
+}
