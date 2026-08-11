@@ -1,0 +1,4 @@
+# build artifacts
+tb
+tb.exe
+*.o

@@ -126,7 +126,8 @@ static void attention(const int64_t* x, int l, const Params& p, int64_t* attn_ou
             acc_t denom = 0;
             for (int j = 0; j < SEQ; ++j) {
                 int64_t dd = sc[j] - rowmax;
-                if (dd < -clamp) dd = -clamp; if (dd > 0) dd = 0;
+                if (dd < -clamp) dd = -clamp;
+                if (dd > 0) dd = 0;
                 num[j] = elut[dd + clamp];
                 denom += num[j];
             }
