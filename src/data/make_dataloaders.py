@@ -47,16 +47,6 @@ from src.config import (
     TEST_RATIO,
     BATCH_SIZE,
     DATALOADER_NUM_WORKERS,
-    USE_SMOTE_AUGMENTATION,
-    USE_NOISE_INJECTION,
-    NOISE_INJECTION_STD,
-)
-from src.data.augmentation import augment_training_data
-from src.data.cached_augmentation import (
-    build_train_augmentation_cache_key,
-    get_train_augmentation_cache_path,
-    load_cached_augmented_train_data,
-    save_augmented_train_data_cache,
 )
 from src.data.load_data import build_file_index
 from src.data.prepare_dataset import (
@@ -523,9 +513,6 @@ def build_dataloaders(
     stride: int = WINDOW_STRIDE,
     normalization_scope: str = NORMALIZATION_SCOPE,
     normalization_method: str = NORMALIZATION_METHOD,
-    use_smote: bool = USE_SMOTE_AUGMENTATION,
-    use_noise_injection: bool = USE_NOISE_INJECTION,
-    noise_std: float = NOISE_INJECTION_STD,
     num_workers: int = DATALOADER_NUM_WORKERS,
     include_tail: bool = INCLUDE_TAIL_WINDOW,
     tail_mode: str = TAIL_WINDOW_MODE,
@@ -549,12 +536,6 @@ def build_dataloaders(
         "per_file", "per_window", or "global_train".
     normalization_method : str, default=NORMALIZATION_METHOD
         Normalization method. The final pipeline uses "zscore".
-    use_smote : bool, default=USE_SMOTE_AUGMENTATION
-        Whether to apply SMOTE-based augmentation to training data.
-    use_noise_injection : bool, default=USE_NOISE_INJECTION
-        Whether to apply noise injection to training data.
-    noise_std : float, default=NOISE_INJECTION_STD
-        Standard deviation used for noise injection.
     num_workers : int, default=DATALOADER_NUM_WORKERS
         Number of worker processes used by PyTorch DataLoader.
     include_tail : bool, default=INCLUDE_TAIL_WINDOW
@@ -629,111 +610,36 @@ def build_dataloaders(
         )
         normalization_fit_seconds = time.perf_counter() - fit_start
 
-    if use_smote or use_noise_injection:
-        # SMOTE and noise injection operate on arrays, so training is materialized
-        # before augmentation. Validation and test remain clean and unaugmented.
-        cache_key = build_train_augmentation_cache_key(
+    train_materialize_start = time.perf_counter()
+    X_train, y_train, train_kept, train_dropped, train_window_counts = (
+        build_X_y_from_file_index(
             train_index_df,
-            use_smote=use_smote,
-            use_noise_injection=use_noise_injection,
-            noise_std=noise_std,
             window_size=window_size,
-            window_stride=stride,
-            normalization_scope=normalization_scope,
-            normalization_method=normalization_method,
+            stride=stride,
             include_tail=include_tail,
             tail_mode=tail_mode,
+            normalization_scope=normalization_scope,
+            normalization_method=normalization_method,
+            global_normalization_stats=global_normalization_stats,
         )
-        train_augmentation_cache_path = str(get_train_augmentation_cache_path(cache_key))
-        cached_train_data = load_cached_augmented_train_data(cache_key)
+    )
+    split_materialization_seconds["train"] = time.perf_counter() - train_materialize_start
+    train_dataset = TensorDataset(
+        torch.from_numpy(X_train),
+        torch.from_numpy(y_train),
+    )
 
-        if cached_train_data is not None:
-            X_train, y_train, cache_metadata = cached_train_data
-            augmentation_info = cache_metadata["augmentation_info"]
-            train_kept = int(cache_metadata["train_kept"])
-            train_dropped = int(cache_metadata["train_dropped"])
-            # Pre-augmentation window counts are stored in the cache metadata.
-            # Older caches predate this field; fall back to zeros if absent.
-            train_window_counts = cache_metadata.get(
-                "window_counts", {"normal": 0, "tail": 0, "total": 0}
-            )
-            train_augmentation_cache_used = True
-            split_materialization_seconds["train"] = 0.0
-        else:
-            train_materialize_start = time.perf_counter()
-            X_train, y_train, train_kept, train_dropped, train_window_counts = (
-                build_X_y_from_file_index(
-                    train_index_df,
-                    window_size=window_size,
-                    stride=stride,
-                    include_tail=include_tail,
-                    tail_mode=tail_mode,
-                    normalization_scope=normalization_scope,
-                    normalization_method=normalization_method,
-                    global_normalization_stats=global_normalization_stats,
-                )
-            )
-            split_materialization_seconds["train"] = time.perf_counter() - train_materialize_start
-            X_train, y_train, augmentation_info = augment_training_data(
-                X_train,
-                y_train,
-                use_smote=use_smote,
-                use_noise_injection=use_noise_injection,
-                noise_std=noise_std,
-            )
-            save_augmented_train_data_cache(
-                cache_key,
-                X_train,
-                y_train,
-                {
-                    "augmentation_info": augmentation_info,
-                    "train_kept": int(train_kept),
-                    "train_dropped": int(train_dropped),
-                    "window_counts": train_window_counts,
-                },
-            )
-
-        train_dataset = TensorDataset(
-            torch.from_numpy(X_train),
-            torch.from_numpy(y_train),
+    if len(train_dataset) == 0:
+        raise ValueError(
+            "Training dataset contains zero samples after preprocessing/windowing."
         )
 
-        if len(train_dataset) == 0:
-            raise ValueError(
-                "Training dataset contains zero samples after materialization/augmentation."
-            )
-    else:
-        train_materialize_start = time.perf_counter()
-        X_train, y_train, train_kept, train_dropped, train_window_counts = (
-            build_X_y_from_file_index(
-                train_index_df,
-                window_size=window_size,
-                stride=stride,
-                include_tail=include_tail,
-                tail_mode=tail_mode,
-                normalization_scope=normalization_scope,
-                normalization_method=normalization_method,
-                global_normalization_stats=global_normalization_stats,
-            )
-        )
-        split_materialization_seconds["train"] = time.perf_counter() - train_materialize_start
-        train_dataset = TensorDataset(
-            torch.from_numpy(X_train),
-            torch.from_numpy(y_train),
-        )
-
-        if len(train_dataset) == 0:
-            raise ValueError(
-                "Training dataset contains zero samples after preprocessing/windowing."
-            )
-
-        augmentation_info = {
-            "smote_applied": False,
-            "noise_injection_applied": False,
-            "noise_std": float(noise_std),
-            "original_samples": len(X_train),
-            "augmented_samples": len(X_train),
-        }
+    augmentation_info = {
+        "smote_applied": False,
+        "noise_injection_applied": False,
+        "original_samples": len(X_train),
+        "augmented_samples": len(X_train),
+    }
 
     val_materialize_start = time.perf_counter()
     X_val, y_val, val_kept, val_dropped, val_window_counts = build_X_y_from_file_index(
@@ -812,7 +718,7 @@ def build_dataloaders(
 
     preprocessing_cache_enabled = True
     preprocessing_cache_path = str(PREPROCESSED_CACHE_DIR)
-    train_augmented = bool(use_smote or use_noise_injection)
+    train_augmented = False
 
     # Per-class window counts for distribution reporting.
     label_names_by_id = {v: k for k, v in LABEL_MAP.items()}

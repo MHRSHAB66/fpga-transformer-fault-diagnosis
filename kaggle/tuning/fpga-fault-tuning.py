@@ -146,6 +146,39 @@ TUNING_CONFIGS = [
         "note": "prior-work-inspired: width 8 (no proj), ReLU FFN 8->8, GAP, "
                 "Dense 8->50->4; key_dim approx (4/head) + no pos-enc",
     },
+    # -- G: d_model=16, 1 layer, nhead=2 -- sweet spot search between F and P ----
+    #    F_1layer (d=32, ~9.5k param, ~98.3% val) vs P_prior_like (d=8, 1.6k, 88.9%)
+    #    G_d16 targets ~2500 param; head_dim=8 kept same as F to preserve quality.
+    {
+        "name": "G_d16",
+        "d_model": 16, "nhead": 2, "num_layers": 1, "dim_feedforward": 32,
+        "dropout": 0.1, "lr": 1e-3,
+        "note": "d=16, 1layer, nhead=2 (head_dim=8); ~2500 param; FPGA-minimal candidate",
+    },
+    # -- H: d_model=24 -- midpoint between G (95.9%) and F (97.9%). Keeps head_dim=8
+    #    via nhead=3. ~5500 param; ~42% smaller than F, more capacity than G. -----
+    {
+        "name": "H_d24",
+        "d_model": 24, "nhead": 3, "num_layers": 1, "dim_feedforward": 48,
+        "dropout": 0.1, "lr": 1e-3,
+        "note": "d=24, 1layer, nhead=3 (head_dim=8); ~5500 param; F<->G midpoint",
+    },
+    # -- I: d_model=32 kept, FFN halved 64->32 -- conservative shrink. d_model
+    #    intact so accuracy should stay near F. ~7400 param. ---------------------
+    {
+        "name": "I_d32_ffn32",
+        "d_model": 32, "nhead": 4, "num_layers": 1, "dim_feedforward": 32,
+        "dropout": 0.1, "lr": 1e-3,
+        "note": "d=32, 1layer, ffn 64->32; ~7400 param; d_model intact for accuracy",
+    },
+    # -- J: below G -- d=16, ffn 32->16. Maps the sub-G floor of the size/acc curve.
+    #    Expected to drop accuracy; useful as a report data point, not final HW. --
+    {
+        "name": "J_d16_ffn16",
+        "d_model": 16, "nhead": 2, "num_layers": 1, "dim_feedforward": 16,
+        "dropout": 0.1, "lr": 1e-3,
+        "note": "d=16, 1layer, ffn 32->16; ~2000 param; sub-G floor probe",
+    },
 ]
 
 # === Which configs to run ======================================================
@@ -154,7 +187,7 @@ TUNING_CONFIGS = [
 # - To run the full six-config grid instead, set this to [].
 # - To run a single leftover config, e.g. ["D_d64_slow"].
 # - The env var TUNING_RUN_ONLY (comma-separated) overrides this at runtime.
-RUN_ONLY_DEFAULT = ["P_prior_like"]  # F/A/B/E/C/D done; now the prior-work-inspired model
+RUN_ONLY_DEFAULT = ["H_d24", "I_d32_ffn32", "J_d16_ffn16"]  # size/accuracy curve: F<->G midpoint, conservative shrink, sub-G floor
 
 # Fixed training hyperparameters (per user spec -- do not change)
 WINDOW_SIZE  = 1024
