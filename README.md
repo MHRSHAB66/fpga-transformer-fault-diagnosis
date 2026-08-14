@@ -65,10 +65,11 @@ All commands run from the project root.
 
 **Data validation (no training):**
 ```bash
-python -m src.tools.test_pipeline          # build a small subset, check shapes, one forward pass
-python -m src.data.pipeline_validation     # export artifacts/results/preprocessing_config.json
 python -m src.tools.test_tail_window       # windowing unit checks (numpy only)
 ```
+Stage-2 preprocessing is finalized; its one-off validation/export tools
+(`test_pipeline.py`, `pipeline_validation.py`) now live under `archive/`.
+The exported config remains at `artifacts/results/preprocessing_config.json`.
 
 **Train the Transformer baseline:**
 ```bash

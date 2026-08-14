@@ -56,7 +56,9 @@
     "window_stride_samples": 1024,
     "active_sample_rate_hz": 50000,
     "window_duration_seconds": 0.02048,
-    "overlap_samples": 0
+    "overlap_samples": 0,
+    "include_tail_window": false,
+    "tail_window_mode": null
   },
   "augmentation": {
     "smote_enabled": false,
@@ -65,7 +67,7 @@
     "scope": "train_split_only"
   },
   "dataloader": {
-    "batch_size": 8,
+    "batch_size": 64,
     "num_workers": 0
   },
   "tensor_shape": {

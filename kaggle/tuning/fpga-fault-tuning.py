@@ -187,7 +187,7 @@ TUNING_CONFIGS = [
 # - To run the full six-config grid instead, set this to [].
 # - To run a single leftover config, e.g. ["D_d64_slow"].
 # - The env var TUNING_RUN_ONLY (comma-separated) overrides this at runtime.
-RUN_ONLY_DEFAULT = ["H_d24", "I_d32_ffn32", "J_d16_ffn16"]  # size/accuracy curve: F<->G midpoint, conservative shrink, sub-G floor
+RUN_ONLY_DEFAULT = ["F_1layer"]  # retrain F (selected FPGA arch) + run int16/int8 bit-sweep on it
 
 # Fixed training hyperparameters (per user spec -- do not change)
 WINDOW_SIZE  = 1024
@@ -918,6 +918,51 @@ def main():
 
     decision = make_decision(best_name, best_cfg, test_metrics)
     log(f"\nDecision: {decision}")
+
+    # -- Integer bit-width sweep (int16 vs int8) on the winner -------------------
+    # Runs the full-integer reference (numpy, CPU) at both bit-widths on the same
+    # calibration/test subsets. Non-destructive: writes its own JSON only.
+    try:
+        log("Running integer bit-width sweep (int16, int8) on winner...")
+        from src.quantize.evaluate_integer_bits import run_one
+        from src.quantize.evaluate_integer import build_train_subset
+        from src.quantize.evaluate_quantized import build_test_subset
+
+        sweep_ckpt = torch.load(best_result["checkpoint_path"], map_location="cpu")
+        state_np = {k: v.cpu().numpy() for k, v in sweep_ckpt["model_state_dict"].items()}
+        sweep_cfg = {
+            "input_dim":       IN_CHANNELS,
+            "seq_len":         WINDOW_SIZE,
+            "num_classes":     NUM_CLASSES,
+            "d_model":         best_cfg["d_model"],
+            "nhead":           best_cfg["nhead"],
+            "num_layers":      best_cfg["num_layers"],
+            "dim_feedforward": best_cfg["dim_feedforward"],
+            "dropout":         best_cfg["dropout"],
+        }
+        CALIB_FILES = 40
+        TEST_FILES  = 10 ** 6            # >= all test files -> use the full test split
+        Xc, _, kc = build_train_subset(CALIB_FILES, SEED)
+        Xt, yt, sub = build_test_subset(TEST_FILES, SEED)
+        log(f"  calib windows={len(Xc)} ({kc} files); "
+            f"test windows={sub['windows']} ({sub['test_files_used']} files)")
+        sweep_results = [run_one(b, state_np, sweep_cfg, Xc, Xt, yt) for b in (16, 8)]
+        sweep_out = {
+            "stage":       "6f_bit_sweep_winner",
+            "winner":      best_name,
+            "model_cfg":   sweep_cfg,
+            "test_subset": sub,
+            "results":     sweep_results,
+        }
+        sweep_path = tuning_dir / "integer_bits_sweep_F.json"
+        with open(sweep_path, "w") as fh:
+            json.dump(sweep_out, fh, indent=2)
+        import shutil as _sh
+        _sh.copy(sweep_path, Path(WORKING_DIR) / "integer_bits_sweep_F.json")
+        log(f"  integer sweep -> {sweep_path}")
+    except Exception as exc:
+        log(f"[ERROR] integer sweep failed: {type(exc).__name__}: {exc}")
+        traceback.print_exc()
 
     # -- Final report -----------------------------------------------------------
     peak_mem_gib = (
