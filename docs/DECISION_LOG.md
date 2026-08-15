@@ -140,6 +140,42 @@ Format per entry:
 
 ---
 
+## Hardware / FPGA Deployment — 2026-08-16
+
+### D013 — FPGA-deployed model is F_1layer (not the 2-layer baseline)
+- **Date:** 2026-08-16
+- **Decision:** The hardware/HLS core targets `F_1layer` (1 encoder layer,
+  d_model=32, 4 heads, ffn=64, 9,492 params), not the higher-accuracy 2-layer
+  baseline (98.22%).
+- **Why:** F halves the encoder hardware to fit the small EBAZ4205 / Zynq-7010
+  (80 DSP, ~270 KB BRAM); full-test accuracy stays high (float 97.55%).
+- **Source:** User confirmation (2026-08-16); `kaggle/` sweeps.
+- **Affects:** Stages 6-8, `hls_f_int10/`, `pynq/`. The day14 A_baseline int16
+  core in `hls/` is preserved untouched.
+
+### D014 — Numeric format is int10
+- **Date:** 2026-08-16
+- **Decision:** Quantize activations, weights and attention to **int10**
+  (`ap_int<10>`).
+- **Why:** Bit-width sweep `[16,14,12,10,8]` showed int10 is the smallest
+  near-lossless width (full-test **97.11%**, drop 0.44%, no class collapse);
+  int8 collapses the imbalance class (recall 0.66). HLS supports arbitrary
+  widths, so int10 is free in hardware and lighter than int16.
+- **Source:** `kaggle/sweep_multibit/`, `kaggle/int10_shard/int10_fulltest_combined.json`.
+- **Affects:** `hls_f_int10/` export + core, `hls_f_int10/vitis/ap_types.h`.
+
+### D015 — Full-test int10 measured by 4-way Kaggle CPU sharding
+- **Date:** 2026-08-16
+- **Decision:** The definitive int10 full-test number is combined from 4 sharded
+  CPU kernels, not a single run or a subset.
+- **Why:** The int64 NumPy reference is ~0.42 s/window; all 95,404 windows exceed
+  Kaggle's 12 h per-session wall, but its weekly quota is GPU-only so CPU runs
+  are free. Strided shards keep class balance; raw counts combine exactly.
+- **Source:** User request (2026-08-16); `kaggle/int10_shard/`.
+- **Affects:** Reported accuracy; `docs/final_report.md`.
+
+---
+
 ## Pending Decisions (awaiting user input)
 
 | ID | Question | Related observation |
