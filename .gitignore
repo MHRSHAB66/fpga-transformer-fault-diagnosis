@@ -249,6 +249,7 @@ kaggle/tuning/_v10_out/
 kaggle/tuning/_v10_final/
 kaggle/tuning/_probe/
 kaggle/sweep_multibit/_out/
+kaggle/int10_shard/_out/
 
 # Scratch / verification workspace (temporary debugging artifacts)
 verification_workspace/

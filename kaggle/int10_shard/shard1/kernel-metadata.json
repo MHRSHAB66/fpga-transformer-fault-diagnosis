@@ -1,0 +1,16 @@
+{
+  "id": "mehrdadsheikhabbasi/fpga-fault-int10-shard1",
+  "title": "FPGA Fault int10 Shard 1",
+  "code_file": "int10-shard1.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "dataset_sources": [
+    "mehrdadsheikhabbasi/fpga-fault-src",
+    "vuxuancu/mafaulda-full",
+    "mehrdadsheikhabbasi/fpga-fault-f1-ckpt"
+  ]
+}
