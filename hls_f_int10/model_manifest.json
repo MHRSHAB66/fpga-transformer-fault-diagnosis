@@ -1,0 +1,22 @@
+{
+  "stage": "7_hls_export_f_int10",
+  "model": "F_1layer",
+  "input_scale": 0.061840288793037546,
+  "act_bits": 10,
+  "weight_bits": 10,
+  "attn_bits": 10,
+  "exp_frac": 15,
+  "rsqrt_frac": 15,
+  "seq_len": 1024,
+  "in_channels": 8,
+  "d_model": 32,
+  "nhead": 4,
+  "num_layers": 1,
+  "dim_feedforward": 64,
+  "num_classes": 4,
+  "golden": {
+    "count": 16,
+    "correct": 15
+  },
+  "note": "requant/affine constants are float64 here (bit-exact with the Python reference); convert to fixed-point per target board."
+}

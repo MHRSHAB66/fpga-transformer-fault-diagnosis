@@ -10,6 +10,11 @@ scipy              # signal processing: butter/filtfilt, wiener, resample, welch
 matplotlib         # training history / confusion-matrix / analysis plots
 torch              # Transformer model, training, and inference
 
+# PC-side / board glue (Stage 10/11). pyserial is only needed for the real UART
+# link in host/fault_monitor.py and pynq/run_demo.py; the mock/file sources and
+# the NumPy backend run without it. Tkinter ships with CPython.
+pyserial           # UART receiver (PC) + sender (PYNQ)
+
 # Optional / experimental only — NOT required by the main MAFAULDA pipeline.
 # Used solely by the experimental sound/MFCC feature-extraction scripts
 # (src/tools/signal_preprocessing.py, extract_features.py, preprocess_data.py),
