@@ -1,0 +1,50 @@
+{
+  "stage": "6f_bit_sweep_winner",
+  "winner": "F_1layer",
+  "model_cfg": {
+    "input_dim": 8,
+    "seq_len": 1024,
+    "num_classes": 4,
+    "d_model": 32,
+    "nhead": 4,
+    "num_layers": 1,
+    "dim_feedforward": 64,
+    "dropout": 0.1
+  },
+  "test_subset": {
+    "total_test_files": 391,
+    "test_files_used": 40,
+    "test_files_dropped": 0,
+    "windows": 4000,
+    "subsampled_from": 9760,
+    "subsample_seed": 42
+  },
+  "results": [
+    {
+      "bits": 16,
+      "float_accuracy": 0.964,
+      "int_accuracy": 0.96225,
+      "accuracy_drop_vs_float": 0.0017499999999999183,
+      "prediction_agreement_vs_float": 0.9925,
+      "per_class_accuracy": {
+        "normal": 0.98,
+        "imbalance": 0.9511111111111111,
+        "misalignment": 0.958,
+        "bearing_fault": 0.9685
+      }
+    },
+    {
+      "bits": 8,
+      "float_accuracy": 0.964,
+      "int_accuracy": 0.88675,
+      "accuracy_drop_vs_float": 0.07724999999999993,
+      "prediction_agreement_vs_float": 0.89775,
+      "per_class_accuracy": {
+        "normal": 0.99,
+        "imbalance": 0.6577777777777778,
+        "misalignment": 0.976,
+        "bearing_fault": 0.94
+      }
+    }
+  ]
+}

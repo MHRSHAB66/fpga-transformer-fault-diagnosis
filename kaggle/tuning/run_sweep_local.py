@@ -63,8 +63,30 @@ def main():
     }
     Xc, _, kc = build_train_subset(CALIB_FILES, SEED)
     Xt, yt, sub = build_test_subset(TEST_FILES, SEED)
+
+    # The int64 numpy reference is slow at seq=1024, so optionally stratified-
+    # subsample the test windows down to TEST_MAX_WINDOWS (fixed seed, keeps all
+    # classes and their proportions) to bound runtime while staying representative.
+    max_win = int(os.environ.get("TEST_MAX_WINDOWS", 0))
+    if max_win and len(Xt) > max_win:
+        import numpy as np
+        rng = np.random.default_rng(SEED)
+        frac = max_win / len(Xt)
+        keep = []
+        for c in np.unique(yt):
+            idx = np.flatnonzero(yt == c)
+            n = max(1, int(round(len(idx) * frac)))
+            keep.append(rng.choice(idx, size=min(n, len(idx)), replace=False))
+        keep = np.sort(np.concatenate(keep))
+        Xt, yt = Xt[keep], yt[keep]
+        sub = {**sub, "windows": int(len(keep)), "subsampled_from": sub["windows"],
+               "subsample_seed": SEED}
+
+    import numpy as _np
+    _bc = _np.bincount(yt.astype(int), minlength=NUM_CLASSES).tolist()
     print(f"calib windows={len(Xc)} ({kc} files); "
-          f"test windows={sub['windows']} ({sub['test_files_used']} files)", flush=True)
+          f"test windows={len(yt)} ({sub['test_files_used']} files)  "
+          f"class_counts={_bc}", flush=True)
     results = []
     for b in (16, 8):
         t0 = time.perf_counter()
