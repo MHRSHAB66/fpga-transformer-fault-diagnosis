@@ -1,0 +1,96 @@
+{
+  "stage": "6f_multibit_sweep_winner",
+  "winner": "F_1layer",
+  "model_cfg": {
+    "input_dim": 8,
+    "seq_len": 1024,
+    "num_classes": 4,
+    "d_model": 32,
+    "nhead": 4,
+    "num_layers": 1,
+    "dim_feedforward": 64,
+    "dropout": 0.1
+  },
+  "bit_widths": [
+    16,
+    14,
+    12,
+    10,
+    8
+  ],
+  "test_subset": {
+    "total_test_files": 391,
+    "test_files_used": 40,
+    "test_files_dropped": 0,
+    "windows": 4000,
+    "subsampled_from": 9760,
+    "subsample_seed": 42
+  },
+  "results": [
+    {
+      "bits": 16,
+      "float_accuracy": 0.964,
+      "int_accuracy": 0.96225,
+      "accuracy_drop_vs_float": 0.0017499999999999183,
+      "prediction_agreement_vs_float": 0.9925,
+      "per_class_accuracy": {
+        "normal": 0.98,
+        "imbalance": 0.9511111111111111,
+        "misalignment": 0.958,
+        "bearing_fault": 0.9685
+      }
+    },
+    {
+      "bits": 14,
+      "float_accuracy": 0.964,
+      "int_accuracy": 0.96175,
+      "accuracy_drop_vs_float": 0.0022499999999999742,
+      "prediction_agreement_vs_float": 0.997,
+      "per_class_accuracy": {
+        "normal": 0.99,
+        "imbalance": 0.9477777777777778,
+        "misalignment": 0.95,
+        "bearing_fault": 0.9725
+      }
+    },
+    {
+      "bits": 12,
+      "float_accuracy": 0.964,
+      "int_accuracy": 0.9615,
+      "accuracy_drop_vs_float": 0.0024999999999999467,
+      "prediction_agreement_vs_float": 0.99675,
+      "per_class_accuracy": {
+        "normal": 0.99,
+        "imbalance": 0.9477777777777778,
+        "misalignment": 0.948,
+        "bearing_fault": 0.973
+      }
+    },
+    {
+      "bits": 10,
+      "float_accuracy": 0.964,
+      "int_accuracy": 0.96375,
+      "accuracy_drop_vs_float": 0.00024999999999997247,
+      "prediction_agreement_vs_float": 0.98875,
+      "per_class_accuracy": {
+        "normal": 0.98,
+        "imbalance": 0.9644444444444444,
+        "misalignment": 0.941,
+        "bearing_fault": 0.974
+      }
+    },
+    {
+      "bits": 8,
+      "float_accuracy": 0.964,
+      "int_accuracy": 0.88675,
+      "accuracy_drop_vs_float": 0.07724999999999993,
+      "prediction_agreement_vs_float": 0.89775,
+      "per_class_accuracy": {
+        "normal": 0.99,
+        "imbalance": 0.6577777777777778,
+        "misalignment": 0.976,
+        "bearing_fault": 0.94
+      }
+    }
+  ]
+}

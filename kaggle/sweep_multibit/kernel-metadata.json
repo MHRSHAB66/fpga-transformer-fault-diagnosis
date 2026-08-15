@@ -1,0 +1,16 @@
+{
+  "id": "mehrdadsheikhabbasi/fpga-fault-multibit-sweep",
+  "title": "FPGA Fault Multibit Sweep",
+  "code_file": "multibit-sweep.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": false,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "dataset_sources": [
+    "mehrdadsheikhabbasi/fpga-fault-src",
+    "vuxuancu/mafaulda-full",
+    "mehrdadsheikhabbasi/fpga-fault-f1-ckpt"
+  ]
+}
