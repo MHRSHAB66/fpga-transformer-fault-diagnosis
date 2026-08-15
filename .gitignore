@@ -242,6 +242,13 @@ kaggle/kernel/pulled/
 kaggle/kernel/pulled2/
 kaggle/**/__pycache__/
 
+# Kaggle kernel-output download scratch dirs (checkpoints, logs, preprocess cache)
+kaggle/tuning/_ckpt/
+kaggle/tuning/_sel/
+kaggle/tuning/_v10_out/
+kaggle/tuning/_v10_final/
+kaggle/tuning/_probe/
+
 # Scratch / verification workspace (temporary debugging artifacts)
 verification_workspace/
 

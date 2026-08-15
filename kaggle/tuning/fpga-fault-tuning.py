@@ -928,8 +928,38 @@ def main():
         from src.quantize.evaluate_integer import build_train_subset
         from src.quantize.evaluate_quantized import build_test_subset
 
+        # On Kaggle the real MAFAULDA data lives under /kaggle/input/... (found by
+        # detect_mafaulda_root), not at src.config.DATA_RAW_DIR. Both modules read
+        # their own module-level DATA_RAW_DIR global, so patch each to raw_dir.
+        import src.quantize.evaluate_integer as _ei
+        import src.quantize.evaluate_quantized as _eq
+        from pathlib import Path as _P
+        _ei.DATA_RAW_DIR = _P(raw_dir)
+        _eq.DATA_RAW_DIR = _P(raw_dir)
+
+        # TuningTransformer uses the same architecture as TransformerBaseline but
+        # different attribute names, so its state_dict keys don't match what the
+        # IntegerTransformer reference (built for transformer_baseline) expects.
+        # Remap keys 1:1 -- purely a name adapter, no numeric change.
+        def _remap_key(k):
+            k = k.replace("pos_enc.", "positional_encoding.")
+            k = k.replace("input_proj.", "input_projection.")
+            if k.startswith("encoder."):
+                parts = k.split(".")
+                l, rest = parts[1], ".".join(parts[2:])
+                for a, b in (("attn", "self_attention"),
+                             ("attn_norm", "attention_norm"),
+                             ("ffn_norm", "feedforward_norm"),
+                             ("ffn", "feedforward")):
+                    if rest == a or rest.startswith(a + "."):
+                        rest = b + rest[len(a):]
+                        break
+                k = f"encoder_layers.{l}.{rest}"
+            return k
+
         sweep_ckpt = torch.load(best_result["checkpoint_path"], map_location="cpu")
-        state_np = {k: v.cpu().numpy() for k, v in sweep_ckpt["model_state_dict"].items()}
+        state_np = {_remap_key(k): v.cpu().numpy()
+                    for k, v in sweep_ckpt["model_state_dict"].items()}
         sweep_cfg = {
             "input_dim":       IN_CHANNELS,
             "seq_len":         WINDOW_SIZE,
