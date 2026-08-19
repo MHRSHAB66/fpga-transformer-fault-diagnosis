@@ -99,8 +99,20 @@ def infer_label_from_path(file_path: Union[str, Path]) -> str:
         - "misalignment"
         - "bearing_fault"
         - "unknown" if no rule matches
+
+    Notes
+    -----
+    Only the path *below the dataset root* (DATA_RAW_DIR) is inspected, so a
+    keyword that happens to appear in the project/user directory prefix (e.g. a
+    parent folder literally named "normal") can never accidentally trigger a
+    label. If the path is not under DATA_RAW_DIR, the full path is used as a
+    fallback (preserves the original behavior for synthetic/test paths).
     """
-    path_str = str(file_path).lower().replace("\\", "/")
+    try:
+        search_part = str(Path(file_path).resolve().relative_to(DATA_RAW_DIR.resolve()))
+    except ValueError:
+        search_part = str(file_path)
+    path_str = search_part.lower().replace("\\", "/")
 
     if "horizontal-misalignment" in path_str or "vertical-misalignment" in path_str:
         return "misalignment"
