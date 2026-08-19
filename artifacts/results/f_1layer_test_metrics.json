@@ -1,0 +1,87 @@
+{
+  "model": "F_1layer",
+  "checkpoint": "kaggle\\f1_ckpt_dataset\\best.pt",
+  "n_params": 9492,
+  "split": "test",
+  "num_test_windows": 95404,
+  "test_loss": 0.06841154992121737,
+  "test_accuracy": 0.9754517630288039,
+  "precision_recall_f1": {
+    "per_class": {
+      "normal": {
+        "precision": 0.7843455667424488,
+        "recall": 0.9897540983606558,
+        "f1": 0.8751585432143504,
+        "support": 2440
+      },
+      "imbalance": {
+        "precision": 0.9568512771544522,
+        "recall": 0.9807315879618302,
+        "f1": 0.9686442725954568,
+        "support": 16348
+      },
+      "misalignment": {
+        "precision": 0.9761363166384053,
+        "recall": 0.9770657393608213,
+        "f1": 0.9766008068687286,
+        "support": 24156
+      },
+      "bearing_fault": {
+        "precision": 0.9926444833625219,
+        "recall": 0.9723980175371711,
+        "f1": 0.9824169475204622,
+        "support": 52460
+      }
+    },
+    "macro": {
+      "precision": 0.9274944109744571,
+      "recall": 0.9799873608051195,
+      "f1": 0.9507051425497496
+    },
+    "weighted": {
+      "precision": 0.9770039654908367,
+      "recall": 0.9754517630288039,
+      "f1": 0.9758411132811832
+    }
+  },
+  "per_class_accuracy": {
+    "0": 0.9897540983606558,
+    "1": 0.9807315879618302,
+    "2": 0.9770657393608213,
+    "3": 0.9723980175371711
+  },
+  "confusion_matrix": [
+    [
+      2415,
+      5,
+      20,
+      0
+    ],
+    [
+      19,
+      16033,
+      14,
+      282
+    ],
+    [
+      371,
+      87,
+      23602,
+      96
+    ],
+    [
+      274,
+      631,
+      543,
+      51012
+    ]
+  ],
+  "class_names": [
+    "normal",
+    "imbalance",
+    "misalignment",
+    "bearing_fault"
+  ],
+  "generated": "2026-08-19T14:50:24",
+  "note": "Standard F1 (beta=1) on the TEST split, same pipeline as the 2-layer baseline. Float model (not int10)."
+}

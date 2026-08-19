@@ -1,0 +1,3604 @@
+{
+  "dataset_dir": "data\\raw\\mafaulda",
+  "expected_column_order": [
+    "tachometer",
+    "acc_axial_b1",
+    "acc_radial_b1",
+    "acc_tangential_b1",
+    "acc_axial_b2",
+    "acc_radial_b2",
+    "acc_tangential_b2",
+    "microphone"
+  ],
+  "expected_num_columns": 8,
+  "method": "Relative zero-crossing ordering within each file (first second). A file is consistent when col 0 has the fewest crossings (tachometer) and col 7 has the most (microphone). Robust to operating-condition variation, unlike absolute thresholds.",
+  "total_files": 1951,
+  "consistent_files": 1752,
+  "inconsistent_files": 199,
+  "all_consistent": false,
+  "elapsed_seconds": 74.0,
+  "problems": [
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\12.288.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        35486,
+        36628,
+        22523,
+        409,
+        268,
+        1935,
+        36297
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\13.5168.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        26,
+        40229,
+        40743,
+        21910,
+        719,
+        1391,
+        2393,
+        36989
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\14.5408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        36,
+        39869,
+        40562,
+        20970,
+        1432,
+        1640,
+        5232,
+        36014
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\15.36.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        40249,
+        40746,
+        20215,
+        1341,
+        1624,
+        4701,
+        36525
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\16.384.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        40147,
+        40346,
+        18797,
+        1009,
+        1276,
+        3513,
+        39015
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\17.408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39351,
+        40351,
+        18061,
+        316,
+        1299,
+        1307,
+        38770
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\18.8416.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        37,
+        39839,
+        40253,
+        16908,
+        1609,
+        1672,
+        6492,
+        38479
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\19.6608.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        40190,
+        40378,
+        16318,
+        1281,
+        1589,
+        4559,
+        38631
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\20.48.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        40,
+        39608,
+        40276,
+        15037,
+        1163,
+        1707,
+        4115,
+        38804
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\21.504.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        44,
+        38314,
+        39992,
+        13925,
+        1900,
+        1828,
+        6337,
+        39000
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\0.5mm\\22.528.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        44,
+        38105,
+        40107,
+        13323,
+        1786,
+        1883,
+        5432,
+        39066
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.0mm\\12.288.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        26,
+        38581,
+        40155,
+        20107,
+        1136,
+        833,
+        5136,
+        36833
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.0mm\\13.7216.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39840,
+        40670,
+        18662,
+        2059,
+        1556,
+        9357,
+        37366
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.0mm\\14.336.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39731,
+        40590,
+        17569,
+        1808,
+        1574,
+        9471,
+        37422
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.0mm\\15.9744.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39937,
+        39979,
+        16536,
+        566,
+        1302,
+        5218,
+        37813
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.0mm\\16.5888.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        40320,
+        40100,
+        16169,
+        1429,
+        1333,
+        7761,
+        39316
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.0mm\\17.8176.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39127,
+        40304,
+        15394,
+        2078,
+        1552,
+        8262,
+        38342
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.0mm\\18.8416.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        37,
+        39225,
+        39952,
+        14193,
+        1463,
+        1627,
+        7842,
+        38258
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.0mm\\19.6608.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        39,
+        39680,
+        39649,
+        13773,
+        1883,
+        1615,
+        7803,
+        38194
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.0mm\\20.2752.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        40,
+        39787,
+        39596,
+        13476,
+        1776,
+        2355,
+        9577,
+        38234
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.0mm\\21.504.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        42,
+        38604,
+        38837,
+        12269,
+        2417,
+        1994,
+        7387,
+        38527
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.5mm\\12.288.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        40433,
+        40673,
+        21840,
+        1242,
+        1597,
+        3460,
+        37367
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.5mm\\13.9264.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        27,
+        39357,
+        40698,
+        20233,
+        942,
+        1596,
+        2676,
+        37424
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.5mm\\14.9504.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        40008,
+        40464,
+        19793,
+        1013,
+        1631,
+        3053,
+        38506
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.5mm\\15.7696.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        40009,
+        39861,
+        18828,
+        750,
+        1813,
+        2643,
+        38959
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.5mm\\16.7936.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        36,
+        39678,
+        39884,
+        18184,
+        738,
+        1790,
+        2552,
+        39030
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.5mm\\17.8176.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        36,
+        38808,
+        39725,
+        17527,
+        902,
+        1726,
+        2512,
+        38947
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.5mm\\19.0464.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        39606,
+        39853,
+        16602,
+        662,
+        1773,
+        3334,
+        38556
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.5mm\\19.6608.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        39,
+        39574,
+        39732,
+        15849,
+        1137,
+        1738,
+        3991,
+        38348
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.5mm\\20.6848.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        40,
+        38445,
+        39460,
+        14768,
+        1390,
+        1994,
+        4575,
+        38330
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.5mm\\21.2992.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        40,
+        37912,
+        39499,
+        13934,
+        655,
+        1900,
+        1521,
+        38517
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\1.5mm\\22.3232.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        44,
+        37305,
+        39194,
+        13477,
+        2101,
+        1888,
+        7052,
+        38368
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\12.288.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        31152,
+        31782,
+        18170,
+        76,
+        70,
+        192,
+        30843
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\13.5168.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        35381,
+        34945,
+        18498,
+        104,
+        136,
+        464,
+        35311
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\14.5408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        38081,
+        37849,
+        18859,
+        312,
+        466,
+        706,
+        37195
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\15.36.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39072,
+        41311,
+        19686,
+        1143,
+        1321,
+        4084,
+        37553
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\16.384.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        38474,
+        41052,
+        18856,
+        937,
+        1367,
+        2619,
+        37188
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\17.408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        38721,
+        40865,
+        18282,
+        533,
+        947,
+        1262,
+        37243
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\18.6368.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        39,
+        39117,
+        40605,
+        17158,
+        974,
+        1366,
+        1996,
+        37522
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\19.456.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        38702,
+        40620,
+        16135,
+        975,
+        1390,
+        3295,
+        37307
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\20.2752.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        40,
+        37743,
+        39937,
+        15285,
+        965,
+        1339,
+        2709,
+        37506
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\21.7088.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        42,
+        37301,
+        39637,
+        13447,
+        1226,
+        1624,
+        3413,
+        37895
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\22.7328.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        44,
+        38063,
+        39229,
+        12998,
+        1175,
+        1850,
+        3649,
+        38053
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\23.1424.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        44,
+        37958,
+        39271,
+        12796,
+        1144,
+        1815,
+        3398,
+        38081
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\horizontal-misalignment\\2.0mm\\24.1664.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        46,
+        37383,
+        38749,
+        12031,
+        1000,
+        1808,
+        1366,
+        38659
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\10g\\13.9264.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        29,
+        39397,
+        40783,
+        28677,
+        583,
+        1694,
+        1961,
+        38861
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\10g\\14.5408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39237,
+        40787,
+        27321,
+        714,
+        1539,
+        1747,
+        38857
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\10g\\15.7696.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39639,
+        40851,
+        23693,
+        1077,
+        1729,
+        1867,
+        38332
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\10g\\16.5888.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39998,
+        40828,
+        22650,
+        814,
+        1624,
+        2789,
+        38512
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\10g\\17.2032.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39025,
+        40827,
+        20226,
+        566,
+        1246,
+        989,
+        38687
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\10g\\18.2272.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        37930,
+        40626,
+        15539,
+        626,
+        1506,
+        2558,
+        38567
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\10g\\19.2512.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        38064,
+        40565,
+        10851,
+        789,
+        1786,
+        2612,
+        39189
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\10g\\20.48.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        44,
+        39076,
+        39178,
+        5430,
+        752,
+        1838,
+        2942,
+        39160
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\15g\\13.312.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        38557,
+        40389,
+        24956,
+        766,
+        1400,
+        1578,
+        37145
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\15g\\14.5408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        38669,
+        40862,
+        23746,
+        723,
+        1672,
+        1447,
+        37402
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\15g\\15.5648.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39603,
+        40861,
+        20675,
+        817,
+        1983,
+        1735,
+        38519
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\15g\\16.9984.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39274,
+        40631,
+        16386,
+        732,
+        1640,
+        463,
+        38261
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\15g\\17.8176.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        35,
+        38315,
+        40500,
+        12670,
+        741,
+        1582,
+        1685,
+        38306
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\15g\\18.6368.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        37768,
+        40438,
+        8852,
+        982,
+        1744,
+        1785,
+        38432
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\15g\\19.6608.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        38495,
+        39019,
+        4496,
+        904,
+        2020,
+        1502,
+        38199
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\15g\\20.8896.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        40,
+        38637,
+        34195,
+        3323,
+        823,
+        2031,
+        2141,
+        38548
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\20g\\13.312.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        40575,
+        40785,
+        26209,
+        641,
+        1537,
+        773,
+        38122
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\20g\\14.336.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        39062,
+        40836,
+        22898,
+        720,
+        1588,
+        1515,
+        38358
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\20g\\14.9504.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        31,
+        38908,
+        40971,
+        21797,
+        787,
+        1792,
+        837,
+        37887
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\20g\\16.1792.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39773,
+        40755,
+        16835,
+        710,
+        1408,
+        1758,
+        38415
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\20g\\17.408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39069,
+        40651,
+        11757,
+        553,
+        1299,
+        925,
+        38693
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\20g\\18.2272.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        36,
+        38912,
+        40021,
+        7675,
+        745,
+        1801,
+        1593,
+        39461
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\25g\\12.288.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        24,
+        35814,
+        37583,
+        26596,
+        253,
+        541,
+        927,
+        36488
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\25g\\13.7216.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39589,
+        40955,
+        25114,
+        631,
+        1827,
+        1518,
+        37702
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\25g\\15.1552.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39659,
+        41186,
+        19786,
+        614,
+        1547,
+        840,
+        37774
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\25g\\15.7696.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        33,
+        39939,
+        40964,
+        16925,
+        604,
+        1650,
+        1460,
+        38368
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\25g\\16.9984.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        33,
+        39643,
+        40829,
+        10847,
+        692,
+        1676,
+        65,
+        39216
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\25g\\17.6128.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39115,
+        40335,
+        8671,
+        507,
+        1576,
+        803,
+        39075
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\25g\\18.432.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        37,
+        39181,
+        38813,
+        4720,
+        792,
+        1858,
+        1387,
+        39016
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\25g\\19.2512.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        39,
+        39472,
+        34126,
+        3003,
+        952,
+        1964,
+        1557,
+        39179
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\30g\\12.0832.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        29,
+        36803,
+        38227,
+        27467,
+        202,
+        650,
+        1024,
+        37684
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\30g\\13.1072.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        38548,
+        40580,
+        26119,
+        415,
+        1265,
+        1183,
+        36950
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\30g\\14.336.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39364,
+        41023,
+        21009,
+        733,
+        1559,
+        1575,
+        37827
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\30g\\14.9504.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        35,
+        39467,
+        41117,
+        19025,
+        1101,
+        1872,
+        2661,
+        38168
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\30g\\16.5888.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        40017,
+        40443,
+        10992,
+        591,
+        1537,
+        1339,
+        39042
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\30g\\17.2032.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        35,
+        39377,
+        40022,
+        7650,
+        469,
+        1195,
+        538,
+        38882
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\30g\\18.2272.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        36,
+        38921,
+        37960,
+        4907,
+        644,
+        1518,
+        1528,
+        38868
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\30g\\19.456.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        42,
+        39015,
+        19929,
+        2267,
+        784,
+        1229,
+        2171,
+        38460
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\30g\\21.0944.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        42,
+        39103,
+        12772,
+        2971,
+        693,
+        1459,
+        4265,
+        38863
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\35g\\12.0832.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        27,
+        33443,
+        33947,
+        24011,
+        224,
+        337,
+        804,
+        33765
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\35g\\13.7216.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        26,
+        36522,
+        38120,
+        22525,
+        209,
+        380,
+        867,
+        37839
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\35g\\14.5408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39658,
+        40897,
+        18771,
+        883,
+        1473,
+        2811,
+        38355
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\35g\\15.7696.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39795,
+        40686,
+        12213,
+        839,
+        1009,
+        2427,
+        39042
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\35g\\16.5888.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39866,
+        40599,
+        8332,
+        1249,
+        1760,
+        2355,
+        39091
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\35g\\17.2032.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39247,
+        39379,
+        5792,
+        1415,
+        1879,
+        1115,
+        38526
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\35g\\19.8656.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        39,
+        39369,
+        12427,
+        1905,
+        1862,
+        1987,
+        1283,
+        39354
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\6g\\13.9264.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39077,
+        40861,
+        28719,
+        944,
+        1628,
+        3222,
+        38199
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\6g\\14.336.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39046,
+        40831,
+        28708,
+        1074,
+        1604,
+        2885,
+        38069
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\6g\\15.36.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39580,
+        41156,
+        26688,
+        1108,
+        1469,
+        2462,
+        37972
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\6g\\16.1792.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39906,
+        40802,
+        25992,
+        1111,
+        1513,
+        2632,
+        38708
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\6g\\17.408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        38736,
+        41029,
+        23224,
+        890,
+        1534,
+        1124,
+        38660
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\6g\\18.432.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        36,
+        38551,
+        41229,
+        21570,
+        1401,
+        1841,
+        2252,
+        38953
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\6g\\19.6608.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        38663,
+        41075,
+        16417,
+        1436,
+        1968,
+        4484,
+        39191
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\6g\\20.2752.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        40,
+        39241,
+        40490,
+        12382,
+        1043,
+        1977,
+        2721,
+        39178
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\6g\\21.7088.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        43,
+        37656,
+        40218,
+        8346,
+        1422,
+        1959,
+        4948,
+        39174
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\imbalance\\6g\\22.7328.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        44,
+        36911,
+        39589,
+        9508,
+        1523,
+        2127,
+        4346,
+        39286
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\12.288.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        27,
+        41236,
+        40798,
+        30173,
+        1647,
+        2033,
+        5717,
+        39188
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\13.1072.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39983,
+        40800,
+        29119,
+        948,
+        2007,
+        2676,
+        38321
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\14.336.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        33,
+        39570,
+        41017,
+        27545,
+        1338,
+        1840,
+        5316,
+        38363
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\15.1552.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        29,
+        39793,
+        40927,
+        25793,
+        1048,
+        1971,
+        5694,
+        38429
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\16.1792.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        35,
+        40361,
+        40995,
+        25584,
+        1742,
+        2159,
+        4068,
+        39616
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\17.2032.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        39,
+        40317,
+        40949,
+        24159,
+        788,
+        2059,
+        1740,
+        39419
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\18.432.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        40,
+        38145,
+        40893,
+        21866,
+        1641,
+        2039,
+        5585,
+        38798
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\19.6608.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        39,
+        39126,
+        40488,
+        18892,
+        1876,
+        2140,
+        5002,
+        38973
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\20.2752.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        41,
+        39287,
+        40359,
+        18224,
+        1016,
+        2029,
+        2894,
+        38832
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\21.7088.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        44,
+        38448,
+        41008,
+        16443,
+        2153,
+        2137,
+        4041,
+        39199
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\22.3232.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        43,
+        37274,
+        40685,
+        16510,
+        1957,
+        2099,
+        4469,
+        39380
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\23.552.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        47,
+        37523,
+        40608,
+        15892,
+        1298,
+        2059,
+        3532,
+        39738
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\normal\\24.576.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        48,
+        38048,
+        40398,
+        15634,
+        2009,
+        2224,
+        6559,
+        39900
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\0g\\13.1072.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        31,
+        40592,
+        36270,
+        12573,
+        1012,
+        1016,
+        6443,
+        37871
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\0g\\14.1312.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        40068,
+        36295,
+        12399,
+        1154,
+        1046,
+        6115,
+        38297
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\0g\\14.9504.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        29,
+        39480,
+        35959,
+        11706,
+        801,
+        1015,
+        5585,
+        38613
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\0g\\16.1792.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39819,
+        35630,
+        11886,
+        661,
+        1032,
+        4477,
+        39321
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\0g\\17.408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39492,
+        35246,
+        11619,
+        714,
+        1178,
+        4728,
+        39470
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\20g\\13.7216.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        40207,
+        37179,
+        12582,
+        826,
+        782,
+        4177,
+        38060
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\20g\\14.5408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39542,
+        36496,
+        11644,
+        1139,
+        853,
+        5351,
+        38718
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\20g\\15.36.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39450,
+        35449,
+        10029,
+        1143,
+        705,
+        5139,
+        39086
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\20g\\16.384.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39902,
+        34102,
+        8591,
+        1240,
+        1104,
+        4666,
+        39526
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\20g\\17.408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        33,
+        40050,
+        32267,
+        6366,
+        507,
+        815,
+        2315,
+        39850
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\35g\\13.5168.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        40147,
+        36797,
+        11923,
+        1422,
+        796,
+        4286,
+        38436
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\35g\\14.336.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39347,
+        36602,
+        9755,
+        1067,
+        669,
+        3495,
+        38313
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\35g\\15.5648.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39517,
+        33536,
+        6661,
+        1395,
+        901,
+        3967,
+        38905
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\35g\\16.384.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39902,
+        30171,
+        4934,
+        1120,
+        882,
+        3530,
+        38999
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\35g\\17.6128.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        35,
+        39360,
+        22328,
+        2922,
+        1130,
+        900,
+        2382,
+        39210
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\6g\\13.1072.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        29,
+        40956,
+        36758,
+        12903,
+        1087,
+        1043,
+        4635,
+        38204
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\6g\\14.5408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39436,
+        36640,
+        12438,
+        1025,
+        1161,
+        5129,
+        38424
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\6g\\14.9504.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39227,
+        36720,
+        12495,
+        898,
+        1185,
+        2440,
+        38330
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\6g\\16.1792.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        31,
+        40060,
+        36158,
+        12040,
+        407,
+        1416,
+        3451,
+        39072
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\6g\\17.408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        39533,
+        35046,
+        11590,
+        962,
+        1308,
+        3042,
+        39301
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\cage_fault\\6g\\20.48.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        44,
+        39748,
+        31432,
+        6478,
+        1470,
+        1484,
+        4103,
+        39743
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\outer_race\\0g\\13.1072.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        39339,
+        35066,
+        11605,
+        1080,
+        1391,
+        3970,
+        38176
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\outer_race\\20g\\13.5168.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        38991,
+        33363,
+        10231,
+        993,
+        1515,
+        2923,
+        38842
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\outer_race\\35g\\13.7216.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        27,
+        39303,
+        32679,
+        9734,
+        824,
+        1190,
+        2782,
+        38689
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\overhang\\outer_race\\35g\\14.7456.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39204,
+        31318,
+        8946,
+        990,
+        1228,
+        2398,
+        39076
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\0g\\13.312.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        39318,
+        40266,
+        16778,
+        1623,
+        2127,
+        7103,
+        38268
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\0g\\14.5408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        38262,
+        39922,
+        15848,
+        2374,
+        2092,
+        9898,
+        39182
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\0g\\15.5648.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        38657,
+        39820,
+        15179,
+        2013,
+        2117,
+        7785,
+        39506
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\0g\\17.408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        37605,
+        39749,
+        14582,
+        1450,
+        2076,
+        4865,
+        39700
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\20g\\13.312.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        26,
+        38425,
+        39984,
+        16371,
+        1327,
+        899,
+        6115,
+        38634
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\20g\\14.1312.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39043,
+        40443,
+        17098,
+        1883,
+        1915,
+        5487,
+        38626
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\20g\\15.5648.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        31,
+        38768,
+        40414,
+        14606,
+        1660,
+        2178,
+        6119,
+        39324
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\20g\\16.384.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        38980,
+        40446,
+        12990,
+        1733,
+        1966,
+        5974,
+        39717
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\20g\\17.408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        38632,
+        40052,
+        10301,
+        702,
+        1882,
+        3404,
+        39888
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\20g\\27.648.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        66,
+        33780,
+        11464,
+        5562,
+        763,
+        2134,
+        3002,
+        33488
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\13.312.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39338,
+        40418,
+        16500,
+        2149,
+        1946,
+        4918,
+        37776
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\13.9264.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39409,
+        40798,
+        15709,
+        2146,
+        1889,
+        5190,
+        38533
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\15.36.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        38813,
+        40350,
+        12296,
+        1656,
+        1910,
+        4714,
+        39062
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\16.384.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        38927,
+        39868,
+        8962,
+        1594,
+        1775,
+        4468,
+        39614
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\56.1152.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        124,
+        3342,
+        4011,
+        4668,
+        203,
+        295,
+        1023,
+        84
+      ],
+      "argmin_col": 7,
+      "argmax_col": 3
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\6g\\12.9024.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        26,
+        39969,
+        40855,
+        17483,
+        2046,
+        2109,
+        7572,
+        38893
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\6g\\14.336.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39000,
+        40522,
+        16528,
+        1556,
+        2050,
+        8395,
+        39313
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\6g\\15.5648.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        38895,
+        40413,
+        15436,
+        2004,
+        2080,
+        7267,
+        39665
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\6g\\16.1792.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        38982,
+        40370,
+        15322,
+        1638,
+        1994,
+        6895,
+        40091
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\6g\\17.408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        38439,
+        40275,
+        14343,
+        929,
+        2102,
+        3617,
+        40159
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\6g\\18.6368.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        36,
+        38328,
+        40284,
+        13537,
+        969,
+        2152,
+        5537,
+        40164
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\0g\\13.5168.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39458,
+        37518,
+        13951,
+        4823,
+        2542,
+        5586,
+        38566
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\0g\\14.7456.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39284,
+        36964,
+        12959,
+        3747,
+        1497,
+        5299,
+        39198
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\20g\\12.9024.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        33,
+        39369,
+        39237,
+        15234,
+        4170,
+        1441,
+        6707,
+        37726
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\20g\\13.9264.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        31,
+        39185,
+        39323,
+        14565,
+        4624,
+        1973,
+        6105,
+        38254
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\20g\\15.9744.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39400,
+        38853,
+        12607,
+        2930,
+        538,
+        5669,
+        39098
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\20g\\16.384.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39479,
+        38867,
+        12501,
+        4546,
+        1325,
+        5637,
+        39178
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\35g\\13.1072.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        25,
+        39357,
+        38759,
+        15050,
+        4352,
+        1548,
+        6743,
+        37782
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\35g\\14.7456.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        36,
+        39056,
+        38779,
+        12896,
+        3998,
+        1816,
+        6028,
+        38344
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\35g\\16.384.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39502,
+        37499,
+        9313,
+        3779,
+        2137,
+        4834,
+        38952
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\6g\\13.5168.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39011,
+        38913,
+        15851,
+        4237,
+        875,
+        6560,
+        37811
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\6g\\14.336.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39225,
+        39143,
+        14905,
+        4303,
+        2127,
+        6300,
+        38559
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.51mm\\13.1072.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        38807,
+        39953,
+        21459,
+        1124,
+        1608,
+        2296,
+        39379
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.51mm\\14.9504.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        33,
+        39834,
+        40397,
+        19565,
+        418,
+        474,
+        2152,
+        39568
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.51mm\\16.1792.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        40159,
+        39678,
+        17964,
+        310,
+        534,
+        1711,
+        39896
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.63mm\\12.4928.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        25,
+        41044,
+        40423,
+        21727,
+        1205,
+        1995,
+        2165,
+        39328
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.63mm\\13.312.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39963,
+        40093,
+        20527,
+        1112,
+        1777,
+        2846,
+        38839
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.63mm\\14.1312.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39123,
+        40117,
+        20201,
+        655,
+        631,
+        1201,
+        38360
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.63mm\\15.36.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39735,
+        40478,
+        19848,
+        1570,
+        1832,
+        3214,
+        38987
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.63mm\\16.7936.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39432,
+        39962,
+        18925,
+        1615,
+        2149,
+        3351,
+        39486
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.63mm\\18.0224.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        36,
+        38666,
+        39594,
+        16866,
+        1740,
+        2054,
+        4706,
+        39423
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.63mm\\18.8416.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        40,
+        39145,
+        39742,
+        16571,
+        952,
+        1138,
+        3384,
+        39384
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.63mm\\20.0704.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        40,
+        39456,
+        40144,
+        15533,
+        1144,
+        1366,
+        3330,
+        39841
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\0.63mm\\20.48.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        40,
+        39098,
+        39704,
+        13867,
+        1225,
+        1472,
+        3395,
+        39683
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.27mm\\12.0832.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        40790,
+        40255,
+        18075,
+        372,
+        929,
+        1160,
+        39494
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.40mm\\12.0832.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        40596,
+        40461,
+        18042,
+        502,
+        1195,
+        1506,
+        38326
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.40mm\\13.312.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        28,
+        39994,
+        40011,
+        17184,
+        332,
+        700,
+        1038,
+        38973
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.40mm\\14.7456.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39767,
+        40150,
+        16254,
+        500,
+        1075,
+        1638,
+        39428
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.40mm\\15.7696.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        39355,
+        40093,
+        16152,
+        770,
+        1252,
+        2101,
+        39320
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.40mm\\16.384.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39138,
+        39608,
+        14951,
+        689,
+        1533,
+        1951,
+        38974
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.40mm\\17.2032.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        34,
+        38859,
+        39570,
+        14999,
+        809,
+        1591,
+        1524,
+        39087
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.40mm\\18.2272.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        36,
+        38748,
+        39254,
+        14004,
+        777,
+        1659,
+        2254,
+        39042
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.40mm\\19.6608.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        39278,
+        39101,
+        13277,
+        925,
+        1643,
+        2649,
+        39181
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.78mm\\12.4928.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        35,
+        40517,
+        40416,
+        18300,
+        656,
+        1154,
+        1234,
+        38196
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.78mm\\13.312.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        26,
+        39859,
+        38951,
+        16949,
+        583,
+        927,
+        1325,
+        39338
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.78mm\\15.9744.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        32,
+        39655,
+        38297,
+        15352,
+        785,
+        1571,
+        1697,
+        39462
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.78mm\\19.2512.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        38,
+        39170,
+        39578,
+        13678,
+        965,
+        1943,
+        2790,
+        39234
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.90mm\\12.0832.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        26,
+        40791,
+        39715,
+        16870,
+        333,
+        1417,
+        1047,
+        39349
+      ],
+      "argmin_col": 0,
+      "argmax_col": 1
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.90mm\\14.5408.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39273,
+        39926,
+        15797,
+        535,
+        1577,
+        1752,
+        39038
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\vertical-misalignment\\1.90mm\\15.1552.csv",
+      "n_columns": 8,
+      "consistent": false,
+      "status": "MISMATCH",
+      "zero_crossings_per_col": [
+        30,
+        39116,
+        39305,
+        14747,
+        528,
+        1739,
+        1583,
+        39301
+      ],
+      "argmin_col": 0,
+      "argmax_col": 2
+    }
+  ]
+}

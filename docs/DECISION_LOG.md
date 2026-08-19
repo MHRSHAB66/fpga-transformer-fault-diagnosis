@@ -49,13 +49,26 @@ Format per entry:
 - **Affects:** All data modules, Transformer seq_len, FPGA buffer design (future)
 - **Revisit flag:** Window size is an architectural decision that interacts with Transformer sequence length (1024 tokens → large attention matrix). After learning more about Transformer internals, revisit whether 1024 is optimal or whether a different size (e.g., 512) would be better for FPGA latency/resource tradeoff. Changing this invalidates the current cache and requires full retraining.
 
-### D005 — Per-file z-score normalization
-- **Date:** (active as of Day 11)
-- **Decision:** Normalize each CSV file independently before windowing
-- **Why:** Each file has its own operating conditions; per-file normalization keeps relative signal structure
-- **Source:** `src/data/prepare_dataset.py::normalize_dataframe`, `artifacts/results/preprocessing_config.json`
-- **Note:** This deviates from the CLAUDE.md Stage 2 spec (which says fit on train, apply to val/test). Needs user confirmation.
-- **Affects:** `prepare_dataset.py`, `preprocessed_cache.py`, FPGA normalization path (future)
+### D005 — Per-window z-score normalization
+- **Date:** originally per-file (Day 11); **corrected 2026-08-19** to reflect the
+  actual final pipeline.
+- **Decision:** Normalize **each window independently** (per-channel z-score
+  computed inside each 1024-sample window). `NORMALIZATION_SCOPE = "per_window"`.
+- **Why:** Self-contained for FPGA — the hardware computes mean/std from the same
+  1024-sample input buffer it is about to classify, with no stored global stats
+  and no need to buffer a whole file. Also robust to per-sensor gain changes.
+- **Source of truth:** `src/config.py::NORMALIZATION_SCOPE`,
+  `src/data/make_dataloaders.py` (calls `normalize_windows_array`, scope=per_window),
+  and the final run artifact
+  `artifacts/runs/20260615_223905_fpga_fault_final_t4/results/transformer_experiment_config.json`
+  → `"normalization_scope": "per_window"`.
+- **History / correction:** This entry previously stated **per-file** normalization
+  (via `prepare_dataset.py::normalize_dataframe`) as active "as of Day 11". That was
+  true only for the earlier standalone preprocessing path. The final training path
+  (`make_dataloaders.py`) and the final 98.22% checkpoint used **per_window**. The
+  doc had gone stale; `normalize_dataframe` (per-file) is now an unused legacy
+  helper not called by the main pipeline. See cleanup candidates.
+- **Affects:** `make_dataloaders.py`, `preprocessed_cache.py`, FPGA normalization path.
 
 ### D006 — Signal processing flags all disabled (no resample, no filter, no Wiener)
 - **Date:** (active as of Day 11)
@@ -174,13 +187,52 @@ Format per entry:
 - **Source:** User request (2026-08-16); `kaggle/int10_shard/`.
 - **Affects:** Reported accuracy; `docs/final_report.md`.
 
+### D016 — Normalization is host-side for the prepared-window path; on-chip is required for the live-sensor path
+- **Date:** 2026-08-19
+- **Decision:** For the prepared-window demo (the minimum project target), the
+  per-window z-score is computed on the **host/PC**, and the already-normalized
+  window (quantized with `input_scale`) is what the FPGA core receives.
+  **Verified:** `src/quantize/export_hls_f_int10.py` builds `golden_in.txt` from
+  `golden["normalized_input"]` (line ~157), and `hls_f_int10/model_manifest.json`
+  carries `input_scale` — the core assumes normalized input, it does NOT normalize.
+- **Why:** Normalization is preprocessing (allowed on host); classification is what
+  must run on the FPGA (CLAUDE.md). Host-side normalization keeps the current HLS
+  core simple.
+- **Live-sensor path (Stage 9):** When a real sensor feeds the FPGA directly (no
+  PC in the loop), the FPGA must normalize on-chip (mean/var/rsqrt over the
+  1024-sample buffer). This is a documented requirement for that future path.
+- **User's proposed variant to explore:** a two-run scheme — a first "cold" run
+  where the FPGA computes the normalization stats and stores them on the PC, then
+  a second run that reads them back. To capture faithfully: this is a caching idea;
+  note that per-window stats differ per window, so what would be cached/reused
+  needs to be defined (per-window vs a fixed global set) when Stage 9 is designed.
+- **Affects:** `hls_f_int10/`, `pynq/`, Stage 9 sensor path.
+
+### D017 — Resampling/downsampling REJECTED for the full 8-channel model
+- **Date:** 2026-08-19
+- **Decision:** Keep the full **50 kHz** sample rate; do **not** downsample
+  (`RESAMPLE_ENABLED = False` stays).
+- **Why (data-driven):** `artifacts/results/spectrum_analysis/spectrum_report.json`
+  99%-energy cutoffs per channel show two channels carry fault information at very
+  high frequency: **acc_axial_b1 has 90% of its energy at ~22 kHz** (the structural
+  resonance that channel_analysis found MOST class-discriminative for bearing vs
+  non-bearing faults), and the **microphone extends to ~24 kHz**. Downsampling to
+  keep ≤12–16 kHz (which would shrink the window and help the FPGA) would destroy
+  that 22 kHz feature. Keeping 22 kHz needs Nyquist ≥ 44 kHz ≈ the current 50 kHz,
+  so there is effectively no safe downsampling for the full-channel model.
+- **Caveat / possible future work:** some channels (acc_axial_b2 ~1.2 kHz,
+  acc_radial_b2 ~0.5 kHz, tachometer ~3 kHz) are low-frequency; a channel-subset or
+  per-channel-rate design could downsample those, but that is a larger redesign and
+  interacts with channel ablation (EXP-2). Not pursued now.
+- **Affects:** closes the RESAMPLE open item; Stage 2 signal-processing flags.
+
 ---
 
 ## Pending Decisions (awaiting user input)
 
 | ID | Question | Related observation |
 |----|----------|---------------------|
-| P001 | Is per-file z-score normalization an accepted decision, or should we revisit it? | Explained below; needs decision before FPGA path |
+| P001 | ~~Is per-file z-score an accepted decision?~~ **Resolved 2026-08-19:** the final model uses **per_window** (see D005). Open sub-question kept below: is `global_train` worth trying for simpler FPGA? | Explained below |
 | P003 | Should old data paths (`data/processed/`, `mafaulda_synthetic/`) be kept or removed? | Not used by active pipeline |
 | P005 | Should `docs/` be committed to git? | Currently entirely untracked |
 | P006 | Is it intentional that `CLAUDE.md` is in `.gitignore`? | Not tracked by git |
@@ -190,16 +242,26 @@ Format per entry:
 
 ## Normalization Question (P001) — Explanation
 
-**What the code currently does:**
-Each CSV file is normalized on its own. For example, if file A has mean=5 and std=2, it gets normalized using those numbers. If file B has mean=100 and std=50, it gets normalized using those different numbers. Each file is treated independently.
+**Corrected 2026-08-19.** An earlier version of this section wrongly described the
+active pipeline as **per-file**. The final model actually uses **per_window** (D005).
 
-**What CLAUDE.md Stage 2 says should happen:**
-Compute mean and std only from training files. Then use those same fixed numbers to normalize validation and test files too.
+**What the code actually does (final model):**
+Each 1024-sample window is normalized on its own: for every channel, mean and std
+are computed *inside that window* and used to z-score it. No file-level or
+training-set statistics are involved. Verified in
+`transformer_experiment_config.json` → `"normalization_scope": "per_window"`.
 
-**Why it matters for FPGA:**
-- Current (per-file): FPGA receives raw sensor data → must first read all 1024 samples, compute mean/std, then normalize → more logic, extra buffering step.
-- Alternative (fixed global stats): FPGA has hardcoded constants (e.g., mean=X, std=Y per channel, computed once from training) → subtract and divide by fixed numbers → much simpler hardware.
+**The three scopes the code supports** (`src/data/make_dataloaders.py`):
+- `per_window` — **selected.** Self-contained; FPGA computes mean/std from the same
+  1024-sample buffer it classifies. Robust to per-sensor gain. Small HW cost
+  (sum, sum-of-squares, one divide/sqrt over 1024 values).
+- `per_file` — normalize each whole CSV with its own stats. Not implementable for
+  real-time streaming (needs the whole file first). Legacy helper only.
+- `global_train` — fit mean/std once on training files, hardcode as FPGA constants.
+  Simplest hardware (subtract/divide by constants) but bakes in training-set
+  amplitude; a new sensor with different gain can break it.
 
-**Practical impact on software accuracy:** Probably small, because each file already comes from a controlled test condition with consistent amplitude. But the decision affects what the FPGA needs to implement.
-
-**No decision needed right now** — training isn't finalized yet. This can be decided when we prepare for Stage 6 (quantization). Flagged here so it isn't forgotten.
+**Open sub-question (not blocking):** Is it worth *retraining* with `global_train`
+to get the simplest possible FPGA normalization? Trade-off: simpler HW vs. loss of
+per-window robustness. Since per_window's HW cost is small, current choice is to
+keep per_window and note global_train as possible future work.
