@@ -1,3 +1,11 @@
+"""
+SUPERSEDED — archived 2026-08-19. Old MAFAULDA feature-extraction path.
+
+Builds ``data/processed/features_dataset.npz`` from the old preprocessing cache.
+Not used by the main pipeline. Kept for reference only; it depends on
+``preprocess_data`` (also archived here) — the ``from src.tools.preprocess_data``
+import reflects the original location under ``src/tools/``.
+"""
 from __future__ import annotations
 
 import json

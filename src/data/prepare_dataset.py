@@ -266,7 +266,13 @@ def normalize_dataframe(
     method: str = NORMALIZATION_METHOD,
 ) -> pd.DataFrame:
     """
-    Normalize each column of the DataFrame.
+    Normalize each column of the DataFrame (whole-file / per-file scaling).
+
+    NOTE: Only reached via ``preprocess_dataframe(..., normalize=True)``, whose
+    sole caller is the archived feature-extraction path (archive/preprocess_data.py).
+    The active training pipeline calls ``preprocess_dataframe(..., normalize=False)``
+    and applies per-window z-score later in make_dataloaders, so this function does
+    not run during normal training/evaluation.
 
     Parameters
     ----------

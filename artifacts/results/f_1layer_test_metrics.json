@@ -82,6 +82,6 @@
     "misalignment",
     "bearing_fault"
   ],
-  "generated": "2026-08-19T14:50:24",
+  "generated": "2026-08-20T13:38:03",
   "note": "Standard F1 (beta=1) on the TEST split, same pipeline as the 2-layer baseline. Float model (not int10)."
 }

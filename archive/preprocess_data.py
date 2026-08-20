@@ -1,3 +1,13 @@
+"""
+SUPERSEDED — archived 2026-08-19. Old MAFAULDA feature-extraction path.
+
+The active pipeline preprocesses per file into ``artifacts/cache/`` via
+``src/data/preprocessed_cache.py`` and normalizes per-window. This script wrote a
+separate cache under ``data/processed/preprocessed_signals/`` (removed to reclaim
+disk). Kept for reference only; it is the sole user of
+``prepare_dataset.normalize_dataframe`` (per-file z-score). The ``src.tools...``
+imports reflect its original location under ``src/tools/``.
+"""
 from __future__ import annotations
 
 import json
