@@ -51,7 +51,6 @@ from src.data.load_data import build_file_index
 from src.data.prepare_dataset import (
     create_windows_from_dataframe,
     count_normal_windows,
-    normalize_array,
     normalize_windows_array,
 )
 from src.data.preprocessed_cache import (
@@ -180,92 +179,6 @@ def split_file_index(index_df):
     )
 
 
-def fit_global_normalization_stats(
-    index_df,
-    method: str = NORMALIZATION_METHOD,
-    epsilon: float = EPSILON,
-) -> dict:
-    """
-    Fit per-channel normalization constants from training files only.
-
-    Validation/test files are never inspected here, which keeps
-    ``global_train`` leakage-free.
-    """
-    total_rows = 0
-    kept_files = 0
-    dropped_files = 0
-    sum_values = None
-    sum_squares = None
-    min_values = None
-    max_values = None
-
-    for _, row in index_df.iterrows():
-        values = load_or_create_preprocessed_array(row["filepath"])
-        if values is None:
-            dropped_files += 1
-            continue
-        if values.size == 0:
-            continue
-
-        values64 = values.astype(np.float64, copy=False)
-        kept_files += 1
-        total_rows += int(values64.shape[0])
-
-        file_sum = values64.sum(axis=0)
-        file_sum_squares = np.square(values64).sum(axis=0)
-        file_min = values64.min(axis=0)
-        file_max = values64.max(axis=0)
-
-        if sum_values is None:
-            sum_values = file_sum
-            sum_squares = file_sum_squares
-            min_values = file_min
-            max_values = file_max
-        else:
-            sum_values += file_sum
-            sum_squares += file_sum_squares
-            min_values = np.minimum(min_values, file_min)
-            max_values = np.maximum(max_values, file_max)
-
-    if total_rows == 0 or sum_values is None:
-        raise ValueError("Could not fit global normalization stats: no training rows.")
-
-    if method == "zscore":
-        mean = sum_values / total_rows
-        variance = np.maximum((sum_squares / total_rows) - np.square(mean), 0.0)
-        std = np.sqrt(variance)
-        safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
-        return {
-            "scope": "global_train",
-            "method": method,
-            "fitted_on": "train",
-            "files_used": int(kept_files),
-            "files_dropped": int(dropped_files),
-            "rows_used": int(total_rows),
-            "epsilon": float(epsilon),
-            "mean": mean.astype(float).tolist(),
-            "std": safe_std.astype(float).tolist(),
-        }
-
-    if method == "minmax":
-        denom = max_values - min_values
-        safe_denom = np.where(np.abs(denom) < epsilon, 1.0, denom)
-        return {
-            "scope": "global_train",
-            "method": method,
-            "fitted_on": "train",
-            "files_used": int(kept_files),
-            "files_dropped": int(dropped_files),
-            "rows_used": int(total_rows),
-            "epsilon": float(epsilon),
-            "min": min_values.astype(float).tolist(),
-            "max": max_values.astype(float).tolist(),
-            "range": safe_denom.astype(float).tolist(),
-        }
-
-    raise ValueError(f"Unsupported normalization method: {method}")
-
-
 def build_X_y_from_file_index(
     index_df,
     window_size: int = WINDOW_SIZE,
@@ -295,11 +208,13 @@ def build_X_y_from_file_index(
     tail_mode : str, default=TAIL_WINDOW_MODE
         Tail strategy passed through to ``create_windows_from_dataframe``.
     normalization_scope : str, default=NORMALIZATION_SCOPE
-        "per_file", "per_window", or "global_train".
+        "per_window" only (per_file/global_train archived in
+        src/data/normalization_variants.py for EXP-5).
     normalization_method : str, default=NORMALIZATION_METHOD
         Current supported final method is "zscore".
     global_normalization_stats : dict or None
-        Required when normalization_scope is "global_train".
+        Unused by the active per_window pipeline; kept as None for the archived
+        variants (see normalization_variants.py).
 
     Returns
     -------
@@ -349,9 +264,6 @@ def build_X_y_from_file_index(
             continue
 
         kept_files += 1
-
-        if normalization_scope == "per_file":
-            values = normalize_array(values, method=normalization_method)
 
         windows = create_windows_from_dataframe(
             values,
@@ -427,7 +339,8 @@ def build_dataloaders(
     stride : int, default=WINDOW_STRIDE
         Step size between consecutive windows.
     normalization_scope : str, default=NORMALIZATION_SCOPE
-        "per_file", "per_window", or "global_train".
+        "per_window" only (per_file/global_train archived in
+        src/data/normalization_variants.py for EXP-5).
     normalization_method : str, default=NORMALIZATION_METHOD
         Normalization method. The final pipeline uses "zscore".
     num_workers : int, default=DATALOADER_NUM_WORKERS
@@ -459,7 +372,7 @@ def build_dataloaders(
     - Base preprocessing is reused through the per-file disk cache.
     - All splits are materialized from the per-file preprocessing cache.
     """
-    if normalization_scope not in {"per_file", "per_window", "global_train"}:
+    if normalization_scope not in {"per_window"}:
         raise ValueError(f"Unsupported normalization_scope: {normalization_scope!r}")
     if normalization_scope == "per_window" and normalization_method != "zscore":
         raise ValueError("per_window normalization currently supports zscore only.")
@@ -495,14 +408,6 @@ def build_dataloaders(
     global_normalization_stats = None
     normalization_fit_seconds = 0.0
     split_materialization_seconds = {}
-
-    if normalization_scope == "global_train":
-        fit_start = time.perf_counter()
-        global_normalization_stats = fit_global_normalization_stats(
-            train_index_df,
-            method=normalization_method,
-        )
-        normalization_fit_seconds = time.perf_counter() - fit_start
 
     train_materialize_start = time.perf_counter()
     X_train, y_train, train_kept, train_dropped, train_window_counts = (
@@ -668,9 +573,7 @@ def build_dataloaders(
             "method": str(normalization_method),
             "epsilon": float(EPSILON),
             "global_stats": global_normalization_stats,
-            "global_stats_fitted_on": (
-                "train" if normalization_scope == "global_train" else None
-            ),
+            "global_stats_fitted_on": None,
         },
         "tail_window_info": {
             "enabled": bool(include_tail),

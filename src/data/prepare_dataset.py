@@ -311,46 +311,6 @@ def normalize_dataframe(
     return df
 
 
-def normalize_array(
-    values: np.ndarray,
-    method: str = NORMALIZATION_METHOD,
-    stats: Optional[dict] = None,
-    epsilon: float = EPSILON,
-) -> np.ndarray:
-    """
-    Normalize a 2D time-series array per channel.
-
-    ``stats`` is optional for per-file fitting and required when applying
-    constants fitted on the training split.
-    """
-    values = np.asarray(values, dtype=np.float32)
-    if values.size == 0:
-        return values.astype(np.float32, copy=False)
-
-    if method == "zscore":
-        if stats is None:
-            mean = values.mean(axis=0)
-            std = values.std(axis=0, ddof=1) if values.shape[0] > 1 else values.std(axis=0)
-        else:
-            mean = np.asarray(stats["mean"], dtype=np.float32)
-            std = np.asarray(stats["std"], dtype=np.float32)
-        safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
-        return ((values - mean) / safe_std).astype(np.float32)
-
-    if method == "minmax":
-        if stats is None:
-            min_val = values.min(axis=0)
-            max_val = values.max(axis=0)
-        else:
-            min_val = np.asarray(stats["min"], dtype=np.float32)
-            max_val = np.asarray(stats["max"], dtype=np.float32)
-        denom = max_val - min_val
-        safe_denom = np.where(np.abs(denom) < epsilon, 1.0, denom)
-        return ((values - min_val) / safe_denom).astype(np.float32)
-
-    raise ValueError(f"Unsupported normalization method: {method}")
-
-
 def normalize_windows_array(
     windows: np.ndarray,
     method: str = NORMALIZATION_METHOD,
@@ -369,25 +329,12 @@ def normalize_windows_array(
     if windows.size == 0:
         return windows.astype(np.float32, copy=False)
 
-    if scope == "per_file":
-        return windows.astype(np.float32, copy=False)
-
-    if scope == "global_train":
-        if global_stats is None:
-            raise ValueError("global_train normalization requires global_stats.")
-        shape = (1, 1, windows.shape[-1])
-        if method == "zscore":
-            mean = np.asarray(global_stats["mean"], dtype=np.float32).reshape(shape)
-            std = np.asarray(global_stats["std"], dtype=np.float32).reshape(shape)
-            safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
-            return ((windows - mean) / safe_std).astype(np.float32)
-        if method == "minmax":
-            min_val = np.asarray(global_stats["min"], dtype=np.float32).reshape(shape)
-            max_val = np.asarray(global_stats["max"], dtype=np.float32).reshape(shape)
-            denom = max_val - min_val
-            safe_denom = np.where(np.abs(denom) < epsilon, 1.0, denom)
-            return ((windows - min_val) / safe_denom).astype(np.float32)
-        raise ValueError(f"Unsupported normalization method: {method}")
+    if scope in ("per_file", "global_train"):
+        raise NotImplementedError(
+            f"normalization scope {scope!r} was archived to "
+            "src/data/normalization_variants.py for EXP-5. The active pipeline "
+            "uses 'per_window' only."
+        )
 
     if scope == "per_window":
         if method != "zscore":

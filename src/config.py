@@ -72,7 +72,10 @@ MISSING_RATIO_THRESHOLD = 0.2
 MISSING_FILL_METHOD = "median"
 
 NORMALIZATION_METHOD = "zscore"
-NORMALIZATION_SCOPE = "per_window"  # "per_file" | "per_window" | "global_train"
+# Only "per_window" is active. The "per_file" and "global_train" scopes were
+# archived to src/data/normalization_variants.py for the EXP-5 normalization
+# study (docs/future_experiments.md); relax the check below to re-enable them.
+NORMALIZATION_SCOPE = "per_window"
 EPSILON = 1e-8
 
 # =========================
@@ -208,8 +211,8 @@ INPUT_CHANNELS = NUM_ACTIVE_CHANNELS
 if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:
     raise ValueError("TRAIN_RATIO + VAL_RATIO + TEST_RATIO must be 1.0")
 
-if NORMALIZATION_SCOPE not in {"per_file", "per_window", "global_train"}:
+if NORMALIZATION_SCOPE != "per_window":
     raise ValueError(
-        "NORMALIZATION_SCOPE must be one of: "
-        "'per_file', 'per_window', 'global_train'"
+        "NORMALIZATION_SCOPE must be 'per_window' (the only active scope). "
+        "per_file/global_train are archived in normalization_variants.py."
     )
