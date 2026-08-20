@@ -226,6 +226,27 @@ Format per entry:
   interacts with channel ablation (EXP-2). Not pursued now.
 - **Affects:** closes the RESAMPLE open item; Stage 2 signal-processing flags.
 
+### D018 — F_1layer is the single primary model; config.py set to 1 layer
+- **Date:** 2026-08-19
+- **Decision:** `TRANSFORMER_NUM_LAYERS = 1` in `src/config.py`, so the config now
+  fully describes **F_1layer** (the FPGA-deployed model). The rest of the config
+  already matched (d_model=32, nhead=4, ffn=64, dropout=0.1), so the default
+  `TransformerBaseline()` is now exactly F_1layer (9,492 params, verified).
+- **Why:** Unify to one model. The whole back half of the project (quantization,
+  HLS, PYNQ, host) targets F_1layer, and `evaluate_f1layer.py` is the canonical
+  eval. Keeping config at 2 layers was a source of confusion.
+- **Consequence / preserved:** The earlier 2-layer baseline (test 98.22%,
+  `artifacts/runs/20260615_*`) remains a documented exploration result. Its `.pt`
+  has no embedded model_config, so evaluating it now requires temporarily setting
+  `TRANSFORMER_NUM_LAYERS=2` (its metrics are already recorded, so re-evaluation
+  is not normally needed). `evaluate_f1layer.py` is unaffected — it reads
+  num_layers from the F_1layer checkpoint, not from config.
+- **Verified:** F_1layer full-test still 97.55% (unchanged); default model params
+  = 9,492 with the new config.
+- **Source:** User decision (2026-08-19).
+- **Affects:** `src/config.py`, `src/train_transformer_baseline.py` (a fresh run
+  now trains 1 layer), reporting/thesis narrative.
+
 ---
 
 ## Pending Decisions (awaiting user input)

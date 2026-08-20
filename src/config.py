@@ -111,17 +111,18 @@ HIDDEN_DIM = 64
 # =========================
 # Transformer baseline
 # =========================
-# NOTE: This config describes the 2-layer SOFTWARE baseline (highest accuracy,
-# test_acc 98.22%), whose checkpoint lives in artifacts/runs/20260615_*.
-# The model actually DEPLOYED to the FPGA is a smaller variant, "F_1layer"
-# (num_layers=1, d_model=32, nhead=4, dim_feedforward=64, 9,492 params, ~97.55%
-# float / 97.11% int10), chosen to fit the EBAZ4205 / Zynq-7010. See DECISION_LOG
-# D013. F_1layer's own config snapshot ships with its checkpoint
-# (kaggle/f1_ckpt_dataset/best.pt) and its export (hls_f_int10/). Do NOT change
-# these values to 1 layer — that would break reproduction of the 2-layer baseline.
+# This config describes F_1layer — the single primary model, DEPLOYED to the FPGA
+# (num_layers=1, d_model=32, nhead=4, dim_feedforward=64, 9,492 params; float test
+# 97.55%, int10 97.11%), chosen to fit the EBAZ4205 / Zynq-7010. See DECISION_LOG
+# D013/D018. Its checkpoint is kaggle/f1_ckpt_dataset/best.pt and its export lives
+# in hls_f_int10/.
+# History: an earlier 2-layer variant reached higher software accuracy (test
+# 98.22%, checkpoint artifacts/runs/20260615_*). That is a preserved exploration
+# result; to evaluate that old checkpoint set TRANSFORMER_NUM_LAYERS=2. The
+# project's primary/deployed model is now this 1-layer config.
 TRANSFORMER_D_MODEL = 32
 TRANSFORMER_NHEAD = 4
-TRANSFORMER_NUM_LAYERS = 2
+TRANSFORMER_NUM_LAYERS = 1
 TRANSFORMER_DIM_FEEDFORWARD = 64
 TRANSFORMER_DROPOUT = 0.1
 
