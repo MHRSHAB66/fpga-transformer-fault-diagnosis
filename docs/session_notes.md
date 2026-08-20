@@ -53,16 +53,27 @@
 - **F_1layer با `TuningTransformer` آموزش دیده** (اسم‌لایه‌های کوتاه)؛ با remapping
   به `TransformerBaseline` لود می‌شود (معماری یکسان).
 
-### مواردِ باز (برای روزهای بعد)
-- [ ] تولیدِ متریکِ **int10** با همان فرمتِ استاندارد (الان float داریم).
-- [ ] خوندنِ ورودیِ HLS تأیید شد host-side؛ برای Stage 9 بلوکِ on-chip normalization.
-- [ ] کدِ مُرده‌ی `normalize_dataframe` (per-file) — کاندیدای تمیزکاری (با تأیید).
-- [ ] (اختیاری) ابزارِ ساختارِ همبستگی برای سازگاریِ شتاب‌سنج‌ها (research-grade).
-- [ ] **دیسکِ G: تنگ است** (۸G آزاد)؛ کشِ قدیمیِ `data/processed/preprocessed_signals`
-      (۲.۴G، بلااستفاده) کاندیدای پاک‌کردن.
-- [ ] بلاکرِ اصلیِ پروژه: **سنتز Vitis روی لپ‌تاپ + دموِ برد** (خارج از این دسکتاپ).
+### تمیزکاری/refactor (بعدازظهر Day 16، commitهای c77c51f, b9e00a8, 7102d64)
+- **استخراجِ دمو:** کدِ نمودار/`__main__` از make_dataloaders رفت به
+  `src/tools/inspect_dataloaders.py` (ماژول ۱۵۴ خط سبک‌تر).
+- **آرشیوِ نرمال‌سازی:** per_file/global_train از کدِ فعال حذف و به
+  `src/data/normalization_variants.py` منتقل شد (برای EXP-5). فقط per_window فعال.
+  تأیید: F_1layer full-test بدون تغییر ۹۷.۵۵٪.
+- **D018 — یکی‌سازیِ مدل:** `TRANSFORMER_NUM_LAYERS=1`؛ config حالا دقیقاً F_1layer
+  است (default model = 9,492 params). 2-لایه به‌عنوان نتیجه‌ی تاریخی حفظ شد.
 
-### ایستگاهِ بعدی
-- `src/data/load_data.py`
+### مواردِ باز (به‌روز‌شده — خیلی‌ها حل شدند)
+- [ ] **مورد ۳:** `preprocess_data.py`+`extract_features.py`+`data/processed/` یک
+      مسیرِ استخراجِ ویژگیِ **قدیمی و بلااستفاده** است (`normalize_dataframe` فقط
+      اینجاست). تصمیم: آرشیو/حذفِ کلِ این مسیر؟ (با تأیید.)
+- [ ] متریکِ **int10** با فرمتِ استاندارد P/R/F1 (الان فقط accuracy=97.11% داریم).
+- [ ] **دیسکِ G: تنگ** (۸G)؛ کشِ قدیمیِ `data/processed/preprocessed_signals` (۲.۴G).
+- [ ] Stage 9: بلوکِ on-chip normalization (فقط اگه سنسور اضافه شد).
+- [ ] (اختیاری) ابزارِ همبستگی برای سازگاریِ شتاب‌سنج‌ها (research-grade).
+- [ ] بلاکرِ اصلی: **سنتز Vitis روی لپ‌تاپ + دموِ برد**.
+
+### ایستگاهِ تور — کجاییم
+- ✅ config.py, load_data.py, make_dataloaders.py (کامل)
+- ⏭️ بعدی: `src/models/transformer_baseline.py`
 
 ---
