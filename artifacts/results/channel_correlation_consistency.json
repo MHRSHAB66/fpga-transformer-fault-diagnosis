@@ -1,0 +1,181 @@
+{
+  "method": "per-file 8x8 Pearson correlation vs element-wise median reference; deviation = mean|corr - ref|; outlier if deviation > median + 3*IQR",
+  "expected_column_order": [
+    "tachometer",
+    "acc_axial_b1",
+    "acc_radial_b1",
+    "acc_tangential_b1",
+    "acc_axial_b2",
+    "acc_radial_b2",
+    "acc_tangential_b2",
+    "microphone"
+  ],
+  "files_used": 1951,
+  "files_skipped": 0,
+  "deviation_stats": {
+    "median": 0.11184429990977018,
+    "q1": 0.08145618908634898,
+    "q3": 0.1555423231003784,
+    "iqr": 0.07408613401402943,
+    "max": 0.36319150105466685,
+    "outlier_threshold": 0.3341027019518585
+  },
+  "num_structural_outliers": 18,
+  "structural_outliers": [
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\43.4176.csv",
+      "deviation": 0.36319150105466685
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\42.3936.csv",
+      "deviation": 0.3623051384096138
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\41.3696.csv",
+      "deviation": 0.3575745692324353
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\45.4656.csv",
+      "deviation": 0.3561564576667119
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\35g\\42.1888.csv",
+      "deviation": 0.3527506801536896
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\35g\\40.96.csv",
+      "deviation": 0.35141304010953955
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\44.6464.csv",
+      "deviation": 0.35096664065455424
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\20g\\41.3696.csv",
+      "deviation": 0.35074365354764553
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\20g\\40.3456.csv",
+      "deviation": 0.3489688152820139
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\37.4784.csv",
+      "deviation": 0.3470748960297373
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\35g\\39.3216.csv",
+      "deviation": 0.3463205059984636
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\35g\\39.936.csv",
+      "deviation": 0.34227628519468223
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\20g\\42.3936.csv",
+      "deviation": 0.3415436843533212
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\46.4896.csv",
+      "deviation": 0.3415411472619381
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\outer_race\\20g\\39.1168.csv",
+      "deviation": 0.3382567366441908
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\40.5504.csv",
+      "deviation": 0.3377990695983606
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\20g\\38.2976.csv",
+      "deviation": 0.33639900701800085
+    },
+    {
+      "filepath": "data\\raw\\mafaulda\\underhang\\cage_fault\\35g\\38.5024.csv",
+      "deviation": 0.33437750951502726
+    }
+  ],
+  "reference_correlation_matrix": [
+    [
+      1.0,
+      -0.0029,
+      -0.0136,
+      -0.0457,
+      0.132,
+      0.0647,
+      0.0122,
+      -0.0053
+    ],
+    [
+      -0.0029,
+      1.0,
+      0.2295,
+      0.1035,
+      0.0256,
+      0.008,
+      0.0379,
+      -0.1082
+    ],
+    [
+      -0.0136,
+      0.2295,
+      1.0,
+      0.1119,
+      0.0253,
+      0.0516,
+      0.1174,
+      -0.4004
+    ],
+    [
+      -0.0457,
+      0.1035,
+      0.1119,
+      1.0,
+      0.0018,
+      0.0167,
+      0.0234,
+      -0.0324
+    ],
+    [
+      0.132,
+      0.0256,
+      0.0253,
+      0.0018,
+      1.0,
+      0.4571,
+      0.2069,
+      -0.0178
+    ],
+    [
+      0.0647,
+      0.008,
+      0.0516,
+      0.0167,
+      0.4571,
+      1.0,
+      0.3599,
+      -0.0155
+    ],
+    [
+      0.0122,
+      0.0379,
+      0.1174,
+      0.0234,
+      0.2069,
+      0.3599,
+      1.0,
+      -0.0224
+    ],
+    [
+      -0.0053,
+      -0.1082,
+      -0.4004,
+      -0.0324,
+      -0.0178,
+      -0.0155,
+      -0.0224,
+      1.0
+    ]
+  ],
+  "elapsed_seconds": 107.3
+}

@@ -1,0 +1,97 @@
+{
+  "model": "F_1layer",
+  "quantization": "int10 (weights+activations+attention)",
+  "checkpoint": "kaggle\\f1_ckpt_dataset\\best.pt",
+  "calibration": {
+    "files": 12,
+    "windows": 2928,
+    "seed": 42
+  },
+  "measured_on": "stratified test subset",
+  "subset_per_class": 400,
+  "subset_windows": 1600,
+  "subset_accuracy": 0.9725,
+  "precision_recall_f1": {
+    "per_class": {
+      "normal": {
+        "precision": 0.9588377723970944,
+        "recall": 0.99,
+        "f1": 0.974169741697417,
+        "support": 400
+      },
+      "imbalance": {
+        "precision": 0.9653465346534653,
+        "recall": 0.975,
+        "f1": 0.9701492537313433,
+        "support": 400
+      },
+      "misalignment": {
+        "precision": 0.9897172236503856,
+        "recall": 0.9625,
+        "f1": 0.9759188846641318,
+        "support": 400
+      },
+      "bearing_fault": {
+        "precision": 0.9771573604060914,
+        "recall": 0.9625,
+        "f1": 0.9697732997481108,
+        "support": 400
+      }
+    },
+    "macro": {
+      "precision": 0.9727647227767592,
+      "recall": 0.9724999999999999,
+      "f1": 0.9725027949602507
+    },
+    "weighted": {
+      "precision": 0.9727647227767591,
+      "recall": 0.9725,
+      "f1": 0.9725027949602507
+    }
+  },
+  "confusion_matrix": [
+    [
+      396,
+      2,
+      2,
+      0
+    ],
+    [
+      1,
+      390,
+      0,
+      9
+    ],
+    [
+      13,
+      2,
+      385,
+      0
+    ],
+    [
+      3,
+      10,
+      2,
+      385
+    ]
+  ],
+  "class_names": [
+    "normal",
+    "imbalance",
+    "misalignment",
+    "bearing_fault"
+  ],
+  "full_test_reference": {
+    "source": "kaggle\\int10_shard\\int10_fulltest_combined.json",
+    "windows": 95404,
+    "accuracy": 0.9711332858161084,
+    "per_class_recall": {
+      "normal": 0.9934426229508196,
+      "imbalance": 0.98464643993149,
+      "misalignment": 0.9712286802450737,
+      "bearing_fault": 0.9658406404879909
+    }
+  },
+  "generated": "2026-08-20T14:14:30",
+  "note": "Full-test accuracy/recall are from the definitive 4-shard run; precision/F1/confusion are measured on the stratified subset (full int10 confusion would need ~8 h locally)."
+}

@@ -62,15 +62,17 @@
 - **D018 — یکی‌سازیِ مدل:** `TRANSFORMER_NUM_LAYERS=1`؛ config حالا دقیقاً F_1layer
   است (default model = 9,492 params). 2-لایه به‌عنوان نتیجه‌ی تاریخی حفظ شد.
 
-### مواردِ باز (به‌روز‌شده — خیلی‌ها حل شدند)
-- [ ] **مورد ۳:** `preprocess_data.py`+`extract_features.py`+`data/processed/` یک
-      مسیرِ استخراجِ ویژگیِ **قدیمی و بلااستفاده** است (`normalize_dataframe` فقط
-      اینجاست). تصمیم: آرشیو/حذفِ کلِ این مسیر؟ (با تأیید.)
-- [ ] متریکِ **int10** با فرمتِ استاندارد P/R/F1 (الان فقط accuracy=97.11% داریم).
-- [ ] **دیسکِ G: تنگ** (۸G)؛ کشِ قدیمیِ `data/processed/preprocessed_signals` (۲.۴G).
-- [ ] Stage 9: بلوکِ on-chip normalization (فقط اگه سنسور اضافه شد).
-- [ ] (اختیاری) ابزارِ همبستگی برای سازگاریِ شتاب‌سنج‌ها (research-grade).
-- [ ] بلاکرِ اصلی: **سنتز Vitis روی لپ‌تاپ + دموِ برد**.
+### مواردِ باز — تقریباً همه حل شدند (2026-08-19 بعدازظهر)
+- [x] مسیرِ قدیمیِ استخراجِ ویژگی → `archive/` + کشِ ۲.۴G پاک شد (دیسک ۸→۱۰.۳G).
+- [x] **متریکِ int10 استاندارد** → `evaluate_int10_metrics.py`؛ زیرمجموعه‌ی
+      stratified (۱۶۰۰ پنجره): macro P/R/F1 = 0.973؛ full-test acc 97.11%.
+      خروجی: `f_1layer_int10_test_metrics.json`.
+- [x] **مورد ۲ (on-chip normalization)** → `hls_f_int10/onchip_normalization_reference.py`
+      (مرجعِ NumPy + spec، با host بایت‌به‌بایت می‌خونه؛ آماده‌ی Stage 9 HLS).
+- [x] **مورد ۳ (همبستگیِ کانال‌ها)** → `verify_channel_correlation.py`؛ ساختارِ ۸×۸
+      سازگار (انحرافِ میانه 0.11)؛ ۱۸ ناهنجار همگی severe-bearing (فیزیکی، نه جابه‌جایی).
+- [ ] **تنها بلاکرِ باقی‌مونده: سنتز Vitis روی لپ‌تاپ + دموِ برد** (خارج از این دسکتاپ).
+- [ ] (اختیاری/آینده) Stage 9 سنسور، تبدیلِ مرجعِ on-chip به HLS.
 
 ### ایستگاهِ تور — کجاییم
 - ✅ config.py, load_data.py, make_dataloaders.py (کامل)
