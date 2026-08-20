@@ -1,0 +1,465 @@
+{
+  "tuning_run_id": "tuning_20260813_181251",
+  "date": "20260813_181251",
+  "total_runtime_minutes": 190.8,
+  "gpu_name": "Tesla T4",
+  "peak_gpu_memory_gib": 0.1715998649597168,
+  "fixed_settings": {
+    "window_size": 1024,
+    "stride": 1024,
+    "normalization": "per_window/zscore",
+    "batch_size": 64,
+    "max_epochs": 12,
+    "patience": 3,
+    "seed": 42
+  },
+  "official_baseline": {
+    "run_id": "20260615_223905_fpga_fault_final_t4",
+    "test_acc": 0.9822,
+    "test_macro_f2": 0.978,
+    "test_weighted_f2": 0.9822,
+    "fault_recall": 0.9975,
+    "false_alarm_rate": 0.0234,
+    "checkpoint_size_kb": 381,
+    "arch": {
+      "d_model": 32,
+      "nhead": 4,
+      "num_layers": 2,
+      "dim_feedforward": 64,
+      "dropout": 0.1,
+      "lr": 0.001
+    }
+  },
+  "configs_attempted": 3,
+  "configs_completed": [
+    "H_d24",
+    "I_d32_ffn32",
+    "J_d16_ffn16"
+  ],
+  "configs_failed": [],
+  "configs_skipped": [],
+  "all_val_results": [
+    {
+      "name": "H_d24",
+      "config": {
+        "name": "H_d24",
+        "d_model": 24,
+        "nhead": 3,
+        "num_layers": 1,
+        "dim_feedforward": 48,
+        "dropout": 0.1,
+        "lr": 0.001,
+        "note": "d=24, 1layer, nhead=3 (head_dim=8); ~5500 param; F<->G midpoint"
+      },
+      "n_params": 5488,
+      "best_epoch": 7,
+      "stopped_epoch": 10,
+      "best_val_loss": 0.10317224161273805,
+      "val_acc": 0.9628835645229088,
+      "val_macro_f2": 0.9617936842990797,
+      "val_weighted_f2": 0.9627988794679253,
+      "val_fault_recall": 0.9945642795513373,
+      "val_false_alarm": 0.02622950819672131,
+      "val_safety": {
+        "fault_recall": 0.9945642795513373,
+        "false_alarm_rate": 0.02622950819672131,
+        "captured_faults": 46108,
+        "missed_faults": 252,
+        "false_alarms": 32,
+        "actual_faults": 46360,
+        "actual_normal": 1220
+      },
+      "val_per_class_acc": {
+        "normal": 0.9737704918032787,
+        "imbalance": 0.9914307004470939,
+        "misalignment": 0.9830327868852459,
+        "bearing_fault": 0.9441550482610694
+      },
+      "val_confusion": [
+        [
+          1188,
+          17,
+          12,
+          3
+        ],
+        [
+          16,
+          7983,
+          39,
+          14
+        ],
+        [
+          115,
+          11,
+          11993,
+          81
+        ],
+        [
+          121,
+          408,
+          929,
+          24650
+        ]
+      ],
+      "history": {
+        "epoch": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "train_loss": [
+          0.483266,
+          0.249815,
+          0.192099,
+          0.1635,
+          0.14448,
+          0.130952,
+          0.121584,
+          0.111401,
+          0.102849,
+          0.097854
+        ],
+        "train_acc": [
+          0.813811,
+          0.899562,
+          0.923248,
+          0.936447,
+          0.944475,
+          0.950727,
+          0.954167,
+          0.958341,
+          0.960974,
+          0.962992
+        ],
+        "val_loss": [
+          0.309908,
+          0.198588,
+          0.282459,
+          0.184054,
+          0.153653,
+          0.248878,
+          0.103172,
+          0.15074,
+          0.123848,
+          0.116985
+        ],
+        "val_acc": [
+          0.882367,
+          0.929214,
+          0.895818,
+          0.932556,
+          0.94235,
+          0.913304,
+          0.962884,
+          0.948066,
+          0.954582,
+          0.957566
+        ]
+      },
+      "runtime_seconds": 3604.9,
+      "checkpoint_path": "/kaggle/working/tuning_20260813_181251/H_d24/checkpoints/best.pt"
+    },
+    {
+      "name": "I_d32_ffn32",
+      "config": {
+        "name": "I_d32_ffn32",
+        "d_model": 32,
+        "nhead": 4,
+        "num_layers": 1,
+        "dim_feedforward": 32,
+        "dropout": 0.1,
+        "lr": 0.001,
+        "note": "d=32, 1layer, ffn 64->32; ~7400 param; d_model intact for accuracy"
+      },
+      "n_params": 7412,
+      "best_epoch": 7,
+      "stopped_epoch": 10,
+      "best_val_loss": 0.08569486346404344,
+      "val_acc": 0.9688524590163935,
+      "val_macro_f2": 0.9673281598033842,
+      "val_weighted_f2": 0.9687919069644707,
+      "val_fault_recall": 0.9946074201898188,
+      "val_false_alarm": 0.019672131147540985,
+      "val_safety": {
+        "fault_recall": 0.9946074201898188,
+        "false_alarm_rate": 0.019672131147540985,
+        "captured_faults": 46110,
+        "missed_faults": 250,
+        "false_alarms": 24,
+        "actual_faults": 46360,
+        "actual_normal": 1220
+      },
+      "val_per_class_acc": {
+        "normal": 0.980327868852459,
+        "imbalance": 0.9901887729756582,
+        "misalignment": 0.9901639344262295,
+        "bearing_fault": 0.9517772330320209
+      },
+      "val_confusion": [
+        [
+          1196,
+          0,
+          24,
+          0
+        ],
+        [
+          20,
+          7973,
+          32,
+          27
+        ],
+        [
+          70,
+          3,
+          12080,
+          47
+        ],
+        [
+          160,
+          250,
+          849,
+          24849
+        ]
+      ],
+      "history": {
+        "epoch": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "train_loss": [
+          0.410398,
+          0.207604,
+          0.156994,
+          0.134609,
+          0.113878,
+          0.098873,
+          0.089967,
+          0.08464,
+          0.079782,
+          0.074466
+        ],
+        "train_acc": [
+          0.844947,
+          0.920008,
+          0.940758,
+          0.949063,
+          0.956287,
+          0.962388,
+          0.965988,
+          0.967576,
+          0.969582,
+          0.9716
+        ],
+        "val_loss": [
+          0.250656,
+          0.184766,
+          0.172235,
+          0.199721,
+          0.116717,
+          0.217383,
+          0.085695,
+          0.086942,
+          0.090134,
+          0.147813
+        ],
+        "val_acc": [
+          0.901576,
+          0.928794,
+          0.936675,
+          0.925536,
+          0.955485,
+          0.920555,
+          0.968852,
+          0.967654,
+          0.966604,
+          0.946364
+        ]
+      },
+      "runtime_seconds": 4653.9,
+      "checkpoint_path": "/kaggle/working/tuning_20260813_181251/I_d32_ffn32/checkpoints/best.pt"
+    },
+    {
+      "name": "J_d16_ffn16",
+      "config": {
+        "name": "J_d16_ffn16",
+        "d_model": 16,
+        "nhead": 2,
+        "num_layers": 1,
+        "dim_feedforward": 16,
+        "dropout": 0.1,
+        "lr": 0.001,
+        "note": "d=16, 1layer, ffn 32->16; ~2000 param; sub-G floor probe"
+      },
+      "n_params": 2044,
+      "best_epoch": 4,
+      "stopped_epoch": 7,
+      "best_val_loss": 0.18358829903752227,
+      "val_acc": 0.9329129886506936,
+      "val_macro_f2": 0.9202413488251617,
+      "val_weighted_f2": 0.9329112624403962,
+      "val_fault_recall": 0.9937230371009491,
+      "val_false_alarm": 0.10491803278688525,
+      "val_safety": {
+        "fault_recall": 0.9937230371009491,
+        "false_alarm_rate": 0.10491803278688525,
+        "captured_faults": 46069,
+        "missed_faults": 291,
+        "false_alarms": 128,
+        "actual_faults": 46360,
+        "actual_normal": 1220
+      },
+      "val_per_class_acc": {
+        "normal": 0.8950819672131147,
+        "imbalance": 0.9390213611525087,
+        "misalignment": 0.9600819672131148,
+        "bearing_fault": 0.9201011184311322
+      },
+      "val_confusion": [
+        [
+          1092,
+          15,
+          113,
+          0
+        ],
+        [
+          40,
+          7561,
+          279,
+          172
+        ],
+        [
+          98,
+          19,
+          11713,
+          370
+        ],
+        [
+          153,
+          431,
+          1502,
+          24022
+        ]
+      ],
+      "history": {
+        "epoch": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "train_loss": [
+          0.561153,
+          0.346486,
+          0.282668,
+          0.244227,
+          0.218296,
+          0.199982,
+          0.186954
+        ],
+        "train_acc": [
+          0.775164,
+          0.864895,
+          0.890374,
+          0.906921,
+          0.917474,
+          0.92453,
+          0.928773
+        ],
+        "val_loss": [
+          0.616013,
+          0.341257,
+          0.285382,
+          0.183588,
+          0.187619,
+          0.306707,
+          0.213705
+        ],
+        "val_acc": [
+          0.76694,
+          0.878899,
+          0.891131,
+          0.932913,
+          0.931106,
+          0.892707,
+          0.924254
+        ]
+      },
+      "runtime_seconds": 1710.6,
+      "checkpoint_path": "/kaggle/working/tuning_20260813_181251/J_d16_ffn16/checkpoints/best.pt"
+    }
+  ],
+  "best_config": "I_d32_ffn32",
+  "best_config_params": 7412,
+  "best_val_metrics": {
+    "val_acc": 0.9688524590163935,
+    "val_macro_f2": 0.9673281598033842,
+    "best_val_loss": 0.08569486346404344
+  },
+  "test_metrics_for_best": {
+    "test_acc": 0.9644564169217223,
+    "test_macro_f2": 0.9585760356584078,
+    "test_weighted_f2": 0.9644252218521547,
+    "test_fault_recall": 0.9954283378512112,
+    "test_false_alarm": 0.04262295081967213,
+    "test_safety": {
+      "fault_recall": 0.9954283378512112,
+      "false_alarm_rate": 0.04262295081967213,
+      "captured_faults": 92539,
+      "missed_faults": 425,
+      "false_alarms": 104,
+      "actual_faults": 92964,
+      "actual_normal": 2440
+    },
+    "test_per_class_acc": {
+      "normal": 0.9573770491803278,
+      "imbalance": 0.9662344017616834,
+      "misalignment": 0.9879947011094552,
+      "bearing_fault": 0.9533930613800992
+    },
+    "test_confusion": [
+      [
+        2336,
+        5,
+        94,
+        5
+      ],
+      [
+        25,
+        15796,
+        31,
+        496
+      ],
+      [
+        160,
+        73,
+        23866,
+        57
+      ],
+      [
+        240,
+        582,
+        1623,
+        50015
+      ]
+    ]
+  },
+  "decision": "KEEP ORIGINAL BASELINE -- I_d32_ffn32 degrades safety metrics (fault_recall D=-0.0021, false_alarm D=+0.0192)."
+}

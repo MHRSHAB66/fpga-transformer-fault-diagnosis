@@ -1,0 +1,112 @@
+{
+  "name": "J_d16_ffn16",
+  "config": {
+    "name": "J_d16_ffn16",
+    "d_model": 16,
+    "nhead": 2,
+    "num_layers": 1,
+    "dim_feedforward": 16,
+    "dropout": 0.1,
+    "lr": 0.001,
+    "note": "d=16, 1layer, ffn 32->16; ~2000 param; sub-G floor probe"
+  },
+  "n_params": 2044,
+  "best_epoch": 4,
+  "stopped_epoch": 7,
+  "best_val_loss": 0.18358829903752227,
+  "val_acc": 0.9329129886506936,
+  "val_macro_f2": 0.9202413488251617,
+  "val_weighted_f2": 0.9329112624403962,
+  "val_fault_recall": 0.9937230371009491,
+  "val_false_alarm": 0.10491803278688525,
+  "val_safety": {
+    "fault_recall": 0.9937230371009491,
+    "false_alarm_rate": 0.10491803278688525,
+    "captured_faults": 46069,
+    "missed_faults": 291,
+    "false_alarms": 128,
+    "actual_faults": 46360,
+    "actual_normal": 1220
+  },
+  "val_per_class_acc": {
+    "normal": 0.8950819672131147,
+    "imbalance": 0.9390213611525087,
+    "misalignment": 0.9600819672131148,
+    "bearing_fault": 0.9201011184311322
+  },
+  "val_confusion": [
+    [
+      1092,
+      15,
+      113,
+      0
+    ],
+    [
+      40,
+      7561,
+      279,
+      172
+    ],
+    [
+      98,
+      19,
+      11713,
+      370
+    ],
+    [
+      153,
+      431,
+      1502,
+      24022
+    ]
+  ],
+  "history": {
+    "epoch": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7
+    ],
+    "train_loss": [
+      0.561153,
+      0.346486,
+      0.282668,
+      0.244227,
+      0.218296,
+      0.199982,
+      0.186954
+    ],
+    "train_acc": [
+      0.775164,
+      0.864895,
+      0.890374,
+      0.906921,
+      0.917474,
+      0.92453,
+      0.928773
+    ],
+    "val_loss": [
+      0.616013,
+      0.341257,
+      0.285382,
+      0.183588,
+      0.187619,
+      0.306707,
+      0.213705
+    ],
+    "val_acc": [
+      0.76694,
+      0.878899,
+      0.891131,
+      0.932913,
+      0.931106,
+      0.892707,
+      0.924254
+    ]
+  },
+  "runtime_seconds": 1710.6,
+  "checkpoint_path": "/kaggle/working/tuning_20260813_181251/J_d16_ffn16/checkpoints/best.pt"
+}

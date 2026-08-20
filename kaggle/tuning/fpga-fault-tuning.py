@@ -187,12 +187,11 @@ TUNING_CONFIGS = [
 # - To run the full six-config grid instead, set this to [].
 # - To run a single leftover config, e.g. ["D_d64_slow"].
 # - The env var TUNING_RUN_ONLY (comma-separated) overrides this at runtime.
-# Next Kaggle run: the FPGA-minimal sweet-spot search (d_model 16/24 region).
-# These configs are defined below but have NO saved results yet (only a code
-# comment cites G_d16 ~95.9%). See docs/architecture_search.md sec 4 / EXP-4.
-# Save the result JSONs so the small-model row can be added to the search table.
-RUN_ONLY_DEFAULT = ["G_d16", "H_d24", "I_d32_ffn32", "J_d16_ffn16"]
-# Previous default was ["F_1layer"]. Override at runtime with TUNING_RUN_ONLY.
+# G_d16/H_d24/I_d32_ffn32/J_d16_ffn16 HAVE been run (2026-08-13); their results
+# are archived in artifacts/runs/tuning_hij_20260813/ and summarized in
+# docs/architecture_search.md. No re-run needed. Override at runtime with
+# TUNING_RUN_ONLY (comma-separated) if you want to rerun a specific config.
+RUN_ONLY_DEFAULT = ["F_1layer"]  # retrain F (selected FPGA arch) + int bit-sweep
 
 # Fixed training hyperparameters (per user spec -- do not change)
 WINDOW_SIZE  = 1024

@@ -36,24 +36,28 @@ Sources: `artifacts/runs/tuning_skipped_kaggle_20260801/results_merged.json`
 
 ---
 
-## 2. Configs DEFINED but with NO saved result
+## 2. FPGA-minimal sweet-spot configs (d_model 16/24 region)
 
-Defined in `kaggle/tuning/fpga-fault-tuning.py` for a "sweet-spot" search below
-d_model=32 (the FPGA-minimal region), but **no result JSON or log exists in the
-repo**. The only trace is a code comment citing G_d16 ≈ 95.9% val — apparently
-from an exploratory Kaggle run whose output was never saved.
+Run on Kaggle 2026-08-13 to probe below F_1layer. Results archived in
+`artifacts/runs/tuning_hij_20260813/` (recovered 2026-08-19; the run outputs had
+lived only in a temp folder). Only the per-session winner was test-evaluated
+(G_d16 in its run, I_d32_ffn32 in the H/I/J run); H_d24 and J_d16_ffn16 have val
+metrics only.
 
-| Config | d_model | layers | heads | ffn | ~params | accuracy | status |
-|---|---|---|---|---|---|---|---|
-| G_d16 | 16 | 1 | 2 | 32 | ~2,500 | ~95.9% | **comment only, unsaved** |
-| H_d24 | 24 | 1 | 3 | 48 | ~5,500 | (estimate) | **not run / unsaved** |
-| I_d32_ffn32 | 32 | 1 | 4 | 32 | ~7,400 | unknown | **not run / unsaved** |
-| J_d16_ffn16 | 16 | 1 | 2 | 16 | ~2,000 | unknown | **not run / unsaved** |
+| Config | d_model | layers | heads | ffn | params | val_acc | test_acc | val_false_alarm |
+|---|---|---|---|---|---|---|---|---|
+| I_d32_ffn32 | 32 | 1 | 4 | 32 | 7,412 | 96.89% | 96.45% | 1.97% |
+| H_d24 | 24 | 1 | 3 | 48 | 5,488 | 96.29% | — | 2.62% |
+| G_d16 | 16 | 1 | 2 | 32 | 2,572 | 95.84% | 95.88% | 1.97% |
+| J_d16_ffn16 | 16 | 1 | 2 | 16 | 2,044 | 93.29% | — | **10.49%** |
 
-These are exactly the FPGA-minimal candidates. G_d16 (~2,500 params, ~95.9%) is
-~3.7x smaller than F_1layer for ~2.4% accuracy cost — a real option if the board
-is too small for F. **To cite any of these in the thesis, re-run them on Kaggle
-and save the artifacts** (see §4).
+Sources: `artifacts/runs/tuning_hij_20260813/{G_d16,H_d24,I_d32_ffn32,J_d16_ffn16}__result.json`
+and `{g_d16,hij}_final_report.json` (`test_metrics_for_best`). Test false-alarm for
+the tested winners: I_d32_ffn32 4.26%, G_d16 4.84% (vs F_1layer's much lower rate).
+
+**Decision:** the H/I/J session winner was I_d32_ffn32, but the architecture was
+NOT changed — I halves the FFN for only ~2k fewer params yet drops accuracy ~1.4%
+and worsens the false-alarm/safety rate, so F_1layer (and the A/F family) was kept.
 
 ---
 
@@ -79,25 +83,36 @@ val_acc
 98.7% |                          E_3layers (26.6k)
 98.3% |            F_1layer (9.5k)  A_baseline (18k)
 97.5% |                          B_wide_ffn (26.4k)   <- wider FFN, worse
-        ...
+96.9% |        I_d32_ffn32 (7.4k)
+96.3% |      H_d24 (5.5k)
+95.8% |    G_d16 (2.6k)
+93.3% |   J_d16_ffn16 (2.0k)   <- accuracy + safety fall off
 89.3% |  P_prior (1.6k)
         +------------------------------------------------> params
-        (G_d16 ~2.5k @ ~95.9% and H_d24 ~5.5k would fill the 1.6k–9.5k gap
-         once re-run)
 ```
+
+The 1.6k–9.5k gap is now filled (G/H/I/J): the curve bends sharply right at
+F_1layer. Below F, accuracy falls (F 98.3% -> I 96.9% -> G 95.8% -> J 93.3%) and,
+below ~2.5k params (J), the false-alarm rate explodes (10.5%). So F_1layer is the
+smallest config that stays in the "safe ~98%" band.
 
 ---
 
-## 4. Open gap / next run
+## 4. Conclusion (gap now closed)
 
-The d_model=16 and 24 region (G_d16, H_d24, J_d16_ffn16, I_d32_ffn32) is the most
-interesting for shrinking FPGA resources but has **no documented results**. This
-is EXP-4 in `docs/future_experiments.md`.
+The whole size spectrum from 1.6k to 69.9k params has now been explored (11
+configs). The accuracy-vs-size curve has a clear knee at **F_1layer (9,492
+params, ~98%)**:
+- Above F: more accuracy but rapidly more params (up to 69.9k for +1.4%).
+- Below F: I/H/G give up ~1.4–2.4% accuracy for modest size savings, and J
+  (2,044 params) breaks the safety margin (false alarm 10.5%).
 
-To close it: re-run those four configs on Kaggle and save the result JSONs.
-`kaggle/tuning/fpga-fault-tuning.py` already defines them; select them via the
-`TUNING_RUN_ONLY` env var (comma-separated) or by editing `RUN_ONLY_DEFAULT`,
-e.g. `RUN_ONLY_DEFAULT = ["G_d16", "H_d24", "I_d32_ffn32", "J_d16_ffn16"]`. Then
-add a full test-set evaluation for the best small config, and append its row to §1.
+F_1layer is therefore the selected FPGA architecture — the smallest model that
+keeps ~98% accuracy and a low false-alarm rate. If a future board is too small
+even for F, **G_d16 (2,572 params, 95.88% test, fault-recall 99.6%)** is the
+documented fallback (its higher false-alarm ~4.8% is the cost).
+
+Optional future work (still EXP-4): only a coarse grid was tried below F; a finer
+search or light regularization might recover some of G/H's accuracy at their size.
 
 _Last updated: 2026-08-19._
