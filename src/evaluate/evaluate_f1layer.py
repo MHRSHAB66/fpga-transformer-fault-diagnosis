@@ -28,7 +28,7 @@ import torch.nn as nn
 from src.config import PROJECT_ROOT, NUM_CLASSES, LABEL_MAP, RANDOM_SEED
 from src.models.transformer_baseline import TransformerBaseline
 from src.data.make_dataloaders import build_dataloaders
-from src.train_transformer_baseline import evaluate_with_details, set_seed
+from src.utils.training_utils import evaluate_with_details, set_seed
 from src.evaluation_metrics import precision_recall_fbeta_from_confusion
 
 CKPT = PROJECT_ROOT / "kaggle" / "f1_ckpt_dataset" / "best.pt"
