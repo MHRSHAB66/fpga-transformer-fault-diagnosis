@@ -34,8 +34,7 @@ import torch
 from src.config import PROJECT_ROOT, NUM_CLASSES, RANDOM_SEED, LABEL_MAP
 from src.quantize.integer_model import IntegerTransformer
 from src.quantize.evaluate_integer_bits import set_bits, calibrate_bits
-from src.quantize.evaluate_integer import int_logits, build_train_subset
-from src.quantize.evaluate_quantized import build_test_subset
+from src.quantize.evaluate_integer import int_logits, build_train_subset, build_test_subset
 from src.evaluation_metrics import precision_recall_fbeta_from_confusion
 
 CKPT = PROJECT_ROOT / "kaggle" / "f1_ckpt_dataset" / "best.pt"

@@ -36,7 +36,46 @@ from src.quantize.integer_model import IntegerTransformer, layer_positions
 from src.quantize.integer_ops import qint_max
 from src.quantize.evaluate_integer_bits import set_bits, calibrate_bits
 from src.quantize.evaluate_integer import build_train_subset
-from src.quantize.export_hls import _write_ints, _write_floats, _linear_plan
+
+
+def _write_ints(path: Path, arr) -> None:
+    arr = np.asarray(arr).ravel().astype(np.int64)
+    with open(path, "w", encoding="ascii") as f:
+        f.write(f"{arr.size}\n")
+        f.write(" ".join(str(int(v)) for v in arr))
+        f.write("\n")
+
+
+def _write_floats(path: Path, arr) -> None:
+    arr = np.asarray(arr, dtype=np.float64).ravel()
+    with open(path, "w", encoding="ascii") as f:
+        f.write(f"{arr.size}\n")
+        f.write(" ".join(repr(float(v)) for v in arr))
+        f.write("\n")
+
+
+def _linear_plan(m: IntegerTransformer, s: dict):
+    def layer_in(l):
+        return s["embed"] if l == 0 else s[layer_positions(l - 1)["ln2"]]
+
+    plan = [("proj", s["input"], s["embed"])]
+    for l in range(m.num_layers):
+        pos = layer_positions(l)
+        lin = layer_in(l)
+        plan += [
+            (f"l{l}.wq", lin, s[pos["q"]]),
+            (f"l{l}.wk", lin, s[pos["k"]]),
+            (f"l{l}.wv", lin, s[pos["v"]]),
+            (f"l{l}.out", s[pos["ctx"]], s[pos["attn_out"]]),
+            (f"l{l}.ff0", s[pos["ln1"]], s[pos["ff1"]]),
+            (f"l{l}.ff3", s[pos["ff_act"]], s[pos["ff2"]]),
+        ]
+    plan += [
+        ("cls1", s["cls_ln"], s["cls1"]),
+        ("cls4", s["cls_act"], s["logits"]),
+    ]
+    return plan
+
 
 BITS        = 10
 CALIB_FILES = 20
