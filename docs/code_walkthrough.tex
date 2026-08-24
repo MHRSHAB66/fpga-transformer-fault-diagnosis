@@ -1,0 +1,549 @@
+\documentclass{article}
+
+% ================= Packages =================
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xepersian}
+
+% ================= Page Layout =================
+\linespread{1.3}
+\geometry{margin=2.5cm}
+\setlength{\parindent}{0.7cm}
+\setlength{\hfuzz}{9pt}
+
+% ================= Colors =================
+\definecolor{main_blue}{RGB}{0,70,140}
+\definecolor{light_blue}{RGB}{0,120,200}
+\definecolor{light_gray}{RGB}{112,146,190}
+\definecolor{code_bg}{RGB}{245,245,250}
+\definecolor{code_kw}{RGB}{0,70,140}
+\definecolor{code_str}{RGB}{180,60,0}
+\definecolor{code_cm}{RGB}{100,130,100}
+
+% ================= Fonts =================
+\settextfont[
+Scale=1.3,
+Path=../../report/template/fonts/,
+Extension=.TTF,
+BoldFont=B-NAZANIN-Bold
+]{B-NAZANIN}
+
+\setlatintextfont[
+Scale=1.1,
+Path=../../report/template/fonts/,
+Extension=.TTF,
+BoldFont=timesbd,
+ItalicFont=timesi
+]{Times}
+
+% ================= Code Listing =================
+\lstset{
+  language=Python,
+  backgroundcolor=\color{code_bg},
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{code_kw}\bfseries,
+  stringstyle=\color{code_str},
+  commentstyle=\color{code_cm}\itshape,
+  numbers=left,
+  numberstyle=\tiny\color{light_gray},
+  frame=single,
+  framerule=0.5pt,
+  rulecolor=\color{light_gray},
+  tabsize=4,
+  breaklines=true,
+  showstringspaces=false,
+  xleftmargin=0.5cm,
+}
+
+% ================= Helpers =================
+\renewcommand{\labelitemi}{\textcolor{main_blue}{\large$\bullet$}}
+\newcommand{\pellipsis}{\ensuremath{\ldots}}
+\newcommand{\pmdash}{\lr{---}}
+
+% ================= Custom Section =================
+\newcommand{\mysection}[2]{
+\par\vspace{1cm}
+\noindent
+\begingroup
+\def\mysectionNumW{1.2cm}
+\def\mysectionH{1.2cm}
+\def\mysectionR{3pt}
+\def\mysectionGap{2pt}
+\begin{tikzpicture}
+    \coordinate (rightedge) at (\linewidth,0);
+    \node[rectangle, fill=light_blue, text=white, anchor=east,
+    minimum width=\mysectionNumW, minimum height=\mysectionH,
+    rounded corners=\mysectionR, align=center, inner sep=2pt, outer sep=0pt,
+    font=\Large\bfseries] (num) at (rightedge) {#1};
+    \node[rectangle, fill=main_blue, text=white, anchor=east,
+    minimum height=\mysectionH, rounded corners=\mysectionR,
+    align=right, inner sep=6pt, outer sep=0pt,
+    font=\Large\bfseries] (title) at ([xshift=-\mysectionGap]num.west) {#2};
+    \draw[light_gray, line width=3pt, line cap=round]
+    ($(0,0 |- num.north)+(0.5\pgflinewidth,0)$) -- ($(rightedge |- num.north)+(-0.5\pgflinewidth,0)$);
+\end{tikzpicture}
+\endgroup
+\par\vspace{0.5cm}
+}
+
+\newcommand{\mysubsection}[1]{
+\par\vspace{0.5cm}
+\noindent\textcolor{main_blue}{\large\textbf{#1}}
+\par\vspace{0.2cm}
+}
+
+% ================= Info Box =================
+\newcommand{\infobox}[1]{
+\vspace{0.3cm}
+\noindent
+\begin{tikzpicture}
+  \node[rectangle, fill=code_bg, draw=light_gray, rounded corners=3pt,
+        inner sep=8pt, text width=\dimexpr\textwidth-1.2cm\relax] {#1};
+\end{tikzpicture}
+\vspace{0.3cm}
+}
+
+% ================= Document =================
+\begin{document}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=4cm]{../../report/template/AUT.png}
+\end{figure}
+
+\vspace{0.3cm}
+\begin{center}
+{\LARGE\textbf{راهنمای کامل کد پروژه}}\\[0.4cm]
+{\large تشخیص خرابی ماشین‌آلات با \lr{Transformer} روی \lr{FPGA}}\\[0.3cm]
+{\large مهرداد شیخ عباسی}\\[0.2cm]
+{\normalsize دانشگاه امیرکبیر \pmdash{} دانشکده مهندسی کامپیوتر}
+\end{center}
+
+\vspace{0.3cm}
+\noindent{\color{light_gray}\rule{\linewidth}{0.5mm}}
+\vspace{0.3cm}
+
+\noindent
+این سند راهنمای خواندنِ کامل کدِ پروژه است \pmdash{} از بارگذاریِ داده تا خروجیِ \lr{FPGA}.
+هر بخش یک فایل از پایپلاین را توضیح می‌دهد: هدفش چیست، کدِ کلیدی‌اش چه می‌کند،
+و چطور به بقیه وصل است.
+
+% ==============================================================
+\mysection{۱}{\lr{src/config.py} \pmdash{} تنظیمات مرکزی}
+% ==============================================================
+
+\mysubsection{هدف}
+
+\lr{config.py} تنها جایی است که اعدادِ مهم پروژه نگه داشته می‌شوند.
+هیچ اسکریپتی نباید عددِ \lr{hard-code} داشته باشد \pmdash{} همه از اینجا \lr{import} می‌کنند.
+این یعنی برای تغییرِ معماری یا تنظیمات فقط یک فایل را باید عوض کرد.
+
+\mysubsection{دسته‌بندیِ ثابت‌ها}
+
+\begin{itemize}
+\item \textbf{مسیرها:} \lr{PROJECT\_ROOT}، \lr{DATA\_RAW\_DIR}، \lr{RUNS\_DIR} \pmdash{} پروژه را جابه‌جا کنی مسیرها خودکار درست می‌شوند.
+
+\item \textbf{داده:} \lr{WINDOW\_SIZE = 1024}، \lr{WINDOW\_STRIDE = 1024}،
+\lr{INPUT\_CHANNELS = 8}، \lr{NORMALIZATION\_SCOPE = "per\_window"}.
+
+\item \textbf{کلاس‌ها:} \lr{NUM\_CLASSES = 4}، \lr{LABEL\_MAP} (نگاشتِ نام به عدد):
+\end{itemize}
+
+\begin{latin}
+\begin{lstlisting}
+LABEL_MAP = {
+    "normal":       0,
+    "imbalance":    1,
+    "misalignment": 2,
+    "bearing":      3,
+}
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item \textbf{معماری \lr{Transformer}:}
+\lr{TRANSFORMER\_D\_MODEL = 32}،
+\lr{TRANSFORMER\_NHEAD = 4}،
+\lr{TRANSFORMER\_NUM\_LAYERS = 1}،
+\lr{TRANSFORMER\_DIM\_FEEDFORWARD = 64}.
+این چهار عدد مدلِ \lr{F\_1layer} را کاملاً تعریف می‌کنند (\lr{9,492} پارامتر).
+
+\item \textbf{آموزش:} \lr{NUM\_EPOCHS}، \lr{BATCH\_SIZE}، \lr{LEARNING\_RATE}،
+\lr{RANDOM\_SEED = 42}،\\
+\lr{EARLY\_STOPPING\_PATIENCE}.
+\end{itemize}
+
+\mysubsection{نکته کلیدی: چرا \lr{d\_model = 32}؟}
+
+\lr{d\_model} تعدادِ ویژگیِ هر توکن در طولِ مدل است. در جست‌وجوی معماری،
+۱۱ پیکربندی از \lr{d=8} تا \lr{d=64} تست شد. \lr{F\_1layer} با \lr{d=32} روی زانوی منحنیِ
+دقت\pmdash{}اندازه قرار دارد: کوچک‌ترین مدلی که تقریباً ۹۸ درصد دقت می‌دهد.
+
+\infobox{
+\textbf{قاعده:} \lr{d\_model \% nhead == 0} باید برقرار باشد.
+برای ما: $32 \div 4 = 8$ (\lr{head\_dim = 8}، کمینه قابل‌قبول).
+}
+
+% ==============================================================
+\mysection{۲}{\lr{src/data/load\_data.py} \pmdash{} کشفِ فایل‌ها و برچسب‌گذاری}
+% ==============================================================
+
+\mysubsection{هدف}
+
+این ماژول پوشه \lr{MAFAULDA} را اسکن می‌کند، همه فایل‌های \lr{CSV} را پیدا می‌کند،
+و از روی نامِ مسیر به هر فایل یک برچسبِ کلاس می‌دهد.
+
+\mysubsection{تابعِ اصلی: \lr{build\_file\_index}}
+
+\begin{latin}
+\begin{lstlisting}
+def build_file_index(data_dir) -> pd.DataFrame:
+    # returns: columns = [file_path, label, split_hint]
+\end{lstlisting}
+\end{latin}
+
+خروجی یک \lr{DataFrame} است که هر ردیفش یک فایل \lr{CSV} از \lr{MAFAULDA} است.
+
+\mysubsection{برچسب‌گذاری با \lr{infer\_label\_from\_path}}
+
+\begin{latin}
+\begin{lstlisting}
+def infer_label_from_path(path: Path) -> str | None:
+    rel = path.relative_to(DATA_RAW_DIR)  # only path under data/raw
+    rel_str = rel.as_posix().lower()
+    if "normal"       in rel_str: return "normal"
+    if "imbalance"    in rel_str: return "imbalance"
+    if "misalignment" in rel_str: return "misalignment"
+    if "bearing"      in rel_str: return "bearing"
+    return None
+\end{lstlisting}
+\end{latin}
+
+\infobox{
+\textbf{نکته مهم:} تابع فقط روی بخشِ زیرِ \lr{DATA\_RAW\_DIR} جست‌وجو می‌کند،
+نه کلِ مسیرِ مطلق. اگر اسمِ پوشه پروژه حاوی کلیدواژه‌هایی مثل \lr{"normal"} باشد،
+برچسب‌گذاری اشتباه نمی‌شود. (باگی که پیدا و اصلاح شد.)
+}
+
+\mysubsection{جداسازیِ فایل‌ها: \lr{split\_file\_index}}
+
+\begin{latin}
+\begin{lstlisting}
+train_df, val_df, test_df = split_file_index(index_df)
+# default ratio: 70% / 10% / 20%
+\end{lstlisting}
+\end{latin}
+
+جداسازی در سطحِ \textbf{فایل} انجام می‌شود، نه پنجره. این از نشتِ داده (\lr{data leakage}) جلوگیری می‌کند:
+هیچ پنجره‌ای از یک فایل نمی‌تواند هم در \lr{train} و هم در \lr{test} باشد.
+
+% ==============================================================
+\mysection{۳}{\lr{make\_dataloaders.py} \pmdash{} پنجره‌سازی و \lr{DataLoader}}
+% ==============================================================
+
+\mysubsection{هدف}
+
+از فایل‌های \lr{CSV} به تنسورهای \lr{PyTorch} می‌رسیم.
+مسیر: بارگذاریِ \lr{CSV} $\leftarrow$ نرمال‌سازی $\leftarrow$ پنجره‌بندی $\leftarrow$ \lr{DataLoader}.
+
+\mysubsection{پنجره‌بندی}
+
+هر فایل \lr{CSV} یک سیگنالِ زمانی است. آن را به پنجره‌های ثابت‌اندازه تقسیم می‌کنیم:
+
+\begin{latin}
+\begin{lstlisting}
+WINDOW_SIZE   = 1024  # samples per window
+WINDOW_STRIDE = 1024  # step size (no overlap)
+# one window shape: (1024, 8)
+\end{lstlisting}
+\end{latin}
+
+\mysubsection{نرمال‌سازی: \lr{per-window z-score}}
+
+\begin{latin}
+\begin{lstlisting}
+# per-window independently:
+mu  = window.mean()
+std = window.std()
+normalized = (window - mu) / (std + eps)
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item هر پنجره مستقل نرمال می‌شود: میانگین صفر، واریانس یک.
+\item برای \lr{FPGA} ایده‌آل است: پنجره اطلاعاتِ کافی دارد و نیاز به آمارِ سراسری نیست.
+\item دامنه مطلق (شدتِ خرابی) از دست می‌رود، ولی برای تشخیصِ \textbf{نوعِ} خرابی کافی است.
+\end{itemize}
+
+\mysubsection{تابعِ اصلی: \lr{build\_dataloaders}}
+
+\begin{latin}
+\begin{lstlisting}
+train_loader, val_loader, test_loader, stats = build_dataloaders(
+    batch_size=64,
+    window_size=1024,
+    stride=1024,
+    normalization_scope="per_window",
+)
+# each batch: X shape (64, 1024, 8), y shape (64,)
+\end{lstlisting}
+\end{latin}
+
+% ==============================================================
+\mysection{۴}{\lr{src/models/transformer\_baseline.py} \pmdash{} معماریِ مدل}
+% ==============================================================
+
+\mysubsection{مسیرِ داده در مدل}
+
+\begin{latin}
+\begin{lstlisting}
+(batch, 1024, 8)
+    -> Linear(8->32)         # input_projection
+    -> PositionalEncoding    # + positional info
+    -> EncoderBlock          # self-attention + FFN  (1 block)
+    -> mean(dim=1)           # (batch, 32)
+    -> Linear(32->16)->GELU->Linear(16->4)   # classifier
+(batch, 4)                   # logit for 4 classes
+\end{lstlisting}
+\end{latin}
+
+\mysubsection{کلاسِ اول: \lr{PositionalEncoding}}
+
+مشکل: \lr{attention} ترتیبِ توکن‌ها را نمی‌داند.
+راه‌حل: به هر جایگاه یک بردارِ ثابتِ یکتا اضافه می‌کنیم.
+
+\begin{latin}
+\begin{lstlisting}
+pe = zeros(1024, 32)
+pe[:, 0::2] = sin(position * div_term)  # even columns
+pe[:, 1::2] = cos(position * div_term)  # odd columns
+
+# in forward:
+x = x + pe[:, :seq_len, :]
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item \lr{div\_term}: اعدادی از ۱.۰ تا ۰.۰۰۰۲ که هر بُعد را با آهنگِ متفاوت نوسان می‌دهد.
+\item هر جایگاه یک ترکیبِ \lr{(sin, cos)} یکتا دارد \pmdash{} مثلِ شمارشِ دودویی با موجِ نرم.
+\item \lr{register\_buffer}: جدول \lr{train} نمی‌شود، ثابت است.
+\end{itemize}
+
+\mysubsection{کلاسِ دوم: \lr{TransformerEncoderBlock}}
+
+\textbf{۱) \lr{Self-Attention}:} هر توکن به همه توکن‌ها نگاه می‌کند.
+
+\begin{latin}
+\begin{lstlisting}
+attn_out, _ = self.self_attention(x, x, x)  # Q=K=V=x
+x = LayerNorm(x + Dropout(attn_out))        # Add & Norm
+\end{lstlisting}
+\end{latin}
+
+سه \lr{x} به این معنی نیست که مقادیر یکسانند \pmdash{} داخلِ \lr{MultiheadAttention}
+با وزن‌های جداگانه $W_Q, W_K, W_V$ ضرب می‌شوند.
+\lr{nhead=4}: توجه ۴ بار موازی با دیدگاه‌های مختلف (\lr{head\_dim = 32/4 = 8}).
+
+\textbf{۲) \lr{Feedforward}:} روی هر توکن جداگانه:
+
+\begin{latin}
+\begin{lstlisting}
+ff_out = Linear(32->64) -> GELU -> Linear(64->32)
+x = LayerNorm(x + Dropout(ff_out))   # Add & Norm
+\end{lstlisting}
+\end{latin}
+
+\mysubsection{کلاسِ سوم: \lr{TransformerBaseline}}
+
+\begin{latin}
+\begin{lstlisting}
+def forward(self, x):
+    x = self.input_projection(x)      # (B,1024,8) -> (B,1024,32)
+    x = self.positional_encoding(x)   # (B,1024,32)
+    for layer in self.encoder_layers:
+        x = layer(x)                  # (B,1024,32)
+    x = x.mean(dim=1)                 # (B,32)  Global Avg Pool
+    return self.classifier(x)         # (B,4)
+\end{lstlisting}
+\end{latin}
+
+\infobox{
+\lr{mean(dim=1)}: میانگین روی ۱۰۲۴ توکن \pmdash{} از \lr{(batch, 1024, 32)} به \lr{(batch, 32)}.
+این \lr{Global Average Pooling} نام دارد: ساده‌ترین روش برای خلاصه کلِ پنجره.
+}
+
+% ==============================================================
+\mysection{۵}{\lr{src/train\_transformer\_baseline.py} \pmdash{} حلقه آموزش}
+% ==============================================================
+
+\mysubsection{حلقه اصلی}
+
+\begin{latin}
+\begin{lstlisting}
+for epoch in range(num_epochs):
+    model.train()
+    for X_batch, y_batch in train_loader:
+        optimizer.zero_grad()          # clear previous gradients
+        logits = model(X_batch)        # forward pass
+        loss = criterion(logits, y_batch)
+        loss.backward()                # compute gradients
+        optimizer.step()               # update weights
+
+    val_loss, val_acc = evaluate(model, val_loader, ...)
+
+    if val_loss < best_val_loss:
+        best_model_state = deepcopy(model.state_dict())
+        torch.save({...}, checkpoint_path)  # save
+    else:
+        epochs_without_improvement += 1
+        if epochs_without_improvement >= patience:
+            break   # early stopping
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item \textbf{\lr{optimizer}:} \lr{Adam} با \lr{lr=1e-3}
+\item \textbf{\lr{criterion}:} \lr{CrossEntropyLoss} (اگر \lr{imbalance > 1.5} با وزنِ کلاس)
+\item \textbf{بهترین مدل:} بر اساسِ \lr{val\_loss} انتخاب می‌شود
+\item \textbf{\lr{checkpoint}:} شاملِ وزن‌ها \texttt{+} معماری \texttt{+} تنظیمات
+\end{itemize}
+
+\mysubsection{توابعِ مشترک (\lr{src/utils/training\_utils.py})}
+
+\begin{latin}
+\begin{lstlisting}
+set_seed(42)               # fix all random sources
+evaluate(...)              # loss and accuracy on DataLoader
+evaluate_with_details(...) # + confusion matrix
+build_loss_function(...)   # CrossEntropy with/without class weights
+\end{lstlisting}
+\end{latin}
+
+% ==============================================================
+\mysection{۶}{\lr{src/evaluate/evaluate\_model.py} \pmdash{} ارزیابی}
+% ==============================================================
+
+\mysubsection{لودِ مدل از چک‌پوینت}
+
+\begin{latin}
+\begin{lstlisting}
+checkpoint = torch.load(path, map_location=device)
+model_config = checkpoint.get("model_config")
+model = TransformerBaseline(
+    d_model=model_config.get("d_model", TRANSFORMER_D_MODEL),
+    # missing value falls back to config.py default
+)
+model.load_state_dict(checkpoint["model_state_dict"])
+\end{lstlisting}
+\end{latin}
+
+معماری از \textbf{داخلِ چک‌پوینت} خوانده می‌شود نه \lr{config.py} فعلی.
+\lr{map\_location=device}: اگر مدل روی \lr{GPU} ذخیره شده ولی الان \lr{CPU} داری، درست کار می‌کند.
+
+% ==============================================================
+\mysection{۷}{\lr{src/quantize/} \pmdash{} کوانتیزاسیونِ \lr{int10}}
+% ==============================================================
+
+\mysubsection{هدف}
+
+مدلِ \lr{float32} برای \lr{FPGA} مناسب نیست. راه‌حل: همه اعداد را به \lr{int10} تبدیل کنیم.
+
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{تعدادِ بیت} & \textbf{دقت} & \textbf{افتِ دقت} \\
+\hline
+\lr{float32} & \lr{97.55\%} & \pmdash{} \\
+\lr{int16}   & \lr{97.55\%} & \lr{0.00\%} \\
+\lr{int10}   & \lr{97.11\%} & \lr{0.44\%} \\
+\lr{int8}    & کمتر & بیشتر \\
+\hline
+\end{tabular}
+\end{center}
+
+\lr{int10} نقطه بهینه است: افتِ دقت ناچیز، منابعِ \lr{FPGA} بسیار کمتر.
+
+\mysubsection{فرآیند}
+
+\begin{latin}
+\begin{lstlisting}
+# step 1: calibrate on train subset
+scales = calibrate(model, X_train)
+
+# step 2: integer inference
+# float_input -> /scale_in -> int
+# MatMul with int weights -> *scale_out -> next layer input
+\end{lstlisting}
+\end{latin}
+
+\mysubsection{فایل‌های فعال}
+
+\begin{itemize}
+\item \lr{integer\_ops.py}: عملیاتِ پایه (\lr{LayerNorm} صحیح، \lr{GELU} با \lr{LUT}، \lr{Softmax} صحیح)
+\item \lr{integer\_model.py}: کلاسِ \lr{IntegerTransformer} با \lr{numpy}
+\item \lr{evaluate\_integer.py}: کالیبراسیون + مقایسه \lr{float} در برابر \lr{integer}
+\item \lr{evaluate\_integer\_bits.py}: جست‌وجوی بهترین تعدادِ بیت (یافت: \lr{int10})
+\item \lr{evaluate\_int10\_metrics.py}: متریکِ نهاییِ \lr{int10}
+\item \lr{export\_hls\_f\_int10.py}: \lr{export} وزن‌ها و \lr{scale}ها برای \lr{HLS C++}
+\end{itemize}
+
+% ==============================================================
+\mysection{۸}{\lr{hls\_f\_int10/} \pmdash{} هسته \lr{C++} برای \lr{FPGA}}
+% ==============================================================
+
+\mysubsection{هدف}
+
+پیاده‌سازیِ مدلِ \lr{int10} در \lr{C++} برای سنتزِ \lr{HLS} (\lr{Vitis HLS}).
+
+\begin{latin}
+\begin{lstlisting}
+hls_f_int10/
+  core.cpp / core.hpp    # inference logic
+  data/                  # weights and scales (from export_hls_f_int10.py)
+  golden/                # reference input/output for testbench
+  onchip_normalization_reference.py  # NumPy reference for on-chip z-score
+\end{lstlisting}
+\end{latin}
+
+تأییدِ درستی قبل از سنتز: \lr{python -m hls\_f\_int10.verify\_oracle}
+نتیجه: \lr{PASS 16/16}.
+
+% ==============================================================
+\mysection{۹}{\lr{pynq/, host/} \pmdash{} درایور و رابطِ کاربری}
+% ==============================================================
+
+\begin{itemize}
+\item \lr{pynq/pynq\_driver.py}: اجرای مدل روی برد \lr{EBAZ4205 (Zynq-7010)}
+\item \lr{pynq/numpy\_backend.py}: شبیه‌سازی بدونِ برد (برای تست)
+\item \lr{host/uart\_monitor.py}: دریافتِ پیامِ \lr{serial} از \lr{FPGA}
+\item \lr{host/display\_ui.py}: نمایشِ نتیجه روی صفحه کامپیوتر
+\item پروتکل: \lr{\texttt{FRAME=<id>,CLASS=<n>,LABEL=<name>,CONF=<c>}}
+\end{itemize}
+
+% ==============================================================
+\mysection{۱۰}{\rl{تصویرِ کلی از ورودی تا خروجی}}
+% ==============================================================
+
+\begin{latin}
+\begin{lstlisting}
+MAFAULDA CSV files (8 channels, 50 kHz)
+    |
+    v  load_data.py       : file discovery + labeling
+    v  make_dataloaders.py: windowing (1024) + per-window z-score
+    v  transformer_baseline.py: 8->32->attention->32->4 classes
+    v  (train, best checkpoint saved)
+    |
+    v  IntegerTransformer : calibrate scales + int10 inference
+    v  export_hls_f_int10 : weights + scales -> data/ files
+    v  HLS C++ core       : synthesized for EBAZ4205
+    v  PYNQ driver        : feed window -> get class
+    v  UART -> host PC    : display_ui.py -> show result
+\end{lstlisting}
+\end{latin}
+
+\end{document}

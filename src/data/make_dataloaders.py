@@ -35,8 +35,6 @@ from src.config import (
     RANDOM_SEED,
     WINDOW_SIZE,
     WINDOW_STRIDE,
-    INCLUDE_TAIL_WINDOW,
-    TAIL_WINDOW_MODE,
     EXPECTED_NUM_COLUMNS,
     NORMALIZATION_METHOD,
     NORMALIZATION_SCOPE,
@@ -183,8 +181,6 @@ def build_X_y_from_file_index(
     index_df,
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
-    include_tail: bool = INCLUDE_TAIL_WINDOW,
-    tail_mode: str = TAIL_WINDOW_MODE,
     normalization_scope: str = NORMALIZATION_SCOPE,
     normalization_method: str = NORMALIZATION_METHOD,
     global_normalization_stats: Optional[dict] = None,
@@ -202,11 +198,6 @@ def build_X_y_from_file_index(
         Number of rows per time window.
     stride : int, default=WINDOW_STRIDE
         Step size between consecutive windows.
-    include_tail : bool, default=INCLUDE_TAIL_WINDOW
-        Whether to add a backshift tail window per file when trailing samples
-        would otherwise be discarded.
-    tail_mode : str, default=TAIL_WINDOW_MODE
-        Tail strategy passed through to ``create_windows_from_dataframe``.
     normalization_scope : str, default=NORMALIZATION_SCOPE
         "per_window" only (per_file/global_train archived in
         src/data/normalization_variants.py for EXP-5).
@@ -269,15 +260,10 @@ def build_X_y_from_file_index(
             values,
             window_size=window_size,
             stride=stride,
-            include_tail=include_tail,
-            tail_mode=tail_mode,
         )
 
-        # The backshift policy appends at most one extra window per file, so the
-        # tail count for this file is whatever exceeds the standard window count.
         file_normal = count_normal_windows(len(values), window_size, stride)
         normal_windows += file_normal
-        tail_windows += max(0, len(windows) - file_normal)
 
         label_id = LABEL_MAP[label_name]
 
@@ -304,8 +290,7 @@ def build_X_y_from_file_index(
 
     window_counts = {
         "normal": int(normal_windows),
-        "tail": int(tail_windows),
-        "total": int(normal_windows + tail_windows),
+        "total": int(normal_windows),
     }
 
     return X, y, kept_files, dropped_files, window_counts
@@ -320,8 +305,6 @@ def build_dataloaders(
     normalization_scope: str = NORMALIZATION_SCOPE,
     normalization_method: str = NORMALIZATION_METHOD,
     num_workers: int = DATALOADER_NUM_WORKERS,
-    include_tail: bool = INCLUDE_TAIL_WINDOW,
-    tail_mode: str = TAIL_WINDOW_MODE,
 ):
     """
     Build train, validation, and test DataLoaders.
@@ -345,12 +328,6 @@ def build_dataloaders(
         Normalization method. The final pipeline uses "zscore".
     num_workers : int, default=DATALOADER_NUM_WORKERS
         Number of worker processes used by PyTorch DataLoader.
-    include_tail : bool, default=INCLUDE_TAIL_WINDOW
-        Whether to add a backshift tail window per file so trailing samples that
-        would otherwise be discarded are still used. Applied identically to all
-        splits; overlap stays within a file because splitting is file-level.
-    tail_mode : str, default=TAIL_WINDOW_MODE
-        Tail strategy. Only "backshift" is supported.
 
     Returns
     -------
@@ -415,8 +392,6 @@ def build_dataloaders(
             train_index_df,
             window_size=window_size,
             stride=stride,
-            include_tail=include_tail,
-            tail_mode=tail_mode,
             normalization_scope=normalization_scope,
             normalization_method=normalization_method,
             global_normalization_stats=global_normalization_stats,
@@ -445,8 +420,6 @@ def build_dataloaders(
         val_index_df,
         window_size=window_size,
         stride=stride,
-        include_tail=include_tail,
-        tail_mode=tail_mode,
         normalization_scope=normalization_scope,
         normalization_method=normalization_method,
         global_normalization_stats=global_normalization_stats,
@@ -462,8 +435,6 @@ def build_dataloaders(
         test_index_df,
         window_size=window_size,
         stride=stride,
-        include_tail=include_tail,
-        tail_mode=tail_mode,
         normalization_scope=normalization_scope,
         normalization_method=normalization_method,
         global_normalization_stats=global_normalization_stats,

@@ -1,0 +1,31 @@
+{
+  "stage": "6f_fulltest_int10_combined",
+  "winner": "F_1layer",
+  "bits": 10,
+  "num_shards": 4,
+  "full_test_windows": 95404,
+  "total_correct": 92650,
+  "int_accuracy": 0.9711332858161084,
+  "per_class": {
+    "normal": {
+      "n": 2440,
+      "correct": 2424,
+      "accuracy": 0.9934426229508196
+    },
+    "imbalance": {
+      "n": 16348,
+      "correct": 16097,
+      "accuracy": 0.98464643993149
+    },
+    "misalignment": {
+      "n": 24156,
+      "correct": 23461,
+      "accuracy": 0.9712286802450737
+    },
+    "bearing_fault": {
+      "n": 52460,
+      "correct": 50668,
+      "accuracy": 0.9658406404879909
+    }
+  }
+}
