@@ -71,3 +71,17 @@ hls/
 - `INCLUDE_TAIL_WINDOW` / `TAIL_WINDOW_MODE` حذف شدن — همیشه False بود؛ preprocessing قرار است روی FPGA انجام شود و tail window در آن context معنا ندارد. کد مربوطه از `prepare_dataset.py`، `make_dataloaders.py`، `experiment_config.py` پاک شد؛ `ablation_tail_window.py` به `archive/` منتقل شد.
 - `USE_SMOTE_AUGMENTATION` / `USE_NOISE_INJECTION` / `NOISE_INJECTION_STD` حذف شدن — همیشه False/unused بودن؛ references فقط در `archive/` بودن.
 - `RESAMPLE_ENABLED` / `LOWPASS_FILTER_ENABLED` / `WIENER_FILTER_ENABLED` / `LOW_ENERGY_FILTER_ENABLED` و تمام پارامترهای مرتبط حذف شدن — همه همیشه False بودن. توابع `apply_lowpass_filter`، `apply_wiener_filter`، `apply_resample_array`، `apply_low_energy_filter` از `prepare_dataset.py` و `preprocessed_cache.py` پاک شدن. `MAFAULDA_SAMPLE_RATE = 50000` نگه داشته شد چون ابزارهای تحلیلی استفاده میکنن.
+- `CHANNEL_SELECTION` / `_VIBRATION_CHANNEL_INDICES` / `NUM_ACTIVE_CHANNELS` و if/elif block مربوطه حذف شدن — فقط "all" پیاده‌سازی شده بود. `INPUT_CHANNELS = EXPECTED_NUM_COLUMNS` مستقیم set شد.
+- sanity check مربوط به `NORMALIZATION_SCOPE` حذف شد — constant رو با خودش چک میکرد.
+
+## آرشیو `src/tools/` به `archive/tools/`
+
+| فایل | دلیل |
+|------|------|
+| `test_tail_window.py` | تست tail window که از config حذف شد |
+| `signal_preprocessing.py` | مربوط به filter flags که حذف شدن |
+| `run_skipped_tuning_configs.py` | tuning تمام شده |
+| `inspect_data.py` | از `DATA_SAMPLE_DIR` استفاده میکرد که حذف شد |
+| `build_deck.py` / `build_native_deck.py` / `build_presentation.py` | ابزارهای presentation قدیمی |
+| `build_figures.py` / `deck_figures.py` | ابزارهای figure قدیمی |
+| `add_notes.py` / `update_corner_logo.py` / `update_slide2_pipeline.py` | ابزارهای presentation قدیمی |
