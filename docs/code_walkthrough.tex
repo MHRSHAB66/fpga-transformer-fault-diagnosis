@@ -8,6 +8,7 @@
 \usepackage{geometry}
 \usepackage{graphicx}
 \usepackage{listings}
+\usepackage{tcolorbox}
 \usepackage{xepersian}
 
 % ================= Page Layout =================
@@ -98,14 +99,19 @@ ItalicFont=timesi
 }
 
 % ================= Info Box =================
-\newcommand{\infobox}[1]{
-\vspace{0.3cm}
-\noindent
-\begin{tikzpicture}
-  \node[rectangle, fill=code_bg, draw=light_gray, rounded corners=3pt,
-        inner sep=8pt, text width=\dimexpr\textwidth-1.2cm\relax] {#1};
-\end{tikzpicture}
-\vspace{0.3cm}
+\newcommand{\infobox}[1]{%
+\vspace{0.3cm}%
+\begin{tcolorbox}[
+  colback=code_bg,
+  colframe=light_gray,
+  arc=3pt,
+  boxrule=0.5pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  boxsep=0pt
+]
+#1
+\end{tcolorbox}%
+\vspace{0.1cm}%
 }
 
 % ================= Document =================
@@ -143,40 +149,177 @@ ItalicFont=timesi
 هیچ اسکریپتی نباید عددِ \lr{hard-code} داشته باشد \pmdash{} همه از اینجا \lr{import} می‌کنند.
 این یعنی برای تغییرِ معماری یا تنظیمات فقط یک فایل را باید عوض کرد.
 
-\mysubsection{دسته‌بندیِ ثابت‌ها}
-
-\begin{itemize}
-\item \textbf{مسیرها:} \lr{PROJECT\_ROOT}، \lr{DATA\_RAW\_DIR}، \lr{RUNS\_DIR} \pmdash{} پروژه را جابه‌جا کنی مسیرها خودکار درست می‌شوند.
-
-\item \textbf{داده:} \lr{WINDOW\_SIZE = 1024}، \lr{WINDOW\_STRIDE = 1024}،
-\lr{INPUT\_CHANNELS = 8}، \lr{NORMALIZATION\_SCOPE = "per\_window"}.
-
-\item \textbf{کلاس‌ها:} \lr{NUM\_CLASSES = 4}، \lr{LABEL\_MAP} (نگاشتِ نام به عدد):
-\end{itemize}
+\mysubsection{بارگذاریِ مسیرِ پروژه از \lr{.env}}
 
 \begin{latin}
 \begin{lstlisting}
-LABEL_MAP = {
-    "normal":       0,
-    "imbalance":    1,
-    "misalignment": 2,
-    "bearing":      3,
-}
+import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
+project_root_env = os.getenv("PROJECT_ROOT")
+PROJECT_ROOT = Path(project_root_env).resolve()
 \end{lstlisting}
 \end{latin}
 
 \begin{itemize}
-\item \textbf{معماری \lr{Transformer}:}
-\lr{TRANSFORMER\_D\_MODEL = 32}،
-\lr{TRANSFORMER\_NHEAD = 4}،
-\lr{TRANSFORMER\_NUM\_LAYERS = 1}،
-\lr{TRANSFORMER\_DIM\_FEEDFORWARD = 64}.
-این چهار عدد مدلِ \lr{F\_1layer} را کاملاً تعریف می‌کنند (\lr{9,492} پارامتر).
-
-\item \textbf{آموزش:} \lr{NUM\_EPOCHS}، \lr{BATCH\_SIZE}، \lr{LEARNING\_RATE}،
-\lr{RANDOM\_SEED = 42}،\\
-\lr{EARLY\_STOPPING\_PATIENCE}.
+\item \lr{.env} فایلِ متنی کوچکی است که آدرسِ ریشه را نگه می‌دارد
+(\lr{PROJECT\_ROOT=...}).
+\item \lr{load\_dotenv()} این فایل را می‌خواند و در \lr{environment variables} قرار می‌دهد.
+\item \lr{Path(...).resolve()} آدرس را به مطلق تبدیل می‌کند؛ در همه سیستم‌عامل‌ها کار می‌کند.
+\item نتیجه: پروژه را جابه‌جا کنی فقط کافی است \lr{.env} را عوض کنی.
 \end{itemize}
+
+\mysubsection{ثابت‌هایِ مسیر}
+
+\begin{latin}
+\begin{lstlisting}
+DATA_RAW_DIR      = PROJECT_ROOT / "data" / "raw" / "mafaulda"
+DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+RUNS_DIR           = PROJECT_ROOT / "artifacts" / "runs"
+DEFAULT_RUN_NAME   = "transformer_final_t4"
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item \lr{DATA\_RAW\_DIR}: پوشه‌ای که فایل‌های \lr{CSV} خامِ \lr{MAFAULDA} در آن هستند.
+\item \lr{DATA\_PROCESSED\_DIR}: برای پنجره‌های پیش‌پردازش‌شده که \lr{FPGA} تولید می‌کند
+و روی \lr{PC} کَش می‌شوند.
+\item \lr{RUNS\_DIR}: همه نتایجِ آموزش (\lr{checkpoints}، متریک‌ها، تاریخچه) اینجا ذخیره می‌شوند.
+\item \lr{DEFAULT\_RUN\_NAME}: نامِ پوشه پیش‌فرض برای اسکریپت‌های آموزش.
+\end{itemize}
+
+\mysubsection{ستون‌هایِ ورودی: ۸ کانالِ \lr{MAFAULDA}}
+
+\begin{latin}
+\begin{lstlisting}
+EXPECTED_COLUMNS = [
+    "tachometer",          # col 0: rotation-speed pulse reference
+    "acc_axial_b1",        # col 1: underhang bearing, axial
+    "acc_radial_b1",       # col 2: underhang bearing, radial
+    "acc_tangential_b1",   # col 3: underhang bearing, tangential
+    "acc_axial_b2",        # col 4: overhang bearing, axial
+    "acc_radial_b2",       # col 5: overhang bearing, radial
+    "acc_tangential_b2",   # col 6: overhang bearing, tangential
+    "microphone",          # col 7: acoustic emission
+]
+EXPECTED_NUM_COLUMNS = len(EXPECTED_COLUMNS)  # 8
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item \lr{b1} (یا \lr{underhang}) و \lr{b2} (یا \lr{overhang}) دو یاتاقانِ ماشینِ \lr{MAFAULDA} هستند.
+\item هر یاتاقان در سه محور اندازه‌گیری می‌شود: محوری (\lr{axial})، شعاعی (\lr{radial})، مماسی (\lr{tangential}).
+\item \lr{tachometer} سرعتِ دورانی را می‌دهد (نه برای تشخیصِ خرابی، بلکه برای مرجعِ زمانی).
+\item \lr{microphone} صدایِ صوتی است \pmdash{} اطلاعاتِ مکمل دارد، نه اصلی.
+\item \lr{ACTIVE\_CHANNEL\_INDICES = list(range(8))}: همه ۸ کانال استفاده می‌شوند.
+\end{itemize}
+
+\infobox{
+\textbf{ترتیبِ ستون‌ها ثابت است.} فایل‌های \lr{MAFAULDA} هر بار به همین ترتیب ذخیره می‌شوند.
+هیچ جایی در کد نباید بر اساسِ نامِ ستون فیلتر کرد \pmdash{} همیشه از ایندکس استفاده کنید.
+}
+
+\mysubsection{کلاس‌ها و نگاشت}
+
+\begin{latin}
+\begin{lstlisting}
+LABEL_MAP = {
+    "normal":        0,
+    "imbalance":     1,
+    "misalignment":  2,
+    "bearing_fault": 3,
+}
+NUM_CLASSES = len(LABEL_MAP)  # 4
+\end{lstlisting}
+\end{latin}
+
+این نگاشت در \textbf{همه مراحل} یکسان باید بماند: آموزش، ارزیابی، کوانتش، کدِ \lr{HLS}، پروتکلِ \lr{UART}، و رابطِ کاربری.
+
+\mysubsection{پنجره‌بندی و نرمال‌سازی}
+
+\begin{latin}
+\begin{lstlisting}
+WINDOW_SIZE   = 1024   # samples per window
+WINDOW_STRIDE = 1024   # no overlap
+MIN_ROWS_PER_FILE = WINDOW_SIZE  # drop files shorter than one window
+
+NORMALIZATION_METHOD = "zscore"
+NORMALIZATION_SCOPE  = "per_window"  # mean=0, std=1 per window
+EPSILON = 1e-8  # prevents division-by-zero in std normalization
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item \lr{per\_window} نرمال‌سازی برای \lr{FPGA} ایده‌آل است: هر پنجره ۱۰۲۴ نمونه دارد
+و آمارش (میانگین و انحرافِ معیار) درون همان پنجره محاسبه می‌شود \pmdash{} نیازی به آمارِ سراسریِ دیتاست نیست.
+\item دامنه مطلق (شدتِ لرزش) از دست می‌رود، ولی \textbf{الگوی نوع} خرابی حفظ می‌شود.
+\item \lr{EPSILON}: وقتی کانالی ثابت باشد (مثلاً تاکومتر در یک بازه)، \lr{std=0} می‌شود.
+\lr{EPSILON} از تقسیم بر صفر جلوگیری می‌کند.
+\end{itemize}
+
+\mysubsection{داده‌هایِ ازدست‌رفته}
+
+\begin{latin}
+\begin{lstlisting}
+MISSING_RATIO_THRESHOLD = 0.2   # drop file if >20% cells are NaN
+MISSING_FILL_METHOD     = "median"  # fill remaining NaNs with median
+\end{lstlisting}
+\end{latin}
+
+فایل‌های \lr{MAFAULDA} عموماً سالم هستند، اما این مقادیر برایِ پایداری در برابرِ فایل‌های آسیب‌دیده لازمند.
+
+\mysubsection{آموزش و \lr{DataLoader}}
+
+\begin{latin}
+\begin{lstlisting}
+BATCH_SIZE              = 64
+DATALOADER_NUM_WORKERS  = 0    # Windows: multiprocessing disabled
+LEARNING_RATE           = 1e-3
+NUM_EPOCHS              = 30
+EARLY_STOPPING_PATIENCE = 6
+RANDOM_SEED             = 42
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item \lr{NUM\_WORKERS = 0}: در \lr{Windows}، \lr{PyTorch multiprocessing} برای \lr{DataLoader} اغلب مشکل ایجاد می‌کند.
+با صفر، همه چیز در فرآیندِ اصلی اجرا می‌شود و پایدارتر است.
+\item \lr{EARLY\_STOPPING\_PATIENCE = 6}: اگر \lr{val\_loss} به مدت ۶ اپاک بهتر نشد، آموزش متوقف می‌شود.
+\item \lr{RANDOM\_SEED = 42}: تضمین می‌کند که نتایج در اجراهای مختلف یکسان باشند.
+\end{itemize}
+
+\mysubsection{معماریِ \lr{Transformer}}
+
+\begin{latin}
+\begin{lstlisting}
+TRANSFORMER_D_MODEL         = 32   # token feature dimension
+TRANSFORMER_NHEAD           = 4    # parallel attention heads
+TRANSFORMER_NUM_LAYERS      = 1    # encoder blocks
+TRANSFORMER_DIM_FEEDFORWARD = 64   # FFN hidden size
+TRANSFORMER_DROPOUT         = 0.1
+
+MAFAULDA_SAMPLE_RATE = 50000  # Hz, used by analysis tools in src/tools/
+\end{lstlisting}
+\end{latin}
+
+این چهار عدد مدلِ \lr{F\_1layer} را کاملاً تعریف می‌کنند. این مدل مستقیماً روی \lr{FPGA EBAZ4205} مستقر شده است.
+تاریخچه: نسخه قدیمی‌تر با \lr{num\_layers=2} دقتِ نرم‌افزاری بالاتری داشت (\lr{98.22\%}) ولی
+برای \lr{FPGA Zynq-7010} (با منابعِ کمتر) مدلِ ۱ لایه انتخاب شد.
+
+\mysubsection{منحنیِ دقت در برابرِ اندازه \lr{—} جست‌وجوی معماری}
+
+در مجموع ۱۰ پیکربندی از \lr{P} (۱/۵۸۲ پارامتر) تا \lr{D} (۶۹/۸۶۰ پارامتر) آزمایش شدند.
+نمودارِ زیر رابطه دقتِ اعتبارسنجی و اندازه مدل را نشان می‌دهد:
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{figures/arch_curve.pdf}
+\caption{منحنیِ دقت در برابرِ تعدادِ پارامتر برای ۱۰ پیکربندیِ آزمایش‌شده.
+\lr{F\_1layer} روی زانوی منحنی قرار دارد: کوچک‌ترین مدلی که دقتِ بالا را حفظ می‌کند
+و در محدوده منابعِ \lr{FPGA EBAZ4205 (Zynq-7010)} جا می‌شود.}
+\end{figure}
 
 \mysubsection{نکته کلیدی: چرا \lr{d\_model = 32}؟}
 
@@ -188,6 +331,44 @@ LABEL_MAP = {
 \textbf{قاعده:} \lr{d\_model \% nhead == 0} باید برقرار باشد.
 برای ما: $32 \div 4 = 8$ (\lr{head\_dim = 8}، کمینه قابل‌قبول).
 }
+
+\mysubsection{بررسیِ صحت (\lr{sanity check})}
+
+\begin{latin}
+\begin{lstlisting}
+if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:
+    raise ValueError("TRAIN_RATIO + VAL_RATIO + TEST_RATIO must be 1.0")
+# default: 0.7 + 0.1 + 0.2 = 1.0
+\end{lstlisting}
+\end{latin}
+
+اگر کسی نسبت‌ها را عوض کند و فراموش کند مجموعشان ۱ باشد، پروژه \textbf{قبل از شروعِ آموزش} خطا می‌دهد،
+نه وقتی که نتیجه‌های عجیب دیدیم.
+
+\mysubsection{فلگ‌هایی که حذف شدند (ریفکتورِ \lr{2026-08-24})}
+
+این فلگ‌ها وجود داشتند اما همیشه \lr{False} بودند و کدی استفاده‌شان نمی‌کرد:
+
+\begin{latin}
+\begin{lstlisting}
+# Removed — always False, never used:
+INCLUDE_TAIL_WINDOW, TAIL_WINDOW_MODE         # tail window
+USE_SMOTE_AUGMENTATION, USE_NOISE_INJECTION   # augmentation
+RESAMPLE_ENABLED, LOWPASS_FILTER_ENABLED,
+WIENER_FILTER_ENABLED, LOW_ENERGY_FILTER_ENABLED  # signal filters
+CHANNEL_SELECTION, _VIBRATION_CHANNEL_INDICES,
+NUM_ACTIVE_CHANNELS                           # channel switching
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item پنجره‌ی دُم‌دار: \lr{preprocessing} روی \lr{FPGA} انجام می‌شود، نه \lr{PC}.
+\item افزوده‌سازی داده: هرگز فعال نشد.
+\item فیلترهای سیگنال: همه همیشه \lr{False} بودند.
+\item انتخابِ کانال: فقط حالتِ «همه کانال‌ها» پیاده‌سازی شده بود.
+\end{itemize}
+
+حذفِ این فلگ‌ها کد را ساده‌تر کرد، بدونِ هیچ تغییری در رفتارِ واقعی.
 
 % ==============================================================
 \mysection{۲}{\lr{src/data/load\_data.py} \pmdash{} کشفِ فایل‌ها و برچسب‌گذاری}

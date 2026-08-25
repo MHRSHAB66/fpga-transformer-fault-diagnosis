@@ -117,8 +117,7 @@ MAFAULDA_SAMPLE_RATE = 50000  # Hz — acquisition rate, used by analysis tools
 # =========================
 # col 0 = tachometer, col 1-3 = underhang bearing (axial/radial/tangential),
 # col 4-6 = overhang bearing (axial/radial/tangential), col 7 = microphone
-ACTIVE_CHANNEL_INDICES: list = list(range(EXPECTED_NUM_COLUMNS))  # all 8 columns
-INPUT_CHANNELS = EXPECTED_NUM_COLUMNS  # 8
+INPUT_CHANNELS = EXPECTED_NUM_COLUMNS  # 8 — all columns used
 
 # =========================
 # Sanity checks

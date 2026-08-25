@@ -73,6 +73,7 @@ hls/
 - `RESAMPLE_ENABLED` / `LOWPASS_FILTER_ENABLED` / `WIENER_FILTER_ENABLED` / `LOW_ENERGY_FILTER_ENABLED` و تمام پارامترهای مرتبط حذف شدن — همه همیشه False بودن. توابع `apply_lowpass_filter`، `apply_wiener_filter`، `apply_resample_array`، `apply_low_energy_filter` از `prepare_dataset.py` و `preprocessed_cache.py` پاک شدن. `MAFAULDA_SAMPLE_RATE = 50000` نگه داشته شد چون ابزارهای تحلیلی استفاده میکنن.
 - `CHANNEL_SELECTION` / `_VIBRATION_CHANNEL_INDICES` / `NUM_ACTIVE_CHANNELS` و if/elif block مربوطه حذف شدن — فقط "all" پیاده‌سازی شده بود. `INPUT_CHANNELS = EXPECTED_NUM_COLUMNS` مستقیم set شد.
 - sanity check مربوط به `NORMALIZATION_SCOPE` حذف شد — constant رو با خودش چک میکرد.
+- `ACTIVE_CHANNEL_INDICES` حذف شد (2026-08-25) — در pipeline اصلی استفاده نمی‌شد؛ فقط یک comment در `src/tools/channel_analysis.py` به آن اشاره داشت. `INPUT_CHANNELS = 8` نگه داشته شد چون `transformer_baseline.py`، `evaluate_model.py`، و `experiment_config.py` از آن import می‌کنند.
 
 ## آرشیو `src/tools/` به `archive/tools/`
 
