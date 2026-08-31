@@ -211,9 +211,13 @@ EXPECTED_NUM_COLUMNS = len(EXPECTED_COLUMNS)  # 8
 \begin{itemize}
 \item \lr{b1} (یا \lr{underhang}) و \lr{b2} (یا \lr{overhang}) دو یاتاقانِ ماشینِ \lr{MAFAULDA} هستند.
 \item هر یاتاقان در سه محور اندازه‌گیری می‌شود: محوری (\lr{axial})، شعاعی (\lr{radial})، مماسی (\lr{tangential}).
-\item \lr{tachometer} سرعتِ دورانی را می‌دهد (نه برای تشخیصِ خرابی، بلکه برای مرجعِ زمانی).
+\item \lr{tachometer} سرعتِ دورانی را می‌دهد. خودِ این عدد مستقیماً نشانه‌ی خرابی نیست
+(موتورِ سالم و موتورِ خراب هر دو می‌توانند با همان سرعت بچرخند)؛ اما
+\textbf{غیرمستقیم} کمک می‌کند: مدل می‌تواند رابطه‌ی ارتعاش با یک دورِ کامل را یاد بگیرد.
+مثلاً خرابیِ \lr{outer race} یک بلبرینگ، فرکانسی مشخص \emph{نسبت به} سرعتِ دوران دارد
+که با وجودِ تاکومتر قابلِ شناسایی‌تر می‌شود.
 \item \lr{microphone} صدایِ صوتی است \pmdash{} اطلاعاتِ مکمل دارد، نه اصلی.
-\item \lr{ACTIVE\_CHANNEL\_INDICES = list(range(8))}: همه ۸ کانال استفاده می‌شوند.
+\item همه ۸ کانال استفاده می‌شوند (\lr{INPUT\_CHANNELS = 8}).
 \end{itemize}
 
 \infobox{
@@ -378,17 +382,51 @@ NUM_ACTIVE_CHANNELS                           # channel switching
 
 این ماژول پوشه \lr{MAFAULDA} را اسکن می‌کند، همه فایل‌های \lr{CSV} را پیدا می‌کند،
 و از روی نامِ مسیر به هر فایل یک برچسبِ کلاس می‌دهد.
+خروجی نهاییِ این ماژول یک \lr{DataFrame} (فهرستِ فایل‌ها) است که \lr{make\_dataloaders.py}
+آن را ورودی می‌گیرد.
+
+\mysubsection{فرمتِ نامِ فایل‌های \lr{MAFAULDA}}
+
+فایل‌های \lr{CSV} با فرمتِ \lr{X.Y.csv} نام‌گذاری شده‌اند:
+
+\begin{latin}
+\begin{lstlisting}
+16.1792.csv
+# X = 16  : rotation speed in Hz (~960 RPM)
+# Y = 1792 : internal file identifier (no physical unit)
+\end{lstlisting}
+\end{latin}
+
+مقادیرِ رایجِ سرعت: ۱۲ تا ۵۰ \lr{Hz}. اهمیتِ این عدد در اینجا نیست که مدل
+سرعت را تشخیص دهد، بلکه \lr{split} باید طیفِ سرعت‌های مختلف را هم در \lr{train}
+و هم در \lr{test} داشته باشد تا مدل روی سرعتِ خاصی \lr{overfit} نکند.
+
+\mysubsection{کشفِ فایل‌ها: \lr{list\_csv\_files}}
+
+\begin{latin}
+\begin{lstlisting}
+def list_csv_files(directory: Path) -> List[Path]:
+    files = sorted(directory.rglob("*.csv"))
+    return files
+\end{lstlisting}
+\end{latin}
+
+به‌صورتِ بازگشتی تمام فایل‌های \lr{.csv} را زیرِ \lr{DATA\_RAW\_DIR} پیدا می‌کند
+(جمعاً ۱۹۵۱ فایل). اگر پوشه وجود نداشته باشد، لیستِ خالی برمی‌گرداند.
 
 \mysubsection{تابعِ اصلی: \lr{build\_file\_index}}
 
 \begin{latin}
 \begin{lstlisting}
 def build_file_index(data_dir) -> pd.DataFrame:
-    # returns: columns = [file_path, label, split_hint]
+    # 1. list_csv_files   -> find all 1951 CSVs
+    # 2. infer_label_from_path -> assign class label per file
+    # returns: DataFrame with columns [file_path, label]
 \end{lstlisting}
 \end{latin}
 
 خروجی یک \lr{DataFrame} است که هر ردیفش یک فایل \lr{CSV} از \lr{MAFAULDA} است.
+این \lr{DataFrame} بدونِ هیچ پردازشِ اضافه‌ای به \lr{make\_dataloaders.py} تحویل داده می‌شود.
 
 \mysubsection{برچسب‌گذاری با \lr{infer\_label\_from\_path}}
 
@@ -411,7 +449,42 @@ def infer_label_from_path(path: Path) -> str | None:
 برچسب‌گذاری اشتباه نمی‌شود. (باگی که پیدا و اصلاح شد.)
 }
 
+\mysubsection{\lr{load\_one\_csv} \pmdash{} پایین‌ترین لایه خواندن}
+
+\begin{latin}
+\begin{lstlisting}
+def load_one_csv(file_path) -> pd.DataFrame:
+    return pd.read_csv(PROJECT_ROOT / file_path, header=None)
+\end{lstlisting}
+\end{latin}
+
+ساده‌ترین تابعِ ماژول: یک فایل \lr{CSV} را می‌خواند و \lr{DataFrame} خام برمی‌گرداند.
+\textbf{هیچ پردازشی} (نرمال‌سازی، \lr{windowing}، فیلتر) انجام نمی‌دهد.
+
+مستقیماً در \lr{pipeline} نیست، اما از طریقِ \lr{preprocessed\_cache.py} صدا زده می‌شود:
+
+\begin{latin}
+\begin{lstlisting}
+# preprocessed_cache.py  (called by make_dataloaders.py)
+cached = load_cached_preprocessed_array(file_path)
+if cached is not None:
+    return cached          # cache hit -> load_one_csv NOT called
+df = load_one_csv(file_path)   # cache miss -> read raw CSV
+\end{lstlisting}
+\end{latin}
+
+اگر فایلِ \lr{cache} وجود داشته باشد، \lr{load\_one\_csv} اصلاً صدا زده نمی‌شود.
+اگر \lr{cache} خالی باشد (مثلاً بعد از پاکسازیِ \lr{artifacts/cache/})،
+برای هر فایل یک‌بار صدا زده می‌شود و نتیجه ذخیره می‌شود.
+
+% ==============================================================
+\mysection{۳}{\lr{make\_dataloaders.py} \pmdash{} پنجره‌سازی و \lr{DataLoader}}
+% ==============================================================
+
 \mysubsection{جداسازیِ فایل‌ها: \lr{split\_file\_index}}
+
+این تابع در \lr{make\_dataloaders.py} تعریف شده (نه \lr{load\_data.py}).
+\lr{index\_df} که از \lr{load\_data.py} می‌آید را می‌گیرد و به سه زیرمجموعه تقسیم می‌کند:
 
 \begin{latin}
 \begin{lstlisting}
@@ -422,10 +495,6 @@ train_df, val_df, test_df = split_file_index(index_df)
 
 جداسازی در سطحِ \textbf{فایل} انجام می‌شود، نه پنجره. این از نشتِ داده (\lr{data leakage}) جلوگیری می‌کند:
 هیچ پنجره‌ای از یک فایل نمی‌تواند هم در \lr{train} و هم در \lr{test} باشد.
-
-% ==============================================================
-\mysection{۳}{\lr{make\_dataloaders.py} \pmdash{} پنجره‌سازی و \lr{DataLoader}}
-% ==============================================================
 
 \mysubsection{هدف}
 
