@@ -29,8 +29,6 @@ from src.config import (
     WINDOW_STRIDE,
     MISSING_RATIO_THRESHOLD,
     MISSING_FILL_METHOD,
-    NORMALIZATION_METHOD,
-    NORMALIZATION_SCOPE,
     EPSILON,
 )
 
@@ -192,99 +190,29 @@ def fill_missing_values(
     return df
 
 
-def normalize_dataframe(
-    df: pd.DataFrame,
-    method: str = NORMALIZATION_METHOD,
-) -> pd.DataFrame:
-    """
-    Normalize each column of the DataFrame (whole-file / per-file scaling).
-
-    NOTE: Only reached via ``preprocess_dataframe(..., normalize=True)``, whose
-    sole caller is the archived feature-extraction path (archive/preprocess_data.py).
-    The active training pipeline calls ``preprocess_dataframe(..., normalize=False)``
-    and applies per-window z-score later in make_dataloaders, so this function does
-    not run during normal training/evaluation.
-
-    Parameters
-    ----------
-    df : pandas.DataFrame
-        Input DataFrame.
-    method : str, default=NORMALIZATION_METHOD
-        Normalization strategy. Supported values:
-        - "zscore"
-        - "minmax"
-
-    Returns
-    -------
-    pandas.DataFrame
-        Normalized DataFrame.
-
-    Raises
-    ------
-    ValueError
-        If the method is not supported.
-
-    Notes
-    -----
-    EPSILON is added to denominators to avoid division by zero.
-    """
-    df = df.copy()
-
-    if method == "zscore":
-        for col in df.columns:
-            mean = df[col].mean()
-            std = df[col].std()
-            df[col] = (df[col] - mean) / (std + EPSILON)
-
-    elif method == "minmax":
-        for col in df.columns:
-            min_val = df[col].min()
-            max_val = df[col].max()
-            df[col] = (df[col] - min_val) / (max_val - min_val + EPSILON)
-
-    else:
-        raise ValueError(f"Unsupported normalization method: {method}")
-
-    return df
-
 
 def normalize_windows_array(
     windows: np.ndarray,
-    method: str = NORMALIZATION_METHOD,
-    scope: str = NORMALIZATION_SCOPE,
-    global_stats: Optional[dict] = None,
     epsilon: float = EPSILON,
 ) -> np.ndarray:
     """
-    Normalize a stack of windows according to the selected scope.
+    Apply per-window z-score normalization to a stack of windows.
 
-    The final candidate is ``per_window`` z-score: mean/std are computed per
-    channel inside each individual window, which is reproducible for FPGA
-    inference from the 1024-sample input buffer.
+    Each window is normalized independently: mean and std are computed over
+    all samples in that window. Reproducible for FPGA inference because no
+    global dataset statistics are needed.
     """
     windows = np.asarray(windows, dtype=np.float32)
     if windows.size == 0:
         return windows.astype(np.float32, copy=False)
 
-    if scope in ("per_file", "global_train"):
-        raise NotImplementedError(
-            f"normalization scope {scope!r} was archived to "
-            "src/data/normalization_variants.py for EXP-5. The active pipeline "
-            "uses 'per_window' only."
-        )
-
-    if scope == "per_window":
-        if method != "zscore":
-            raise ValueError("per_window normalization currently supports zscore only.")
-        mean = windows.mean(axis=1, keepdims=True)
-        std = windows.std(axis=1, keepdims=True)
-        safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
-        return ((windows - mean) / safe_std).astype(np.float32)
-
-    raise ValueError(f"Unsupported normalization scope: {scope}")
+    mean = windows.mean(axis=1, keepdims=True)
+    std = windows.std(axis=1, keepdims=True)
+    safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
+    return ((windows - mean) / safe_std).astype(np.float32)
 
 
-def preprocess_dataframe(df: pd.DataFrame, normalize: bool = True) -> Optional[pd.DataFrame]:
+def preprocess_dataframe(df: pd.DataFrame, normalize: bool = False) -> Optional[pd.DataFrame]:
     """
     Run the preprocessing pipeline on a single raw DataFrame.
 
@@ -316,6 +244,10 @@ def preprocess_dataframe(df: pd.DataFrame, normalize: bool = True) -> Optional[p
         df = fill_missing_values(df)
 
     if normalize:
-        df = normalize_dataframe(df)
+        raise NotImplementedError(
+            "normalize_dataframe was removed (2026-09-01). "
+            "Active pipeline uses per-window z-score in make_dataloaders.py. "
+            "See archive/preprocess_data.py for the old file-level normalization path."
+        )
 
     return df

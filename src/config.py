@@ -59,11 +59,6 @@ MIN_ROWS_PER_FILE = WINDOW_SIZE
 MISSING_RATIO_THRESHOLD = 0.2
 MISSING_FILL_METHOD = "median"
 
-NORMALIZATION_METHOD = "zscore"
-# Only "per_window" is active. The "per_file" and "global_train" scopes were
-# archived to src/data/normalization_variants.py for the EXP-5 normalization
-# study (docs/future_experiments.md); relax the check below to re-enable them.
-NORMALIZATION_SCOPE = "per_window"
 EPSILON = 1e-8
 
 # =========================

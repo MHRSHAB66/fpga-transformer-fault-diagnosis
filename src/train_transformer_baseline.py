@@ -33,8 +33,6 @@ from src.config import (
     DEFAULT_RUN_NAME,
     EARLY_STOPPING_PATIENCE,
     LEARNING_RATE,
-    NORMALIZATION_METHOD,
-    NORMALIZATION_SCOPE,
     NUM_EPOCHS,
     RANDOM_SEED,
     PROJECT_ROOT,
@@ -398,8 +396,6 @@ def train(
     batch_size: int = BATCH_SIZE,
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
-    normalization_scope: str = NORMALIZATION_SCOPE,
-    normalization_method: str = NORMALIZATION_METHOD,
 ):
     """
     Entry point for full Transformer baseline training.
@@ -426,8 +422,6 @@ def train(
         "batch_size": batch_size,
         "window_size": window_size,
         "stride": stride,
-        "normalization_scope": normalization_scope,
-        "normalization_method": normalization_method,
     }
     if data_dir is not None:
         build_kwargs["data_dir"] = data_dir
@@ -435,7 +429,6 @@ def train(
     dataloader_build_seconds = time.perf_counter() - dataloader_build_start
 
     print(f"[INFO] build_dataloaders_seconds={dataloader_build_seconds:.3f}")
-    print(f"[INFO] normalization_scope={normalization_scope}")
     print(f"[INFO] batch_size={batch_size}")
 
     if stats.get("max_files") is not None:
@@ -464,8 +457,8 @@ def train(
     preprocessing_overrides = {
         "window_size": int(window_size),
         "window_stride": int(stride),
-        "normalization": normalization_method,
-        "normalization_scope": normalization_scope,
+        "normalization": "zscore",
+        "normalization_scope": "per_window",
     }
     runtime_info = {
         "run_dir": str(run_dir),
@@ -530,7 +523,7 @@ def train(
         "peak_gpu_memory_bytes": peak_gpu_memory_bytes,
         "peak_gpu_memory_gib": peak_gpu_memory_gib,
         "batch_size": int(batch_size),
-        "normalization_scope": normalization_scope,
+        "normalization_scope": "per_window",
     }
 
     with open(metrics_path, "w") as f:

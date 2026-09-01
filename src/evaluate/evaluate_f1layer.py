@@ -82,16 +82,6 @@ def main() -> int:
     print(f"[INFO] loaded F_1layer ({n_params:,} params, "
           f"ckpt epoch={ckpt.get('epoch')}, val_acc={ckpt.get('val_acc')})")
 
-    # A one-off evaluation should not populate the shared preprocessing cache, so
-    # NEW disk cache writes are disabled: already-cached files still load from
-    # disk; uncached files are computed in memory and simply not written. This is
-    # also what keeps the eval runnable when the disk is low on space. The metrics
-    # result itself is always written (see OUT); only the intermediate per-file
-    # signal cache is skipped. No numeric change to results.
-    import src.data.preprocessed_cache as _pc
-    _pc.save_preprocessed_array_cache = lambda *a, **k: None
-    print("[INFO] preprocessing disk-cache writes disabled -- computing in-memory")
-
     print("[INFO] building dataloaders (file-level split, per-window z-score) ...")
     _, _, test_loader, stats = build_dataloaders()
 

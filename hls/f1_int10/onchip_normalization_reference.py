@@ -60,8 +60,7 @@ def _self_check() -> int:
     windows = rng.normal(size=(32, 1024, 8)) * rng.uniform(0.1, 5.0, (32, 1, 8))
     windows += rng.uniform(-100, 100, (32, 1, 8))
 
-    host = normalize_windows_array(windows.astype(np.float32),
-                                   method="zscore", scope="per_window")
+    host = normalize_windows_array(windows.astype(np.float32))
     onchip = np.stack([onchip_normalize_window(w) for w in windows])
 
     max_abs = float(np.max(np.abs(host - onchip)))

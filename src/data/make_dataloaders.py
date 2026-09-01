@@ -36,8 +36,6 @@ from src.config import (
     WINDOW_SIZE,
     WINDOW_STRIDE,
     EXPECTED_NUM_COLUMNS,
-    NORMALIZATION_METHOD,
-    NORMALIZATION_SCOPE,
     EPSILON,
     TRAIN_RATIO,
     VAL_RATIO,
@@ -45,15 +43,11 @@ from src.config import (
     BATCH_SIZE,
     DATALOADER_NUM_WORKERS,
 )
-from src.data.load_data import build_file_index
+from src.data.load_data import build_file_index, load_one_csv
 from src.data.prepare_dataset import (
     create_windows_from_dataframe,
-    count_normal_windows,
     normalize_windows_array,
-)
-from src.data.preprocessed_cache import (
-    load_or_create_preprocessed_array,
-    CACHE_DIR as PREPROCESSED_CACHE_DIR,
+    preprocess_dataframe,
 )
 
 
@@ -181,9 +175,6 @@ def build_X_y_from_file_index(
     index_df,
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
-    normalization_scope: str = NORMALIZATION_SCOPE,
-    normalization_method: str = NORMALIZATION_METHOD,
-    global_normalization_stats: Optional[dict] = None,
 ) -> Tuple[np.ndarray, np.ndarray, int, int, dict]:
     """
     Materialize windowed training arrays from a file index DataFrame.
@@ -198,15 +189,6 @@ def build_X_y_from_file_index(
         Number of rows per time window.
     stride : int, default=WINDOW_STRIDE
         Step size between consecutive windows.
-    normalization_scope : str, default=NORMALIZATION_SCOPE
-        "per_window" only (per_file/global_train archived in
-        src/data/normalization_variants.py for EXP-5).
-    normalization_method : str, default=NORMALIZATION_METHOD
-        Current supported final method is "zscore".
-    global_normalization_stats : dict or None
-        Unused by the active per_window pipeline; kept as None for the archived
-        variants (see normalization_variants.py).
-
     Returns
     -------
     tuple
@@ -222,8 +204,7 @@ def build_X_y_from_file_index(
         - dropped_files : int
             Number of files dropped during preprocessing
         - window_counts : dict
-            {"normal": int, "tail": int, "total": int} window counts
-            aggregated over all kept files in this split.
+            {"normal": int} window counts aggregated over all kept files.
 
     Notes
     -----
@@ -238,7 +219,6 @@ def build_X_y_from_file_index(
     kept_files = 0
     dropped_files = 0
     normal_windows = 0
-    tail_windows = 0
 
     for _, row in index_df.iterrows():
         file_path = row["filepath"]
@@ -248,11 +228,12 @@ def build_X_y_from_file_index(
         if label_name not in LABEL_MAP:
             continue
 
-        values = load_or_create_preprocessed_array(file_path)
-
-        if values is None:
+        df = load_one_csv(file_path)
+        df = preprocess_dataframe(df)
+        if df is None:
             dropped_files += 1
             continue
+        values = df.to_numpy(copy=True).astype(np.float32, copy=False)
 
         kept_files += 1
 
@@ -262,20 +243,11 @@ def build_X_y_from_file_index(
             stride=stride,
         )
 
-        file_normal = count_normal_windows(len(values), window_size, stride)
-        normal_windows += file_normal
-
         label_id = LABEL_MAP[label_name]
 
-        # Preserve alignment between inputs and labels:
-        # every appended window gets its matching file-level label.
         if windows:
-            windows = normalize_windows_array(
-                np.asarray(windows, dtype=np.float32),
-                method=normalization_method,
-                scope=normalization_scope,
-                global_stats=global_normalization_stats,
-            )
+            windows = normalize_windows_array(np.asarray(windows, dtype=np.float32))
+            normal_windows += len(windows)
 
         for window in windows:
             X.append(window)
@@ -290,7 +262,6 @@ def build_X_y_from_file_index(
 
     window_counts = {
         "normal": int(normal_windows),
-        "total": int(normal_windows),
     }
 
     return X, y, kept_files, dropped_files, window_counts
@@ -302,8 +273,6 @@ def build_dataloaders(
     batch_size: int = BATCH_SIZE,
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
-    normalization_scope: str = NORMALIZATION_SCOPE,
-    normalization_method: str = NORMALIZATION_METHOD,
     num_workers: int = DATALOADER_NUM_WORKERS,
 ):
     """
@@ -321,11 +290,6 @@ def build_dataloaders(
         Number of rows per time window.
     stride : int, default=WINDOW_STRIDE
         Step size between consecutive windows.
-    normalization_scope : str, default=NORMALIZATION_SCOPE
-        "per_window" only (per_file/global_train archived in
-        src/data/normalization_variants.py for EXP-5).
-    normalization_method : str, default=NORMALIZATION_METHOD
-        Normalization method. The final pipeline uses "zscore".
     num_workers : int, default=DATALOADER_NUM_WORKERS
         Number of worker processes used by PyTorch DataLoader.
 
@@ -349,11 +313,6 @@ def build_dataloaders(
     - Base preprocessing is reused through the per-file disk cache.
     - All splits are materialized from the per-file preprocessing cache.
     """
-    if normalization_scope not in {"per_window"}:
-        raise ValueError(f"Unsupported normalization_scope: {normalization_scope!r}")
-    if normalization_scope == "per_window" and normalization_method != "zscore":
-        raise ValueError("per_window normalization currently supports zscore only.")
-
     index_df = build_file_index(data_dir)
     if index_df.empty:
         raise ValueError(f"No CSV files were found under dataset directory: {data_dir}")
@@ -380,10 +339,6 @@ def build_dataloaders(
     if test_index_df.empty:
         raise ValueError("Test split is empty after file-level splitting.")
 
-    train_augmentation_cache_used = False
-    train_augmentation_cache_path = None
-    global_normalization_stats = None
-    normalization_fit_seconds = 0.0
     split_materialization_seconds = {}
 
     train_materialize_start = time.perf_counter()
@@ -392,9 +347,6 @@ def build_dataloaders(
             train_index_df,
             window_size=window_size,
             stride=stride,
-            normalization_scope=normalization_scope,
-            normalization_method=normalization_method,
-            global_normalization_stats=global_normalization_stats,
         )
     )
     split_materialization_seconds["train"] = time.perf_counter() - train_materialize_start
@@ -408,21 +360,11 @@ def build_dataloaders(
             "Training dataset contains zero samples after preprocessing/windowing."
         )
 
-    augmentation_info = {
-        "smote_applied": False,
-        "noise_injection_applied": False,
-        "original_samples": len(X_train),
-        "augmented_samples": len(X_train),
-    }
-
     val_materialize_start = time.perf_counter()
     X_val, y_val, val_kept, val_dropped, val_window_counts = build_X_y_from_file_index(
         val_index_df,
         window_size=window_size,
         stride=stride,
-        normalization_scope=normalization_scope,
-        normalization_method=normalization_method,
-        global_normalization_stats=global_normalization_stats,
     )
     split_materialization_seconds["val"] = time.perf_counter() - val_materialize_start
     val_dataset = TensorDataset(
@@ -435,9 +377,6 @@ def build_dataloaders(
         test_index_df,
         window_size=window_size,
         stride=stride,
-        normalization_scope=normalization_scope,
-        normalization_method=normalization_method,
-        global_normalization_stats=global_normalization_stats,
     )
     split_materialization_seconds["test"] = time.perf_counter() - test_materialize_start
     test_dataset = TensorDataset(
@@ -485,10 +424,6 @@ def build_dataloaders(
         pin_memory=pin_memory,
         persistent_workers=persistent_workers,
     )
-
-    preprocessing_cache_enabled = True
-    preprocessing_cache_path = str(PREPROCESSED_CACHE_DIR)
-    train_augmented = False
 
     # Per-class window counts for distribution reporting.
     label_names_by_id = {v: k for k, v in LABEL_MAP.items()}
@@ -540,15 +475,11 @@ def build_dataloaders(
         "window_stride": int(stride),
         "batch_size": int(batch_size),
         "normalization": {
-            "scope": str(normalization_scope),
-            "method": str(normalization_method),
+            "scope": "per_window",
+            "method": "zscore",
             "epsilon": float(EPSILON),
-            "global_stats": global_normalization_stats,
-            "global_stats_fitted_on": None,
         },
-        "tail_window_info": {
-            "enabled": bool(include_tail),
-            "mode": tail_mode if include_tail else None,
+        "window_counts": {
             "train": train_window_counts,
             "val": val_window_counts,
             "test": test_window_counts,
@@ -557,23 +488,11 @@ def build_dataloaders(
                 + val_window_counts["normal"]
                 + test_window_counts["normal"]
             ),
-            "total_tail": (
-                train_window_counts["tail"]
-                + val_window_counts["tail"]
-                + test_window_counts["tail"]
-            ),
         },
         "train_class_window_counts": train_class_window_counts,
         "val_class_window_counts": val_class_window_counts,
         "test_class_window_counts": test_class_window_counts,
-        "train_augmented": train_augmented,
-        "augmentation": augmentation_info,
-        "train_augmentation_cache_used": train_augmentation_cache_used,
-        "train_augmentation_cache_path": train_augmentation_cache_path,
-        "preprocessing_cache_enabled": preprocessing_cache_enabled,
-        "preprocessing_cache_path": preprocessing_cache_path,
         "preprocessing_timing_seconds": {
-            "global_normalization_fit": float(normalization_fit_seconds),
             "split_materialization": {
                 key: float(value)
                 for key, value in split_materialization_seconds.items()
