@@ -355,11 +355,6 @@ def build_dataloaders(
         torch.from_numpy(y_train),
     )
 
-    if len(train_dataset) == 0:
-        raise ValueError(
-            "Training dataset contains zero samples after preprocessing/windowing."
-        )
-
     val_materialize_start = time.perf_counter()
     X_val, y_val, val_kept, val_dropped, val_window_counts = build_X_y_from_file_index(
         val_index_df,
@@ -384,6 +379,10 @@ def build_dataloaders(
         torch.from_numpy(y_test),
     )
 
+    if len(train_dataset) == 0:
+        raise ValueError(
+            "Training dataset contains zero samples after preprocessing/windowing."
+        )
     if len(val_dataset) == 0:
         raise ValueError(
             "Validation dataset contains zero windows after preprocessing/windowing."
