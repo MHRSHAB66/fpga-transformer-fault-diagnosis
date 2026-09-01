@@ -1,4 +1,33 @@
-# Cleanup Log — 2026-08-24
+# Cleanup Log
+
+---
+
+## پاکسازیِ 2026-09-01 (ادامه) — حذفِ سیستمِ کش
+
+### دلیل
+کش disk-based فقط برای اجراهای مکرر local مفید بود.
+اجرای نرم‌افزاری روی Kaggle انجام می‌شود (kernel هر بار از صفر)،
+و مسیر سخت‌افزاری FPGA جداگانه است.
+کش پیچیدگی بی‌فایده اضافه می‌کرد.
+
+### حذف‌شده‌ها
+
+| فایل/مورد | توضیح |
+|---|---|
+| `src/data/preprocessed_cache.py` | کل ماژول کش — حذف کامل |
+| `NORMALIZATION_METHOD` در `config.py` | فقط برای کش key استفاده می‌شد |
+| `NORMALIZATION_SCOPE` در `config.py` | فقط برای کش key استفاده می‌شد |
+| `preprocessing_cache_enabled/path` در stats | از `build_dataloaders` حذف شد |
+| monkey-patch در `evaluate_f1layer.py` | دیگر cache‌ای نیست که disable شود |
+
+### تغییر رفتار
+`build_X_y_from_file_index` به جای `load_or_create_preprocessed_array`،
+مستقیماً `load_one_csv` + `preprocess_dataframe` را صدا می‌زند.
+نتیجه عددی تغییر نمی‌کند — فقط cache hit دیگر نیست.
+
+---
+
+## پاکسازیِ 2026-09-01 — حذفِ normalize_dataframe و متغیرهای اضافه
 
 ## Deleted
 
@@ -74,6 +103,43 @@ hls/
 - `CHANNEL_SELECTION` / `_VIBRATION_CHANNEL_INDICES` / `NUM_ACTIVE_CHANNELS` و if/elif block مربوطه حذف شدن — فقط "all" پیاده‌سازی شده بود. `INPUT_CHANNELS = EXPECTED_NUM_COLUMNS` مستقیم set شد.
 - sanity check مربوط به `NORMALIZATION_SCOPE` حذف شد — constant رو با خودش چک میکرد.
 - `ACTIVE_CHANNEL_INDICES` حذف شد (2026-08-25) — در pipeline اصلی استفاده نمی‌شد؛ فقط یک comment در `src/tools/channel_analysis.py` به آن اشاره داشت. `INPUT_CHANNELS = 8` نگه داشته شد چون `transformer_baseline.py`، `evaluate_model.py`، و `experiment_config.py` از آن import می‌کنند.
+
+## پاکسازیِ 2026-09-01 (ادامه)
+
+### حذف `global_normalization_stats` و `normalization_fit_seconds` از `make_dataloaders.py`
+
+| چه چیزی | کجا |
+|---------|-----|
+| `global_normalization_stats = None` (متغیر) | `build_dataloaders` |
+| `normalization_fit_seconds = 0.0` (متغیر) | `build_dataloaders` |
+| `global_normalization_stats=...` (آرگومان) | سه فراخوانی `build_X_y_from_file_index` |
+| `global_normalization_stats: Optional[dict]` (پارامتر) | امضای `build_X_y_from_file_index` |
+| `"global_stats"` و `"global_stats_fitted_on"` | `stats` dict |
+| `"global_normalization_fit"` | `stats["preprocessing_timing_seconds"]` |
+
+**دلیل:** بازماندهٔ نرمال‌سازیِ `global_train` بودند که در EXP-5 آرشیو شد.
+همیشه `None` و `0.0` بودند و هیچ اثری در pipeline نداشتند.
+
+---
+
+## پاکسازیِ 2026-09-01
+
+### حذف `normalize_dataframe` از `src/data/prepare_dataset.py`
+
+| چه چیزی | وضعیت |
+|---------|--------|
+| `normalize_dataframe` (تابع) | **حذف شد** |
+| `preprocess_dataframe(normalize=True)` | حالا `NotImplementedError` می‌دهد |
+| `normalize_windows_array` | نگه داشته شد — فعال و در pipeline |
+
+**دلیل:** کدِ یتیم بود. آخرین صدازننده‌اش (`archive/preprocess_data.py`) در کامیتِ
+`c1b23b7` آرشیو شده بود. پایپلاینِ فعال همیشه `normalize=False` می‌فرستد.
+نرمال‌سازی در `make_dataloaders.py` روی پنجره‌ها انجام می‌شود، نه روی فایل.
+
+**تاریخچه:** `normalize_dataframe` از مسیرِ قدیمیِ استخراجِ ویژگی مانده بود که
+در EXP-5 (کامیتِ `b9e00a8`) کنار گذاشته شد.
+
+---
 
 ## آرشیو `src/tools/` به `archive/tools/`
 
