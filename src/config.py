@@ -28,8 +28,14 @@ PROJECT_ROOT = Path(project_root_env).resolve()
 # Paths
 # =========================
 DATA_RAW_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda"      # raw MAFAULDA CSVs
-DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"       # derived artifacts
 RUNS_DIR = PROJECT_ROOT / "artifacts" / "runs"                 # per-run outputs
+
+# On-disk store for pre-processed windows. The software/Kaggle training path
+# builds windows in memory (fresh kernel each run, so a disk cache adds no
+# value there). This is reserved for the hardware/FPGA path: once inputs are
+# pre-processed for the board, results can be persisted here and reused on the
+# PC side as a cache instead of recomputing every time.
+DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 DEFAULT_RUN_NAME = "transformer_final_t4"
 
 # =========================
