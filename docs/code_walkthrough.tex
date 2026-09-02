@@ -175,16 +175,15 @@ PROJECT_ROOT = Path(project_root_env).resolve()
 
 \begin{latin}
 \begin{lstlisting}
-DATA_RAW_DIR      = PROJECT_ROOT / "data" / "raw" / "mafaulda"
-DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+DATA_RAW_DIR       = PROJECT_ROOT / "data" / "raw" / "mafaulda"
 RUNS_DIR           = PROJECT_ROOT / "artifacts" / "runs"
 DEFAULT_RUN_NAME   = "transformer_final_t4"
+DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 \end{lstlisting}
 \end{latin}
 
 \begin{itemize}
 \item \lr{DATA\_RAW\_DIR}: پوشه‌ای که فایل‌های \lr{CSV} خامِ \lr{MAFAULDA} در آن هستند.
-\item \lr{DATA\_PROCESSED\_DIR}: تعریف شده ولی در \lr{pipeline} فعلی استفاده نمی‌شود \pmdash{} جای نگه‌داری برای مراحلِ آینده (سنسور واقعی).
 \item \lr{RUNS\_DIR}: همه نتایجِ آموزش اینجا ذخیره می‌شوند. هر \lr{run} یک زیرپوشه دارد که معمولاً شامل:
 \lr{checkpoints/} (وزن‌های ذخیره‌شده‌ی مدل)،
 \lr{results/} (متریک‌ها، تاریخچه‌ی آموزش، ماتریسِ درهم‌ریختگی)، و
@@ -192,6 +191,10 @@ DEFAULT_RUN_NAME   = "transformer_final_t4"
 
 \item \lr{DEFAULT\_RUN\_NAME}: نامِ پیش‌فرض برای \lr{run} جدید هنگامِ اجرای مجددِ آموزش.
 اسکریپتِ آموزش یک \lr{timestamp} به آن اضافه می‌کند تا \lr{run}های مختلف رونویسی نشوند.
+
+\item \lr{DATA\_PROCESSED\_DIR}: در \lr{pipeline}ِ نرم‌افزاریِ فعلی استفاده نمی‌شود (روی \lr{Kaggle} پنجره‌ها در حافظه ساخته می‌شوند، پس کشِ دیسکی سودی ندارد).
+این مسیر برای مسیرِ سخت‌افزاری/\lr{FPGA} \textbf{رزرو} شده است: وقتی ورودی‌ها برای برد پیش‌پردازش شدند،
+نتیجه اینجا ذخیره و در سمتِ \lr{PC} به‌جای محاسبه‌ی دوباره به‌عنوان کش بازخوانی می‌شود.
 \end{itemize}
 
 \mysubsection{کلاس‌ها و نگاشت}
@@ -270,6 +273,7 @@ EXPECTED_NUM_COLUMNS = len(EXPECTED_COLUMNS)  # 8
 WINDOW_SIZE   = 1024   # samples per window
 WINDOW_STRIDE = 1024   # no overlap
 MIN_ROWS_PER_FILE = WINDOW_SIZE  # drop files shorter than one window
+INPUT_LENGTH = WINDOW_SIZE  # seq_len fed to the model (one token per sample)
 
 NORMALIZATION_METHOD = "zscore"
 NORMALIZATION_SCOPE  = "per_window"  # mean=0, std=1 per window
@@ -301,7 +305,7 @@ MISSING_FILL_METHOD     = "median"  # fill remaining NaNs with median
 \begin{latin}
 \begin{lstlisting}
 BATCH_SIZE              = 64
-DATALOADER_NUM_WORKERS  = 0    # Windows: multiprocessing disabled
+DATALOADER_NUM_WORKERS  = 0    # 0 on Windows; raise on Kaggle/Linux
 LEARNING_RATE           = 1e-3
 NUM_EPOCHS              = 30
 EARLY_STOPPING_PATIENCE = 6
@@ -312,6 +316,7 @@ RANDOM_SEED             = 42
 \begin{itemize}
 \item \lr{NUM\_WORKERS = 0}: در \lr{Windows}، \lr{PyTorch multiprocessing} برای \lr{DataLoader} اغلب مشکل ایجاد می‌کند.
 با صفر، همه چیز در فرآیندِ اصلی اجرا می‌شود و پایدارتر است.
+روی \lr{Kaggle}/\lr{Linux}/\lr{Colab} می‌توان این عدد را (مثلاً به ۲ تا ۴) افزایش داد تا \lr{batch}ها موازی بارگذاری شوند و آموزش سریع‌تر شود.
 \item \lr{EARLY\_STOPPING\_PATIENCE = 6}: اگر \lr{val\_loss} به مدت ۶ اپاک بهتر نشد، آموزش متوقف می‌شود.
 \item \lr{RANDOM\_SEED = 42}: تضمین می‌کند که نتایج در اجراهای مختلف یکسان باشند.
 \end{itemize}
@@ -330,11 +335,11 @@ MAFAULDA_SAMPLE_RATE = 50000  # Hz, used by analysis tools in src/tools/
 \end{lstlisting}
 \end{latin}
 
-این چهار عدد مدلِ \lr{F\_1layer} را کاملاً تعریف می‌کنند.
+این اعداد مدلِ \lr{F\_1layer} را کاملاً تعریف می‌کنند.
 هدفِ سخت‌افزاری این مدل برد \lr{EBAZ4205 (Zynq-7010)} است که منابعِ محدودی دارد
 (۸۰ \lr{DSP}، حدود ۲۷۰ کیلوبایت \lr{BRAM}).
-تاریخچه: نسخه قدیمی‌تر با \lr{num\_layers=2} دقتِ نرم‌افزاری بالاتری داشت (\lr{98.22\%}) ولی
-برای این برد مدلِ ۱ لایه انتخاب شد تا در محدوده منابع جا بگیرد.
+دلیلِ انتخابِ این معماری، اعدادِ دقت، و مسیرِ \lr{checkpoint}ها در \lr{docs/DECISION\_LOG.md}
+(\lr{D013}، \lr{D018}) مستند شده است.
 
 \mysubsection{منحنیِ دقت در برابرِ اندازه \lr{—} جست‌وجوی معماری}
 
