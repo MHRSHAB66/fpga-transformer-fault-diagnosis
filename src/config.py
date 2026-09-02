@@ -29,6 +29,7 @@ PROJECT_ROOT = Path(project_root_env).resolve()
 # =========================
 DATA_RAW_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda"      # raw MAFAULDA CSVs
 RUNS_DIR = PROJECT_ROOT / "artifacts" / "runs"                 # per-run outputs
+DEFAULT_RUN_NAME = "transformer_final_t4"                      # default run-dir label
 
 # On-disk store for pre-processed windows. The software/Kaggle training path
 # builds windows in memory (fresh kernel each run, so a disk cache adds no
@@ -36,7 +37,6 @@ RUNS_DIR = PROJECT_ROOT / "artifacts" / "runs"                 # per-run outputs
 # pre-processed for the board, results can be persisted here and reused on the
 # PC side as a cache instead of recomputing every time.
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
-DEFAULT_RUN_NAME = "transformer_final_t4"
 
 # =========================
 # Reproducibility
@@ -123,9 +123,18 @@ VAL_RATIO = 0.1
 TEST_RATIO = 0.2
 
 # =========================
+# Sanity checks
+# =========================
+if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:
+    raise ValueError("TRAIN_RATIO + VAL_RATIO + TEST_RATIO must be 1.0")
+
+# =========================
 # DataLoader
 # =========================
 BATCH_SIZE = 64
+# Keep at 0 on Windows: multi-worker DataLoaders are slow/unreliable there
+# (process spawn overhead, no fork). On Kaggle/Linux/Colab, raise this (e.g. 2-4)
+# to load batches in parallel and speed up training.
 DATALOADER_NUM_WORKERS = 0
 
 # =========================
@@ -138,23 +147,11 @@ EARLY_STOPPING_PATIENCE = 6  # epochs without val-loss improvement before stop
 # =========================
 # Transformer model
 # =========================
-# This config describes F_1layer — the single primary model, DEPLOYED to the FPGA
-# (num_layers=1, d_model=32, nhead=4, dim_feedforward=64, 9,492 params; float test
-# 97.55%, int10 97.11%), chosen to fit the EBAZ4205 / Zynq-7010. See DECISION_LOG
-# D013/D018. Its checkpoint is kaggle/f1_ckpt_dataset/best.pt and its export lives
-# in hls_f_int10/.
-# History: an earlier 2-layer variant reached higher software accuracy (test
-# 98.22%, checkpoint artifacts/runs/20260615_*). That is a preserved exploration
-# result; to evaluate that old checkpoint set TRANSFORMER_NUM_LAYERS=2. The
-# project's primary/deployed model is now this 1-layer config.
+# F_1layer — the primary model deployed to the FPGA. See docs/DECISION_LOG.md
+# (D013, D018) for rationale, accuracy figures, and checkpoint paths.
 TRANSFORMER_D_MODEL = 32
 TRANSFORMER_NHEAD = 4
 TRANSFORMER_NUM_LAYERS = 1
 TRANSFORMER_DIM_FEEDFORWARD = 64
 TRANSFORMER_DROPOUT = 0.1
 
-# =========================
-# Sanity checks
-# =========================
-if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:
-    raise ValueError("TRAIN_RATIO + VAL_RATIO + TEST_RATIO must be 1.0")
