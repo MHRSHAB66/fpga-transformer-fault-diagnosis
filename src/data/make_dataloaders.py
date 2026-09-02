@@ -32,6 +32,8 @@ from src.config import (
     DATA_RAW_DIR,
     LABEL_MAP,
     NUM_CLASSES,
+    NORMALIZATION_METHOD,
+    NORMALIZATION_SCOPE,
     RANDOM_SEED,
     WINDOW_SIZE,
     WINDOW_STRIDE,
@@ -474,8 +476,8 @@ def build_dataloaders(
         "window_stride": int(stride),
         "batch_size": int(batch_size),
         "normalization": {
-            "scope": "per_window",
-            "method": "zscore",
+            "scope": NORMALIZATION_SCOPE,
+            "method": NORMALIZATION_METHOD,
             "epsilon": float(EPSILON),
         },
         "window_counts": {
