@@ -26,7 +26,6 @@ import torch
 
 from src.config import (
     PROJECT_ROOT, DATA_RAW_DIR, NUM_CLASSES, LABEL_MAP, RANDOM_SEED,
-    NORMALIZATION_SCOPE, NORMALIZATION_METHOD,
 )
 from src.data.load_data import build_file_index
 from src.data.make_dataloaders import split_file_index, build_X_y_from_file_index
@@ -67,11 +66,7 @@ def build_test_subset(num_files, seed):
     total_test_files = len(test_index_df)
     if num_files is not None and num_files < total_test_files:
         test_index_df = test_index_df.sample(n=num_files, random_state=seed).reset_index(drop=True)
-    X, y, kept, dropped, _ = build_X_y_from_file_index(
-        test_index_df,
-        normalization_scope=NORMALIZATION_SCOPE,
-        normalization_method=NORMALIZATION_METHOD,
-    )
+    X, y, kept, dropped, _ = build_X_y_from_file_index(test_index_df)
     return X, y, {
         "total_test_files": int(total_test_files),
         "test_files_used": int(kept),
@@ -92,11 +87,7 @@ def build_train_subset(num_files, seed):
     train_index_df, _, _ = split_file_index(index_df)
     if num_files is not None and num_files < len(train_index_df):
         train_index_df = train_index_df.sample(n=num_files, random_state=seed).reset_index(drop=True)
-    X, y, kept, _, _ = build_X_y_from_file_index(
-        train_index_df,
-        normalization_scope=NORMALIZATION_SCOPE,
-        normalization_method=NORMALIZATION_METHOD,
-    )
+    X, y, kept, _, _ = build_X_y_from_file_index(train_index_df)
     return X, y, int(kept)
 
 

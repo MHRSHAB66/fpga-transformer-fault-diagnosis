@@ -9,8 +9,7 @@ normalization-comparison study (EXP-5 in docs/future_experiments.md) can be run
 without rewriting it.
 
 Nothing in `src/` imports this module during normal training/evaluation. To run
-EXP-5, wire these back into `build_X_y_from_file_index` / `build_dataloaders`
-(and relax the `NORMALIZATION_SCOPE` validation in config.py).
+EXP-5, wire these back into `build_X_y_from_file_index` / `build_dataloaders`.
 
 Contents
 --------
@@ -28,13 +27,14 @@ from typing import Optional
 
 import numpy as np
 
-from src.config import NORMALIZATION_METHOD, NORMALIZATION_SCOPE, EPSILON
-from src.data.preprocessed_cache import load_or_create_preprocessed_array
+from src.config import EPSILON
+from src.data.load_data import load_one_csv
+from src.data.prepare_dataset import preprocess_dataframe
 
 
 def fit_global_normalization_stats(
     index_df,
-    method: str = NORMALIZATION_METHOD,
+    method: str = "zscore",
     epsilon: float = EPSILON,
 ) -> dict:
     """
@@ -52,10 +52,12 @@ def fit_global_normalization_stats(
     max_values = None
 
     for _, row in index_df.iterrows():
-        values = load_or_create_preprocessed_array(row["filepath"])
-        if values is None:
+        df = load_one_csv(row["filepath"])
+        df = preprocess_dataframe(df)
+        if df is None:
             dropped_files += 1
             continue
+        values = df.to_numpy(copy=True).astype(np.float32, copy=False)
         if values.size == 0:
             continue
 
@@ -120,7 +122,7 @@ def fit_global_normalization_stats(
 
 def normalize_array(
     values: np.ndarray,
-    method: str = NORMALIZATION_METHOD,
+    method: str = "zscore",
     stats: Optional[dict] = None,
     epsilon: float = EPSILON,
 ) -> np.ndarray:
@@ -160,8 +162,8 @@ def normalize_array(
 
 def normalize_windows_array_all_scopes(
     windows: np.ndarray,
-    method: str = NORMALIZATION_METHOD,
-    scope: str = NORMALIZATION_SCOPE,
+    method: str = "zscore",
+    scope: str = "per_window",
     global_stats: Optional[dict] = None,
     epsilon: float = EPSILON,
 ) -> np.ndarray:
