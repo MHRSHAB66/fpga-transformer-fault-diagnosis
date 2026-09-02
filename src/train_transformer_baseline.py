@@ -11,11 +11,8 @@ This module is responsible for:
 
 Notes
 -----
-- The training split may be either:
-    * a TensorDataset (materialized / augmented path), or
-    * a lazy WindowedFileDataset
-- Validation and test evaluation always operate on the DataLoaders
-  returned by build_dataloaders().
+- Train, validation, and test splits are all TensorDatasets built by
+  build_dataloaders() (windows materialized in memory per run).
 - The best model is selected using validation loss.
 """
 
@@ -38,6 +35,7 @@ from src.config import (
     PROJECT_ROOT,
     RUNS_DIR,
     NUM_CLASSES,
+    NORMALIZATION_SCOPE,
     WINDOW_SIZE,
     WINDOW_STRIDE,
 )
@@ -454,11 +452,13 @@ def train(
         "num_epochs": int(num_epochs),
         "early_stopping_patience": int(EARLY_STOPPING_PATIENCE),
     }
+    # window_size/stride are actual call args, so they legitimately override.
+    # Normalization method/scope are NOT overridden here: they come from config
+    # (NORMALIZATION_METHOD/SCOPE) via build_preprocessing_config, keeping config
+    # the single source of truth.
     preprocessing_overrides = {
         "window_size": int(window_size),
         "window_stride": int(stride),
-        "normalization": "zscore",
-        "normalization_scope": "per_window",
     }
     runtime_info = {
         "run_dir": str(run_dir),
@@ -523,7 +523,7 @@ def train(
         "peak_gpu_memory_bytes": peak_gpu_memory_bytes,
         "peak_gpu_memory_gib": peak_gpu_memory_gib,
         "batch_size": int(batch_size),
-        "normalization_scope": "per_window",
+        "normalization_scope": NORMALIZATION_SCOPE,
     }
 
     with open(metrics_path, "w") as f:
