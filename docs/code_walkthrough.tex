@@ -450,7 +450,7 @@ def list_csv_files(directory: Path) -> List[Path]:
 def build_file_index(data_dir) -> pd.DataFrame:
     # 1. list_csv_files   -> find all 1951 CSVs
     # 2. infer_label_from_path -> assign class label per file
-    # returns: DataFrame with columns [file_path, label]
+    # returns: DataFrame with columns [filepath, label]
 \end{lstlisting}
 \end{latin}
 
@@ -461,14 +461,15 @@ def build_file_index(data_dir) -> pd.DataFrame:
 
 \begin{latin}
 \begin{lstlisting}
-def infer_label_from_path(path: Path) -> str | None:
-    rel = path.relative_to(DATA_RAW_DIR)  # only path under data/raw
-    rel_str = rel.as_posix().lower()
-    if "normal"       in rel_str: return "normal"
-    if "imbalance"    in rel_str: return "imbalance"
-    if "misalignment" in rel_str: return "misalignment"
-    if "bearing"      in rel_str: return "bearing"
-    return None
+def infer_label_from_path(file_path) -> str:
+    # s = path under DATA_RAW_DIR only, lower-cased, posix slashes
+    if "horizontal-misalignment" in s or "vertical-misalignment" in s:
+        return "misalignment"
+    if "overhang" in s or "underhang" in s:   # the two bearing folders
+        return "bearing_fault"
+    if "imbalance" in s: return "imbalance"
+    if "normal"    in s: return "normal"
+    return "unknown"
 \end{lstlisting}
 \end{latin}
 
@@ -490,21 +491,24 @@ def load_one_csv(file_path) -> pd.DataFrame:
 ساده‌ترین تابعِ ماژول: یک فایل \lr{CSV} را می‌خواند و \lr{DataFrame} خام برمی‌گرداند.
 \textbf{هیچ پردازشی} (نرمال‌سازی، \lr{windowing}، فیلتر) انجام نمی‌دهد.
 
-مستقیماً در \lr{pipeline} نیست، اما از طریقِ \lr{preprocessed\_cache.py} صدا زده می‌شود:
+این تابع مستقیماً در \lr{pipeline} صدا زده می‌شود: \lr{make\_dataloaders.py} برای هر فایلِ
+هر \lr{split}، ابتدا \lr{load\_one\_csv} و سپس \lr{preprocess\_dataframe} را فراخوانی می‌کند:
 
 \begin{latin}
 \begin{lstlisting}
-# preprocessed_cache.py  (called by make_dataloaders.py)
-cached = load_cached_preprocessed_array(file_path)
-if cached is not None:
-    return cached          # cache hit -> load_one_csv NOT called
-df = load_one_csv(file_path)   # cache miss -> read raw CSV
+# make_dataloaders.py  (build_X_y_from_file_index)
+df = load_one_csv(file_path)     # read raw CSV
+df = preprocess_dataframe(df)    # numeric + drop + fill
+if df is None:                   # file dropped (too many NaNs)
+    continue
 \end{lstlisting}
 \end{latin}
 
-اگر فایلِ \lr{cache} وجود داشته باشد، \lr{load\_one\_csv} اصلاً صدا زده نمی‌شود.
-اگر \lr{cache} خالی باشد (مثلاً بعد از پاکسازیِ \lr{artifacts/cache/})،
-برای هر فایل یک‌بار صدا زده می‌شود و نتیجه ذخیره می‌شود.
+\infobox{
+پیش‌تر یک سیستمِ کشِ دیسکی (\lr{preprocessed\_cache.py}) بینِ این دو مرحله بود که آرایه‌ی
+تمیزِ هر فایل را ذخیره می‌کرد. در \lr{2026-09-01} حذف شد: آموزش روی \lr{Kaggle} با \lr{kernel}ِ
+تازه اجرا می‌شود، پس کشِ دیسکی سودی نداشت. حالا هر فایل در هر اجرا مستقیماً خوانده و پردازش می‌شود.
+}
 
 % ==============================================================
 \mysection{۳}{\lr{src/data/prepare\_dataset.py} \pmdash{} پیش‌پردازشِ پایه}
@@ -515,8 +519,8 @@ df = load_one_csv(file_path)   # cache miss -> read raw CSV
 این ماژول توابعِ کمکیِ قابلِ استفاده مجدد برای پیش‌پردازش است.
 هیچ \lr{DataLoader} نمی‌سازد و هیچ تقسیمی انجام نمی‌دهد \pmdash{}
 فقط هر فایل را به آرایه تمیز تبدیل می‌کند.
-دو گروه تابعِ اصلی دارد: توابعِ پیش‌پردازشِ فایل که از \lr{preprocessed\_cache.py}
-صدا زده می‌شوند، و توابعِ پنجره‌سازی و نرمال‌سازی که از \lr{make\_dataloaders.py} استفاده می‌شوند.
+دو گروه تابعِ اصلی دارد: توابعِ پیش‌پردازشِ فایل، و توابعِ پنجره‌سازی و نرمال‌سازی \pmdash{}
+هر دو گروه از \lr{make\_dataloaders.py} صدا زده می‌شوند.
 
 \mysubsection{جریانِ پیش‌پردازشِ یک فایل: \lr{preprocess\_dataframe}}
 
@@ -534,7 +538,7 @@ def preprocess_dataframe(df, normalize=False):
 \end{lstlisting}
 \end{latin}
 
-این تابع همیشه با \lr{normalize=False} از \lr{preprocessed\_cache.py} صدا زده می‌شود.
+این تابع همیشه با \lr{normalize=False} از \lr{make\_dataloaders.py} صدا زده می‌شود.
 تابعِ \lr{normalize\_dataframe} (نرمال‌سازیِ سطحِ فایل) در \lr{2026-09-01} حذف شد \pmdash{}
 کدِ یتیم بود و آخرین صدازننده‌اش در مسیرِ قدیمیِ آرشیوشده بود.
 نرمال‌سازیِ فعال روی پنجره‌ها در \lr{make\_dataloaders.py} انجام می‌شود.
