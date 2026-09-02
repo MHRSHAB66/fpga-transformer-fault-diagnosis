@@ -755,12 +755,16 @@ train_loader, val_loader, test_loader, stats = build_dataloaders(
 (batch, 1024, 8)
     -> Linear(8->32)         # input_projection
     -> PositionalEncoding    # + positional info
-    -> EncoderBlock          # self-attention + FFN  (1 block)
-    -> mean(dim=1)           # (batch, 32)
-    -> Linear(32->16)->GELU->Linear(16->4)   # classifier
-(batch, 4)                   # logit for 4 classes
+    -> EncoderBlock x1       # self-attention + FFN, each: residual + LayerNorm
+    -> mean(dim=1)           # (batch, 32)  global average pooling over time
+    -> classifier            # LayerNorm->Linear(32->16)->GELU->Dropout->Linear(16->4)
+(batch, 4)                   # raw logits for 4 classes (no softmax here)
 \end{lstlisting}
 \end{latin}
+
+کلِ مدل فقط \lr{9,492} پارامتر دارد \pmdash{} عمداً کوچک تا پس از کوانتیزاسیون
+روی بردِ هدف جا شود. خروجی \lr{logit}ِ خام است؛ \lr{softmax} داخلِ مدل نیست و
+در تابعِ \lr{loss} (هنگامِ آموزش) یا جداگانه هنگامِ استنتاج اعمال می‌شود.
 
 \mysubsection{کلاسِ اول: \lr{PositionalEncoding}}
 
@@ -779,9 +783,14 @@ x = x + pe[:, :seq_len, :]
 \end{latin}
 
 \begin{itemize}
-\item \lr{div\_term}: اعدادی از ۱.۰ تا ۰.۰۰۰۲ که هر بُعد را با آهنگِ متفاوت نوسان می‌دهد.
+\item \lr{div\_term} $= \exp(-\frac{2i}{d}\ln 10000)$ برای بُعدِ $i$: فرکانس‌هایی
+که به‌صورتِ هندسی از ۱.۰ تا حدودِ ۰.۰۰۰۲ کم می‌شوند \pmdash{} یعنی بعضی بُعدها سریع و
+بعضی آهسته نوسان می‌کنند.
 \item هر جایگاه یک ترکیبِ \lr{(sin, cos)} یکتا دارد \pmdash{} مثلِ شمارشِ دودویی با موجِ نرم.
-\item \lr{register\_buffer}: جدول \lr{train} نمی‌شود، ثابت است.
+پس مدل می‌تواند «فاصله‌ی زمانی» بینِ دو نمونه را از تفاوتِ امضایشان تشخیص دهد.
+\item فرمولِ ثابت (نه یادگرفتنی) انتخاب شده چون به هر طولِ پنجره تعمیم می‌یابد و
+پیاده‌سازیِ سخت‌افزاری‌اش ساده است (یک جدولِ از پیش‌محاسبه‌شده).
+\item \lr{register\_buffer}: جدول \lr{train} نمی‌شود، ثابت است ولی همراهِ مدل ذخیره و منتقل می‌شود.
 \end{itemize}
 
 \mysubsection{کلاسِ دوم: \lr{TransformerEncoderBlock}}
@@ -798,6 +807,8 @@ x = LayerNorm(x + Dropout(attn_out))        # Add & Norm
 سه \lr{x} به این معنی نیست که مقادیر یکسانند \pmdash{} داخلِ \lr{MultiheadAttention}
 با وزن‌های جداگانه $W_Q, W_K, W_V$ ضرب می‌شوند.
 \lr{nhead=4}: توجه ۴ بار موازی با دیدگاه‌های مختلف (\lr{head\_dim = 32/4 = 8}).
+اتصالِ \lr{x +} (\lr{residual}) کمک می‌کند گرادیان در آموزش بهتر جریان یابد، و
+\lr{LayerNorm} بعد از جمع اعمال می‌شود \pmdash{} این سبک \lr{post-norm} است.
 
 \textbf{۲) \lr{Feedforward}:} روی هر توکن جداگانه:
 
@@ -825,7 +836,26 @@ def forward(self, x):
 \infobox{
 \lr{mean(dim=1)}: میانگین روی ۱۰۲۴ توکن \pmdash{} از \lr{(batch, 1024, 32)} به \lr{(batch, 32)}.
 این \lr{Global Average Pooling} نام دارد: ساده‌ترین روش برای خلاصه کلِ پنجره.
+جایگزین‌هایی مثلِ توکنِ \lr{CLS} یا \lr{attention pooling} هم بودند، ولی میانگین برای
+سخت‌افزار ساده‌تر است و به هیچ پارامترِ اضافه‌ای نیاز ندارد.
 }
+
+\mysubsection{سرِ طبقه‌بندی: \lr{classifier}}
+
+بردارِ ۳۲تاییِ خلاصه‌شده از این زنجیره عبور می‌کند تا به ۴ کلاس برسد:
+
+\begin{latin}
+\begin{lstlisting}
+LayerNorm(32) -> Linear(32->16) -> GELU -> Dropout -> Linear(16->4)
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item \lr{LayerNorm} ورودیِ سر را پایدار می‌کند؛ \lr{Linear(32->16)} بُعد را کم می‌کند،
+\lr{GELU} غیرخطی می‌کند، و \lr{Linear(16->4)} به تعدادِ کلاس‌ها می‌رساند.
+\item خروجی ۴ عددِ \lr{logit} است \pmdash{} بدونِ \lr{softmax}. تبدیل به احتمال در تابعِ
+\lr{loss} (آموزش) یا جداگانه هنگامِ استنتاج انجام می‌شود.
+\end{itemize}
 
 % ==============================================================
 \mysection{۶}{\lr{src/train\_transformer\_baseline.py} \pmdash{} حلقه آموزش}
@@ -859,9 +889,19 @@ for epoch in range(num_epochs):
 \begin{itemize}
 \item \textbf{\lr{optimizer}:} \lr{Adam} با \lr{lr=1e-3}
 \item \textbf{\lr{criterion}:} \lr{CrossEntropyLoss} (اگر \lr{imbalance > 1.5} با وزنِ کلاس)
-\item \textbf{بهترین مدل:} بر اساسِ \lr{val\_loss} انتخاب می‌شود
-\item \textbf{\lr{checkpoint}:} شاملِ وزن‌ها \texttt{+} معماری \texttt{+} تنظیمات
+\item \textbf{بهترین مدل:} بر اساسِ \lr{val\_loss} انتخاب می‌شود \pmdash{} کمترین \lr{val\_loss}،
+نه بیشترین دقت.
+\item \textbf{\lr{early stopping}:} اگر \lr{val\_loss} به مدتِ \lr{patience=6} اپاک بهتر نشد، آموزش می‌ایستد.
+\item \textbf{\lr{checkpoint}:} شاملِ وزن‌ها \texttt{+} \lr{model\_config} \texttt{+} \lr{training\_config}
+\texttt{+} \lr{preprocessing\_config} (همه از \lr{config.py} خوانده می‌شوند تا بازتولیدپذیر باشد).
 \end{itemize}
+
+\infobox{
+\textbf{چه چیزهایی ذخیره می‌شوند؟} هر اجرا یک پوشه‌ی زمان‌دار می‌سازد که شامل:
+\lr{transformer\_best.pt} (بهترین چک‌پوینت)، \lr{history.json} (\lr{loss/acc} هر اپاک)،
+\lr{metrics.json} (متریک‌های نهایی: \lr{accuracy}، \lr{confusion matrix}، \lr{F2}، خلاصه‌ی
+\lr{fault-vs-normal}، زمان‌بندی، مصرفِ حافظه‌ی \lr{GPU})، اسنپ‌شات‌های \lr{config}، و نمودارها.
+}
 
 \mysubsection{توابعِ مشترک (\lr{src/utils/training\_utils.py})}
 
