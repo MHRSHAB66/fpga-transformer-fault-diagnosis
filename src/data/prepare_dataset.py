@@ -33,30 +33,6 @@ from src.config import (
 )
 
 
-def count_normal_windows(num_rows: int, window_size: int, stride: int) -> int:
-    """
-    Number of full non-overlapping/striding windows produced before any tail.
-
-    Parameters
-    ----------
-    num_rows : int
-        Number of rows available in the file.
-    window_size : int
-        Window length in samples.
-    stride : int
-        Step size between consecutive windows.
-
-    Returns
-    -------
-    int
-        Count of standard windows (excluding any backshift tail window).
-        0 when the file is shorter than one window.
-    """
-    if num_rows < window_size:
-        return 0
-    return (num_rows - window_size) // stride + 1
-
-
 def create_windows_from_dataframe(
     df: Union[pd.DataFrame, np.ndarray],
     window_size: int = WINDOW_SIZE,
