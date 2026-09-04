@@ -175,16 +175,15 @@ PROJECT_ROOT = Path(project_root_env).resolve()
 
 \begin{latin}
 \begin{lstlisting}
-DATA_RAW_DIR      = PROJECT_ROOT / "data" / "raw" / "mafaulda"
-DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
+DATA_RAW_DIR       = PROJECT_ROOT / "data" / "raw" / "mafaulda"
 RUNS_DIR           = PROJECT_ROOT / "artifacts" / "runs"
 DEFAULT_RUN_NAME   = "transformer_final_t4"
+DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 \end{lstlisting}
 \end{latin}
 
 \begin{itemize}
 \item \lr{DATA\_RAW\_DIR}: پوشه‌ای که فایل‌های \lr{CSV} خامِ \lr{MAFAULDA} در آن هستند.
-\item \lr{DATA\_PROCESSED\_DIR}: تعریف شده ولی در \lr{pipeline} فعلی استفاده نمی‌شود \pmdash{} جای نگه‌داری برای مراحلِ آینده (سنسور واقعی).
 \item \lr{RUNS\_DIR}: همه نتایجِ آموزش اینجا ذخیره می‌شوند. هر \lr{run} یک زیرپوشه دارد که معمولاً شامل:
 \lr{checkpoints/} (وزن‌های ذخیره‌شده‌ی مدل)،
 \lr{results/} (متریک‌ها، تاریخچه‌ی آموزش، ماتریسِ درهم‌ریختگی)، و
@@ -192,6 +191,10 @@ DEFAULT_RUN_NAME   = "transformer_final_t4"
 
 \item \lr{DEFAULT\_RUN\_NAME}: نامِ پیش‌فرض برای \lr{run} جدید هنگامِ اجرای مجددِ آموزش.
 اسکریپتِ آموزش یک \lr{timestamp} به آن اضافه می‌کند تا \lr{run}های مختلف رونویسی نشوند.
+
+\item \lr{DATA\_PROCESSED\_DIR}: در \lr{pipeline}ِ نرم‌افزاریِ فعلی استفاده نمی‌شود (روی \lr{Kaggle} پنجره‌ها در حافظه ساخته می‌شوند، پس کشِ دیسکی سودی ندارد).
+این مسیر برای مسیرِ سخت‌افزاری/\lr{FPGA} \textbf{رزرو} شده است: وقتی ورودی‌ها برای برد پیش‌پردازش شدند،
+نتیجه اینجا ذخیره و در سمتِ \lr{PC} به‌جای محاسبه‌ی دوباره به‌عنوان کش بازخوانی می‌شود.
 \end{itemize}
 
 \mysubsection{کلاس‌ها و نگاشت}
@@ -270,6 +273,7 @@ EXPECTED_NUM_COLUMNS = len(EXPECTED_COLUMNS)  # 8
 WINDOW_SIZE   = 1024   # samples per window
 WINDOW_STRIDE = 1024   # no overlap
 MIN_ROWS_PER_FILE = WINDOW_SIZE  # drop files shorter than one window
+INPUT_LENGTH = WINDOW_SIZE  # seq_len fed to the model (one token per sample)
 
 NORMALIZATION_METHOD = "zscore"
 NORMALIZATION_SCOPE  = "per_window"  # mean=0, std=1 per window
@@ -301,7 +305,7 @@ MISSING_FILL_METHOD     = "median"  # fill remaining NaNs with median
 \begin{latin}
 \begin{lstlisting}
 BATCH_SIZE              = 64
-DATALOADER_NUM_WORKERS  = 0    # Windows: multiprocessing disabled
+DATALOADER_NUM_WORKERS  = 0    # 0 on Windows; raise on Kaggle/Linux
 LEARNING_RATE           = 1e-3
 NUM_EPOCHS              = 30
 EARLY_STOPPING_PATIENCE = 6
@@ -312,6 +316,7 @@ RANDOM_SEED             = 42
 \begin{itemize}
 \item \lr{NUM\_WORKERS = 0}: در \lr{Windows}، \lr{PyTorch multiprocessing} برای \lr{DataLoader} اغلب مشکل ایجاد می‌کند.
 با صفر، همه چیز در فرآیندِ اصلی اجرا می‌شود و پایدارتر است.
+روی \lr{Kaggle}/\lr{Linux}/\lr{Colab} می‌توان این عدد را (مثلاً به ۲ تا ۴) افزایش داد تا \lr{batch}ها موازی بارگذاری شوند و آموزش سریع‌تر شود.
 \item \lr{EARLY\_STOPPING\_PATIENCE = 6}: اگر \lr{val\_loss} به مدت ۶ اپاک بهتر نشد، آموزش متوقف می‌شود.
 \item \lr{RANDOM\_SEED = 42}: تضمین می‌کند که نتایج در اجراهای مختلف یکسان باشند.
 \end{itemize}
@@ -330,11 +335,11 @@ MAFAULDA_SAMPLE_RATE = 50000  # Hz, used by analysis tools in src/tools/
 \end{lstlisting}
 \end{latin}
 
-این چهار عدد مدلِ \lr{F\_1layer} را کاملاً تعریف می‌کنند.
+این اعداد مدلِ \lr{F\_1layer} را کاملاً تعریف می‌کنند.
 هدفِ سخت‌افزاری این مدل برد \lr{EBAZ4205 (Zynq-7010)} است که منابعِ محدودی دارد
 (۸۰ \lr{DSP}، حدود ۲۷۰ کیلوبایت \lr{BRAM}).
-تاریخچه: نسخه قدیمی‌تر با \lr{num\_layers=2} دقتِ نرم‌افزاری بالاتری داشت (\lr{98.22\%}) ولی
-برای این برد مدلِ ۱ لایه انتخاب شد تا در محدوده منابع جا بگیرد.
+دلیلِ انتخابِ این معماری، اعدادِ دقت، و مسیرِ \lr{checkpoint}ها در \lr{docs/DECISION\_LOG.md}
+(\lr{D013}، \lr{D018}) مستند شده است.
 
 \mysubsection{منحنیِ دقت در برابرِ اندازه \lr{—} جست‌وجوی معماری}
 
@@ -445,7 +450,7 @@ def list_csv_files(directory: Path) -> List[Path]:
 def build_file_index(data_dir) -> pd.DataFrame:
     # 1. list_csv_files   -> find all 1951 CSVs
     # 2. infer_label_from_path -> assign class label per file
-    # returns: DataFrame with columns [file_path, label]
+    # returns: DataFrame with columns [filepath, label]
 \end{lstlisting}
 \end{latin}
 
@@ -456,14 +461,15 @@ def build_file_index(data_dir) -> pd.DataFrame:
 
 \begin{latin}
 \begin{lstlisting}
-def infer_label_from_path(path: Path) -> str | None:
-    rel = path.relative_to(DATA_RAW_DIR)  # only path under data/raw
-    rel_str = rel.as_posix().lower()
-    if "normal"       in rel_str: return "normal"
-    if "imbalance"    in rel_str: return "imbalance"
-    if "misalignment" in rel_str: return "misalignment"
-    if "bearing"      in rel_str: return "bearing"
-    return None
+def infer_label_from_path(file_path) -> str:
+    # s = path under DATA_RAW_DIR only, lower-cased, posix slashes
+    if "horizontal-misalignment" in s or "vertical-misalignment" in s:
+        return "misalignment"
+    if "overhang" in s or "underhang" in s:   # the two bearing folders
+        return "bearing_fault"
+    if "imbalance" in s: return "imbalance"
+    if "normal"    in s: return "normal"
+    return "unknown"
 \end{lstlisting}
 \end{latin}
 
@@ -485,21 +491,24 @@ def load_one_csv(file_path) -> pd.DataFrame:
 ساده‌ترین تابعِ ماژول: یک فایل \lr{CSV} را می‌خواند و \lr{DataFrame} خام برمی‌گرداند.
 \textbf{هیچ پردازشی} (نرمال‌سازی، \lr{windowing}، فیلتر) انجام نمی‌دهد.
 
-مستقیماً در \lr{pipeline} نیست، اما از طریقِ \lr{preprocessed\_cache.py} صدا زده می‌شود:
+این تابع مستقیماً در \lr{pipeline} صدا زده می‌شود: \lr{make\_dataloaders.py} برای هر فایلِ
+هر \lr{split}، ابتدا \lr{load\_one\_csv} و سپس \lr{preprocess\_dataframe} را فراخوانی می‌کند:
 
 \begin{latin}
 \begin{lstlisting}
-# preprocessed_cache.py  (called by make_dataloaders.py)
-cached = load_cached_preprocessed_array(file_path)
-if cached is not None:
-    return cached          # cache hit -> load_one_csv NOT called
-df = load_one_csv(file_path)   # cache miss -> read raw CSV
+# make_dataloaders.py  (build_X_y_from_file_index)
+df = load_one_csv(file_path)     # read raw CSV
+df = preprocess_dataframe(df)    # numeric + drop + fill
+if df is None:                   # file dropped (too many NaNs)
+    continue
 \end{lstlisting}
 \end{latin}
 
-اگر فایلِ \lr{cache} وجود داشته باشد، \lr{load\_one\_csv} اصلاً صدا زده نمی‌شود.
-اگر \lr{cache} خالی باشد (مثلاً بعد از پاکسازیِ \lr{artifacts/cache/})،
-برای هر فایل یک‌بار صدا زده می‌شود و نتیجه ذخیره می‌شود.
+\infobox{
+پیش‌تر یک سیستمِ کشِ دیسکی (\lr{preprocessed\_cache.py}) بینِ این دو مرحله بود که آرایه‌ی
+تمیزِ هر فایل را ذخیره می‌کرد. در \lr{2026-09-01} حذف شد: آموزش روی \lr{Kaggle} با \lr{kernel}ِ
+تازه اجرا می‌شود، پس کشِ دیسکی سودی نداشت. حالا هر فایل در هر اجرا مستقیماً خوانده و پردازش می‌شود.
+}
 
 % ==============================================================
 \mysection{۳}{\lr{src/data/prepare\_dataset.py} \pmdash{} پیش‌پردازشِ پایه}
@@ -510,8 +519,8 @@ df = load_one_csv(file_path)   # cache miss -> read raw CSV
 این ماژول توابعِ کمکیِ قابلِ استفاده مجدد برای پیش‌پردازش است.
 هیچ \lr{DataLoader} نمی‌سازد و هیچ تقسیمی انجام نمی‌دهد \pmdash{}
 فقط هر فایل را به آرایه تمیز تبدیل می‌کند.
-دو گروه تابعِ اصلی دارد: توابعِ پیش‌پردازشِ فایل که از \lr{preprocessed\_cache.py}
-صدا زده می‌شوند، و توابعِ پنجره‌سازی و نرمال‌سازی که از \lr{make\_dataloaders.py} استفاده می‌شوند.
+دو گروه تابعِ اصلی دارد: توابعِ پیش‌پردازشِ فایل، و توابعِ پنجره‌سازی و نرمال‌سازی \pmdash{}
+هر دو گروه از \lr{make\_dataloaders.py} صدا زده می‌شوند.
 
 \mysubsection{جریانِ پیش‌پردازشِ یک فایل: \lr{preprocess\_dataframe}}
 
@@ -529,7 +538,7 @@ def preprocess_dataframe(df, normalize=False):
 \end{lstlisting}
 \end{latin}
 
-این تابع همیشه با \lr{normalize=False} از \lr{preprocessed\_cache.py} صدا زده می‌شود.
+این تابع همیشه با \lr{normalize=False} از \lr{make\_dataloaders.py} صدا زده می‌شود.
 تابعِ \lr{normalize\_dataframe} (نرمال‌سازیِ سطحِ فایل) در \lr{2026-09-01} حذف شد \pmdash{}
 کدِ یتیم بود و آخرین صدازننده‌اش در مسیرِ قدیمیِ آرشیوشده بود.
 نرمال‌سازیِ فعال روی پنجره‌ها در \lr{make\_dataloaders.py} انجام می‌شود.
@@ -746,12 +755,16 @@ train_loader, val_loader, test_loader, stats = build_dataloaders(
 (batch, 1024, 8)
     -> Linear(8->32)         # input_projection
     -> PositionalEncoding    # + positional info
-    -> EncoderBlock          # self-attention + FFN  (1 block)
-    -> mean(dim=1)           # (batch, 32)
-    -> Linear(32->16)->GELU->Linear(16->4)   # classifier
-(batch, 4)                   # logit for 4 classes
+    -> EncoderBlock x1       # self-attention + FFN, each: residual + LayerNorm
+    -> mean(dim=1)           # (batch, 32)  global average pooling over time
+    -> classifier            # LayerNorm->Linear(32->16)->GELU->Dropout->Linear(16->4)
+(batch, 4)                   # raw logits for 4 classes (no softmax here)
 \end{lstlisting}
 \end{latin}
+
+کلِ مدل فقط \lr{9,492} پارامتر دارد \pmdash{} عمداً کوچک تا پس از کوانتیزاسیون
+روی بردِ هدف جا شود. خروجی \lr{logit}ِ خام است؛ \lr{softmax} داخلِ مدل نیست و
+در تابعِ \lr{loss} (هنگامِ آموزش) یا جداگانه هنگامِ استنتاج اعمال می‌شود.
 
 \mysubsection{کلاسِ اول: \lr{PositionalEncoding}}
 
@@ -770,9 +783,14 @@ x = x + pe[:, :seq_len, :]
 \end{latin}
 
 \begin{itemize}
-\item \lr{div\_term}: اعدادی از ۱.۰ تا ۰.۰۰۰۲ که هر بُعد را با آهنگِ متفاوت نوسان می‌دهد.
+\item \lr{div\_term} $= \exp(-\frac{2i}{d}\ln 10000)$ برای بُعدِ $i$: فرکانس‌هایی
+که به‌صورتِ هندسی از ۱.۰ تا حدودِ ۰.۰۰۰۲ کم می‌شوند \pmdash{} یعنی بعضی بُعدها سریع و
+بعضی آهسته نوسان می‌کنند.
 \item هر جایگاه یک ترکیبِ \lr{(sin, cos)} یکتا دارد \pmdash{} مثلِ شمارشِ دودویی با موجِ نرم.
-\item \lr{register\_buffer}: جدول \lr{train} نمی‌شود، ثابت است.
+پس مدل می‌تواند «فاصله‌ی زمانی» بینِ دو نمونه را از تفاوتِ امضایشان تشخیص دهد.
+\item فرمولِ ثابت (نه یادگرفتنی) انتخاب شده چون به هر طولِ پنجره تعمیم می‌یابد و
+پیاده‌سازیِ سخت‌افزاری‌اش ساده است (یک جدولِ از پیش‌محاسبه‌شده).
+\item \lr{register\_buffer}: جدول \lr{train} نمی‌شود، ثابت است ولی همراهِ مدل ذخیره و منتقل می‌شود.
 \end{itemize}
 
 \mysubsection{کلاسِ دوم: \lr{TransformerEncoderBlock}}
@@ -789,6 +807,8 @@ x = LayerNorm(x + Dropout(attn_out))        # Add & Norm
 سه \lr{x} به این معنی نیست که مقادیر یکسانند \pmdash{} داخلِ \lr{MultiheadAttention}
 با وزن‌های جداگانه $W_Q, W_K, W_V$ ضرب می‌شوند.
 \lr{nhead=4}: توجه ۴ بار موازی با دیدگاه‌های مختلف (\lr{head\_dim = 32/4 = 8}).
+اتصالِ \lr{x +} (\lr{residual}) کمک می‌کند گرادیان در آموزش بهتر جریان یابد، و
+\lr{LayerNorm} بعد از جمع اعمال می‌شود \pmdash{} این سبک \lr{post-norm} است.
 
 \textbf{۲) \lr{Feedforward}:} روی هر توکن جداگانه:
 
@@ -816,7 +836,26 @@ def forward(self, x):
 \infobox{
 \lr{mean(dim=1)}: میانگین روی ۱۰۲۴ توکن \pmdash{} از \lr{(batch, 1024, 32)} به \lr{(batch, 32)}.
 این \lr{Global Average Pooling} نام دارد: ساده‌ترین روش برای خلاصه کلِ پنجره.
+جایگزین‌هایی مثلِ توکنِ \lr{CLS} یا \lr{attention pooling} هم بودند، ولی میانگین برای
+سخت‌افزار ساده‌تر است و به هیچ پارامترِ اضافه‌ای نیاز ندارد.
 }
+
+\mysubsection{سرِ طبقه‌بندی: \lr{classifier}}
+
+بردارِ ۳۲تاییِ خلاصه‌شده از این زنجیره عبور می‌کند تا به ۴ کلاس برسد:
+
+\begin{latin}
+\begin{lstlisting}
+LayerNorm(32) -> Linear(32->16) -> GELU -> Dropout -> Linear(16->4)
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item \lr{LayerNorm} ورودیِ سر را پایدار می‌کند؛ \lr{Linear(32->16)} بُعد را کم می‌کند،
+\lr{GELU} غیرخطی می‌کند، و \lr{Linear(16->4)} به تعدادِ کلاس‌ها می‌رساند.
+\item خروجی ۴ عددِ \lr{logit} است \pmdash{} بدونِ \lr{softmax}. تبدیل به احتمال در تابعِ
+\lr{loss} (آموزش) یا جداگانه هنگامِ استنتاج انجام می‌شود.
+\end{itemize}
 
 % ==============================================================
 \mysection{۶}{\lr{src/train\_transformer\_baseline.py} \pmdash{} حلقه آموزش}
@@ -850,9 +889,19 @@ for epoch in range(num_epochs):
 \begin{itemize}
 \item \textbf{\lr{optimizer}:} \lr{Adam} با \lr{lr=1e-3}
 \item \textbf{\lr{criterion}:} \lr{CrossEntropyLoss} (اگر \lr{imbalance > 1.5} با وزنِ کلاس)
-\item \textbf{بهترین مدل:} بر اساسِ \lr{val\_loss} انتخاب می‌شود
-\item \textbf{\lr{checkpoint}:} شاملِ وزن‌ها \texttt{+} معماری \texttt{+} تنظیمات
+\item \textbf{بهترین مدل:} بر اساسِ \lr{val\_loss} انتخاب می‌شود \pmdash{} کمترین \lr{val\_loss}،
+نه بیشترین دقت.
+\item \textbf{\lr{early stopping}:} اگر \lr{val\_loss} به مدتِ \lr{patience=6} اپاک بهتر نشد، آموزش می‌ایستد.
+\item \textbf{\lr{checkpoint}:} شاملِ وزن‌ها \texttt{+} \lr{model\_config} \texttt{+} \lr{training\_config}
+\texttt{+} \lr{preprocessing\_config} (همه از \lr{config.py} خوانده می‌شوند تا بازتولیدپذیر باشد).
 \end{itemize}
+
+\infobox{
+\textbf{چه چیزهایی ذخیره می‌شوند؟} هر اجرا یک پوشه‌ی زمان‌دار می‌سازد که شامل:
+\lr{transformer\_best.pt} (بهترین چک‌پوینت)، \lr{history.json} (\lr{loss/acc} هر اپاک)،
+\lr{metrics.json} (متریک‌های نهایی: \lr{accuracy}، \lr{confusion matrix}، \lr{F2}، خلاصه‌ی
+\lr{fault-vs-normal}، زمان‌بندی، مصرفِ حافظه‌ی \lr{GPU})، اسنپ‌شات‌های \lr{config}، و نمودارها.
+}
 
 \mysubsection{توابعِ مشترک (\lr{src/utils/training\_utils.py})}
 

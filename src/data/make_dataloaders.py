@@ -5,18 +5,16 @@ This module is responsible for:
 1. Building a file index from the dataset directory
 2. Filtering valid labels
 3. Splitting files into train/validation/test sets at file level
-4. Reusing disk-cached base-preprocessed files for window creation
-5. Materializing split windows from the preprocessed cache
-6. Keeping validation and test datasets clean and unaugmented
-7. Creating Dataset and DataLoader objects for PyTorch
+4. Loading and preprocessing each file, then creating windows
+5. Materializing windowed arrays per split
+6. Creating Dataset and DataLoader objects for PyTorch
 
 Important
 ---------
 - Splitting is performed at file level before window creation.
 - This reduces leakage between train, validation, and test because
   multiple windows extracted from the same file are highly related.
-- Base preprocessing is cached per file on disk and reused across splits.
-- Augmentation cache remains train-only.
+- Each file is loaded and preprocessed in memory on every run (no disk cache).
 """
 
 from pathlib import Path
@@ -210,8 +208,7 @@ def build_X_y_from_file_index(
 
     Notes
     -----
-    - Base preprocessing is loaded from the per-file preprocessing cache
-      when available, or created once and then cached on disk.
+    - Each file is loaded and preprocessed in memory (no disk cache).
     - Each file is assigned one label, and all windows extracted from that file
       receive the same label.
     """
@@ -305,15 +302,13 @@ def build_dataloaders(
         - test_loader : DataLoader
         - stats : dict
             Summary information about file counts, sample counts,
-            augmentation usage, preprocessing cache usage, and
-            DataLoader settings.
+            normalization, window counts, timing, and DataLoader settings.
 
     Notes
     -----
     - File-level split happens before window creation.
-    - Validation and test remain clean and unaugmented.
-    - Base preprocessing is reused through the per-file disk cache.
-    - All splits are materialized from the per-file preprocessing cache.
+    - Each split is materialized by loading and preprocessing its files in
+      memory (no disk cache).
     """
     index_df = build_file_index(data_dir)
     if index_df.empty:

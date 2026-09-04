@@ -5,8 +5,8 @@ This module provides reusable helper functions for:
 1. Converting raw CSV DataFrames to numeric values
 2. Dropping files with too many missing values
 3. Filling missing values when needed
-4. Normalizing each feature column
-5. Creating fixed-length windows from a preprocessed DataFrame or ndarray
+4. Creating fixed-length windows from a preprocessed DataFrame or ndarray
+5. Per-window z-score normalization of a stack of windows
 
 Important
 ---------
@@ -31,30 +31,6 @@ from src.config import (
     MISSING_FILL_METHOD,
     EPSILON,
 )
-
-
-def count_normal_windows(num_rows: int, window_size: int, stride: int) -> int:
-    """
-    Number of full non-overlapping/striding windows produced before any tail.
-
-    Parameters
-    ----------
-    num_rows : int
-        Number of rows available in the file.
-    window_size : int
-        Window length in samples.
-    stride : int
-        Step size between consecutive windows.
-
-    Returns
-    -------
-    int
-        Count of standard windows (excluding any backshift tail window).
-        0 when the file is shorter than one window.
-    """
-    if num_rows < window_size:
-        return 0
-    return (num_rows - window_size) // stride + 1
 
 
 def create_windows_from_dataframe(
@@ -190,7 +166,6 @@ def fill_missing_values(
     return df
 
 
-
 def normalize_windows_array(
     windows: np.ndarray,
     epsilon: float = EPSILON,
@@ -232,7 +207,12 @@ def preprocess_dataframe(df: pd.DataFrame, normalize: bool = False) -> Optional[
     1. Convert all values to numeric
     2. Drop the file if the missing-value ratio is too high
     3. Fill missing values only if NaN values exist
-    4. Optionally normalize each feature column
+
+    Normalization is intentionally NOT done here. The active pipeline applies
+    per-window z-score normalization later, in make_dataloaders.py (via
+    normalize_windows_array). The ``normalize`` argument is a compatibility
+    breadcrumb: passing normalize=True raises, pointing to the removed
+    file-level normalization path.
     """
     df = convert_dataframe_to_numeric(df)
 
