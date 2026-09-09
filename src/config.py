@@ -1,14 +1,8 @@
 """
-Central configuration — the single source of truth for the whole project.
+Central configuration for the Python data, training, and model pipeline.
 
-Every runnable stage (data loading, windowing, training, evaluation,
-quantization, golden-vector export, and the FPGA-facing constants) reads its
-settings from here. Keep constants in this file rather than scattering them
-across scripts, and change values here in one place so all stages stay
-consistent.
-
-The project root and dataset root are resolved from the environment so no
-user-specific absolute paths are hard-coded.
+Shared software settings are defined here. Hardware-specific settings are
+stored in exported manifests and the HLS/RTL implementation.
 """
 
 import os
@@ -20,29 +14,28 @@ load_dotenv()
 
 project_root_env = os.getenv("PROJECT_ROOT")
 if not project_root_env:
-    raise ValueError("PROJECT_ROOT is not set in .env")
+    raise ValueError("PROJECT_ROOT is not set in the environment or .env")
 
 PROJECT_ROOT = Path(project_root_env).resolve()
+if not PROJECT_ROOT.is_dir():
+    raise ValueError(f"PROJECT_ROOT is not an existing directory: {PROJECT_ROOT}")
 
 # =========================
 # Paths
 # =========================
 DATA_RAW_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda"      # raw MAFAULDA CSVs
 RUNS_DIR = PROJECT_ROOT / "artifacts" / "runs"                 # per-run outputs
-DEFAULT_RUN_NAME = "transformer_final_t4"                      # default run-dir label
+DEFAULT_RUN_NAME = "transformer_experiment"                    # default run-dir label
 
-# On-disk store for pre-processed windows. The software/Kaggle training path
-# builds windows in memory (fresh kernel each run, so a disk cache adds no
-# value there). This is reserved for the hardware/FPGA path: once inputs are
-# pre-processed for the board, results can be persisted here and reused on the
-# PC side as a cache instead of recomputing every time.
+# Reserved path for optional persisted preprocessed data.
+# It is not used by the active training pipeline.
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 
 # =========================
 # Reproducibility
 # =========================
-# Single seed shared by the file-level split and all torch/numpy randomness so
-# a clean run reproduces the reported metrics.
+# Shared seed for repeatable file splits, software experiments, calibration
+# subsets, and golden-vector generation.
 RANDOM_SEED = 42
 
 # =========================
@@ -80,7 +73,7 @@ EXPECTED_COLUMNS = [
 ]
 EXPECTED_NUM_COLUMNS = len(EXPECTED_COLUMNS)
 
-# All 8 columns are fed to the model (CHANNEL_SELECTION = "all").
+# The active pipeline feeds all 8 MAFAULDA columns to the model.
 INPUT_CHANNELS = EXPECTED_NUM_COLUMNS
 
 # Fixed-length windowing. Stride == size means non-overlapping windows, and
