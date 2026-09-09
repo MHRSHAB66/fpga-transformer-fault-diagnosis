@@ -13,8 +13,8 @@ This script:
      names IntegerTransformer expects (same 1:1 adapter used in the sweep);
   2. set_bits(10) BEFORE building the model so weights quantize at 10 bits;
   3. calibrates activation scales on a TRAIN subset (train-only, as always);
-  4. writes every HLS constant to hls_f_int10/data + int10 golden vectors to
-     hls_f_int10/golden, reusing the exact writer/plan helpers from export_hls
+  4. writes every HLS constant to hls/f1_int10/data + int10 golden vectors to
+     hls/f1_int10/golden, reusing the exact writer/plan helpers from export_hls
      so the F export is byte-for-byte consistent with the A_baseline contract.
 
 Run
@@ -83,7 +83,7 @@ SEED        = 42
 CKPT_PATH   = PROJECT_ROOT / "kaggle" / "f1_ckpt_dataset" / "best.pt"
 GOLDEN_SRC  = PROJECT_ROOT / "artifacts" / "golden" / "golden_vectors.npz"
 
-HLS_DIR    = PROJECT_ROOT / "hls_f_int10"
+HLS_DIR    = PROJECT_ROOT / "hls" / "f1_int10"
 DATA_DIR   = HLS_DIR / "data"
 GOLDEN_DIR = HLS_DIR / "golden"
 CONFIG_DIR = PROJECT_ROOT / "artifacts" / "quantized" / "f_int10"

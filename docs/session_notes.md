@@ -67,7 +67,7 @@
 - [x] **متریکِ int10 استاندارد** → `evaluate_int10_metrics.py`؛ زیرمجموعه‌ی
       stratified (۱۶۰۰ پنجره): macro P/R/F1 = 0.973؛ full-test acc 97.11%.
       خروجی: `f_1layer_int10_test_metrics.json`.
-- [x] **مورد ۲ (on-chip normalization)** → `hls_f_int10/onchip_normalization_reference.py`
+- [x] **مورد ۲ (on-chip normalization)** → `hls/f1_int10/onchip_normalization_reference.py`
       (مرجعِ NumPy + spec، با host بایت‌به‌بایت می‌خونه؛ آماده‌ی Stage 9 HLS).
 - [x] **مورد ۳ (همبستگیِ کانال‌ها)** → `verify_channel_correlation.py`؛ ساختارِ ۸×۸
       سازگار (انحرافِ میانه 0.11)؛ ۱۸ ناهنجار همگی severe-bearing (فیزیکی، نه جابه‌جایی).

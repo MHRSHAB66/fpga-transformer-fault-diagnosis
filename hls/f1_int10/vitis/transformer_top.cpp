@@ -8,8 +8,8 @@
 // ap_types.h.
 //
 // PURPOSE OF THIS FILE: get a BASELINE csynth + resource/latency report in the
-// real tool. It is NOT yet optimized to fit the small Zynq-7010 (80 DSP,
-// ~270 KB BRAM): the SEQ*D activation buffers and the O(SEQ^2) attention need
+// real tool. It is NOT yet optimized for a final target device: the SEQ*D
+// activation buffers and the O(SEQ^2) attention need
 // the streaming/tiling + type-narrowing pass described in SYNTHESIS_GUIDE.md.
 // Validate FUNCTIONALITY first with `run_hls.tcl` C-sim on ../transformer.cpp
 // (prints PASS 16/16); this file is the starting point for the HW build.

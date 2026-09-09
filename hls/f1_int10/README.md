@@ -7,12 +7,13 @@ Full-integer inference core for the **FPGA-winner architecture** `F_1layer`
 Why int10: a multi-bit sweep (`kaggle/sweep_multibit/`) showed int10 is the
 smallest width that stays near-lossless; the **full-test int10 accuracy is
 97.11%** vs float 97.55% (`kaggle/int10_shard/int10_fulltest_combined.json`),
-with no class collapse. `ap_int<10>` makes the narrow datapath free on the small
-EBAZ4205 / Zynq-7010 board. int8 collapses the imbalance class, so it is not used.
+with no class collapse. `ap_int<10>` also narrows storage and arithmetic relative
+to int16. The final FPGA board/device is not selected yet; no fit claim is made.
+int8 collapses the imbalance class, so it is not used.
 
-This directory is **parallel to** `hls/` (the day14 A_baseline 2-layer int16
-core); that verified core is left untouched. The two differ only in three
-constants (`LAYERS`, `ACT_BITS`, `ATTN_BITS`) — the arithmetic is identical.
+This directory lives at `hls/f1_int10/` alongside the older `hls/2layer/`
+day14 A_baseline int16 core. The two differ only in three constants
+(`LAYERS`, `ACT_BITS`, `ATTN_BITS`) — the arithmetic is identical.
 
 ## Files
 - `transformer.h` / `transformer.cpp` — bit-exact C++ transcription of
@@ -35,12 +36,12 @@ python -m src.quantize.export_hls_f_int10        # calibrates on 20 train files,
 
 ## Verify without a compiler (works on this desktop)
 ```bash
-python hls_f_int10/verify_export.py              # PASS = 16/16 class, 16/16 bit-exact logits
+python hls/f1_int10/verify_export.py             # PASS = 16/16 class, 16/16 bit-exact logits
 ```
 
 ## Functional C++ test (needs g++, e.g. on the laptop)
 ```bash
-cd hls_f_int10 && make test                      # builds ./tb, runs against data/ + golden/
+cd hls/f1_int10 && make test                     # builds ./tb, runs against data/ + golden/
 ```
 
 ## Vitis HLS synthesis (on the laptop with the board)
