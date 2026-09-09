@@ -137,7 +137,15 @@ ItalicFont=timesi
 \noindent
 این سند راهنمای خواندنِ کامل کدِ پروژه است \pmdash{} از بارگذاریِ داده تا خروجیِ \lr{FPGA}.
 هر بخش یک فایل از پایپلاین را توضیح می‌دهد: هدفش چیست، کدِ کلیدی‌اش چه می‌کند،
-و چطور به بقیه وصل است.
+چرا این تصمیم گرفته شده، چه محدودیتی دارد، و چطور به بقیه وصل است.
+
+\infobox{
+\textbf{روش خواندن سند:} عبارتِ «پیاده‌سازی شده» فقط وقتی به‌کار می‌رود که فایل و آزمونِ
+قابل اجرا در مخزن وجود داشته باشد. «مرجعِ بیت‌دقیق» یعنی رفتارِ عددی با \lr{Python/NumPy}
+و بردارهای طلایی تأیید شده، اما الزاماً هنوز روی برد سنتز نشده است. «مسیرِ برد» یعنی کاری
+که به ابزارِ سنتز و بردِ نهایی نیاز دارد و تا ثبتِ گزارشِ سنتز، \lr{bitstream}
+و آزمونِ واقعی نباید کامل تلقی شود.
+}
 
 % ==============================================================
 \mysection{۱}{\lr{src/config.py} \pmdash{} تنظیمات مرکزی}
@@ -336,8 +344,8 @@ MAFAULDA_SAMPLE_RATE = 50000  # Hz, used by analysis tools in src/tools/
 \end{latin}
 
 این اعداد مدلِ \lr{F\_1layer} را کاملاً تعریف می‌کنند.
-هدفِ سخت‌افزاری این مدل برد \lr{EBAZ4205 (Zynq-7010)} است که منابعِ محدودی دارد
-(۸۰ \lr{DSP}، حدود ۲۷۰ کیلوبایت \lr{BRAM}).
+برد و قطعه نهایی هنوز انتخاب نشده‌اند؛ بنابراین بودجه منابع و فرکانس هدف نیز فعلاً
+نباید عدد ثابت در نظر گرفته شوند.
 دلیلِ انتخابِ این معماری، اعدادِ دقت، و مسیرِ \lr{checkpoint}ها در \lr{docs/DECISION\_LOG.md}
 (\lr{D013}، \lr{D018}) مستند شده است.
 
@@ -351,7 +359,7 @@ MAFAULDA_SAMPLE_RATE = 50000  # Hz, used by analysis tools in src/tools/
 \includegraphics[width=\textwidth]{figures/arch_curve.pdf}
 \caption{منحنیِ دقت در برابرِ تعدادِ پارامتر برای ۱۰ پیکربندیِ آزمایش‌شده.
 \lr{F\_1layer} روی زانوی منحنی قرار دارد: کوچک‌ترین مدلی که دقتِ بالا را حفظ می‌کند
-و در محدوده منابعِ \lr{FPGA EBAZ4205 (Zynq-7010)} جا می‌شود.}
+و گزینه‌ای کم‌هزینه‌تر برای آغازِ ارزیابی سخت‌افزاری است. برد نهایی هنوز انتخاب نشده است.}
 \end{figure}
 
 \mysubsection{نکته کلیدی: چرا \lr{d\_model = 32}؟}
@@ -857,6 +865,31 @@ LayerNorm(32) -> Linear(32->16) -> GELU -> Dropout -> Linear(16->4)
 \lr{loss} (آموزش) یا جداگانه هنگامِ استنتاج انجام می‌شود.
 \end{itemize}
 
+\mysubsection{ممیزیِ تصمیمِ معماری: آیا این بهترین مسیر است؟}
+
+انتخابِ فعلی از نظرِ دقت و تعدادِ پارامتر منطقی است، اما گلوگاهِ سخت‌افزار فقط تعدادِ
+پارامترها نیست. توجهِ کامل برای طولِ ۱۰۲۴، ماتریسِ $1024\times1024$ می‌سازد و هزینه‌اش
+تقریباً با مربعِ طولِ توالی رشد می‌کند. پس «۹۴۹۲ پارامتر» به‌تنهایی ثابت نمی‌کند که مدل
+روی بردِ نهایی با \lr{latency} مناسب جا می‌شود.
+
+\begin{itemize}
+\item \textbf{چرا فعلاً نگهش می‌داریم؟} مدلِ اصلی باید \lr{Transformer} بماند؛ دقتِ آزمونِ
+\lr{F\_1layer} برابرِ \lr{97.55\%} است و تبدیلِ \lr{int10} نیز به \lr{97.11\%} رسیده است.
+تغییرِ معماری در این نقطه همه وزن‌ها، کالیبراسیون و بردارهای طلایی را بی‌اعتبار می‌کند.
+\item \textbf{چه چیزی هنوز اثبات نشده؟} \lr{fit} شدن، تعدادِ \lr{BRAM/DSP/LUT/FF}، فرکانس،
+\lr{latency} و \lr{throughput} واقعی. این‌ها فقط از گزارشِ سنتز و آزمونِ برد به‌دست می‌آیند.
+\item \textbf{مسیرِ بهترِ کم‌ریسک:} ابتدا همین قراردادِ عددی را در \lr{Vitis HLS} سنتز و
+گلوگاه را اندازه‌گیری کنیم؛ سپس فقط در صورتِ عدم \lr{fit}، گزینه‌هایی مثل پردازشِ \lr{query} به‌صورت
+ردیفی/کاشی‌ای، کاهشِ بافرهای هم‌زمان، یا کوتاه‌تر کردن پنجره را بررسی کنیم. گزینه آخر
+نیاز به آموزش و ارزیابی مجدد دارد و نباید بی‌صدا انجام شود.
+\end{itemize}
+
+\infobox{
+\textbf{تفکیکِ سه مفهوم:} تعدادِ پارامتر، حافظه وزن را تخمین می‌زند؛ طولِ توالی، حافظه
+فعال‌سازی و هزینه \lr{attention} را تعیین می‌کند؛ تعدادِ واحدهای \lr{MAC} موازی، \lr{latency} و مصرف \lr{DSP}
+را تعیین می‌کند. برای قضاوتِ \lr{FPGA} باید هر سه را با هم دید.
+}
+
 % ==============================================================
 \mysection{۶}{\lr{src/train\_transformer\_baseline.py} \pmdash{} حلقه آموزش}
 % ==============================================================
@@ -982,38 +1015,98 @@ scales = calibrate(model, X_train)
 \item \lr{export\_hls\_f\_int10.py}: \lr{export} وزن‌ها و \lr{scale}ها برای \lr{HLS C++}
 \end{itemize}
 
+\mysubsection{خواندنِ \lr{evaluate\_integer\_bits.py} خط‌به‌خط}
+
+این فایل وزنِ جدید آموزش نمی‌دهد. یک چک‌پوینتِ \lr{float} را یک بار می‌خواند و برای هر
+عرضِ بیت، همان وزن‌ها را دوباره کوانت می‌کند؛ مجموعه کالیبراسیون و آزمون نیز برای همه
+عرض‌ها یکسان است تا مقایسه منصفانه بماند.
+
+\begin{latin}
+\begin{lstlisting}
+def set_bits(bits):
+    im.ACT_BITS = bits
+    im.W_BITS = bits
+    im.ATTN_BITS = bits
+
+results = [run_one(b, state_np, model_cfg, Xc, Xt, yt)
+           for b in args.bits]
+\end{lstlisting}
+\end{latin}
+
+\begin{itemize}
+\item \lr{set\_bits}: ثابت‌های ماژولِ \lr{integer\_model} را فقط در حافظه همان فرآیند
+عوض می‌کند؛ فایل یا \lr{artifact} قبلی تغییر نمی‌کند.
+\item بعد از هر تغییرِ بیت، \lr{IntegerTransformer(...)} از نو ساخته می‌شود؛ بنابراین
+وزن‌ها، حدودِ اشباع و \lr{LUT}ها با عرضِ جدید بازسازی می‌شوند.
+\item \lr{CalibStats} بیشینه دامنه فعال‌سازی‌های مسیرِ \lr{float} را روی بخشی از \lr{train} جمع
+می‌کند و از آن \lr{scale} هر لایه را می‌سازد. \lr{test} فقط برای سنجش استفاده می‌شود، نه کالیبراسیون.
+\item \lr{float\_accuracy} در این اسکریپت خروجیِ مرجعِ \lr{NumPy} داخل
+\lr{IntegerTransformer} است؛ الزاماً همان ارزیابی مستقیمِ \lr{PyTorch} روی کل \lr{test} نیست.
+\end{itemize}
+
+\infobox{
+\textbf{نکته مهندسی:} \lr{monkeypatch} برای آزمایشِ اکتشافی قابل‌قبول است، اما قراردادِ نهایی
+نباید به \lr{state} سراسریِ ماژول وابسته باشد. برای توسعه بعدی بهتر است عرضِ بیت به‌صورتِ یک
+\lr{config} صریح به سازنده \lr{IntegerTransformer} داده شود؛ این تغییر باید همراهِ آزمونِ
+\lr{backward compatibility} انجام شود، نه وسطِ مسیر سنتز.
+}
+
+\mysubsection{چرا \lr{int10} و نه \lr{int8}؟}
+
+در \lr{sweep} یکسانِ ۴۰۰۰ پنجره، \lr{int10} دقتِ \lr{96.375\%} و \lr{int8} دقتِ
+\lr{88.675\%} داشت؛ \lr{recall} کلاس \lr{imbalance} در \lr{int8} به حدود \lr{65.78\%} افت کرد.
+سپس \lr{int10} روی تمامِ ۹۵۴۰۴ پنجره \lr{test} به \lr{97.113\%} رسید. بنابراین انتخابِ
+\lr{int10} فقط بر اساسِ میانگین دقت نیست؛ جلوگیری از فروپاشی یک کلاس نیز دلیل اصلی است.
+
 % ==============================================================
-\mysection{۹}{\lr{hls\_f\_int10/} \pmdash{} هسته \lr{C++} برای \lr{FPGA}}
+\mysection{۹}{\lr{hls/f1\_int10/} \pmdash{} هسته \lr{C++} برای \lr{FPGA}}
 % ==============================================================
 
 \mysubsection{هدف}
 
-پیاده‌سازیِ مدلِ \lr{int10} در \lr{C++} برای سنتزِ \lr{HLS} (\lr{Vitis HLS}).
+رونوشتِ \lr{C++} از مدلِ \lr{int10} برای مرجعِ بیت‌دقیق و آماده‌سازیِ سنتزِ
+\lr{HLS} (\lr{Vitis HLS}). این پوشه هنوز معادلِ یک \lr{bitstream} سنتزشده نیست.
 
 \begin{latin}
 \begin{lstlisting}
-hls_f_int10/
-  core.cpp / core.hpp    # inference logic
+hls/f1_int10/
+  transformer.cpp/.h    # portable bit-exact inference logic
+  params_io.cpp          # load exported constants
+  testbench.cpp          # compare all golden logits/classes
   data/                  # weights and scales (from export_hls_f_int10.py)
   golden/                # reference input/output for testbench
-  onchip_normalization_reference.py  # NumPy reference for on-chip z-score
+  verify_export.py       # independent NumPy check of exported files
+  vitis/transformer_top.cpp  # AXI-stream synthesis starting point
 \end{lstlisting}
 \end{latin}
 
-تأییدِ درستی قبل از سنتز: \lr{python -m hls\_f\_int10.verify\_oracle}
-نتیجه: \lr{PASS 16/16}.
+تأییدِ موجود بدون کامپایلر: \lr{python hls/f1\_int10/verify\_export.py}؛
+انتظارِ ثبت‌شده \lr{16/16} کلاس و \lr{logit} بیت‌دقیق است. گامِ بعدی \lr{C-sim} و سپس
+\lr{C-synthesis} در \lr{Vitis} است. راهنمای دقیق در فایلِ
+\lr{SYNTHESIS\_GUIDE.md} داخلِ زیرپوشه \lr{vitis/} قرار دارد.
+
+\infobox{
+\textbf{وضعیت صادقانه:} منطقِ مرجع، \lr{export} و \lr{golden-vector} موجود است؛ اما تا وقتی گزارش
+\lr{csynth}، مصرف منابع، \lr{latency/II}، فایل‌های \lr{.bit/.hwh} و تطبیق روی برد ثبت نشده‌اند،
+مرحله \lr{FPGA} «آماده برای سنتز» است، نه «پیاده‌سازی‌شده روی برد».
+}
 
 % ==============================================================
 \mysection{۱۰}{\lr{pynq/, host/} \pmdash{} درایور و رابطِ کاربری}
 % ==============================================================
 
 \begin{itemize}
-\item \lr{pynq/pynq\_driver.py}: اجرای مدل روی برد \lr{EBAZ4205 (Zynq-7010)}
-\item \lr{pynq/numpy\_backend.py}: شبیه‌سازی بدونِ برد (برای تست)
-\item \lr{host/uart\_monitor.py}: دریافتِ پیامِ \lr{serial} از \lr{FPGA}
-\item \lr{host/display\_ui.py}: نمایشِ نتیجه روی صفحه کامپیوتر
+\item \lr{pynq/fault\_classifier.py}: کلاسِ مشترک با \lr{NumpyBackend} و اسکلتِ
+\lr{HardwareBackend} برای \lr{overlay} و \lr{AXI DMA}
+\item \lr{pynq/run\_demo.py}: پنجره $\rightarrow$ طبقه‌بندی $\rightarrow$ تولیدِ \lr{frame}
+\item \lr{host/frame\_protocol.py}: تعریف و اعتبارسنجیِ قراردادِ پیام
+\item \lr{host/fault\_monitor.py}: دریافت از \lr{serial}، \lr{mock} یا فایل و نمایشِ \lr{Tkinter/headless}
 \item پروتکل: \lr{\texttt{FRAME=<id>,CLASS=<n>,LABEL=<name>,CONF=<c>}}
 \end{itemize}
+
+مسیرِ \lr{mock/NumPy} اکنون قابل نمایش است، ولی \lr{HardwareBackend} تا تولیدِ
+\lr{bitstream} و مشخص شدن نامِ واقعی \lr{IP/DMA} یک قرارداد و اسکلتِ اتصال است. طبقه‌بندی در
+نسخه نهایی باید از \lr{FPGA} بیاید؛ رابطِ \lr{PC} فقط پیام را \lr{parse} و نمایش می‌دهد.
 
 % ==============================================================
 \mysection{۱۱}{\rl{تصویرِ کلی از ورودی تا خروجی}}
@@ -1030,10 +1123,33 @@ MAFAULDA CSV files (8 channels, 50 kHz)
     |
     v  IntegerTransformer : calibrate scales + int10 inference
     v  export_hls_f_int10 : weights + scales -> data/ files
-    v  HLS C++ core       : synthesized for EBAZ4205
-    v  PYNQ driver        : feed window -> get class
-    v  UART -> host PC    : display_ui.py -> show result
+    v  HLS C++ reference  : bit-exact export + golden verification
+    v  Vitis/Vivado       : synthesize, fit, bitstream  [pending hardware proof]
+    v  PYNQ driver        : feed window -> FPGA class   [pending bitstream]
+    v  UART -> host PC    : fault_monitor.py -> parse and display result
 \end{lstlisting}
 \end{latin}
+
+\mysection{۱۲}{\rl{جمع‌بندیِ تصمیم‌ها و قدمِ بعدی}}
+
+\begin{itemize}
+\item \textbf{تصمیم‌های دارای پشتوانه:} \lr{split} فایل‌محور، چهار کلاس ثابت، استفاده از ۸
+کانال، معماریِ \lr{F\_1layer}، و انتخابِ \lr{int10} همگی با کد و \lr{artifact} قابل ردیابی‌اند.
+\item \textbf{تصمیمِ قابل بحث ولی فعلاً معقول:} \lr{z-score} مستقل برای هر پنجره، دامنه مطلق
+ارتعاش را حذف می‌کند اما نسبت به \lr{gain} سنسور مقاوم و برای ورودی آماده‌شده \lr{self-contained} است.
+مقایسه با \lr{global-train normalization} فقط با آموزش مجدد و \lr{validation} مجاز است.
+\item \textbf{بزرگ‌ترین ریسک:} \lr{attention} کامل روی ۱۰۲۴ توکن، نه تعداد وزن‌ها. تصمیم بعدی
+باید بر اساس گزارش واقعی \lr{csynth} باشد، نه حدس درباره منابع.
+\item \textbf{ترتیب پیشنهادی ادامه:} ابتدا \lr{verify\_export} و \lr{C-sim} اجرا شوند؛
+سپس از \lr{C-synthesis} یک خطِ مبنا برای منابع و زمان گرفته شود. بعد از بهینه‌سازیِ بافر
+و حسابِ صحیح، \lr{bitstream} تولید و با داده طلایی روی برد آزموده شود؛ اتصالِ
+\lr{PYNQ/UART/UI} آخرین گام است.
+\end{itemize}
+
+\infobox{
+\textbf{قاعده ادامه پروژه:} هیچ تغییر معماری، پنجره، کانال یا \lr{normalization} فقط برای \lr{fit}
+شدن سخت‌افزار انجام نمی‌شود. ابتدا اندازه‌گیری، سپس یک آزمایش کنترل‌شده، و پس از تأیید
+دوباره آموزش، کوانتش و تولیدِ \lr{golden-vector} انجام می‌شود.
+}
 
 \end{document}
