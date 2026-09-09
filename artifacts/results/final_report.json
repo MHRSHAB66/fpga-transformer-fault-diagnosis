@@ -1,6 +1,6 @@
 {
   "project": "Real-Time Machinery Condition Monitoring with a Transformer on FPGA",
-  "generated": "2026-08-16",
+  "generated": "2026-09-09",
   "deployed_model": "F_1layer (1 encoder layer, d_model=32, 4 heads, ffn=64, 9,492 params)",
   "dataset": "MAFAULDA, 8 channels, window=1024, 4 classes (normal/imbalance/misalignment/bearing_fault)",
   "software_accuracy": {
@@ -120,7 +120,7 @@
     "note": "requant/affine constants are float64 here (bit-exact with the Python reference); convert to fixed-point per target board."
   },
   "hardware_resources": {
-    "part": "xc7z010clg400-1 (EBAZ4205 / Zynq-7010)",
+    "part": "TBD -- final FPGA board/device not selected",
     "LUT": "TBD",
     "FF": "TBD",
     "BRAM": "TBD",
@@ -133,7 +133,7 @@
     "software_training": "done",
     "quantization_int10": "done (full-test 97.11%)",
     "hls_export_and_verify": "done (verify_export PASS 16/16 bit-exact)",
-    "hls_synthesis": "TBD (Vitis on laptop; see hls_f_int10/vitis/SYNTHESIS_GUIDE.md)",
+    "hls_synthesis": "TBD (see hls/f1_int10/vitis/SYNTHESIS_GUIDE.md)",
     "pc_uart_receiver_and_ui": "done (host/, tested end-to-end)",
     "pynq_driver": "done (numpy backend verified; hardware backend template)",
     "on_board_uart_demo": "TBD (needs synthesized bitstream + board)"

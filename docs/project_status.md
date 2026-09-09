@@ -37,9 +37,10 @@ See `docs/final_software_result.md`.
 
 ## FPGA-deployed model (Stages 6-8): F_1layer @ int10
 
-For the FPGA path a smaller architecture was selected to fit the EBAZ4205 /
-Zynq-7010 board: **F_1layer** (1 encoder layer, d_model=32, 4 heads, ffn=64,
-9,492 params).
+For the FPGA path a smaller architecture was selected to reduce the eventual
+resource and latency cost: **F_1layer** (1 encoder layer, d_model=32, 4 heads,
+ffn=64, 9,492 params). The final FPGA board/device is not selected yet, so fit
+and resource-budget claims remain pending.
 
 - Float full-test accuracy: **97.55%**
 - **int10 full-test accuracy: 97.11%** (drop 0.44%, no class collapse) --
@@ -47,7 +48,7 @@ Zynq-7010 board: **F_1layer** (1 encoder layer, d_model=32, 4 heads, ffn=64,
   (`kaggle/int10_shard/int10_fulltest_combined.json`).
 - int10 chosen from a bit-width sweep `[16,14,12,10,8]`; int8 collapses the
   imbalance class (`kaggle/sweep_multibit/`).
-- Bit-exact HLS export verified 16/16 (`hls_f_int10/verify_export.py`).
+- Bit-exact HLS export verified 16/16 (`hls/f1_int10/verify_export.py`).
 
 Consolidated numbers: `docs/final_report.md` (regen:
 `python -m src.reporting.generate_final_report`).
@@ -58,8 +59,8 @@ Consolidated numbers: `docs/final_report.md` (regen:
 
 **Done (runnable / verified on this machine):**
 - Quantization to int10 with full-test accuracy (97.11%).
-- Bit-exact HLS/portable-C++ core + golden vectors (`hls_f_int10/`, verify 16/16).
-- Vitis project scaffold (`hls_f_int10/vitis/`: weights header, ap_int typedefs,
+- Bit-exact HLS/portable-C++ core + golden vectors (`hls/f1_int10/`, verify 16/16).
+- Vitis project scaffold (`hls/f1_int10/vitis/`: weights header, ap_int typedefs,
   synthesizable top, run_hls.tcl, SYNTHESIS_GUIDE.md).
 - PC-side UART receiver + live UI + frame protocol (`host/`, tested end-to-end).
 - PYNQ driver with a verified NumPy backend + hardware-backend template (`pynq/`).

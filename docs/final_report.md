@@ -1,7 +1,7 @@
 # Final Project Report
 
 *Real-Time Machinery Condition Monitoring with a Transformer on FPGA*  
-Generated 2026-08-16 -- auto-assembled by `src/reporting/generate_final_report.py` from committed artifacts.
+Generated 2026-09-09 -- auto-assembled by `src/reporting/generate_final_report.py` from committed artifacts.
 
 ## 1. Model & data
 
@@ -43,11 +43,11 @@ int10 is the smallest near-lossless width; int8 collapses the imbalance class. H
 
 - geometry: seq=1024, in_ch=8, d_model=32, heads=4, layers=1, ffn=64, classes=4
 - bit-widths: act=10, weight=10, attn=10; input_scale=0.061840288793037546
-- golden self-check: 15/16 classified; bit-exact verify PASS 16/16 (`hls_f_int10/verify_export.py`)
+- golden self-check: 15/16 classified; bit-exact verify PASS 16/16 (`hls/f1_int10/verify_export.py`)
 
 ## 5. Hardware resources & latency (fill after Vitis synthesis)
 
-- target part: xc7z010clg400-1 (EBAZ4205 / Zynq-7010)
+- target part: TBD -- final FPGA board/device not selected
 
 | metric | value |
 |--------|-------|
@@ -59,7 +59,7 @@ int10 is the smallest near-lossless width; int8 collapses the imbalance class. H
 | II | TBD |
 | Fmax_MHz | TBD |
 
-See `hls_f_int10/vitis/SYNTHESIS_GUIDE.md` for the synthesis flow.
+See `hls/f1_int10/vitis/SYNTHESIS_GUIDE.md` for the synthesis flow.
 
 ## 6. End-to-end pipeline status
 
@@ -68,7 +68,7 @@ See `hls_f_int10/vitis/SYNTHESIS_GUIDE.md` for the synthesis flow.
 | software training | done |
 | quantization int10 | done (full-test 97.11%) |
 | hls export and verify | done (verify_export PASS 16/16 bit-exact) |
-| hls synthesis | TBD (Vitis on laptop; see hls_f_int10/vitis/SYNTHESIS_GUIDE.md) |
+| hls synthesis | TBD (see hls/f1_int10/vitis/SYNTHESIS_GUIDE.md) |
 | pc uart receiver and ui | done (host/, tested end-to-end) |
 | pynq driver | done (numpy backend verified; hardware backend template) |
 | on board uart demo | TBD (needs synthesized bitstream + board) |

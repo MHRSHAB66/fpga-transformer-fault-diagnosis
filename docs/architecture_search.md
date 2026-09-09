@@ -69,8 +69,9 @@ and worsens the false-alarm/safety rate, so F_1layer (and the A/F family) was ke
   (97.5%) than the same model with ffn=64. Capacity should come from d_model or
   depth, not FFN width.
 - **F_1layer was chosen for SIZE, not accuracy.** D_d64 is the most accurate
-  (99.66%) but 7.4x larger (69,860 params) and does not fit the EBAZ4205 /
-  Zynq-7010. F_1layer is the smallest config that still reaches ~98%, so it sits
+  (99.66%) but 7.4x larger (69,860 params). Because the final FPGA device has
+  not been selected, no board-fit claim is made yet. F_1layer is the smallest
+  config that still reaches ~98%, so it sits
   at the knee of the accuracy-vs-size Pareto curve. The ~1.4% accuracy given up
   (99.66 → 98.28 val) buys a 7.4x parameter reduction.
 

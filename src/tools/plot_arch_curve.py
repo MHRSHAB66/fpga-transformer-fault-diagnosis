@@ -91,7 +91,7 @@ for c in configs:
 
 # ── annotation box for F ──────────────────────────────────────
 ax.annotate(
-    "Selected for FPGA deployment\n"
+    "Selected as hardware candidate\n"
     "9,492 params  ·  98.29% val  ·  97.11% int10",
     xy=(f["n_params"], f["val_acc"]),
     xytext=(28_000, 93.8),
@@ -129,7 +129,7 @@ for spine in ax.spines.values():
 
 # ── legend ────────────────────────────────────────────────────
 legend_handles = [
-    mpatches.Patch(color=ACCENT, label="F_1layer — selected & deployed on FPGA"),
+    mpatches.Patch(color=ACCENT, label="F_1layer — selected hardware candidate"),
     mpatches.Patch(color=OTHERS, label="Other configurations"),
 ]
 ax.legend(handles=legend_handles, fontsize=9, loc="lower right",
