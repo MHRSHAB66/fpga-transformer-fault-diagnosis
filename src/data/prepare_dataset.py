@@ -137,7 +137,8 @@ def fill_missing_values(
     Returns
     -------
     pandas.DataFrame
-        DataFrame with missing values filled.
+        DataFrame after applying the selected fill method. A column containing
+        only missing values may still contain NaNs after the operation.
 
     Raises
     ------
@@ -199,14 +200,15 @@ def preprocess_dataframe(df: pd.DataFrame, normalize: bool = False) -> Optional[
     Returns
     -------
     pandas.DataFrame or None
-        Preprocessed DataFrame if the file is valid.
-        Returns None if the file should be dropped.
+        Preprocessed DataFrame if the file is valid. Returns None if the file
+        exceeds the missing threshold or cannot be fully filled.
 
     Pipeline
     --------
     1. Convert all values to numeric
     2. Drop the file if the missing-value ratio is too high
     3. Fill missing values only if NaN values exist
+    4. Drop the file if missing values still remain after filling
 
     Normalization is intentionally NOT done here. The active pipeline applies
     per-window z-score normalization later, in make_dataloaders.py (via
@@ -222,6 +224,11 @@ def preprocess_dataframe(df: pd.DataFrame, normalize: bool = False) -> Optional[
     # Avoid unnecessary fill operations when the DataFrame is already clean.
     if df.isna().any().any():
         df = fill_missing_values(df)
+
+    # Median/mean cannot fill a column whose every value is missing. Reject
+    # such files instead of silently feeding NaNs or invented zeros downstream.
+    if df.isna().any().any():
+        return None
 
     if normalize:
         raise NotImplementedError(

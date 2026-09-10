@@ -99,9 +99,10 @@ MAFAULDA_SAMPLE_RATE = 50000  # Hz — acquisition rate, used by analysis tools
 MISSING_RATIO_THRESHOLD = 0.2
 MISSING_FILL_METHOD = "median"
 
-# Normalization is per-window z-score (mean 0, std 1 computed independently per
-# window). This needs no global statistics, which keeps it FPGA-friendly.
-# EPSILON guards against division by zero when a window's std is ~0.
+# Normalization is per-window, per-channel z-score: each channel's mean and
+# standard deviation are computed over the time samples of that window. This
+# needs no dataset-wide statistics, which keeps it FPGA-friendly. EPSILON
+# guards against division by zero when a channel's standard deviation is ~0.
 NORMALIZATION_METHOD = "zscore"
 NORMALIZATION_SCOPE = "per_window"
 EPSILON = 1e-8
@@ -118,6 +119,18 @@ TEST_RATIO = 0.2
 # =========================
 # Sanity checks
 # =========================
+if NORMALIZATION_METHOD != "zscore":
+    raise ValueError(
+        "The active preprocessing pipeline currently supports only "
+        "NORMALIZATION_METHOD='zscore'."
+    )
+
+if NORMALIZATION_SCOPE != "per_window":
+    raise ValueError(
+        "The active preprocessing pipeline currently supports only "
+        "NORMALIZATION_SCOPE='per_window'."
+    )
+
 if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:
     raise ValueError("TRAIN_RATIO + VAL_RATIO + TEST_RATIO must be 1.0")
 
@@ -125,9 +138,9 @@ if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:
 # DataLoader
 # =========================
 BATCH_SIZE = 64
-# Keep at 0 on Windows: multi-worker DataLoaders are slow/unreliable there
-# (process spawn overhead, no fork). On Kaggle/Linux/Colab, raise this (e.g. 2-4)
-# to load batches in parallel and speed up training.
+# Use 0 by default on Windows so batches are loaded in the main process and no
+# worker-process setup is required. On Linux environments such as Kaggle or
+# Colab, values such as 2-4 may improve loading speed and should be benchmarked.
 DATALOADER_NUM_WORKERS = 0
 
 # =========================
@@ -140,8 +153,10 @@ EARLY_STOPPING_PATIENCE = 6  # epochs without val-loss improvement before stop
 # =========================
 # Transformer model
 # =========================
-# F_1layer — the primary model deployed to the FPGA. See docs/DECISION_LOG.md
-# (D013, D018) for rationale, accuracy figures, and checkpoint paths.
+# F_1layer — the primary model selected for the future FPGA implementation.
+# Hardware deployment is not yet complete, and the final FPGA target has not
+# been selected. See docs/DECISION_LOG.md (D013, D018) for the model rationale,
+# accuracy figures, and checkpoint paths.
 TRANSFORMER_D_MODEL = 32
 TRANSFORMER_NHEAD = 4
 TRANSFORMER_NUM_LAYERS = 1

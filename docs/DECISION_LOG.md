@@ -155,7 +155,7 @@ Format per entry:
 
 ## Hardware / FPGA Deployment — 2026-08-16
 
-### D013 — FPGA-deployed model is F_1layer (not the 2-layer baseline)
+### D013 — F_1layer selected for the FPGA path (not the 2-layer baseline)
 - **Date:** 2026-08-16
 - **Decision:** The hardware/HLS core targets `F_1layer` (1 encoder layer,
   d_model=32, 4 heads, ffn=64, 9,492 params), not the higher-accuracy 2-layer
@@ -163,6 +163,8 @@ Format per entry:
 - **Why:** F halves the encoder compute/storage relative to the 2-layer model
   while full-test accuracy stays high (float 97.55%). The final board/device is
   not selected, so this is a relative-cost decision, not a board-fit claim.
+- **Hardware status:** This selects the architecture for the hardware path; it
+  does not claim completed FPGA implementation, synthesis, or board deployment.
 - **Source:** User confirmation (2026-08-16); `kaggle/` sweeps.
 - **Affects:** Stages 6-8, `hls/f1_int10/`, `pynq/`. The day14 A_baseline int16
   core in `hls/` is preserved untouched.
@@ -230,9 +232,10 @@ Format per entry:
 ### D018 — F_1layer is the single primary model; config.py set to 1 layer
 - **Date:** 2026-08-19
 - **Decision:** `TRANSFORMER_NUM_LAYERS = 1` in `src/config.py`, so the config now
-  fully describes **F_1layer** (the FPGA-deployed model). The rest of the config
-  already matched (d_model=32, nhead=4, ffn=64, dropout=0.1), so the default
-  `TransformerBaseline()` is now exactly F_1layer (9,492 params, verified).
+  fully describes **F_1layer**, the model selected for the future FPGA
+  implementation. The rest of the config already matched (d_model=32, nhead=4,
+  ffn=64, dropout=0.1), so the default `TransformerBaseline()` is now exactly
+  F_1layer (9,492 params, verified).
 - **Why:** Unify to one model. The whole back half of the project (quantization,
   HLS, PYNQ, host) targets F_1layer, and `evaluate_f1layer.py` is the canonical
   eval. Keeping config at 2 layers was a source of confusion.
