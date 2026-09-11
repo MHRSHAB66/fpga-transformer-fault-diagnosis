@@ -26,7 +26,7 @@ import pandas as pd
 from src.config import DATA_RAW_DIR, PROJECT_ROOT
 
 
-def to_project_relative(path_like: Union[str, Path]) -> Path:
+def project_relative_or_absolute(path_like: Union[str, Path]) -> Path:
     """
     Convert an absolute or relative path to a path relative to PROJECT_ROOT
     when possible.
@@ -67,11 +67,14 @@ def list_csv_files(directory: Path) -> List[Path]:
     directory = Path(directory).resolve()
 
     if not directory.exists():
-        print(f"[WARN] Directory does not exist: {to_project_relative(directory)}")
+        print(f"[WARN] Directory does not exist: {project_relative_or_absolute(directory)}")
         return []
 
     files = sorted(directory.rglob("*.csv"))
-    print(f"[INFO] Found {len(files)} CSV files in {to_project_relative(directory)}")
+    print(
+        f"[INFO] Found {len(files)} CSV files in "
+        f"{project_relative_or_absolute(directory)}"
+    )
     return files
 
 
@@ -105,13 +108,16 @@ def infer_label_from_path(file_path: Union[str, Path]) -> str:
     Only the path *below the dataset root* (DATA_RAW_DIR) is inspected, so a
     keyword that happens to appear in the project/user directory prefix (e.g. a
     parent folder literally named "normal") can never accidentally trigger a
-    label. If the path is not under DATA_RAW_DIR, the full path is used as a
-    fallback (preserves the original behavior for synthetic/test paths).
+    label. Paths outside DATA_RAW_DIR raise ValueError, including when this
+    function is called directly rather than through build_file_index.
     """
     try:
         search_part = str(Path(file_path).resolve().relative_to(DATA_RAW_DIR.resolve()))
-    except ValueError:
-        search_part = str(file_path)
+    except ValueError as exc:
+        raise ValueError(
+            f"CSV path must be inside DATA_RAW_DIR ({DATA_RAW_DIR}); "
+            f"got: {file_path}"
+        ) from exc
     path_str = search_part.lower().replace("\\", "/")
 
     if "horizontal-misalignment" in path_str or "vertical-misalignment" in path_str:
@@ -146,13 +152,22 @@ def build_file_index(directory: Path = DATA_RAW_DIR) -> pd.DataFrame:
         - filepath
         - label
     """
+    directory = Path(directory).resolve()
+    try:
+        directory.relative_to(DATA_RAW_DIR.resolve())
+    except ValueError as exc:
+        raise ValueError(
+            f"Dataset directory must be inside DATA_RAW_DIR ({DATA_RAW_DIR}); "
+            f"got: {directory}"
+        ) from exc
+
     files = list_csv_files(directory)
 
     rows = []
     for file_path in files:
         rows.append(
             {
-                "filepath": str(to_project_relative(file_path)),
+                "filepath": str(project_relative_or_absolute(file_path)),
                 "label": infer_label_from_path(file_path),
             }
         )

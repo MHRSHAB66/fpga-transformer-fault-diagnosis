@@ -44,7 +44,7 @@ from src.config import (
     DATA_RAW_DIR, EXPECTED_COLUMNS, EXPECTED_NUM_COLUMNS,
     MAFAULDA_SAMPLE_RATE, PROJECT_ROOT,
 )
-from src.data.load_data import build_file_index, to_project_relative
+from src.data.load_data import build_file_index, project_relative_or_absolute
 
 SR = MAFAULDA_SAMPLE_RATE
 OUT_JSON = PROJECT_ROOT / "artifacts" / "results" / "channel_correlation_consistency.json"
@@ -157,8 +157,8 @@ def main() -> int:
     else:
         for o in outliers[:10]:
             print(f"   {o['deviation']:.4f}  {o['filepath']}")
-    print(f"-> {to_project_relative(OUT_JSON)}")
-    print(f"-> {to_project_relative(OUT_PNG)}")
+    print(f"-> {project_relative_or_absolute(OUT_JSON)}")
+    print(f"-> {project_relative_or_absolute(OUT_PNG)}")
     print("=" * 60)
     return 0
 

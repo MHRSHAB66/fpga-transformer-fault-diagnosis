@@ -52,7 +52,7 @@ from src.config import (
     MAFAULDA_SAMPLE_RATE,
     PROJECT_ROOT,
 )
-from src.data.load_data import build_file_index, to_project_relative
+from src.data.load_data import build_file_index, project_relative_or_absolute
 
 OUTPUT_PATH = PROJECT_ROOT / "artifacts" / "results" / "channel_order_consistency.json"
 SR = MAFAULDA_SAMPLE_RATE  # 50 000 Hz
@@ -132,7 +132,7 @@ def main() -> int:
     all_ok = consistent == total
 
     summary = {
-        "dataset_dir": str(to_project_relative(DATA_RAW_DIR)),
+        "dataset_dir": str(project_relative_or_absolute(DATA_RAW_DIR)),
         "expected_column_order": list(EXPECTED_COLUMNS),
         "expected_num_columns": EXPECTED_NUM_COLUMNS,
         "method": (
@@ -159,7 +159,7 @@ def main() -> int:
         print(f"RESULT: {consistent}/{total} consistent, "
               f"{total - consistent} problematic (see JSON).")
     print(f"Elapsed: {elapsed:.1f}s")
-    print(f"-> {to_project_relative(OUTPUT_PATH)}")
+    print(f"-> {project_relative_or_absolute(OUTPUT_PATH)}")
     print("=" * 65)
     return 0 if all_ok else 2
 
