@@ -135,16 +135,16 @@ ItalicFont=timesi
 \vspace{0.3cm}
 
 \noindent
-این سند راهنمای خواندنِ کامل کدِ پروژه است \pmdash{} از بارگذاریِ داده تا خروجیِ \lr{FPGA}.
-هر بخش یک فایل از پایپلاین را توضیح می‌دهد: هدفش چیست، کدِ کلیدی‌اش چه می‌کند،
+این سند راهنمای خواندن کامل کد پروژه است \pmdash{} از بارگذاری داده تا خروجی \lr{FPGA}.
+هر بخش یک فایل از پایپلاین را توضیح می‌دهد: هدفش چیست، کد کلیدی‌اش چه می‌کند،
 چرا این تصمیم گرفته شده، چه محدودیتی دارد، و چطور به بقیه وصل است.
 
 \infobox{
-\textbf{روش خواندن سند:} عبارتِ «پیاده‌سازی شده» فقط وقتی به‌کار می‌رود که فایل و آزمونِ
-قابل اجرا در مخزن وجود داشته باشد. «مرجعِ بیت‌دقیق» یعنی رفتارِ عددی با \lr{Python/NumPy}
-و بردارهای طلایی تأیید شده، اما الزاماً هنوز روی برد سنتز نشده است. «مسیرِ برد» یعنی کاری
-که به ابزارِ سنتز و بردِ نهایی نیاز دارد و تا ثبتِ گزارشِ سنتز، \lr{bitstream}
-و آزمونِ واقعی نباید کامل تلقی شود.
+\textbf{روش خواندن سند:} عبارت «پیاده‌سازی شده» فقط وقتی به‌کار می‌رود که فایل و آزمون
+قابل اجرا در مخزن وجود داشته باشد. «مرجع بیت‌دقیق» یعنی رفتار عددی با \lr{Python/NumPy}
+و بردارهای طلایی تأیید شده، اما الزاما هنوز روی برد سنتز نشده است. «مسیر برد» یعنی کاری
+که به ابزار سنتز و برد نهایی نیاز دارد و تا ثبت گزارش سنتز، \lr{bitstream}
+و آزمون واقعی نباید کامل تلقی شود.
 }
 
 % ==============================================================
@@ -153,11 +153,11 @@ ItalicFont=timesi
 
 \mysubsection{هدف}
 
-\lr{config.py} تنها جایی است که اعدادِ مهم پروژه نگه داشته می‌شوند.
-هیچ اسکریپتی نباید عددِ \lr{hard-code} داشته باشد \pmdash{} همه از اینجا \lr{import} می‌کنند.
-این یعنی برای تغییرِ معماری یا تنظیمات فقط یک فایل را باید عوض کرد.
+\lr{config.py} تنظیمات مشترک پایپلاین پایتون برای داده، آموزش و مدل را نگه می‌دارد.
+ثابت‌های مختص پیاده‌سازی سخت‌افزار در مانیفست‌های خروجی و کد \lr{HLS/RTL}
+نگه داشته می‌شوند؛ بنابراین تنظیمات نرم‌افزار با فرض یک برد خاص مخلوط نمی‌شوند.
 
-\mysubsection{بارگذاریِ مسیرِ پروژه از \lr{.env}}
+\mysubsection{بارگذاری مسیر پروژه از \lr{.env}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -167,42 +167,49 @@ from dotenv import load_dotenv
 
 load_dotenv()
 project_root_env = os.getenv("PROJECT_ROOT")
+if not project_root_env:
+    raise ValueError("PROJECT_ROOT is not set in the environment or .env")
 PROJECT_ROOT = Path(project_root_env).resolve()
+if not PROJECT_ROOT.is_dir():
+    raise ValueError("PROJECT_ROOT is not an existing directory")
 \end{lstlisting}
 \end{latin}
 
 \begin{itemize}
-\item \lr{.env} فایلِ متنی کوچکی است که آدرسِ ریشه را نگه می‌دارد
+\item \lr{.env} فایل متنی کوچکی است که آدرس ریشه را نگه می‌دارد
 (\lr{PROJECT\_ROOT=...}).
 \item \lr{load\_dotenv()} این فایل را می‌خواند و در \lr{environment variables} قرار می‌دهد.
+در اجرای معمول از ریشه‌ی مخزن، فایل \lr{.env} پروژه پیدا می‌شود؛ همچنین می‌توان
+\lr{PROJECT\_ROOT} را مستقیما در محیط سیستم‌عامل تعریف کرد.
 \item \lr{Path(...).resolve()} آدرس را به مطلق تبدیل می‌کند؛ در همه سیستم‌عامل‌ها کار می‌کند.
+\item اگر متغیر تعریف نشده باشد یا مسیر به پوشه‌ای موجود اشاره نکند، برنامه همان ابتدا
+با پیام روشن متوقف می‌شود.
 \item نتیجه: پروژه را جابه‌جا کنی فقط کافی است \lr{.env} را عوض کنی.
 \end{itemize}
 
-\mysubsection{ثابت‌هایِ مسیر}
+\mysubsection{ثابت‌های مسیر}
 
 \begin{latin}
 \begin{lstlisting}
 DATA_RAW_DIR       = PROJECT_ROOT / "data" / "raw" / "mafaulda"
 RUNS_DIR           = PROJECT_ROOT / "artifacts" / "runs"
-DEFAULT_RUN_NAME   = "transformer_final_t4"
+DEFAULT_RUN_NAME   = "transformer_experiment"
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 \end{lstlisting}
 \end{latin}
 
 \begin{itemize}
-\item \lr{DATA\_RAW\_DIR}: پوشه‌ای که فایل‌های \lr{CSV} خامِ \lr{MAFAULDA} در آن هستند.
-\item \lr{RUNS\_DIR}: همه نتایجِ آموزش اینجا ذخیره می‌شوند. هر \lr{run} یک زیرپوشه دارد که معمولاً شامل:
+\item \lr{DATA\_RAW\_DIR}: پوشه‌ای که فایل‌های \lr{CSV} خام \lr{MAFAULDA} در آن هستند.
+\item \lr{RUNS\_DIR}: همه نتایج آموزش اینجا ذخیره می‌شوند. هر \lr{run} یک زیرپوشه دارد که معمولا شامل:
 \lr{checkpoints/} (وزن‌های ذخیره‌شده‌ی مدل)،
-\lr{results/} (متریک‌ها، تاریخچه‌ی آموزش، ماتریسِ درهم‌ریختگی)، و
+\lr{results/} (متریک‌ها، تاریخچه‌ی آموزش، ماتریس درهم‌ریختگی)، و
 \lr{plots/} (نمودارها) است.
 
-\item \lr{DEFAULT\_RUN\_NAME}: نامِ پیش‌فرض برای \lr{run} جدید هنگامِ اجرای مجددِ آموزش.
-اسکریپتِ آموزش یک \lr{timestamp} به آن اضافه می‌کند تا \lr{run}های مختلف رونویسی نشوند.
+\item \lr{DEFAULT\_RUN\_NAME}: نام پیش‌فرض برای \lr{run} جدید هنگام اجرای مجدد آموزش.
+اسکریپت آموزش یک \lr{timestamp} به آن اضافه می‌کند تا \lr{run}های مختلف رونویسی نشوند.
 
-\item \lr{DATA\_PROCESSED\_DIR}: در \lr{pipeline}ِ نرم‌افزاریِ فعلی استفاده نمی‌شود (روی \lr{Kaggle} پنجره‌ها در حافظه ساخته می‌شوند، پس کشِ دیسکی سودی ندارد).
-این مسیر برای مسیرِ سخت‌افزاری/\lr{FPGA} \textbf{رزرو} شده است: وقتی ورودی‌ها برای برد پیش‌پردازش شدند،
-نتیجه اینجا ذخیره و در سمتِ \lr{PC} به‌جای محاسبه‌ی دوباره به‌عنوان کش بازخوانی می‌شود.
+\item \lr{DATA\_PROCESSED\_DIR}: مسیر رزروشده برای ذخیره‌ی اختیاری داده‌های
+پیش‌پردازش‌شده است و پایپلاین فعال آموزش در حال حاضر از آن استفاده نمی‌کند.
 \end{itemize}
 
 \mysubsection{کلاس‌ها و نگاشت}
@@ -219,27 +226,27 @@ NUM_CLASSES = len(LABEL_MAP)  # 4
 \end{lstlisting}
 \end{latin}
 
-این نگاشت در \textbf{همه مراحل} یکسان باید بماند: آموزش، ارزیابی، کوانتش، کدِ \lr{HLS}، پروتکلِ \lr{UART}، و رابطِ کاربری.
+این نگاشت در \textbf{همه مراحل} یکسان باید بماند: آموزش، ارزیابی، کوانتش، کد \lr{HLS}، پروتکل \lr{UART}، و رابط کاربری.
 
 \begin{itemize}
-\item \lr{\textbf{normal}} \textbf{(0):} ماشین سالم است. هیچ خرابی‌ای وجود ندارد و ارتعاشات در حدِ نرمال هستند.
+\item \lr{\textbf{normal}} \textbf{(0):} ماشین سالم است. هیچ خرابی‌ای وجود ندارد و ارتعاشات در حد نرمال هستند.
 
-\item \lr{\textbf{imbalance}} \textbf{(1):} توزیعِ جرم روی محورِ دوار یکنواخت نیست \pmdash{} مثلاً یک قطعه‌ی اضافه
-یا کمبودِ جرم در یک طرف. این باعث می‌شود در هر دور یک نیروی گریز از مرکز به یاتاقان‌ها وارد شود
-و ارتعاشی با فرکانسِ دقیقاً برابرِ سرعتِ دوران (\lr{1X}) ایجاد کند.
+\item \lr{\textbf{imbalance}} \textbf{(1):} توزیع جرم روی محور دوار یکنواخت نیست \pmdash{} مثلا یک قطعه‌ی اضافه
+یا کمبود جرم در یک طرف. این باعث می‌شود در هر دور یک نیروی گریز از مرکز به یاتاقان‌ها وارد شود
+و ارتعاشی با فرکانس دقیقا برابر سرعت دوران (\lr{1X}) ایجاد کند.
 
-\item \lr{\textbf{misalignment}} \textbf{(2):} محورِ موتور و محورِ بارِ متصل به آن در یک راستا نیستند.
+\item \lr{\textbf{misalignment}} \textbf{(2):} محور موتور و محور بار متصل به آن در یک راستا نیستند.
 دو نوع دارد: افقی (\lr{horizontal}) و عمودی (\lr{vertical}).
-علامتِ مشخصِ آن ارتعاش در فرکانسِ دو برابرِ سرعتِ دوران (\lr{2X}) است.
+علامت مشخص آن ارتعاش در فرکانس دو برابر سرعت دوران (\lr{2X}) است.
 
-\item \lr{\textbf{bearing\_fault}} \textbf{(3):} خرابی در یاتاقانِ غلتشی. در دیتاست \lr{MAFAULDA}
-چهار نوع خرابیِ بلبرینگ وجود دارد: نقص در \lr{outer race} (حلقه‌ی بیرونی)،
+\item \lr{\textbf{bearing\_fault}} \textbf{(3):} خرابی در یاتاقان غلتشی. در دیتاست \lr{MAFAULDA}
+چهار نوع خرابی بلبرینگ وجود دارد: نقص در \lr{outer race} (حلقه‌ی بیرونی)،
 \lr{inner race} (حلقه‌ی داخلی)، \lr{ball} (ساچمه)، و \lr{cage} (قفسه).
-هر کدام فرکانسِ خاصِ خود را دارند که به هندسه‌ی بلبرینگ و سرعتِ دوران بستگی دارد.
-در این پروژه همه‌ی این چهار نوع زیرِ یک کلاسِ واحد (\lr{bearing\_fault}) گروه‌بندی شده‌اند.
+هر کدام فرکانس خاص خود را دارند که به هندسه‌ی بلبرینگ و سرعت دوران بستگی دارد.
+در این پروژه همه‌ی این چهار نوع زیر یک کلاس واحد (\lr{bearing\_fault}) گروه‌بندی شده‌اند.
 \end{itemize}
 
-\mysubsection{ستون‌هایِ ورودی: ۸ کانالِ \lr{MAFAULDA}}
+\mysubsection{ستون‌های ورودی: ۸ کانال \lr{MAFAULDA}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -258,20 +265,20 @@ EXPECTED_NUM_COLUMNS = len(EXPECTED_COLUMNS)  # 8
 \end{latin}
 
 \begin{itemize}
-\item \lr{b1} (یا \lr{underhang}) و \lr{b2} (یا \lr{overhang}) دو یاتاقانِ ماشینِ \lr{MAFAULDA} هستند.
+\item \lr{b1} (یا \lr{underhang}) و \lr{b2} (یا \lr{overhang}) دو یاتاقان ماشین \lr{MAFAULDA} هستند.
 \item هر یاتاقان در سه محور اندازه‌گیری می‌شود: محوری (\lr{axial})، شعاعی (\lr{radial})، مماسی (\lr{tangential}).
-\item \lr{tachometer} سرعتِ دورانی را می‌دهد. خودِ این عدد مستقیماً نشانه‌ی خرابی نیست
-(موتورِ سالم و موتورِ خراب هر دو می‌توانند با همان سرعت بچرخند)؛ اما
-\textbf{غیرمستقیم} کمک می‌کند: مدل می‌تواند رابطه‌ی ارتعاش با یک دورِ کامل را یاد بگیرد.
-مثلاً خرابیِ \lr{outer race} یک بلبرینگ، فرکانسی مشخص \emph{نسبت به} سرعتِ دوران دارد
-که با وجودِ تاکومتر قابلِ شناسایی‌تر می‌شود.
-\item \lr{microphone} صدایِ صوتی است \pmdash{} اطلاعاتِ مکمل دارد، نه اصلی.
+\item \lr{tachometer} سرعت دورانی را می‌دهد. خود این عدد مستقیما نشانه‌ی خرابی نیست
+(موتور سالم و موتور خراب هر دو می‌توانند با همان سرعت بچرخند)؛ اما
+\textbf{غیرمستقیم} کمک می‌کند: مدل می‌تواند رابطه‌ی ارتعاش با یک دور کامل را یاد بگیرد.
+مثلا خرابی \lr{outer race} یک بلبرینگ، فرکانسی مشخص \emph{نسبت به} سرعت دوران دارد
+که با وجود تاکومتر قابل شناسایی‌تر می‌شود.
+\item \lr{microphone} صدای صوتی است \pmdash{} اطلاعات مکمل دارد، نه اصلی.
 \item همه ۸ کانال استفاده می‌شوند (\lr{INPUT\_CHANNELS = 8}).
 \end{itemize}
 
 \infobox{
-\textbf{ترتیبِ ستون‌ها ثابت است.} فایل‌های \lr{MAFAULDA} هر بار به همین ترتیب ذخیره می‌شوند.
-هیچ جایی در کد نباید بر اساسِ نامِ ستون فیلتر کرد \pmdash{} همیشه از ایندکس استفاده کنید.
+\textbf{ترتیب ستون‌ها ثابت است.} فایل‌های \lr{MAFAULDA} هر بار به همین ترتیب ذخیره می‌شوند.
+هیچ جایی در کد نباید بر اساس نام ستون فیلتر کرد \pmdash{} همیشه از ایندکس استفاده کنید.
 }
 
 \mysubsection{پنجره‌بندی و نرمال‌سازی}
@@ -284,20 +291,20 @@ MIN_ROWS_PER_FILE = WINDOW_SIZE  # drop files shorter than one window
 INPUT_LENGTH = WINDOW_SIZE  # seq_len fed to the model (one token per sample)
 
 NORMALIZATION_METHOD = "zscore"
-NORMALIZATION_SCOPE  = "per_window"  # mean=0, std=1 per window
-EPSILON = 1e-8  # prevents division-by-zero in std normalization
+NORMALIZATION_SCOPE  = "per_window"
+EPSILON = 1e-8  # detects near-zero per-channel std
 \end{lstlisting}
 \end{latin}
 
 \begin{itemize}
-\item \lr{per\_window} نرمال‌سازی برای \lr{FPGA} ایده‌آل است: هر پنجره ۱۰۲۴ نمونه دارد
-و آمارش (میانگین و انحرافِ معیار) درون همان پنجره محاسبه می‌شود \pmdash{} نیازی به آمارِ سراسریِ دیتاست نیست.
-\item دامنه مطلق (شدتِ لرزش) از دست می‌رود، ولی \textbf{الگوی نوع} خرابی حفظ می‌شود.
-\item \lr{EPSILON}: وقتی کانالی ثابت باشد (مثلاً تاکومتر در یک بازه)، \lr{std=0} می‌شود.
-\lr{EPSILON} از تقسیم بر صفر جلوگیری می‌کند.
+\item در نرمال‌سازی \lr{per\_window}، میانگین و انحراف معیار \textbf{هر کانال}
+روی ۱۰۲۴ نمونه‌ی زمانی همان پنجره محاسبه می‌شود؛ بنابراین نیازی به آمار سراسری دیتاست نیست.
+\item دامنه مطلق (شدت لرزش) از دست می‌رود، ولی \textbf{الگوی نوع} خرابی حفظ می‌شود.
+\item \lr{EPSILON}: وقتی انحراف معیار یک کانال تقریبا صفر باشد، کد آن را با مقدار امن
+۱ جایگزین می‌کند؛ در نتیجه کانال ثابت پس از کم‌کردن میانگین به صفر تبدیل می‌شود.
 \end{itemize}
 
-\mysubsection{داده‌هایِ ازدست‌رفته}
+\mysubsection{داده‌های ازدست‌رفته}
 
 \begin{latin}
 \begin{lstlisting}
@@ -306,7 +313,27 @@ MISSING_FILL_METHOD     = "median"  # fill remaining NaNs with median
 \end{lstlisting}
 \end{latin}
 
-فایل‌های \lr{MAFAULDA} عموماً سالم هستند، اما این مقادیر برایِ پایداری در برابرِ فایل‌های آسیب‌دیده لازمند.
+فایل‌های \lr{MAFAULDA} عموما سالم هستند، اما این مقادیر برای پایداری در برابر فایل‌های آسیب‌دیده لازمند.
+اگر پس از پرکردن هنوز مقدار \lr{NaN} باقی بماند (مثلا یک ستون کاملا خالی باشد)،
+آن فایل وارد پنجره‌سازی و آموزش نمی‌شود.
+
+مسیر اصلی همچنین فایل کوتاه‌تر از یک پنجره یا فایلی با تعداد ستون غیر از ۸ را
+با پیام هشدار کنار می‌گذارد و در آمار \lr{dropped\_files} حساب می‌کند.
+
+\mysubsection{تقسیم داده در سطح فایل}
+
+\begin{latin}
+\begin{lstlisting}
+TRAIN_RATIO = 0.7
+VAL_RATIO   = 0.1
+TEST_RATIO  = 0.2
+\end{lstlisting}
+\end{latin}
+
+ابتدا خود فایل‌ها تقسیم می‌شوند و سپس از هر بخش پنجره ساخته می‌شود. بنابراین
+پنجره‌های یک فایل نمی‌توانند هم‌زمان در آموزش و آزمون قرار بگیرند. تقسیم در دو
+مرحله انجام می‌شود: ۷۰ درصد برای \lr{train} و سپس یک‌سوم ۳۰ درصد باقی‌مانده
+برای \lr{validation}؛ نتیجه‌ی نهایی همان نسبت ۷۰/۱۰/۲۰ است.
 
 \mysubsection{آموزش و \lr{DataLoader}}
 
@@ -322,14 +349,15 @@ RANDOM_SEED             = 42
 \end{latin}
 
 \begin{itemize}
-\item \lr{NUM\_WORKERS = 0}: در \lr{Windows}، \lr{PyTorch multiprocessing} برای \lr{DataLoader} اغلب مشکل ایجاد می‌کند.
-با صفر، همه چیز در فرآیندِ اصلی اجرا می‌شود و پایدارتر است.
-روی \lr{Kaggle}/\lr{Linux}/\lr{Colab} می‌توان این عدد را (مثلاً به ۲ تا ۴) افزایش داد تا \lr{batch}ها موازی بارگذاری شوند و آموزش سریع‌تر شود.
+\item \lr{DATALOADER\_NUM\_WORKERS = 0}: در \lr{Windows}، بارگذاری \lr{batch}ها در
+فرآیند اصلی انجام می‌شود و نیازی به راه‌اندازی \lr{worker} جدا نیست. در محیط‌های \lr{Linux}
+می‌توان مقادیر ۲ تا ۴ را بنچمارک کرد؛ افزایش \lr{worker} الزاما همیشه سریع‌تر نیست.
 \item \lr{EARLY\_STOPPING\_PATIENCE = 6}: اگر \lr{val\_loss} به مدت ۶ اپاک بهتر نشد، آموزش متوقف می‌شود.
-\item \lr{RANDOM\_SEED = 42}: تضمین می‌کند که نتایج در اجراهای مختلف یکسان باشند.
+\item \lr{RANDOM\_SEED = 42}: تقسیم فایل‌ها، زیرمجموعه‌های کالیبراسیون و اجزای
+تصادفی آزمایش‌های نرم‌افزاری را تا حد ممکن تکرارپذیر می‌کند.
 \end{itemize}
 
-\mysubsection{معماریِ \lr{Transformer}}
+\mysubsection{معماری \lr{Transformer}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -343,50 +371,57 @@ MAFAULDA_SAMPLE_RATE = 50000  # Hz, used by analysis tools in src/tools/
 \end{lstlisting}
 \end{latin}
 
-این اعداد مدلِ \lr{F\_1layer} را کاملاً تعریف می‌کنند.
-برد و قطعه نهایی هنوز انتخاب نشده‌اند؛ بنابراین بودجه منابع و فرکانس هدف نیز فعلاً
+این اعداد مدل \lr{F\_1layer} را کاملا تعریف می‌کنند.
+برد و قطعه نهایی هنوز انتخاب نشده‌اند؛ بنابراین بودجه منابع و فرکانس هدف نیز فعلا
 نباید عدد ثابت در نظر گرفته شوند.
-دلیلِ انتخابِ این معماری، اعدادِ دقت، و مسیرِ \lr{checkpoint}ها در \lr{docs/DECISION\_LOG.md}
+دلیل انتخاب این معماری، اعداد دقت، و مسیر \lr{checkpoint}ها در \lr{docs/DECISION\_LOG.md}
 (\lr{D013}، \lr{D018}) مستند شده است.
 
-\mysubsection{منحنیِ دقت در برابرِ اندازه \lr{—} جست‌وجوی معماری}
+\mysubsection{منحنی دقت در برابر اندازه \lr{—} جست‌وجوی معماری}
 
-در مجموع ۱۰ پیکربندی از \lr{P} (۱/۵۸۲ پارامتر) تا \lr{D} (۶۹/۸۶۰ پارامتر) آزمایش شدند.
-نمودارِ زیر رابطه دقتِ اعتبارسنجی و اندازه مدل را نشان می‌دهد:
+در مجموع ۱۱ پیکربندی از \lr{P} (۱/۵۸۲ پارامتر) تا \lr{D} (۶۹/۸۶۰ پارامتر) آزمایش شدند.
+نمودار زیر رابطه دقت اعتبارسنجی و اندازه مدل را نشان می‌دهد:
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth]{figures/arch_curve.pdf}
-\caption{منحنیِ دقت در برابرِ تعدادِ پارامتر برای ۱۰ پیکربندیِ آزمایش‌شده.
-\lr{F\_1layer} روی زانوی منحنی قرار دارد: کوچک‌ترین مدلی که دقتِ بالا را حفظ می‌کند
-و گزینه‌ای کم‌هزینه‌تر برای آغازِ ارزیابی سخت‌افزاری است. برد نهایی هنوز انتخاب نشده است.}
+\caption{منحنی دقت در برابر تعداد پارامتر برای ۱۱ پیکربندی آزمایش‌شده.
+\lr{F\_1layer} روی زانوی منحنی قرار دارد: کوچک‌ترین مدلی که دقت بالا را حفظ می‌کند
+و گزینه‌ای کم‌هزینه‌تر برای آغاز ارزیابی سخت‌افزاری است. برد نهایی هنوز انتخاب نشده است.}
 \end{figure}
 
 \mysubsection{نکته کلیدی: چرا \lr{d\_model = 32}؟}
 
-\lr{d\_model} تعدادِ ویژگیِ هر توکن در طولِ مدل است. در جست‌وجوی معماری،
-۱۱ پیکربندی از \lr{d=8} تا \lr{d=64} تست شد. \lr{F\_1layer} با \lr{d=32} روی زانوی منحنیِ
-دقت\pmdash{}اندازه قرار دارد: کوچک‌ترین مدلی که تقریباً ۹۸ درصد دقت می‌دهد.
+\lr{d\_model} تعداد ویژگی هر توکن در طول مدل است. در جست‌وجوی معماری،
+۱۱ پیکربندی از \lr{d=8} تا \lr{d=64} تست شد. \lr{F\_1layer} با \lr{d=32} روی زانوی منحنی
+دقت\pmdash{}اندازه قرار دارد: کوچک‌ترین مدلی که تقریبا ۹۸ درصد دقت می‌دهد.
 
 \infobox{
 \textbf{قاعده:} \lr{d\_model \% nhead == 0} باید برقرار باشد.
 برای ما: $32 \div 4 = 8$ (\lr{head\_dim = 8}، کمینه قابل‌قبول).
 }
 
-\mysubsection{بررسیِ صحت (\lr{sanity check})}
+\mysubsection{بررسی صحت (\lr{sanity check})}
 
 \begin{latin}
 \begin{lstlisting}
+if NORMALIZATION_METHOD != "zscore":
+    raise ValueError(...)
+if NORMALIZATION_SCOPE != "per_window":
+    raise ValueError(...)
+
 if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:
     raise ValueError("TRAIN_RATIO + VAL_RATIO + TEST_RATIO must be 1.0")
 # default: 0.7 + 0.1 + 0.2 = 1.0
 \end{lstlisting}
 \end{latin}
 
-اگر کسی نسبت‌ها را عوض کند و فراموش کند مجموعشان ۱ باشد، پروژه \textbf{قبل از شروعِ آموزش} خطا می‌دهد،
-نه وقتی که نتیجه‌های عجیب دیدیم.
+این بررسی‌ها اجازه نمی‌دهند متن تنظیمات با رفتار واقعی پایپلاین متفاوت شود.
+فعلا فقط ترکیب پیاده‌سازی‌شده‌ی \lr{zscore + per\_window} پذیرفته می‌شود؛ همچنین
+اگر کسی نسبت‌ها را عوض کند و فراموش کند مجموعشان ۱ باشد، پروژه \textbf{قبل از شروع آموزش}
+خطا می‌دهد، نه وقتی که نتیجه‌های عجیب دیده شده‌اند.
 
-\mysubsection{فلگ‌هایی که حذف شدند (ریفکتورِ \lr{2026-08-24})}
+\mysubsection{فلگ‌هایی که حذف شدند (ریفکتور \lr{2026-08-24})}
 
 این فلگ‌ها وجود داشتند اما همیشه \lr{False} بودند و کدی استفاده‌شان نمی‌کرد:
 
@@ -403,28 +438,28 @@ NUM_ACTIVE_CHANNELS                           # channel switching
 \end{latin}
 
 \begin{itemize}
-\item پنجره‌ی دُم‌دار: \lr{preprocessing} روی \lr{FPGA} انجام می‌شود، نه \lr{PC}.
+\item پنجره‌ی دم‌دار: \lr{preprocessing} روی \lr{FPGA} انجام می‌شود، نه \lr{PC}.
 \item افزوده‌سازی داده: هرگز فعال نشد.
 \item فیلترهای سیگنال: همه همیشه \lr{False} بودند.
-\item انتخابِ کانال: فقط حالتِ «همه کانال‌ها» پیاده‌سازی شده بود.
+\item انتخاب کانال: فقط حالت «همه کانال‌ها» پیاده‌سازی شده بود.
 \end{itemize}
 
-حذفِ این فلگ‌ها کد را ساده‌تر کرد، بدونِ هیچ تغییری در رفتارِ واقعی.
+حذف این فلگ‌ها کد را ساده‌تر کرد، بدون هیچ تغییری در رفتار واقعی.
 
 % ==============================================================
-\mysection{۲}{\lr{src/data/load\_data.py} \pmdash{} کشفِ فایل‌ها و برچسب‌گذاری}
+\mysection{۲}{\lr{src/data/load\_data.py} \pmdash{} کشف فایل‌ها و برچسب‌گذاری}
 % ==============================================================
 
 \mysubsection{هدف}
 
 این ماژول پوشه \lr{MAFAULDA} را اسکن می‌کند، همه فایل‌های \lr{CSV} را پیدا می‌کند،
-و از روی نامِ مسیر به هر فایل یک برچسبِ کلاس می‌دهد.
-خروجی نهاییِ این ماژول یک \lr{DataFrame} (فهرستِ فایل‌ها) است که \lr{make\_dataloaders.py}
+و از روی نام مسیر به هر فایل یک برچسب کلاس می‌دهد.
+خروجی نهایی این ماژول یک \lr{DataFrame} (فهرست فایل‌ها) است که \lr{make\_dataloaders.py}
 آن را ورودی می‌گیرد.
 
-\mysubsection{فرمتِ نامِ فایل‌های \lr{MAFAULDA}}
+\mysubsection{فرمت نام فایل‌های \lr{MAFAULDA}}
 
-فایل‌های \lr{CSV} با فرمتِ \lr{X.Y.csv} نام‌گذاری شده‌اند:
+فایل‌های \lr{CSV} با فرمت \lr{X.Y.csv} نام‌گذاری شده‌اند:
 
 \begin{latin}
 \begin{lstlisting}
@@ -434,11 +469,11 @@ NUM_ACTIVE_CHANNELS                           # channel switching
 \end{lstlisting}
 \end{latin}
 
-مقادیرِ رایجِ سرعت: ۱۲ تا ۵۰ \lr{Hz}. اهمیتِ این عدد در اینجا نیست که مدل
-سرعت را تشخیص دهد، بلکه \lr{split} باید طیفِ سرعت‌های مختلف را هم در \lr{train}
-و هم در \lr{test} داشته باشد تا مدل روی سرعتِ خاصی \lr{overfit} نکند.
+مقادیر رایج سرعت: ۱۲ تا ۵۰ \lr{Hz}. اهمیت این عدد در اینجا نیست که مدل
+سرعت را تشخیص دهد، بلکه \lr{split} باید طیف سرعت‌های مختلف را هم در \lr{train}
+و هم در \lr{test} داشته باشد تا مدل روی سرعت خاصی \lr{overfit} نکند.
 
-\mysubsection{کشفِ فایل‌ها: \lr{list\_csv\_files}}
+\mysubsection{کشف فایل‌ها: \lr{list\_csv\_files}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -448,10 +483,10 @@ def list_csv_files(directory: Path) -> List[Path]:
 \end{lstlisting}
 \end{latin}
 
-به‌صورتِ بازگشتی تمام فایل‌های \lr{.csv} را زیرِ \lr{DATA\_RAW\_DIR} پیدا می‌کند
-(جمعاً ۱۹۵۱ فایل). اگر پوشه وجود نداشته باشد، لیستِ خالی برمی‌گرداند.
+به‌صورت بازگشتی تمام فایل‌های \lr{.csv} را زیر \lr{DATA\_RAW\_DIR} پیدا می‌کند
+(جمعا ۱۹۵۱ فایل). اگر پوشه وجود نداشته باشد، لیست خالی برمی‌گرداند.
 
-\mysubsection{تابعِ اصلی: \lr{build\_file\_index}}
+\mysubsection{تابع اصلی: \lr{build\_file\_index}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -463,7 +498,7 @@ def build_file_index(data_dir) -> pd.DataFrame:
 \end{latin}
 
 خروجی یک \lr{DataFrame} است که هر ردیفش یک فایل \lr{CSV} از \lr{MAFAULDA} است.
-این \lr{DataFrame} بدونِ هیچ پردازشِ اضافه‌ای به \lr{make\_dataloaders.py} تحویل داده می‌شود.
+این \lr{DataFrame} بدون هیچ پردازش اضافه‌ای به \lr{make\_dataloaders.py} تحویل داده می‌شود.
 
 \mysubsection{برچسب‌گذاری با \lr{infer\_label\_from\_path}}
 
@@ -482,8 +517,8 @@ def infer_label_from_path(file_path) -> str:
 \end{latin}
 
 \infobox{
-\textbf{نکته مهم:} تابع فقط روی بخشِ زیرِ \lr{DATA\_RAW\_DIR} جست‌وجو می‌کند،
-نه کلِ مسیرِ مطلق. اگر اسمِ پوشه پروژه حاوی کلیدواژه‌هایی مثل \lr{"normal"} باشد،
+\textbf{نکته مهم:} تابع فقط روی بخش زیر \lr{DATA\_RAW\_DIR} جست‌وجو می‌کند،
+نه کل مسیر مطلق. اگر اسم پوشه پروژه حاوی کلیدواژه‌هایی مثل \lr{"normal"} باشد،
 برچسب‌گذاری اشتباه نمی‌شود. (باگی که پیدا و اصلاح شد.)
 }
 
@@ -496,10 +531,10 @@ def load_one_csv(file_path) -> pd.DataFrame:
 \end{lstlisting}
 \end{latin}
 
-ساده‌ترین تابعِ ماژول: یک فایل \lr{CSV} را می‌خواند و \lr{DataFrame} خام برمی‌گرداند.
+ساده‌ترین تابع ماژول: یک فایل \lr{CSV} را می‌خواند و \lr{DataFrame} خام برمی‌گرداند.
 \textbf{هیچ پردازشی} (نرمال‌سازی، \lr{windowing}، فیلتر) انجام نمی‌دهد.
 
-این تابع مستقیماً در \lr{pipeline} صدا زده می‌شود: \lr{make\_dataloaders.py} برای هر فایلِ
+این تابع مستقیما در \lr{pipeline} صدا زده می‌شود: \lr{make\_dataloaders.py} برای هر فایل
 هر \lr{split}، ابتدا \lr{load\_one\_csv} و سپس \lr{preprocess\_dataframe} را فراخوانی می‌کند:
 
 \begin{latin}
@@ -513,24 +548,24 @@ if df is None:                   # file dropped (too many NaNs)
 \end{latin}
 
 \infobox{
-پیش‌تر یک سیستمِ کشِ دیسکی (\lr{preprocessed\_cache.py}) بینِ این دو مرحله بود که آرایه‌ی
-تمیزِ هر فایل را ذخیره می‌کرد. در \lr{2026-09-01} حذف شد: آموزش روی \lr{Kaggle} با \lr{kernel}ِ
-تازه اجرا می‌شود، پس کشِ دیسکی سودی نداشت. حالا هر فایل در هر اجرا مستقیماً خوانده و پردازش می‌شود.
+پیش‌تر یک سیستم کش دیسکی (\lr{preprocessed\_cache.py}) بین این دو مرحله بود که آرایه‌ی
+تمیز هر فایل را ذخیره می‌کرد. در \lr{2026-09-01} حذف شد: آموزش روی \lr{Kaggle} با \lr{kernel}
+تازه اجرا می‌شود، پس کش دیسکی سودی نداشت. حالا هر فایل در هر اجرا مستقیما خوانده و پردازش می‌شود.
 }
 
 % ==============================================================
-\mysection{۳}{\lr{src/data/prepare\_dataset.py} \pmdash{} پیش‌پردازشِ پایه}
+\mysection{۳}{\lr{src/data/prepare\_dataset.py} \pmdash{} پیش‌پردازش پایه}
 % ==============================================================
 
 \mysubsection{هدف}
 
-این ماژول توابعِ کمکیِ قابلِ استفاده مجدد برای پیش‌پردازش است.
+این ماژول توابع کمکی قابل استفاده مجدد برای پیش‌پردازش است.
 هیچ \lr{DataLoader} نمی‌سازد و هیچ تقسیمی انجام نمی‌دهد \pmdash{}
 فقط هر فایل را به آرایه تمیز تبدیل می‌کند.
-دو گروه تابعِ اصلی دارد: توابعِ پیش‌پردازشِ فایل، و توابعِ پنجره‌سازی و نرمال‌سازی \pmdash{}
+دو گروه تابع اصلی دارد: توابع پیش‌پردازش فایل، و توابع پنجره‌سازی و نرمال‌سازی \pmdash{}
 هر دو گروه از \lr{make\_dataloaders.py} صدا زده می‌شوند.
 
-\mysubsection{جریانِ پیش‌پردازشِ یک فایل: \lr{preprocess\_dataframe}}
+\mysubsection{جریان پیش‌پردازش یک فایل: \lr{preprocess\_dataframe}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -547,9 +582,9 @@ def preprocess_dataframe(df, normalize=False):
 \end{latin}
 
 این تابع همیشه با \lr{normalize=False} از \lr{make\_dataloaders.py} صدا زده می‌شود.
-تابعِ \lr{normalize\_dataframe} (نرمال‌سازیِ سطحِ فایل) در \lr{2026-09-01} حذف شد \pmdash{}
-کدِ یتیم بود و آخرین صدازننده‌اش در مسیرِ قدیمیِ آرشیوشده بود.
-نرمال‌سازیِ فعال روی پنجره‌ها در \lr{make\_dataloaders.py} انجام می‌شود.
+تابع \lr{normalize\_dataframe} (نرمال‌سازی سطح فایل) در \lr{2026-09-01} حذف شد \pmdash{}
+کد یتیم بود و آخرین صدازننده‌اش در مسیر قدیمی آرشیوشده بود.
+نرمال‌سازی فعال روی پنجره‌ها در \lr{make\_dataloaders.py} انجام می‌شود.
 
 \mysubsection{تبدیل به عددی: \lr{convert\_dataframe\_to\_numeric}}
 
@@ -560,9 +595,9 @@ df[col] = pd.to_numeric(df[col], errors="coerce")
 \end{latin}
 
 \lr{errors="coerce"}: سلول‌های غیرعددی به \lr{NaN} تبدیل می‌شوند، نه خطا.
-این باعث می‌شود مقادیرِ خراب صریح باشند و مرحله بعدی بتواند آن‌ها را کنترل کند.
+این باعث می‌شود مقادیر خراب صریح باشند و مرحله بعدی بتواند آن‌ها را کنترل کند.
 
-\mysubsection{حذفِ فایل: \lr{should\_drop\_file}}
+\mysubsection{حذف فایل: \lr{should\_drop\_file}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -571,11 +606,11 @@ return missing_ratio > MISSING_RATIO_THRESHOLD  # default 0.2
 \end{lstlisting}
 \end{latin}
 
-اگر بیش از ۲۰ درصدِ سلول‌های فایل \lr{NaN} باشند، فایل حذف می‌شود و \lr{None} برمی‌گردد.
-برای فایل‌های \lr{MAFAULDA} معمولاً هیچ فایلی حذف نمی‌شود،
-اما این چک برایِ پایداری در برابرِ فایل‌های آسیب‌دیده لازم است.
+اگر بیش از ۲۰ درصد سلول‌های فایل \lr{NaN} باشند، فایل حذف می‌شود و \lr{None} برمی‌گردد.
+برای فایل‌های \lr{MAFAULDA} معمولا هیچ فایلی حذف نمی‌شود،
+اما این چک برای پایداری در برابر فایل‌های آسیب‌دیده لازم است.
 
-\mysubsection{پرِ مقادیرِ ازدست‌رفته: \lr{fill\_missing\_values}}
+\mysubsection{پر مقادیر ازدست‌رفته: \lr{fill\_missing\_values}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -585,8 +620,8 @@ df[col] = df[col].fillna(df[col].median())
 \end{lstlisting}
 \end{latin}
 
-پیش‌فرض \lr{median} است چون در برابرِ مقادیرِ پرت مقاوم‌تر از \lr{mean} است.
-این روش از \lr{config.py} می‌آید و قابلِ تغییر است.
+پیش‌فرض \lr{median} است چون در برابر مقادیر پرت مقاوم‌تر از \lr{mean} است.
+این روش از \lr{config.py} می‌آید و قابل تغییر است.
 
 \mysubsection{پنجره‌سازی: \lr{create\_windows\_from\_dataframe}}
 
@@ -601,11 +636,11 @@ for start in range(0, num_rows - window_size + 1, stride):
 
 \begin{itemize}
 \item با \lr{stride = window\_size} (پیش‌فرض): پنجره‌ها همپوشانی ندارند.
-\item نمونه‌های دُم‌دار کوتاه‌تر از \lr{window\_size} دور انداخته می‌شوند.
+\item نمونه‌های دم‌دار کوتاه‌تر از \lr{window\_size} دور انداخته می‌شوند.
 \item خروجی لیستی از آرایه‌های \lr{(1024, 8)} از نوع \lr{float32} است.
 \end{itemize}
 
-\mysubsection{نرمال‌سازیِ پنجره: \lr{normalize\_windows\_array}}
+\mysubsection{نرمال‌سازی پنجره: \lr{normalize\_windows\_array}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -619,7 +654,7 @@ def normalize_windows_array(windows, epsilon=EPSILON):
 
 \begin{itemize}
 \item \lr{axis=1}: آمار روی ۱۰۲۴ نمونه محاسبه می‌شود \pmdash{} هر پنجره مستقل است.
-\item \lr{safe\_std}: اگر انحرافِ معیار کمتر از \lr{epsilon} باشد (کانالِ ثابت)،
+\item \lr{safe\_std}: اگر انحراف معیار کمتر از \lr{epsilon} باشد (کانال ثابت)،
 با ۱.۰ جایگزین می‌شود تا تقسیم بر صفر نشود.
 \item پارامترهای \lr{scope} و \lr{method} حذف شدند (2026-09-01) \pmdash{} فقط یک حالت فعال بود.
 \end{itemize}
@@ -630,11 +665,11 @@ def normalize_windows_array(windows, epsilon=EPSILON):
 
 \mysubsection{هدف}
 
-این ماژول پُلِ اصلی بین فایل‌های خام و مدل است.
-فهرستِ فایل‌ها را از \lr{load\_data.py} می‌گیرد، آن‌ها را در سطحِ فایل تقسیم می‌کند،
+این ماژول پل اصلی بین فایل‌های خام و مدل است.
+فهرست فایل‌ها را از \lr{load\_data.py} می‌گیرد، آن‌ها را در سطح فایل تقسیم می‌کند،
 پنجره می‌سازد، نرمال‌سازی می‌کند، و سه \lr{DataLoader} آماده تحویل می‌دهد.
 
-\mysubsection{جریانِ کلی}
+\mysubsection{جریان کلی}
 
 \begin{latin}
 \begin{lstlisting}
@@ -646,7 +681,7 @@ build_file_index()           # 1951 files with labels
 \end{lstlisting}
 \end{latin}
 
-\mysubsection{جداسازیِ فایل‌ها: \lr{split\_file\_index}}
+\mysubsection{جداسازی فایل‌ها: \lr{split\_file\_index}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -656,19 +691,19 @@ train_df, val_df, test_df = split_file_index(index_df)
 \end{lstlisting}
 \end{latin}
 
-جداسازی در سطحِ \textbf{فایل} انجام می‌شود، نه پنجره.
+جداسازی در سطح \textbf{فایل} انجام می‌شود، نه پنجره.
 هیچ پنجره‌ای از یک فایل نمی‌تواند هم در \lr{train} و هم در \lr{test} باشد
-(جلوگیری از نشتِ داده / \lr{data leakage}).
+(جلوگیری از نشت داده / \lr{data leakage}).
 
 \begin{itemize}
-\item تقسیم در دو مرحله است: ابتدا \lr{train} در مقابلِ \lr{temp}، سپس \lr{val} و \lr{test} از \lr{temp}.
-\item استراتیفای بر اساسِ برچسبِ کلاس: نسبتِ کلاس‌ها در هر بخش حفظ می‌شود.
-\item اگر استراتیفای ممکن نباشد (مثلاً دیتاستِ خیلی کوچک)، به تقسیمِ ساده بازمی‌گردد.
+\item تقسیم در دو مرحله است: ابتدا \lr{train} در مقابل \lr{temp}، سپس \lr{val} و \lr{test} از \lr{temp}.
+\item استراتیفای بر اساس برچسب کلاس: نسبت کلاس‌ها در هر بخش حفظ می‌شود.
+\item اگر استراتیفای ممکن نباشد (مثلا دیتاست خیلی کوچک)، به تقسیم ساده بازمی‌گردد.
 \end{itemize}
 
 \mysubsection{پنجره‌سازی: \lr{build\_X\_y\_from\_file\_index}}
 
-این تابعِ داخلی روی فایل‌های هر بخش حلقه می‌زند:
+این تابع داخلی روی فایل‌های هر بخش حلقه می‌زند:
 
 \begin{latin}
 \begin{lstlisting}
@@ -694,7 +729,7 @@ for each file in index_df:
 \end{lstlisting}
 \end{latin}
 
-نکته مهم: همه پنجره‌های یک فایل یک برچسب می‌گیرند (برچسبِ فایل).
+نکته مهم: همه پنجره‌های یک فایل یک برچسب می‌گیرند (برچسب فایل).
 یعنی اگر فایلی ۱۵۰ پنجره داشته باشد، همه ۱۵۰ تا \lr{bearing\_fault} هستند.
 
 \mysubsection{نرمال‌سازی: \lr{per-window z-score}}
@@ -709,12 +744,12 @@ normalized = (window - mu) / (std + 1e-8)
 \end{latin}
 
 \begin{itemize}
-\item هر پنجره مستقل نرمال می‌شود: نیازی به آمارِ سراسریِ دیتاست نیست.
+\item هر پنجره مستقل نرمال می‌شود: نیازی به آمار سراسری دیتاست نیست.
 \item برای \lr{FPGA} ایده‌آل است: محاسبه فقط با همان ۱۰۲۴ نمونه انجام می‌شود.
 \item \lr{1e-8}: اگر کانالی ثابت باشد و \lr{std=0} شود، از تقسیم بر صفر جلوگیری می‌کند.
 \end{itemize}
 
-\mysubsection{ساختِ \lr{DataLoader}}
+\mysubsection{ساخت \lr{DataLoader}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -732,12 +767,12 @@ test_loader  = DataLoader(test_dataset,  batch_size=64,
 \end{latin}
 
 \begin{itemize}
-\item \lr{train}: \lr{shuffle=True} \pmdash{} ترتیبِ پنجره‌ها در هر \lr{epoch} تصادفی می‌شود (یادگیریِ بهتر).
-\item \lr{val/test}: \lr{shuffle=False} \pmdash{} ترتیبِ ثابت برای ارزیابیِ پایدار.
-\item \lr{pin\_memory}: اگر \lr{GPU} در دسترس باشد، انتقالِ داده به \lr{GPU} را سریع‌تر می‌کند.
+\item \lr{train}: \lr{shuffle=True} \pmdash{} ترتیب پنجره‌ها در هر \lr{epoch} تصادفی می‌شود (یادگیری بهتر).
+\item \lr{val/test}: \lr{shuffle=False} \pmdash{} ترتیب ثابت برای ارزیابی پایدار.
+\item \lr{pin\_memory}: اگر \lr{GPU} در دسترس باشد، انتقال داده به \lr{GPU} را سریع‌تر می‌کند.
 \end{itemize}
 
-\mysubsection{تابعِ اصلی: \lr{build\_dataloaders}}
+\mysubsection{تابع اصلی: \lr{build\_dataloaders}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -749,14 +784,14 @@ train_loader, val_loader, test_loader, stats = build_dataloaders(
 \end{lstlisting}
 \end{latin}
 
-\lr{stats} یک \lr{dict} است که خلاصه‌ای از اطلاعاتِ \lr{pipeline} را برمی‌گرداند:
-تعدادِ فایل‌ها و پنجره‌های هر بخش، توزیعِ کلاس‌ها، میزانِ \lr{RAM} مصرفی، و زمانِ پردازش.
+\lr{stats} یک \lr{dict} است که خلاصه‌ای از اطلاعات \lr{pipeline} را برمی‌گرداند:
+تعداد فایل‌ها و پنجره‌های هر بخش، توزیع کلاس‌ها، میزان \lr{RAM} مصرفی، و زمان پردازش.
 
 % ==============================================================
-\mysection{۵}{\lr{src/models/transformer\_baseline.py} \pmdash{} معماریِ مدل}
+\mysection{۵}{\lr{src/models/transformer\_baseline.py} \pmdash{} معماری مدل}
 % ==============================================================
 
-\mysubsection{مسیرِ داده در مدل}
+\mysubsection{مسیر داده در مدل}
 
 \begin{latin}
 \begin{lstlisting}
@@ -770,14 +805,14 @@ train_loader, val_loader, test_loader, stats = build_dataloaders(
 \end{lstlisting}
 \end{latin}
 
-کلِ مدل فقط \lr{9,492} پارامتر دارد \pmdash{} عمداً کوچک تا پس از کوانتیزاسیون
-روی بردِ هدف جا شود. خروجی \lr{logit}ِ خام است؛ \lr{softmax} داخلِ مدل نیست و
-در تابعِ \lr{loss} (هنگامِ آموزش) یا جداگانه هنگامِ استنتاج اعمال می‌شود.
+کل مدل فقط \lr{9,492} پارامتر دارد \pmdash{} عمدا کوچک تا پس از کوانتیزاسیون
+روی برد هدف جا شود. خروجی \lr{logit} خام است؛ \lr{softmax} داخل مدل نیست و
+در تابع \lr{loss} (هنگام آموزش) یا جداگانه هنگام استنتاج اعمال می‌شود.
 
-\mysubsection{کلاسِ اول: \lr{PositionalEncoding}}
+\mysubsection{کلاس اول: \lr{PositionalEncoding}}
 
-مشکل: \lr{attention} ترتیبِ توکن‌ها را نمی‌داند.
-راه‌حل: به هر جایگاه یک بردارِ ثابتِ یکتا اضافه می‌کنیم.
+مشکل: \lr{attention} ترتیب توکن‌ها را نمی‌داند.
+راه‌حل: به هر جایگاه یک بردار ثابت یکتا اضافه می‌کنیم.
 
 \begin{latin}
 \begin{lstlisting}
@@ -791,17 +826,17 @@ x = x + pe[:, :seq_len, :]
 \end{latin}
 
 \begin{itemize}
-\item \lr{div\_term} $= \exp(-\frac{2i}{d}\ln 10000)$ برای بُعدِ $i$: فرکانس‌هایی
-که به‌صورتِ هندسی از ۱.۰ تا حدودِ ۰.۰۰۰۲ کم می‌شوند \pmdash{} یعنی بعضی بُعدها سریع و
+\item \lr{div\_term} $= \exp(-\frac{2i}{d}\ln 10000)$ برای بعد $i$: فرکانس‌هایی
+که به‌صورت هندسی از ۱.۰ تا حدود ۰.۰۰۰۲ کم می‌شوند \pmdash{} یعنی بعضی بعدها سریع و
 بعضی آهسته نوسان می‌کنند.
-\item هر جایگاه یک ترکیبِ \lr{(sin, cos)} یکتا دارد \pmdash{} مثلِ شمارشِ دودویی با موجِ نرم.
-پس مدل می‌تواند «فاصله‌ی زمانی» بینِ دو نمونه را از تفاوتِ امضایشان تشخیص دهد.
-\item فرمولِ ثابت (نه یادگرفتنی) انتخاب شده چون به هر طولِ پنجره تعمیم می‌یابد و
-پیاده‌سازیِ سخت‌افزاری‌اش ساده است (یک جدولِ از پیش‌محاسبه‌شده).
-\item \lr{register\_buffer}: جدول \lr{train} نمی‌شود، ثابت است ولی همراهِ مدل ذخیره و منتقل می‌شود.
+\item هر جایگاه یک ترکیب \lr{(sin, cos)} یکتا دارد \pmdash{} مثل شمارش دودویی با موج نرم.
+پس مدل می‌تواند «فاصله‌ی زمانی» بین دو نمونه را از تفاوت امضایشان تشخیص دهد.
+\item فرمول ثابت (نه یادگرفتنی) انتخاب شده چون به هر طول پنجره تعمیم می‌یابد و
+پیاده‌سازی سخت‌افزاری‌اش ساده است (یک جدول از پیش‌محاسبه‌شده).
+\item \lr{register\_buffer}: جدول \lr{train} نمی‌شود، ثابت است ولی همراه مدل ذخیره و منتقل می‌شود.
 \end{itemize}
 
-\mysubsection{کلاسِ دوم: \lr{TransformerEncoderBlock}}
+\mysubsection{کلاس دوم: \lr{TransformerEncoderBlock}}
 
 \textbf{۱) \lr{Self-Attention}:} هر توکن به همه توکن‌ها نگاه می‌کند.
 
@@ -812,10 +847,10 @@ x = LayerNorm(x + Dropout(attn_out))        # Add & Norm
 \end{lstlisting}
 \end{latin}
 
-سه \lr{x} به این معنی نیست که مقادیر یکسانند \pmdash{} داخلِ \lr{MultiheadAttention}
+سه \lr{x} به این معنی نیست که مقادیر یکسانند \pmdash{} داخل \lr{MultiheadAttention}
 با وزن‌های جداگانه $W_Q, W_K, W_V$ ضرب می‌شوند.
 \lr{nhead=4}: توجه ۴ بار موازی با دیدگاه‌های مختلف (\lr{head\_dim = 32/4 = 8}).
-اتصالِ \lr{x +} (\lr{residual}) کمک می‌کند گرادیان در آموزش بهتر جریان یابد، و
+اتصال \lr{x +} (\lr{residual}) کمک می‌کند گرادیان در آموزش بهتر جریان یابد، و
 \lr{LayerNorm} بعد از جمع اعمال می‌شود \pmdash{} این سبک \lr{post-norm} است.
 
 \textbf{۲) \lr{Feedforward}:} روی هر توکن جداگانه:
@@ -827,7 +862,7 @@ x = LayerNorm(x + Dropout(ff_out))   # Add & Norm
 \end{lstlisting}
 \end{latin}
 
-\mysubsection{کلاسِ سوم: \lr{TransformerBaseline}}
+\mysubsection{کلاس سوم: \lr{TransformerBaseline}}
 
 \begin{latin}
 \begin{lstlisting}
@@ -843,14 +878,14 @@ def forward(self, x):
 
 \infobox{
 \lr{mean(dim=1)}: میانگین روی ۱۰۲۴ توکن \pmdash{} از \lr{(batch, 1024, 32)} به \lr{(batch, 32)}.
-این \lr{Global Average Pooling} نام دارد: ساده‌ترین روش برای خلاصه کلِ پنجره.
-جایگزین‌هایی مثلِ توکنِ \lr{CLS} یا \lr{attention pooling} هم بودند، ولی میانگین برای
-سخت‌افزار ساده‌تر است و به هیچ پارامترِ اضافه‌ای نیاز ندارد.
+این \lr{Global Average Pooling} نام دارد: ساده‌ترین روش برای خلاصه کل پنجره.
+جایگزین‌هایی مثل توکن \lr{CLS} یا \lr{attention pooling} هم بودند، ولی میانگین برای
+سخت‌افزار ساده‌تر است و به هیچ پارامتر اضافه‌ای نیاز ندارد.
 }
 
-\mysubsection{سرِ طبقه‌بندی: \lr{classifier}}
+\mysubsection{سر طبقه‌بندی: \lr{classifier}}
 
-بردارِ ۳۲تاییِ خلاصه‌شده از این زنجیره عبور می‌کند تا به ۴ کلاس برسد:
+بردار ۳۲تایی خلاصه‌شده از این زنجیره عبور می‌کند تا به ۴ کلاس برسد:
 
 \begin{latin}
 \begin{lstlisting}
@@ -859,35 +894,35 @@ LayerNorm(32) -> Linear(32->16) -> GELU -> Dropout -> Linear(16->4)
 \end{latin}
 
 \begin{itemize}
-\item \lr{LayerNorm} ورودیِ سر را پایدار می‌کند؛ \lr{Linear(32->16)} بُعد را کم می‌کند،
-\lr{GELU} غیرخطی می‌کند، و \lr{Linear(16->4)} به تعدادِ کلاس‌ها می‌رساند.
-\item خروجی ۴ عددِ \lr{logit} است \pmdash{} بدونِ \lr{softmax}. تبدیل به احتمال در تابعِ
-\lr{loss} (آموزش) یا جداگانه هنگامِ استنتاج انجام می‌شود.
+\item \lr{LayerNorm} ورودی سر را پایدار می‌کند؛ \lr{Linear(32->16)} بعد را کم می‌کند،
+\lr{GELU} غیرخطی می‌کند، و \lr{Linear(16->4)} به تعداد کلاس‌ها می‌رساند.
+\item خروجی ۴ عدد \lr{logit} است \pmdash{} بدون \lr{softmax}. تبدیل به احتمال در تابع
+\lr{loss} (آموزش) یا جداگانه هنگام استنتاج انجام می‌شود.
 \end{itemize}
 
-\mysubsection{ممیزیِ تصمیمِ معماری: آیا این بهترین مسیر است؟}
+\mysubsection{ممیزی تصمیم معماری: آیا این بهترین مسیر است؟}
 
-انتخابِ فعلی از نظرِ دقت و تعدادِ پارامتر منطقی است، اما گلوگاهِ سخت‌افزار فقط تعدادِ
-پارامترها نیست. توجهِ کامل برای طولِ ۱۰۲۴، ماتریسِ $1024\times1024$ می‌سازد و هزینه‌اش
-تقریباً با مربعِ طولِ توالی رشد می‌کند. پس «۹۴۹۲ پارامتر» به‌تنهایی ثابت نمی‌کند که مدل
-روی بردِ نهایی با \lr{latency} مناسب جا می‌شود.
+انتخاب فعلی از نظر دقت و تعداد پارامتر منطقی است، اما گلوگاه سخت‌افزار فقط تعداد
+پارامترها نیست. توجه کامل برای طول ۱۰۲۴، ماتریس $1024\times1024$ می‌سازد و هزینه‌اش
+تقریبا با مربع طول توالی رشد می‌کند. پس «۹۴۹۲ پارامتر» به‌تنهایی ثابت نمی‌کند که مدل
+روی برد نهایی با \lr{latency} مناسب جا می‌شود.
 
 \begin{itemize}
-\item \textbf{چرا فعلاً نگهش می‌داریم؟} مدلِ اصلی باید \lr{Transformer} بماند؛ دقتِ آزمونِ
-\lr{F\_1layer} برابرِ \lr{97.55\%} است و تبدیلِ \lr{int10} نیز به \lr{97.11\%} رسیده است.
-تغییرِ معماری در این نقطه همه وزن‌ها، کالیبراسیون و بردارهای طلایی را بی‌اعتبار می‌کند.
-\item \textbf{چه چیزی هنوز اثبات نشده؟} \lr{fit} شدن، تعدادِ \lr{BRAM/DSP/LUT/FF}، فرکانس،
-\lr{latency} و \lr{throughput} واقعی. این‌ها فقط از گزارشِ سنتز و آزمونِ برد به‌دست می‌آیند.
-\item \textbf{مسیرِ بهترِ کم‌ریسک:} ابتدا همین قراردادِ عددی را در \lr{Vitis HLS} سنتز و
-گلوگاه را اندازه‌گیری کنیم؛ سپس فقط در صورتِ عدم \lr{fit}، گزینه‌هایی مثل پردازشِ \lr{query} به‌صورت
-ردیفی/کاشی‌ای، کاهشِ بافرهای هم‌زمان، یا کوتاه‌تر کردن پنجره را بررسی کنیم. گزینه آخر
+\item \textbf{چرا فعلا نگهش می‌داریم؟} مدل اصلی باید \lr{Transformer} بماند؛ دقت آزمون
+\lr{F\_1layer} برابر \lr{97.55\%} است و تبدیل \lr{int10} نیز به \lr{97.11\%} رسیده است.
+تغییر معماری در این نقطه همه وزن‌ها، کالیبراسیون و بردارهای طلایی را بی‌اعتبار می‌کند.
+\item \textbf{چه چیزی هنوز اثبات نشده؟} \lr{fit} شدن، تعداد \lr{BRAM/DSP/LUT/FF}، فرکانس،
+\lr{latency} و \lr{throughput} واقعی. این‌ها فقط از گزارش سنتز و آزمون برد به‌دست می‌آیند.
+\item \textbf{مسیر بهتر کم‌ریسک:} ابتدا همین قرارداد عددی را در \lr{Vitis HLS} سنتز و
+گلوگاه را اندازه‌گیری کنیم؛ سپس فقط در صورت عدم \lr{fit}، گزینه‌هایی مثل پردازش \lr{query} به‌صورت
+ردیفی/کاشی‌ای، کاهش بافرهای هم‌زمان، یا کوتاه‌تر کردن پنجره را بررسی کنیم. گزینه آخر
 نیاز به آموزش و ارزیابی مجدد دارد و نباید بی‌صدا انجام شود.
 \end{itemize}
 
 \infobox{
-\textbf{تفکیکِ سه مفهوم:} تعدادِ پارامتر، حافظه وزن را تخمین می‌زند؛ طولِ توالی، حافظه
-فعال‌سازی و هزینه \lr{attention} را تعیین می‌کند؛ تعدادِ واحدهای \lr{MAC} موازی، \lr{latency} و مصرف \lr{DSP}
-را تعیین می‌کند. برای قضاوتِ \lr{FPGA} باید هر سه را با هم دید.
+\textbf{تفکیک سه مفهوم:} تعداد پارامتر، حافظه وزن را تخمین می‌زند؛ طول توالی، حافظه
+فعال‌سازی و هزینه \lr{attention} را تعیین می‌کند؛ تعداد واحدهای \lr{MAC} موازی، \lr{latency} و مصرف \lr{DSP}
+را تعیین می‌کند. برای قضاوت \lr{FPGA} باید هر سه را با هم دید.
 }
 
 % ==============================================================
@@ -921,11 +956,11 @@ for epoch in range(num_epochs):
 
 \begin{itemize}
 \item \textbf{\lr{optimizer}:} \lr{Adam} با \lr{lr=1e-3}
-\item \textbf{\lr{criterion}:} \lr{CrossEntropyLoss} (اگر \lr{imbalance > 1.5} با وزنِ کلاس)
-\item \textbf{بهترین مدل:} بر اساسِ \lr{val\_loss} انتخاب می‌شود \pmdash{} کمترین \lr{val\_loss}،
+\item \textbf{\lr{criterion}:} \lr{CrossEntropyLoss} (اگر \lr{imbalance > 1.5} با وزن کلاس)
+\item \textbf{بهترین مدل:} بر اساس \lr{val\_loss} انتخاب می‌شود \pmdash{} کمترین \lr{val\_loss}،
 نه بیشترین دقت.
-\item \textbf{\lr{early stopping}:} اگر \lr{val\_loss} به مدتِ \lr{patience=6} اپاک بهتر نشد، آموزش می‌ایستد.
-\item \textbf{\lr{checkpoint}:} شاملِ وزن‌ها \texttt{+} \lr{model\_config} \texttt{+} \lr{training\_config}
+\item \textbf{\lr{early stopping}:} اگر \lr{val\_loss} به مدت \lr{patience=6} اپاک بهتر نشد، آموزش می‌ایستد.
+\item \textbf{\lr{checkpoint}:} شامل وزن‌ها \texttt{+} \lr{model\_config} \texttt{+} \lr{training\_config}
 \texttt{+} \lr{preprocessing\_config} (همه از \lr{config.py} خوانده می‌شوند تا بازتولیدپذیر باشد).
 \end{itemize}
 
@@ -933,10 +968,10 @@ for epoch in range(num_epochs):
 \textbf{چه چیزهایی ذخیره می‌شوند؟} هر اجرا یک پوشه‌ی زمان‌دار می‌سازد که شامل:
 \lr{transformer\_best.pt} (بهترین چک‌پوینت)، \lr{history.json} (\lr{loss/acc} هر اپاک)،
 \lr{metrics.json} (متریک‌های نهایی: \lr{accuracy}، \lr{confusion matrix}، \lr{F2}، خلاصه‌ی
-\lr{fault-vs-normal}، زمان‌بندی، مصرفِ حافظه‌ی \lr{GPU})، اسنپ‌شات‌های \lr{config}، و نمودارها.
+\lr{fault-vs-normal}، زمان‌بندی، مصرف حافظه‌ی \lr{GPU})، اسنپ‌شات‌های \lr{config}، و نمودارها.
 }
 
-\mysubsection{توابعِ مشترک (\lr{src/utils/training\_utils.py})}
+\mysubsection{توابع مشترک (\lr{src/utils/training\_utils.py})}
 
 \begin{latin}
 \begin{lstlisting}
@@ -951,7 +986,7 @@ build_loss_function(...)   # CrossEntropy with/without class weights
 \mysection{۷}{\lr{src/evaluate/evaluate\_model.py} \pmdash{} ارزیابی}
 % ==============================================================
 
-\mysubsection{لودِ مدل از چک‌پوینت}
+\mysubsection{لود مدل از چک‌پوینت}
 
 \begin{latin}
 \begin{lstlisting}
@@ -965,21 +1000,21 @@ model.load_state_dict(checkpoint["model_state_dict"])
 \end{lstlisting}
 \end{latin}
 
-معماری از \textbf{داخلِ چک‌پوینت} خوانده می‌شود نه \lr{config.py} فعلی.
+معماری از \textbf{داخل چک‌پوینت} خوانده می‌شود نه \lr{config.py} فعلی.
 \lr{map\_location=device}: اگر مدل روی \lr{GPU} ذخیره شده ولی الان \lr{CPU} داری، درست کار می‌کند.
 
 % ==============================================================
-\mysection{۸}{\lr{src/quantize/} \pmdash{} کوانتیزاسیونِ \lr{int10}}
+\mysection{۸}{\lr{src/quantize/} \pmdash{} کوانتیزاسیون \lr{int10}}
 % ==============================================================
 
 \mysubsection{هدف}
 
-مدلِ \lr{float32} برای \lr{FPGA} مناسب نیست. راه‌حل: همه اعداد را به \lr{int10} تبدیل کنیم.
+مدل \lr{float32} برای \lr{FPGA} مناسب نیست. راه‌حل: همه اعداد را به \lr{int10} تبدیل کنیم.
 
 \begin{center}
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{تعدادِ بیت} & \textbf{دقت} & \textbf{افتِ دقت} \\
+\textbf{تعداد بیت} & \textbf{دقت} & \textbf{افت دقت} \\
 \hline
 \lr{float32} & \lr{97.55\%} & \pmdash{} \\
 \lr{int16}   & \lr{97.55\%} & \lr{0.00\%} \\
@@ -989,7 +1024,7 @@ model.load_state_dict(checkpoint["model_state_dict"])
 \end{tabular}
 \end{center}
 
-\lr{int10} نقطه بهینه است: افتِ دقت ناچیز، منابعِ \lr{FPGA} بسیار کمتر.
+\lr{int10} نقطه بهینه است: افت دقت ناچیز، منابع \lr{FPGA} بسیار کمتر.
 
 \mysubsection{فرآیند}
 
@@ -1007,18 +1042,18 @@ scales = calibrate(model, X_train)
 \mysubsection{فایل‌های فعال}
 
 \begin{itemize}
-\item \lr{integer\_ops.py}: عملیاتِ پایه (\lr{LayerNorm} صحیح، \lr{GELU} با \lr{LUT}، \lr{Softmax} صحیح)
-\item \lr{integer\_model.py}: کلاسِ \lr{IntegerTransformer} با \lr{numpy}
+\item \lr{integer\_ops.py}: عملیات پایه (\lr{LayerNorm} صحیح، \lr{GELU} با \lr{LUT}، \lr{Softmax} صحیح)
+\item \lr{integer\_model.py}: کلاس \lr{IntegerTransformer} با \lr{numpy}
 \item \lr{evaluate\_integer.py}: کالیبراسیون + مقایسه \lr{float} در برابر \lr{integer}
-\item \lr{evaluate\_integer\_bits.py}: جست‌وجوی بهترین تعدادِ بیت (یافت: \lr{int10})
-\item \lr{evaluate\_int10\_metrics.py}: متریکِ نهاییِ \lr{int10}
+\item \lr{evaluate\_integer\_bits.py}: جست‌وجوی بهترین تعداد بیت (یافت: \lr{int10})
+\item \lr{evaluate\_int10\_metrics.py}: متریک نهایی \lr{int10}
 \item \lr{export\_hls\_f\_int10.py}: \lr{export} وزن‌ها و \lr{scale}ها برای \lr{HLS C++}
 \end{itemize}
 
-\mysubsection{خواندنِ \lr{evaluate\_integer\_bits.py} خط‌به‌خط}
+\mysubsection{خواندن \lr{evaluate\_integer\_bits.py} خط‌به‌خط}
 
-این فایل وزنِ جدید آموزش نمی‌دهد. یک چک‌پوینتِ \lr{float} را یک بار می‌خواند و برای هر
-عرضِ بیت، همان وزن‌ها را دوباره کوانت می‌کند؛ مجموعه کالیبراسیون و آزمون نیز برای همه
+این فایل وزن جدید آموزش نمی‌دهد. یک چک‌پوینت \lr{float} را یک بار می‌خواند و برای هر
+عرض بیت، همان وزن‌ها را دوباره کوانت می‌کند؛ مجموعه کالیبراسیون و آزمون نیز برای همه
 عرض‌ها یکسان است تا مقایسه منصفانه بماند.
 
 \begin{latin}
@@ -1034,29 +1069,29 @@ results = [run_one(b, state_np, model_cfg, Xc, Xt, yt)
 \end{latin}
 
 \begin{itemize}
-\item \lr{set\_bits}: ثابت‌های ماژولِ \lr{integer\_model} را فقط در حافظه همان فرآیند
+\item \lr{set\_bits}: ثابت‌های ماژول \lr{integer\_model} را فقط در حافظه همان فرآیند
 عوض می‌کند؛ فایل یا \lr{artifact} قبلی تغییر نمی‌کند.
-\item بعد از هر تغییرِ بیت، \lr{IntegerTransformer(...)} از نو ساخته می‌شود؛ بنابراین
-وزن‌ها، حدودِ اشباع و \lr{LUT}ها با عرضِ جدید بازسازی می‌شوند.
-\item \lr{CalibStats} بیشینه دامنه فعال‌سازی‌های مسیرِ \lr{float} را روی بخشی از \lr{train} جمع
+\item بعد از هر تغییر بیت، \lr{IntegerTransformer(...)} از نو ساخته می‌شود؛ بنابراین
+وزن‌ها، حدود اشباع و \lr{LUT}ها با عرض جدید بازسازی می‌شوند.
+\item \lr{CalibStats} بیشینه دامنه فعال‌سازی‌های مسیر \lr{float} را روی بخشی از \lr{train} جمع
 می‌کند و از آن \lr{scale} هر لایه را می‌سازد. \lr{test} فقط برای سنجش استفاده می‌شود، نه کالیبراسیون.
-\item \lr{float\_accuracy} در این اسکریپت خروجیِ مرجعِ \lr{NumPy} داخل
-\lr{IntegerTransformer} است؛ الزاماً همان ارزیابی مستقیمِ \lr{PyTorch} روی کل \lr{test} نیست.
+\item \lr{float\_accuracy} در این اسکریپت خروجی مرجع \lr{NumPy} داخل
+\lr{IntegerTransformer} است؛ الزاما همان ارزیابی مستقیم \lr{PyTorch} روی کل \lr{test} نیست.
 \end{itemize}
 
 \infobox{
-\textbf{نکته مهندسی:} \lr{monkeypatch} برای آزمایشِ اکتشافی قابل‌قبول است، اما قراردادِ نهایی
-نباید به \lr{state} سراسریِ ماژول وابسته باشد. برای توسعه بعدی بهتر است عرضِ بیت به‌صورتِ یک
-\lr{config} صریح به سازنده \lr{IntegerTransformer} داده شود؛ این تغییر باید همراهِ آزمونِ
-\lr{backward compatibility} انجام شود، نه وسطِ مسیر سنتز.
+\textbf{نکته مهندسی:} \lr{monkeypatch} برای آزمایش اکتشافی قابل‌قبول است، اما قرارداد نهایی
+نباید به \lr{state} سراسری ماژول وابسته باشد. برای توسعه بعدی بهتر است عرض بیت به‌صورت یک
+\lr{config} صریح به سازنده \lr{IntegerTransformer} داده شود؛ این تغییر باید همراه آزمون
+\lr{backward compatibility} انجام شود، نه وسط مسیر سنتز.
 }
 
 \mysubsection{چرا \lr{int10} و نه \lr{int8}؟}
 
-در \lr{sweep} یکسانِ ۴۰۰۰ پنجره، \lr{int10} دقتِ \lr{96.375\%} و \lr{int8} دقتِ
+در \lr{sweep} یکسان ۴۰۰۰ پنجره، \lr{int10} دقت \lr{96.375\%} و \lr{int8} دقت
 \lr{88.675\%} داشت؛ \lr{recall} کلاس \lr{imbalance} در \lr{int8} به حدود \lr{65.78\%} افت کرد.
-سپس \lr{int10} روی تمامِ ۹۵۴۰۴ پنجره \lr{test} به \lr{97.113\%} رسید. بنابراین انتخابِ
-\lr{int10} فقط بر اساسِ میانگین دقت نیست؛ جلوگیری از فروپاشی یک کلاس نیز دلیل اصلی است.
+سپس \lr{int10} روی تمام ۹۵۴۰۴ پنجره \lr{test} به \lr{97.113\%} رسید. بنابراین انتخاب
+\lr{int10} فقط بر اساس میانگین دقت نیست؛ جلوگیری از فروپاشی یک کلاس نیز دلیل اصلی است.
 
 % ==============================================================
 \mysection{۹}{\lr{hls/f1\_int10/} \pmdash{} هسته \lr{C++} برای \lr{FPGA}}
@@ -1064,8 +1099,8 @@ results = [run_one(b, state_np, model_cfg, Xc, Xt, yt)
 
 \mysubsection{هدف}
 
-رونوشتِ \lr{C++} از مدلِ \lr{int10} برای مرجعِ بیت‌دقیق و آماده‌سازیِ سنتزِ
-\lr{HLS} (\lr{Vitis HLS}). این پوشه هنوز معادلِ یک \lr{bitstream} سنتزشده نیست.
+رونوشت \lr{C++} از مدل \lr{int10} برای مرجع بیت‌دقیق و آماده‌سازی سنتز
+\lr{HLS} (\lr{Vitis HLS}). این پوشه هنوز معادل یک \lr{bitstream} سنتزشده نیست.
 
 \begin{latin}
 \begin{lstlisting}
@@ -1080,36 +1115,36 @@ hls/f1_int10/
 \end{lstlisting}
 \end{latin}
 
-تأییدِ موجود بدون کامپایلر: \lr{python hls/f1\_int10/verify\_export.py}؛
-انتظارِ ثبت‌شده \lr{16/16} کلاس و \lr{logit} بیت‌دقیق است. گامِ بعدی \lr{C-sim} و سپس
-\lr{C-synthesis} در \lr{Vitis} است. راهنمای دقیق در فایلِ
-\lr{SYNTHESIS\_GUIDE.md} داخلِ زیرپوشه \lr{vitis/} قرار دارد.
+تأیید موجود بدون کامپایلر: \lr{python hls/f1\_int10/verify\_export.py}؛
+انتظار ثبت‌شده \lr{16/16} کلاس و \lr{logit} بیت‌دقیق است. گام بعدی \lr{C-sim} و سپس
+\lr{C-synthesis} در \lr{Vitis} است. راهنمای دقیق در فایل
+\lr{SYNTHESIS\_GUIDE.md} داخل زیرپوشه \lr{vitis/} قرار دارد.
 
 \infobox{
-\textbf{وضعیت صادقانه:} منطقِ مرجع، \lr{export} و \lr{golden-vector} موجود است؛ اما تا وقتی گزارش
+\textbf{وضعیت صادقانه:} منطق مرجع، \lr{export} و \lr{golden-vector} موجود است؛ اما تا وقتی گزارش
 \lr{csynth}، مصرف منابع، \lr{latency/II}، فایل‌های \lr{.bit/.hwh} و تطبیق روی برد ثبت نشده‌اند،
 مرحله \lr{FPGA} «آماده برای سنتز» است، نه «پیاده‌سازی‌شده روی برد».
 }
 
 % ==============================================================
-\mysection{۱۰}{\lr{pynq/, host/} \pmdash{} درایور و رابطِ کاربری}
+\mysection{۱۰}{\lr{pynq/, host/} \pmdash{} درایور و رابط کاربری}
 % ==============================================================
 
 \begin{itemize}
-\item \lr{pynq/fault\_classifier.py}: کلاسِ مشترک با \lr{NumpyBackend} و اسکلتِ
+\item \lr{pynq/fault\_classifier.py}: کلاس مشترک با \lr{NumpyBackend} و اسکلت
 \lr{HardwareBackend} برای \lr{overlay} و \lr{AXI DMA}
-\item \lr{pynq/run\_demo.py}: پنجره $\rightarrow$ طبقه‌بندی $\rightarrow$ تولیدِ \lr{frame}
-\item \lr{host/frame\_protocol.py}: تعریف و اعتبارسنجیِ قراردادِ پیام
-\item \lr{host/fault\_monitor.py}: دریافت از \lr{serial}، \lr{mock} یا فایل و نمایشِ \lr{Tkinter/headless}
+\item \lr{pynq/run\_demo.py}: پنجره $\rightarrow$ طبقه‌بندی $\rightarrow$ تولید \lr{frame}
+\item \lr{host/frame\_protocol.py}: تعریف و اعتبارسنجی قرارداد پیام
+\item \lr{host/fault\_monitor.py}: دریافت از \lr{serial}، \lr{mock} یا فایل و نمایش \lr{Tkinter/headless}
 \item پروتکل: \lr{\texttt{FRAME=<id>,CLASS=<n>,LABEL=<name>,CONF=<c>}}
 \end{itemize}
 
-مسیرِ \lr{mock/NumPy} اکنون قابل نمایش است، ولی \lr{HardwareBackend} تا تولیدِ
-\lr{bitstream} و مشخص شدن نامِ واقعی \lr{IP/DMA} یک قرارداد و اسکلتِ اتصال است. طبقه‌بندی در
-نسخه نهایی باید از \lr{FPGA} بیاید؛ رابطِ \lr{PC} فقط پیام را \lr{parse} و نمایش می‌دهد.
+مسیر \lr{mock/NumPy} اکنون قابل نمایش است، ولی \lr{HardwareBackend} تا تولید
+\lr{bitstream} و مشخص شدن نام واقعی \lr{IP/DMA} یک قرارداد و اسکلت اتصال است. طبقه‌بندی در
+نسخه نهایی باید از \lr{FPGA} بیاید؛ رابط \lr{PC} فقط پیام را \lr{parse} و نمایش می‌دهد.
 
 % ==============================================================
-\mysection{۱۱}{\rl{تصویرِ کلی از ورودی تا خروجی}}
+\mysection{۱۱}{\rl{تصویر کلی از ورودی تا خروجی}}
 % ==============================================================
 
 \begin{latin}
@@ -1130,26 +1165,26 @@ MAFAULDA CSV files (8 channels, 50 kHz)
 \end{lstlisting}
 \end{latin}
 
-\mysection{۱۲}{\rl{جمع‌بندیِ تصمیم‌ها و قدمِ بعدی}}
+\mysection{۱۲}{\rl{جمع‌بندی تصمیم‌ها و قدم بعدی}}
 
 \begin{itemize}
 \item \textbf{تصمیم‌های دارای پشتوانه:} \lr{split} فایل‌محور، چهار کلاس ثابت، استفاده از ۸
-کانال، معماریِ \lr{F\_1layer}، و انتخابِ \lr{int10} همگی با کد و \lr{artifact} قابل ردیابی‌اند.
-\item \textbf{تصمیمِ قابل بحث ولی فعلاً معقول:} \lr{z-score} مستقل برای هر پنجره، دامنه مطلق
+کانال، معماری \lr{F\_1layer}، و انتخاب \lr{int10} همگی با کد و \lr{artifact} قابل ردیابی‌اند.
+\item \textbf{تصمیم قابل بحث ولی فعلا معقول:} \lr{z-score} مستقل برای هر پنجره، دامنه مطلق
 ارتعاش را حذف می‌کند اما نسبت به \lr{gain} سنسور مقاوم و برای ورودی آماده‌شده \lr{self-contained} است.
 مقایسه با \lr{global-train normalization} فقط با آموزش مجدد و \lr{validation} مجاز است.
 \item \textbf{بزرگ‌ترین ریسک:} \lr{attention} کامل روی ۱۰۲۴ توکن، نه تعداد وزن‌ها. تصمیم بعدی
 باید بر اساس گزارش واقعی \lr{csynth} باشد، نه حدس درباره منابع.
 \item \textbf{ترتیب پیشنهادی ادامه:} ابتدا \lr{verify\_export} و \lr{C-sim} اجرا شوند؛
-سپس از \lr{C-synthesis} یک خطِ مبنا برای منابع و زمان گرفته شود. بعد از بهینه‌سازیِ بافر
-و حسابِ صحیح، \lr{bitstream} تولید و با داده طلایی روی برد آزموده شود؛ اتصالِ
+سپس از \lr{C-synthesis} یک خط مبنا برای منابع و زمان گرفته شود. بعد از بهینه‌سازی بافر
+و حساب صحیح، \lr{bitstream} تولید و با داده طلایی روی برد آزموده شود؛ اتصال
 \lr{PYNQ/UART/UI} آخرین گام است.
 \end{itemize}
 
 \infobox{
 \textbf{قاعده ادامه پروژه:} هیچ تغییر معماری، پنجره، کانال یا \lr{normalization} فقط برای \lr{fit}
 شدن سخت‌افزار انجام نمی‌شود. ابتدا اندازه‌گیری، سپس یک آزمایش کنترل‌شده، و پس از تأیید
-دوباره آموزش، کوانتش و تولیدِ \lr{golden-vector} انجام می‌شود.
+دوباره آموزش، کوانتش و تولید \lr{golden-vector} انجام می‌شود.
 }
 
 \end{document}
