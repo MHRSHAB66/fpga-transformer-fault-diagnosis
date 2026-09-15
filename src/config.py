@@ -1,14 +1,8 @@
 """
-Central configuration — the single source of truth for the whole project.
+Central configuration for the Python data, training, and model pipeline.
 
-Every runnable stage (data loading, windowing, training, evaluation,
-quantization, golden-vector export, and the FPGA-facing constants) reads its
-settings from here. Keep constants in this file rather than scattering them
-across scripts, and change values here in one place so all stages stay
-consistent.
-
-The project root and dataset root are resolved from the environment so no
-user-specific absolute paths are hard-coded.
+Shared software settings are defined here. Hardware-specific settings are
+stored in exported manifests and the HLS/RTL implementation.
 """
 
 import os
@@ -20,29 +14,28 @@ load_dotenv()
 
 project_root_env = os.getenv("PROJECT_ROOT")
 if not project_root_env:
-    raise ValueError("PROJECT_ROOT is not set in .env")
+    raise ValueError("PROJECT_ROOT is not set in the environment or .env")
 
 PROJECT_ROOT = Path(project_root_env).resolve()
+if not PROJECT_ROOT.is_dir():
+    raise ValueError(f"PROJECT_ROOT is not an existing directory: {PROJECT_ROOT}")
 
 # =========================
 # Paths
 # =========================
 DATA_RAW_DIR = PROJECT_ROOT / "data" / "raw" / "mafaulda"      # raw MAFAULDA CSVs
 RUNS_DIR = PROJECT_ROOT / "artifacts" / "runs"                 # per-run outputs
-DEFAULT_RUN_NAME = "transformer_final_t4"                      # default run-dir label
+DEFAULT_RUN_NAME = "transformer_experiment"                    # default run-dir label
 
-# On-disk store for pre-processed windows. The software/Kaggle training path
-# builds windows in memory (fresh kernel each run, so a disk cache adds no
-# value there). This is reserved for the hardware/FPGA path: once inputs are
-# pre-processed for the board, results can be persisted here and reused on the
-# PC side as a cache instead of recomputing every time.
+# Reserved path for optional persisted preprocessed data.
+# It is not used by the active training pipeline.
 DATA_PROCESSED_DIR = PROJECT_ROOT / "data" / "processed"
 
 # =========================
 # Reproducibility
 # =========================
-# Single seed shared by the file-level split and all torch/numpy randomness so
-# a clean run reproduces the reported metrics.
+# Shared seed for repeatable file splits, software experiments, calibration
+# subsets, and golden-vector generation.
 RANDOM_SEED = 42
 
 # =========================
@@ -80,7 +73,7 @@ EXPECTED_COLUMNS = [
 ]
 EXPECTED_NUM_COLUMNS = len(EXPECTED_COLUMNS)
 
-# All 8 columns are fed to the model (CHANNEL_SELECTION = "all").
+# The active pipeline feeds all 8 MAFAULDA columns to the model.
 INPUT_CHANNELS = EXPECTED_NUM_COLUMNS
 
 # Fixed-length windowing. Stride == size means non-overlapping windows, and
@@ -106,9 +99,10 @@ MAFAULDA_SAMPLE_RATE = 50000  # Hz — acquisition rate, used by analysis tools
 MISSING_RATIO_THRESHOLD = 0.2
 MISSING_FILL_METHOD = "median"
 
-# Normalization is per-window z-score (mean 0, std 1 computed independently per
-# window). This needs no global statistics, which keeps it FPGA-friendly.
-# EPSILON guards against division by zero when a window's std is ~0.
+# Normalization is per-window, per-channel z-score: each channel's mean and
+# standard deviation are computed over the time samples of that window. This
+# needs no dataset-wide statistics, which keeps it FPGA-friendly. EPSILON
+# guards against division by zero when a channel's standard deviation is ~0.
 NORMALIZATION_METHOD = "zscore"
 NORMALIZATION_SCOPE = "per_window"
 EPSILON = 1e-8
@@ -125,6 +119,18 @@ TEST_RATIO = 0.2
 # =========================
 # Sanity checks
 # =========================
+if NORMALIZATION_METHOD != "zscore":
+    raise ValueError(
+        "The active preprocessing pipeline currently supports only "
+        "NORMALIZATION_METHOD='zscore'."
+    )
+
+if NORMALIZATION_SCOPE != "per_window":
+    raise ValueError(
+        "The active preprocessing pipeline currently supports only "
+        "NORMALIZATION_SCOPE='per_window'."
+    )
+
 if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:
     raise ValueError("TRAIN_RATIO + VAL_RATIO + TEST_RATIO must be 1.0")
 
@@ -132,9 +138,9 @@ if abs((TRAIN_RATIO + VAL_RATIO + TEST_RATIO) - 1.0) > 1e-8:
 # DataLoader
 # =========================
 BATCH_SIZE = 64
-# Keep at 0 on Windows: multi-worker DataLoaders are slow/unreliable there
-# (process spawn overhead, no fork). On Kaggle/Linux/Colab, raise this (e.g. 2-4)
-# to load batches in parallel and speed up training.
+# Use 0 by default on Windows so batches are loaded in the main process and no
+# worker-process setup is required. On Linux environments such as Kaggle or
+# Colab, values such as 2-4 may improve loading speed and should be benchmarked.
 DATALOADER_NUM_WORKERS = 0
 
 # =========================
@@ -147,8 +153,10 @@ EARLY_STOPPING_PATIENCE = 6  # epochs without val-loss improvement before stop
 # =========================
 # Transformer model
 # =========================
-# F_1layer — the primary model deployed to the FPGA. See docs/DECISION_LOG.md
-# (D013, D018) for rationale, accuracy figures, and checkpoint paths.
+# F_1layer — the primary model selected for the future FPGA implementation.
+# Hardware deployment is not yet complete, and the final FPGA target has not
+# been selected. See docs/DECISION_LOG.md (D013, D018) for the model rationale,
+# accuracy figures, and checkpoint paths.
 TRANSFORMER_D_MODEL = 32
 TRANSFORMER_NHEAD = 4
 TRANSFORMER_NUM_LAYERS = 1

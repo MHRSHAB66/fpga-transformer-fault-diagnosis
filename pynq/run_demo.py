@@ -27,7 +27,7 @@ from pynq.fault_classifier import FaultClassifier, NumpyBackend
 from host.frame_protocol import format_frame, LABELS
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-GOLDEN_IN = REPO_ROOT / "hls_f_int10" / "golden" / "golden_in.txt"
+GOLDEN_IN = REPO_ROOT / "hls" / "f1_int10" / "golden" / "golden_in.txt"
 
 
 def softmax_conf(logits: np.ndarray) -> float:

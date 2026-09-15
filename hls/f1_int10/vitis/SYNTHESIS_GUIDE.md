@@ -1,11 +1,12 @@
-# Vitis HLS synthesis guide — F_1layer @ int10 (EBAZ4205 / Zynq-7010)
+# Vitis HLS synthesis guide — F_1layer @ int10
 
 Everything here runs on the laptop with Vitis; this desktop has no compiler, so
 the C++ below is unverified-by-compiler (the *arithmetic* is verified bit-exact
 by `../verify_export.py`, PASS 16/16). Follow the stages in order.
 
-Target part: **`xc7z010clg400-1`**. Budget (Zynq-7010):
-**80 DSP · 60 BRAM36 (~270 KB) · 17 600 LUT · 35 200 FF**.
+Target part: **TBD**. The final FPGA board/device has not been selected. Before
+running the flow, set `FPGA_PART` to the exact Vitis part and record that
+device's DSP, BRAM, LUT and FF budget in the project report.
 
 ## Files here
 | file | role |
@@ -17,7 +18,7 @@ Target part: **`xc7z010clg400-1`**. Budget (Zynq-7010):
 
 ## Stage A — C-simulation now (validates in the real tool, no synthesis)
 ```bash
-cd hls_f_int10/vitis
+cd hls/f1_int10/vitis
 vitis_hls -f run_hls.tcl        # DO_CSIM=1: builds ../transformer.cpp + testbench
 ```
 Expect `RESULT: PASS` (16/16 class, 16/16 bit-exact logits) — same as
@@ -27,12 +28,12 @@ Expect `RESULT: PASS` (16/16 class, 16/16 bit-exact logits) — same as
 In `run_hls.tcl` set `DO_CSYNTH 1`, `set_top transformer_top`, and add
 `$HLSDIR/vitis/transformer_top.cpp` (drop the portable `transformer.cpp` from the
 design fileset — keep it only as -tb). Re-run. This gives a BASELINE report; it
-will **not fit** Zynq-7010 yet (see Stage C) but tells you the starting numbers.
+does not establish fit until it is compared with the selected device (see Stage C).
 
 Why it won't fit as-is: the core keeps full `SEQ*D = 32768`-element activation
-buffers (`x, q, k, v, ctx, res, ln1, ff2`) plus `SEQ*DFF = 65536` for `ff`. Even
-at 10 bits that is well over the ~270 KB BRAM budget, and attention is
-O(SEQ²)=~4M MACs/head. Optimization is mandatory.
+buffers (`x, q, k, v, ctx, res, ln1, ff2`) plus `SEQ*DFF = 65536` for `ff`.
+Attention is O(SEQ²)=~4M MACs/head. Measure this baseline against the selected
+device before deciding which optimizations are mandatory.
 
 ## Stage C — optimize to fit the board
 1. **Narrow the datapath.** `ap_types.h` already sets `act_t=ap_int<10>`,
@@ -62,7 +63,7 @@ O(SEQ²)=~4M MACs/head. Optimization is mandatory.
    control; generate bitstream → `design.bit` + `design.hwh`.
 3. Copy both to the board; in `pynq/fault_classifier.py` `HardwareBackend`, set
    the overlay path and confirm the DMA name (`overlay.ip_dict`).
-4. Sanity-check on hardware with `hls_f_int10/golden/` (logits must match), then
+4. Sanity-check on hardware with `hls/f1_int10/golden/` (logits must match), then
    `python -m pynq.run_demo --bitstream design.bit --port /dev/ttyPS0` with the
    PC running `python -m host.fault_monitor --source serial --port <COM>`.
 

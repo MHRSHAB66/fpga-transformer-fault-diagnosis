@@ -10,7 +10,7 @@ desktop has no FPGA toolchain).
 Reads (all committed):
   - kaggle/int10_shard/int10_fulltest_combined.json   (int10 full-test accuracy)
   - kaggle/sweep_multibit/integer_multibit_sweep_F.json (bit-width sweep)
-  - hls_f_int10/model_manifest.json                   (HW geometry / scales)
+  - hls/f1_int10/model_manifest.json                  (HW geometry / scales)
 
 Run
 ---
@@ -26,7 +26,7 @@ from src.config import PROJECT_ROOT
 
 INT10_FULLTEST = PROJECT_ROOT / "kaggle" / "int10_shard" / "int10_fulltest_combined.json"
 BIT_SWEEP      = PROJECT_ROOT / "kaggle" / "sweep_multibit" / "integer_multibit_sweep_F.json"
-HW_MANIFEST    = PROJECT_ROOT / "hls_f_int10" / "model_manifest.json"
+HW_MANIFEST    = PROJECT_ROOT / "hls" / "f1_int10" / "model_manifest.json"
 
 OUT_MD   = PROJECT_ROOT / "docs" / "final_report.md"
 OUT_JSON = PROJECT_ROOT / "artifacts" / "results" / "final_report.json"
@@ -62,7 +62,7 @@ def build():
         "bit_width_sweep": sweep["results"] if sweep else None,
         "hardware_config": manifest,
         "hardware_resources": {  # fill from Vitis reports after synthesis
-            "part": "xc7z010clg400-1 (EBAZ4205 / Zynq-7010)",
+            "part": "TBD -- final FPGA board/device not selected",
             "LUT": "TBD", "FF": "TBD", "BRAM": "TBD", "DSP": "TBD",
             "latency_cycles": "TBD", "II": "TBD", "Fmax_MHz": "TBD",
         },
@@ -70,7 +70,7 @@ def build():
             "software_training": "done",
             "quantization_int10": "done (full-test 97.11%)",
             "hls_export_and_verify": "done (verify_export PASS 16/16 bit-exact)",
-            "hls_synthesis": "TBD (Vitis on laptop; see hls_f_int10/vitis/SYNTHESIS_GUIDE.md)",
+            "hls_synthesis": "TBD (see hls/f1_int10/vitis/SYNTHESIS_GUIDE.md)",
             "pc_uart_receiver_and_ui": "done (host/, tested end-to-end)",
             "pynq_driver": "done (numpy backend verified; hardware backend template)",
             "on_board_uart_demo": "TBD (needs synthesized bitstream + board)",
@@ -135,7 +135,7 @@ def _write_markdown(r):
                  f"attn={m.get('attn_bits')}; input_scale={m.get('input_scale')}")
         g = m.get("golden", {})
         L.append(f"- golden self-check: {g.get('correct')}/{g.get('count')} classified; "
-                 "bit-exact verify PASS 16/16 (`hls_f_int10/verify_export.py`)\n")
+                 "bit-exact verify PASS 16/16 (`hls/f1_int10/verify_export.py`)\n")
 
     hw = r["hardware_resources"]
     L.append("## 5. Hardware resources & latency (fill after Vitis synthesis)\n")
@@ -145,7 +145,7 @@ def _write_markdown(r):
     L.append("|--------|-------|")
     for k in ["LUT", "FF", "BRAM", "DSP", "latency_cycles", "II", "Fmax_MHz"]:
         L.append(f"| {k} | {hw[k]} |")
-    L.append("\nSee `hls_f_int10/vitis/SYNTHESIS_GUIDE.md` for the synthesis flow.\n")
+    L.append("\nSee `hls/f1_int10/vitis/SYNTHESIS_GUIDE.md` for the synthesis flow.\n")
 
     L.append("## 6. End-to-end pipeline status\n")
     L.append("| stage | status |")

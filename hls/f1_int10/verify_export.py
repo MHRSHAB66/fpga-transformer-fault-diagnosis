@@ -2,14 +2,14 @@
 Compiler-free verification of the F_1layer @ int10 HLS data contract.
 
 Independent NumPy re-implementation of the C++ core, reading the SAME exported
-files under hls_f_int10/data + hls_f_int10/golden, asserting it reproduces the
+files under hls/f1_int10/data + hls/f1_int10/golden, asserting it reproduces the
 int10 golden logits bit-for-bit. Mirrors hls/verify_export.py but for the
 1-layer int10 model (ACT/ATTN qmax = 2^9-1 = 511, LAYERS = 1). It does NOT
 import integer_model, so agreement is a genuine second-source check.
 
 Run
 ---
-    python hls_f_int10/verify_export.py        # from repo root
+    python hls/f1_int10/verify_export.py        # from repo root
 """
 from __future__ import annotations
 

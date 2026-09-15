@@ -1,8 +1,9 @@
 # Vitis HLS project script for the F_1layer @ int10 core.
 #
-# Target: EBAZ4205 -> XC7Z010-1CLG400  (part xc7z010clg400-1)
+# Target device is intentionally not hard-coded. Set FPGA_PART to the exact
+# Vitis part only after the final board/device is selected.
 #
-# Usage (from hls_f_int10/vitis/, with vitis_hls on PATH):
+# Usage (from hls/f1_int10/vitis/, with vitis_hls on PATH):
 #   vitis_hls -f run_hls.tcl              # runs C-simulation of the golden core
 #
 # Stages are gated by variables at the top so you can enable csynth/cosim/export
@@ -11,9 +12,11 @@
 # testbench and must print "RESULT: PASS" (16/16), matching the NumPy verify.
 
 # ---- config ---------------------------------------------------------------
-set REPO   [file normalize [pwd]/../..]        ;# repo root
-set HLSDIR $REPO/hls_f_int10
-set PART   xc7z010clg400-1                      ;# Zynq-7010 on EBAZ4205
+set HLSDIR [file normalize [pwd]/..]            ;# repo/hls/f1_int10
+if {![info exists ::env(FPGA_PART)] || $::env(FPGA_PART) eq ""} {
+    error "FPGA_PART is not set; select the final FPGA device before running Vitis HLS"
+}
+set PART   $::env(FPGA_PART)
 set PERIOD 10                                   ;# ns -> 100 MHz starting target
 
 set DO_CSIM   1

@@ -155,15 +155,18 @@ Format per entry:
 
 ## Hardware / FPGA Deployment — 2026-08-16
 
-### D013 — FPGA-deployed model is F_1layer (not the 2-layer baseline)
+### D013 — F_1layer selected for the FPGA path (not the 2-layer baseline)
 - **Date:** 2026-08-16
 - **Decision:** The hardware/HLS core targets `F_1layer` (1 encoder layer,
   d_model=32, 4 heads, ffn=64, 9,492 params), not the higher-accuracy 2-layer
   baseline (98.22%).
-- **Why:** F halves the encoder hardware to fit the small EBAZ4205 / Zynq-7010
-  (80 DSP, ~270 KB BRAM); full-test accuracy stays high (float 97.55%).
+- **Why:** F halves the encoder compute/storage relative to the 2-layer model
+  while full-test accuracy stays high (float 97.55%). The final board/device is
+  not selected, so this is a relative-cost decision, not a board-fit claim.
+- **Hardware status:** This selects the architecture for the hardware path; it
+  does not claim completed FPGA implementation, synthesis, or board deployment.
 - **Source:** User confirmation (2026-08-16); `kaggle/` sweeps.
-- **Affects:** Stages 6-8, `hls_f_int10/`, `pynq/`. The day14 A_baseline int16
+- **Affects:** Stages 6-8, `hls/f1_int10/`, `pynq/`. The day14 A_baseline int16
   core in `hls/` is preserved untouched.
 
 ### D014 — Numeric format is int10
@@ -175,7 +178,7 @@ Format per entry:
   int8 collapses the imbalance class (recall 0.66). HLS supports arbitrary
   widths, so int10 is free in hardware and lighter than int16.
 - **Source:** `kaggle/sweep_multibit/`, `kaggle/int10_shard/int10_fulltest_combined.json`.
-- **Affects:** `hls_f_int10/` export + core, `hls_f_int10/vitis/ap_types.h`.
+- **Affects:** `hls/f1_int10/` export + core, `hls/f1_int10/vitis/ap_types.h`.
 
 ### D015 — Full-test int10 measured by 4-way Kaggle CPU sharding
 - **Date:** 2026-08-16
@@ -193,7 +196,7 @@ Format per entry:
   per-window z-score is computed on the **host/PC**, and the already-normalized
   window (quantized with `input_scale`) is what the FPGA core receives.
   **Verified:** `src/quantize/export_hls_f_int10.py` builds `golden_in.txt` from
-  `golden["normalized_input"]` (line ~157), and `hls_f_int10/model_manifest.json`
+  `golden["normalized_input"]` (line ~157), and `hls/f1_int10/model_manifest.json`
   carries `input_scale` — the core assumes normalized input, it does NOT normalize.
 - **Why:** Normalization is preprocessing (allowed on host); classification is what
   must run on the FPGA (CLAUDE.md). Host-side normalization keeps the current HLS
@@ -206,7 +209,7 @@ Format per entry:
   a second run that reads them back. To capture faithfully: this is a caching idea;
   note that per-window stats differ per window, so what would be cached/reused
   needs to be defined (per-window vs a fixed global set) when Stage 9 is designed.
-- **Affects:** `hls_f_int10/`, `pynq/`, Stage 9 sensor path.
+- **Affects:** `hls/f1_int10/`, `pynq/`, Stage 9 sensor path.
 
 ### D017 — Resampling/downsampling REJECTED for the full 8-channel model
 - **Date:** 2026-08-19
@@ -229,9 +232,10 @@ Format per entry:
 ### D018 — F_1layer is the single primary model; config.py set to 1 layer
 - **Date:** 2026-08-19
 - **Decision:** `TRANSFORMER_NUM_LAYERS = 1` in `src/config.py`, so the config now
-  fully describes **F_1layer** (the FPGA-deployed model). The rest of the config
-  already matched (d_model=32, nhead=4, ffn=64, dropout=0.1), so the default
-  `TransformerBaseline()` is now exactly F_1layer (9,492 params, verified).
+  fully describes **F_1layer**, the model selected for the future FPGA
+  implementation. The rest of the config already matched (d_model=32, nhead=4,
+  ffn=64, dropout=0.1), so the default `TransformerBaseline()` is now exactly
+  F_1layer (9,492 params, verified).
 - **Why:** Unify to one model. The whole back half of the project (quantization,
   HLS, PYNQ, host) targets F_1layer, and `evaluate_f1layer.py` is the canonical
   eval. Keeping config at 2 layers was a source of confusion.

@@ -253,6 +253,7 @@ kaggle/int10_shard/_out/
 
 # Scratch / verification workspace (temporary debugging artifacts)
 verification_workspace/
+/tmp/
 
 # Slide handoff ZIP and duplicated assets (regenerate from docs/slide_handoff/)
 slide_handoff_package.zip

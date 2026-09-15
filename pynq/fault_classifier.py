@@ -6,17 +6,17 @@ Two interchangeable backends behind one `FaultClassifier.infer(window)` API:
   * HardwareBackend -- loads the synthesized overlay (.bit + .hwh), streams one
     quantized window through an AXI-DMA to the HLS IP and reads back the 4 int
     logits. Fill in the IP/DMA names after synthesis (see IP CONTRACT below).
-  * NumpyBackend    -- runs the exported int10 reference (hls_f_int10/) in pure
+  * NumpyBackend    -- runs the exported int10 reference (hls/f1_int10/) in pure
     NumPy, so the notebook / UART demo runs end-to-end on ANY machine with no
     board. This is the SAME arithmetic the hardware must reproduce (verified
-    bit-exact by hls_f_int10/verify_export.py), so it is a faithful stand-in.
+    bit-exact by hls/f1_int10/verify_export.py), so it is a faithful stand-in.
 
 The board never re-defines the class map; label ids come from
 host.frame_protocol.LABELS (== src.config.LABEL_MAP).
 
 IP CONTRACT (what the Vitis HLS export must expose, matches transformer.h):
   - input : SEQ*CH = 1024*8 int codes, row-major [seq, channel], quantized with
-            input_scale from hls_f_int10/model_manifest.json (code = round(x/scale),
+            input_scale from hls/f1_int10/model_manifest.json (code = round(x/scale),
             clamped to +/-511);
   - output: NUM_CLASSES = 4 int logits; prediction = argmax.
   - transport assumed here: AXI-Stream in/out via one axi_dma; a control bit to
@@ -30,7 +30,7 @@ from pathlib import Path
 import numpy as np
 
 REPO_ROOT   = Path(__file__).resolve().parents[1]
-HLS_DIR     = REPO_ROOT / "hls_f_int10"
+HLS_DIR     = REPO_ROOT / "hls" / "f1_int10"
 MANIFEST    = HLS_DIR / "model_manifest.json"
 
 SEQ, CH, NUM_CLASSES = 1024, 8, 4
@@ -54,9 +54,9 @@ def quantize_window(window: np.ndarray, input_scale: float, qmax: int = 511) -> 
 # ---------------------------------------------------------------------------
 class NumpyBackend:
     def __init__(self):
-        # load hls_f_int10/verify_export.py by path (not importable as a package)
+        # load hls/f1_int10/verify_export.py by path (not importable as a package)
         spec = importlib.util.spec_from_file_location(
-            "hls_f_int10_verify", HLS_DIR / "verify_export.py")
+            "hls_f1_int10_verify", HLS_DIR / "verify_export.py")
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)
         self._mod = mod

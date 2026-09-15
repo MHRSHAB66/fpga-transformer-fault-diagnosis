@@ -47,7 +47,7 @@ constexpr int  RSQRT_FRAC = 15;
 typedef int64_t data_t;   // activation codes (fit in int10 range, stored wide)
 typedef int64_t acc_t;    // MAC accumulator
 
-// ----- all model constants, loaded from hls_f_int10/data/ -----------------
+// ----- all model constants, loaded from hls/f1_int10/data/ ----------------
 struct Params {
     std::map<std::string, std::vector<int64_t>> W;    // weight matrices  (Dout*Din)
     std::map<std::string, std::vector<int64_t>> b;    // folded biases    (Dout)

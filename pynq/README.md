@@ -7,7 +7,7 @@ synthesized overlay is the only change needed once the bitstream exists.
 
 ## Files
 - `fault_classifier.py` — `FaultClassifier` with two backends:
-  - `NumpyBackend` — runs the verified `hls_f_int10/` int10 reference in NumPy
+  - `NumpyBackend` — runs the verified `hls/f1_int10/` int10 reference in NumPy
     (no board, no torch). Bit-exact with the hardware contract.
   - `HardwareBackend` — loads the overlay (`.bit`/`.hwh`) and streams a window
     through an `axi_dma` to the HLS IP. Fill in the IP/DMA names after synthesis.
@@ -18,10 +18,10 @@ Fixed in `host/frame_protocol.LABELS` (== `src.config.LABEL_MAP`):
 `0 normal, 1 imbalance, 2 misalignment, 3 bearing_fault`. The board never
 re-defines it.
 
-## Data contract for the HLS IP (matches `hls_f_int10/transformer.h`)
+## Data contract for the HLS IP (matches `hls/f1_int10/transformer.h`)
 - **input**: `SEQ*CH = 1024*8` int codes, row-major `[seq, channel]`, quantized
   as `code = round(x_normalized / input_scale)` clamped to ±511, where
-  `input_scale` comes from `hls_f_int10/model_manifest.json`.
+  `input_scale` comes from `hls/f1_int10/model_manifest.json`.
 - **output**: 4 int logits; prediction = `argmax`.
 - **transport** (assumed): AXI-Stream in/out over one `axi_dma`, `s_axilite`
   start/done. Adjust `HardwareBackend` to your generated design.
@@ -50,7 +50,7 @@ python -m host.fault_monitor --source serial --port <PC-side-COM>
 1. Copy `design.bit` + `design.hwh` to the board.
 2. In `HardwareBackend`, set the overlay path and confirm the DMA name
    (`overlay.ip_dict` / `overlay?`).
-3. Sanity-check against the golden vectors: feed `hls_f_int10/golden/golden_in.txt`
+3. Sanity-check against the golden vectors: feed `hls/f1_int10/golden/golden_in.txt`
    rows and confirm the logits match `golden_expected.txt` (same check the
    NumPy backend passes 16/16).
 4. Then run `run_demo.py --bitstream ... --port ...`.

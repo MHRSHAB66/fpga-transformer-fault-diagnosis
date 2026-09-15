@@ -30,7 +30,7 @@ Verified by import graph from `train_transformer_baseline.py` and `evaluate/eval
 | File | Active functions | Role |
 |------|------------------|------|
 | `src/config.py` | all constants | Central config; every constant lives here |
-| `src/data/load_data.py` | `build_file_index`, `infer_label_from_path`, `load_one_csv`, `to_project_relative`, `list_csv_files` | CSV discovery + file-level label inference |
+| `src/data/load_data.py` | `build_file_index`, `infer_label_from_path`, `load_one_csv`, `project_relative_or_absolute`, `list_csv_files` | CSV discovery + file-level label inference |
 | `src/data/prepare_dataset.py` | `preprocess_dataframe`, `convert_dataframe_to_numeric`, `should_drop_file`, `fill_missing_values`, `normalize_dataframe`, `create_windows_from_dataframe`, `count_normal_windows` | Per-file preprocessing + windowing |
 | `src/data/preprocessed_cache.py` | `load_or_create_preprocessed_array` (+ key/load/save helpers) | Per-file `.npz` disk cache (active) |
 | `src/data/make_dataloaders.py` | `build_dataloaders`, `build_X_y_from_file_index`, `split_file_index`, `safe_train_test_split`, `deterministic_small_split` | **Pipeline orchestrator (main entry)** |

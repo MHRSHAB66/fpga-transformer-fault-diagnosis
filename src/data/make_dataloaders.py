@@ -232,6 +232,23 @@ def build_X_y_from_file_index(
         if df is None:
             dropped_files += 1
             continue
+
+        if df.shape[1] != EXPECTED_NUM_COLUMNS:
+            print(
+                f"[WARN] Dropping {file_path}: expected {EXPECTED_NUM_COLUMNS} "
+                f"columns, got {df.shape[1]}."
+            )
+            dropped_files += 1
+            continue
+
+        if len(df) < window_size:
+            print(
+                f"[WARN] Dropping {file_path}: expected at least {window_size} "
+                f"rows, got {len(df)}."
+            )
+            dropped_files += 1
+            continue
+
         values = df.to_numpy(copy=True).astype(np.float32, copy=False)
 
         kept_files += 1
