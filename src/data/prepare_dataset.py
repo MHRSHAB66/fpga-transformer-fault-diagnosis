@@ -29,6 +29,7 @@ from src.config import (
     WINDOW_STRIDE,
     MISSING_RATIO_THRESHOLD,
     MISSING_FILL_METHOD,
+    NORMALIZATION_METHOD,
     EPSILON,
 )
 
@@ -42,11 +43,32 @@ def create_windows_from_dataframe(
     Split a preprocessed DataFrame or ndarray into fixed-length windows.
 
     Trailing samples shorter than window_size are discarded.
+
+    Input must have shape (samples, channels). window_size and stride must
+    be positive integers (booleans are not accepted).
+
+    Raises
+    ------
+    TypeError
+        If window_size or stride is not an integer.
+    ValueError
+        If window_size or stride is not positive, or input is not two-dimensional.
     """
+    for name, value in (("window_size", window_size), ("stride", stride)):
+        if isinstance(value, (bool, np.bool_)) or not isinstance(value, (int, np.integer)):
+            raise TypeError(f"{name} must be a positive integer; got {value!r}")
+        if value <= 0:
+            raise ValueError(f"{name} must be positive; got {value!r}")
+
     if hasattr(df, "to_numpy"):
         values = df.to_numpy(copy=True)
     else:
         values = np.asarray(df, dtype=np.float32)
+
+    if values.ndim != 2:
+        raise ValueError(
+            f"Input must be two-dimensional (samples, channels); got shape {values.shape}"
+        )
 
     windows: List[np.ndarray] = []
     num_rows = len(values)
@@ -170,6 +192,7 @@ def fill_missing_values(
 def normalize_windows_array(
     windows: np.ndarray,
     epsilon: float = EPSILON,
+    method: str = NORMALIZATION_METHOD,
 ) -> np.ndarray:
     """
     Apply per-window z-score normalization to a stack of windows.
@@ -178,6 +201,12 @@ def normalize_windows_array(
     all samples in that window. Reproducible for FPGA inference because no
     global dataset statistics are needed.
     """
+    if method != "zscore":
+        raise ValueError(
+            "normalize_windows_array supports only method='zscore'; "
+            f"got {method!r}"
+        )
+
     windows = np.asarray(windows, dtype=np.float32)
     if windows.size == 0:
         return windows.astype(np.float32, copy=False)
