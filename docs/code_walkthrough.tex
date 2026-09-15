@@ -475,51 +475,82 @@ NUM_ACTIVE_CHANNELS                           # channel switching
 
 \mysubsection{کشف فایل‌ها: \lr{list\_csv\_files}}
 
+تابع کمکی \lr{project\_relative\_or\_absolute} مسیرهای داخل پروژه را نسبت به
+\lr{PROJECT\_ROOT} کوتاه می‌کند و مسیرهای بیرونی را مطلق نگه می‌دارد.
+این تابع برای نمایش مسیر است؛ مجاز بودن ورودی دیتاست جداگانه کنترل می‌شود.
+
 \begin{latin}
 \begin{lstlisting}
 def list_csv_files(directory: Path) -> List[Path]:
-    files = sorted(directory.rglob("*.csv"))
+    directory = Path(directory).resolve()
+    if not directory.exists():
+        # Print a warning in the actual implementation.
+        return []
+    if not directory.is_dir():
+        raise NotADirectoryError(directory)
+    files = sorted(p for p in directory.rglob("*.csv") if p.is_file())
     return files
 \end{lstlisting}
 \end{latin}
 
 به‌صورت بازگشتی تمام فایل‌های \lr{.csv} را زیر \lr{DATA\_RAW\_DIR} پیدا می‌کند
-(جمعا ۱۹۵۱ فایل). اگر پوشه وجود نداشته باشد، لیست خالی برمی‌گرداند.
+(در بررسی فعلی ۱۹۵۱ فایل). مسیر ناموجود هشدار و لیست خالی می‌دهد؛ ورودی موجود
+که پوشه نباشد خطا می‌دهد. پوشه‌ای با نامی مثل \lr{folder.csv} وارد فهرست نمی‌شود.
+مسیر نسبی پوشه جست‌وجو از پوشه اجرای برنامه تفسیر می‌شود.
 
 \mysubsection{تابع اصلی: \lr{build\_file\_index}}
 
 \begin{latin}
 \begin{lstlisting}
-def build_file_index(data_dir) -> pd.DataFrame:
-    # 1. list_csv_files   -> find all 1951 CSVs
-    # 2. infer_label_from_path -> assign class label per file
-    # returns: DataFrame with columns [filepath, label]
+def build_file_index(directory=DATA_RAW_DIR) -> pd.DataFrame:
+    directory = Path(directory).resolve()
+    # Raises ValueError outside the configured dataset.
+    directory.relative_to(DATA_RAW_DIR.resolve())
+    rows = []
+    for file_path in list_csv_files(directory):
+        rows.append({
+            "filepath": str(project_relative_or_absolute(file_path)),
+            "label": infer_label_from_path(file_path),
+        })
+    return pd.DataFrame(rows, columns=["filepath", "label"])
 \end{lstlisting}
 \end{latin}
 
 خروجی یک \lr{DataFrame} است که هر ردیفش یک فایل \lr{CSV} از \lr{MAFAULDA} است.
 این \lr{DataFrame} بدون هیچ پردازش اضافه‌ای به \lr{make\_dataloaders.py} تحویل داده می‌شود.
+خود دیتاست یا زیرپوشه‌های آن مجازند؛ مسیر بیرونی پیش از جست‌وجو رد می‌شود.
+حتی جدول خالی هم دو ستون ثابت دارد. در این مرحله هنوز محتوای فایل خوانده نشده
+و تقسیم آموزش و آزمون یا پنجره‌سازی انجام نشده است. قطعه‌کدها خلاصه‌اند؛ کد اصلی
+برای مسیر نامعتبر پیام خطای توضیح‌دار تولید می‌کند.
 
 \mysubsection{برچسب‌گذاری با \lr{infer\_label\_from\_path}}
 
 \begin{latin}
 \begin{lstlisting}
 def infer_label_from_path(file_path) -> str:
-    # s = path under DATA_RAW_DIR only, lower-cased, posix slashes
-    if "horizontal-misalignment" in s or "vertical-misalignment" in s:
-        return "misalignment"
-    if "overhang" in s or "underhang" in s:   # the two bearing folders
-        return "bearing_fault"
-    if "imbalance" in s: return "imbalance"
-    if "normal"    in s: return "normal"
-    return "unknown"
+    relative_path = (PROJECT_ROOT / file_path).resolve().relative_to(
+        DATA_RAW_DIR.resolve()
+    )
+    if len(relative_path.parts) < 2:
+        return "unknown"
+    directory_labels = {
+        "horizontal-misalignment": "misalignment",
+        "vertical-misalignment": "misalignment",
+        "overhang": "bearing_fault",
+        "underhang": "bearing_fault",
+        "imbalance": "imbalance",
+        "normal": "normal",
+    }
+    return directory_labels.get(relative_path.parts[0].lower(), "unknown")
 \end{lstlisting}
 \end{latin}
 
 \infobox{
-\textbf{نکته مهم:} تابع فقط روی بخش زیر \lr{DATA\_RAW\_DIR} جست‌وجو می‌کند،
-نه کل مسیر مطلق. اگر اسم پوشه پروژه حاوی کلیدواژه‌هایی مثل \lr{"normal"} باشد،
-برچسب‌گذاری اشتباه نمی‌شود. (باگی که پیدا و اصلاح شد.)
+\textbf{نکته مهم:} نام دقیق اولین پوشه زیر دیتاست تعیین‌کننده است.
+\lr{abnormal/file.csv} برچسب \lr{unknown} می‌گیرد، ولی
+\lr{normal/imbalance.csv} همچنان \lr{normal} است. نام فایل و زیرپوشه‌های عمیق‌تر
+برچسب را تغییر نمی‌دهند. مسیر بیرونی حتی در فراخوانی مستقیم خطا می‌دهد.
+\lr{unknown} نشانه مسیر ناشناخته است و کلاس پنجم مدل نیست.
 }
 
 \mysubsection{\lr{load\_one\_csv} \pmdash{} پایین‌ترین لایه خواندن}
@@ -527,12 +558,24 @@ def infer_label_from_path(file_path) -> str:
 \begin{latin}
 \begin{lstlisting}
 def load_one_csv(file_path) -> pd.DataFrame:
-    return pd.read_csv(PROJECT_ROOT / file_path, header=None)
+    path = (PROJECT_ROOT / file_path).resolve()
+    # Raises ValueError before reading an external file.
+    path.relative_to(DATA_RAW_DIR.resolve())
+    return pd.read_csv(path, header=None)
 \end{lstlisting}
 \end{latin}
 
-ساده‌ترین تابع ماژول: یک فایل \lr{CSV} را می‌خواند و \lr{DataFrame} خام برمی‌گرداند.
-\textbf{هیچ پردازشی} (نرمال‌سازی، \lr{windowing}، فیلتر) انجام نمی‌دهد.
+این تابع فایل را به جدول خام پانداس تبدیل می‌کند. نرمال‌سازی، پنجره‌سازی و فیلتر
+در این تابع انجام نمی‌شوند.
+
+مسیر فایل در این تابع و تابع تشخیص برچسب، اگر نسبی باشد، نسبت به
+\lr{PROJECT\_ROOT} تفسیر می‌شود؛ بنابراین مسیر جدول به پوشه اجرای برنامه وابسته نیست.
+
+گزینه \lr{header=None} اولین سطر را داده نگه می‌دارد و ستون‌ها شماره‌گذاری می‌شوند.
+خطاهای خواندن یا تجزیه فایل به فراخواننده منتقل می‌شوند.
+
+در بررسی این نسخه، برچسب هر ۱۹۵۱ فایل بدون تغییر ماند. خواندن مسیر نسبی از
+پوشه اجرای دیگر، رد مسیر بیرونی، جدول خالی و نام‌های گمراه‌کننده نیز آزموده شدند.
 
 این تابع مستقیما در \lr{pipeline} صدا زده می‌شود: \lr{make\_dataloaders.py} برای هر فایل
 هر \lr{split}، ابتدا \lr{load\_one\_csv} و سپس \lr{preprocess\_dataframe} را فراخوانی می‌کند:
