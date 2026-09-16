@@ -17,14 +17,16 @@ Important
 - Each file is loaded and preprocessed in memory on every run (no disk cache).
 """
 
-from pathlib import Path
+from collections import Counter
+import math
+from numbers import Integral, Real
+import time
 from typing import Optional, Tuple
 
 import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, TensorDataset
-import time
 
 from src.config import (
     DATA_RAW_DIR,
@@ -51,6 +53,13 @@ from src.data.prepare_dataset import (
 )
 
 
+def _require_file_index_columns(index_df):
+    required = {"filepath", "label"}
+    missing = required.difference(index_df.columns)
+    if missing:
+        raise ValueError(f"File index is missing required columns: {', '.join(sorted(missing))}.")
+
+
 def deterministic_small_split(index_df, train_size):
     """
     Split very small debug subsets without raising sklearn split errors.
@@ -58,6 +67,14 @@ def deterministic_small_split(index_df, train_size):
     This is only a fallback path. Normal dataset sizes still use
     train_test_split with the configured random seed.
     """
+    if (
+        isinstance(train_size, bool)
+        or not isinstance(train_size, Real)
+        or not np.isfinite(train_size)
+        or not 0 < train_size < 1
+    ):
+        raise ValueError("train_size must be a finite real number strictly between 0 and 1.")
+
     shuffled = index_df.sample(frac=1, random_state=RANDOM_SEED).reset_index(drop=True)
 
     if len(shuffled) < 2:
@@ -100,31 +117,41 @@ def safe_train_test_split(index_df, train_size, stratify_labels):
     Notes
     -----
     - `shuffle=True` is required for meaningful random splitting.
-    - If stratified splitting fails, the function falls back to a
-      non-stratified split and prints a warning.
+    - Known small-sample limitations trigger a fallback; unexpected sklearn
+      errors propagate instead of being hidden.
     """
-    try:
-        return train_test_split(
-            index_df,
-            train_size=train_size,
-            random_state=RANDOM_SEED,
-            shuffle=True,
-            stratify=stratify_labels,
-        )
-    except ValueError:
-        if stratify_labels is not None:
-            print("[WARN] Stratified split failed. Falling back to non-stratified split.")
-        try:
-            return train_test_split(
-                index_df,
-                train_size=train_size,
-                random_state=RANDOM_SEED,
-                shuffle=True,
-                stratify=None,
-            )
-        except ValueError:
-            print("[WARN] Split too small for sklearn. Using deterministic debug split.")
-            return deterministic_small_split(index_df, train_size)
+    if (
+        isinstance(train_size, bool)
+        or not isinstance(train_size, Real)
+        or not np.isfinite(train_size)
+        or not 0 < train_size < 1
+    ):
+        raise ValueError("train_size must be a finite real number strictly between 0 and 1.")
+
+    if stratify_labels is not None and len(stratify_labels) != len(index_df):
+        raise ValueError("stratify_labels must have the same length as index_df.")
+
+    sample_count = len(index_df)
+    first_count = math.floor(sample_count * train_size)
+    second_count = sample_count - first_count
+    if first_count == 0 or second_count == 0:
+        print("[WARN] Split too small for sklearn. Using deterministic debug split.")
+        return deterministic_small_split(index_df, train_size)
+
+    if stratify_labels is not None:
+        class_counts = Counter(stratify_labels)
+        class_count = len(class_counts)
+        if min(class_counts.values()) < 2 or min(first_count, second_count) < class_count:
+            print("[WARN] Stratified split is infeasible. Falling back to non-stratified split.")
+            stratify_labels = None
+
+    return train_test_split(
+        index_df,
+        train_size=train_size,
+        random_state=RANDOM_SEED,
+        shuffle=True,
+        stratify=stratify_labels,
+    )
 
 
 def split_file_index(index_df):
@@ -151,6 +178,7 @@ def split_file_index(index_df):
 
     Stratification is used when more than one class is present.
     """
+    _require_file_index_columns(index_df)
     if index_df.empty:
         return index_df.copy(), index_df.copy(), index_df.copy()
 
@@ -202,9 +230,9 @@ def build_X_y_from_file_index(
         - kept_files : int
             Number of files kept after preprocessing
         - dropped_files : int
-            Number of files dropped during preprocessing
+            Number of files skipped for an invalid label or dropped during preprocessing
         - window_counts : dict
-            {"normal": int} window counts aggregated over all kept files.
+            {"normalized": int} window count aggregated over all kept files.
 
     Notes
     -----
@@ -212,19 +240,28 @@ def build_X_y_from_file_index(
     - Each file is assigned one label, and all windows extracted from that file
       receive the same label.
     """
+    _require_file_index_columns(index_df)
+    for name, value in (("window_size", window_size), ("stride", stride)):
+        if isinstance(value, (bool, np.bool_)) or not isinstance(value, Integral):
+            raise TypeError(f"{name} must be a positive integer.")
+        if value <= 0:
+            raise ValueError(f"{name} must be greater than 0.")
+
     X = []
     y = []
 
     kept_files = 0
     dropped_files = 0
-    normal_windows = 0
+    normalized_windows = 0
 
     for _, row in index_df.iterrows():
         file_path = row["filepath"]
         label_name = row["label"]
 
-        # Skip unexpected labels for robustness.
+        # Skip unexpected labels without leaving them out of file counts.
         if label_name not in LABEL_MAP:
+            print(f"[WARN] Dropping {file_path}: unexpected label {label_name!r}.")
+            dropped_files += 1
             continue
 
         df = load_one_csv(file_path)
@@ -263,7 +300,7 @@ def build_X_y_from_file_index(
 
         if windows:
             windows = normalize_windows_array(np.asarray(windows, dtype=np.float32))
-            normal_windows += len(windows)
+            normalized_windows += len(windows)
 
         for window in windows:
             X.append(window)
@@ -275,9 +312,11 @@ def build_X_y_from_file_index(
         X = np.empty((0, window_size, EXPECTED_NUM_COLUMNS), dtype=np.float32)
 
     y = np.array(y, dtype=np.int64)
+    if len(X) != len(y):
+        raise RuntimeError("Window and label counts do not match.")
 
     window_counts = {
-        "normal": int(normal_windows),
+        "normalized": int(normalized_windows),
     }
 
     return X, y, kept_files, dropped_files, window_counts
@@ -327,6 +366,31 @@ def build_dataloaders(
     - Each split is materialized by loading and preprocessing its files in
       memory (no disk cache).
     """
+    integer_parameters = {
+        "batch_size": batch_size,
+        "window_size": window_size,
+        "stride": stride,
+        "num_workers": num_workers,
+    }
+    for parameter_name, value in integer_parameters.items():
+        if isinstance(value, bool) or not isinstance(value, Integral):
+            raise TypeError(f"{parameter_name} must be an integer.")
+
+    if batch_size <= 0:
+        raise ValueError("batch_size must be greater than 0.")
+    if window_size <= 0:
+        raise ValueError("window_size must be greater than 0.")
+    if stride <= 0:
+        raise ValueError("stride must be greater than 0.")
+    if num_workers < 0:
+        raise ValueError("num_workers must be greater than or equal to 0.")
+
+    if max_files is not None:
+        if isinstance(max_files, bool) or not isinstance(max_files, Integral):
+            raise TypeError("max_files must be a positive integer or None.")
+        if max_files <= 0:
+            raise ValueError("max_files must be greater than 0.")
+
     index_df = build_file_index(data_dir)
     if index_df.empty:
         raise ValueError(f"No CSV files were found under dataset directory: {data_dir}")
@@ -343,6 +407,13 @@ def build_dataloaders(
         # Shuffle before truncating so debug subsets are not biased by sorted paths.
         index_df = index_df.sample(frac=1, random_state=RANDOM_SEED).reset_index(drop=True)
         index_df = index_df.head(max_files)
+
+    if len(index_df) < 4:
+        raise ValueError(
+            "At least 4 valid files are required to build non-empty train, "
+            "validation, and test splits with the two-stage split logic; "
+            f"got {len(index_df)}."
+        )
 
     train_index_df, val_index_df, test_index_df = split_file_index(index_df)
 
@@ -405,6 +476,14 @@ def build_dataloaders(
         raise ValueError(
             "Test dataset contains zero windows after preprocessing/windowing."
         )
+
+    for split_name, file_index, kept, dropped in (
+        ("train", train_index_df, train_kept, train_dropped),
+        ("validation", val_index_df, val_kept, val_dropped),
+        ("test", test_index_df, test_kept, test_dropped),
+    ):
+        if len(file_index) != kept + dropped:
+            raise RuntimeError(f"{split_name} file counts do not match the split size.")
 
     # Shuffle training batches for better learning.
     # Validation and test remain ordered for stable evaluation.
@@ -496,10 +575,10 @@ def build_dataloaders(
             "train": train_window_counts,
             "val": val_window_counts,
             "test": test_window_counts,
-            "total_normal": (
-                train_window_counts["normal"]
-                + val_window_counts["normal"]
-                + test_window_counts["normal"]
+            "total_normalized": (
+                train_window_counts["normalized"]
+                + val_window_counts["normalized"]
+                + test_window_counts["normalized"]
             ),
         },
         "train_class_window_counts": train_class_window_counts,
