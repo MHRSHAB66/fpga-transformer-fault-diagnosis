@@ -1,19 +1,20 @@
 // Fixed-point type aliases for the F_1layer @ int10 core.
 //
-// Under Vitis HLS synthesis (__SYNTHESIS__ defined) these become arbitrary-
-// precision ap_int; under plain g++ (C-sim / desktop verify) they fall back to
-// wide native ints so the SAME source builds and runs both ways.
+// Under synthesis, or when HLS_USE_AP_INT is set for C-simulation, use the
+// actual hardware widths. Plain desktop g++ can use wide native integers.
 //
 // Widths are the STARTING point for synthesis. The int10 reference clamps
 // activations to +/-511 (10-bit signed) and attention weights to +/-511; the MAC
 // accumulators must be wide enough for the worst-case dot product:
 //   proj:  CH=8   terms of 10b*10b  -> <= 8*(2^18)  ~ 21 bits
-//   attn/ffn: up to D=32 or DFF=64 terms          -> <= 64*(2^18) ~ 24 bits
-// so ACC 32-bit is safe. Narrow further only with overflow analysis.
+//   attention QK: HD=8 terms; FFN: DFF=64 terms
+//   attention context: up to SEQ=1024 terms of 511*511 < 2^28
+// The current exported biases have magnitude <= 22128, so 32-bit signed
+// accumulators cover these bounds. Re-check after changing model/export data.
 #ifndef AP_TYPES_H
 #define AP_TYPES_H
 
-#ifdef __SYNTHESIS__
+#if defined(__SYNTHESIS__) || defined(HLS_USE_AP_INT)
   #include "ap_int.h"
   typedef ap_int<10> act_t;    // activation / weight codes (int10, +/-511)
   typedef ap_int<32> acc_t;    // MAC accumulator
@@ -25,9 +26,8 @@
   typedef int64_t lut_t;
 #endif
 
-// Requant / affine multipliers are float64 in the reference (bit-exact). For a
-// first functional synthesis they can stay `double` (FP cores); the optimization
-// pass converts each to an ap_fixed or an integer (M0 * 2^-shift) multiplier.
-typedef double scale_t;
+// Hardware-facing affine coefficients are exported as signed Q40 integers.
+// The original float64 arrays remain in weights_int10.h for reference.
+typedef long long scale_t;
 
 #endif // AP_TYPES_H
