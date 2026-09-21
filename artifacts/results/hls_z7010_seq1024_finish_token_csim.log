@@ -1,0 +1,26 @@
+INFO: [SIM 2] *************** CSIM start ***************
+INFO: [SIM 4] CSIM will launch GCC as the compiler.
+INFO: [SIM 7] User does not set_part, FPO V7 c-model will be used by default.
+   Compiling ../../../../../../hls/f1_int10/vitis/testbench_top.cpp in release mode
+   Compiling ../../../../../../hls/f1_int10/vitis/transformer_top.cpp in release mode
+   Generating csim.exe
+vector 0: exact expected=[69,-117,-74,-129] actual=[69,-117,-74,-129]
+vector 1: exact expected=[59,-59,-86,-64] actual=[59,-59,-86,-64]
+vector 2: exact expected=[80,-112,-39,-267] actual=[80,-112,-39,-267]
+vector 3: exact expected=[81,-125,-22,-244] actual=[81,-125,-22,-244]
+vector 4: exact expected=[-268,122,-288,96] actual=[-268,122,-288,96]
+vector 5: exact expected=[-203,132,-234,-71] actual=[-203,132,-234,-71]
+vector 6: exact expected=[-192,114,-222,-44] actual=[-192,114,-222,-44]
+vector 7: exact expected=[-152,102,-54,-196] actual=[-152,102,-54,-196]
+vector 8: exact expected=[-49,-151,113,-95] actual=[-49,-151,113,-95]
+vector 9: exact expected=[-40,-142,100,-80] actual=[-40,-142,100,-80]
+vector 10: exact expected=[-144,-139,167,-94] actual=[-144,-139,167,-94]
+vector 11: exact expected=[-80,-36,68,28] actual=[-80,-36,68,28]
+vector 12: exact expected=[-156,73,-120,28] actual=[-156,73,-120,28]
+vector 13: exact expected=[-337,2,-271,223] actual=[-337,2,-271,223]
+vector 14: exact expected=[-310,25,-212,189] actual=[-310,25,-212,189]
+vector 15: exact expected=[-328,-90,23,222] actual=[-328,-90,23,222]
+AXI top exact vectors: 16/16
+The maximum depth reached by any of the 32 hls::stream() instances in the design is 8192
+INFO: [SIM 1] CSim done with 0 errors.
+INFO: [SIM 3] *************** CSIM finish ***************
