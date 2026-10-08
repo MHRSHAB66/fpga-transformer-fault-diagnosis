@@ -1,0 +1,197 @@
+{
+  "report": "hls_throughput_study_7020",
+  "generated": "2026-09-25",
+  "evidence_class": "MEASURED (Vitis HLS 2020.2 csim+csynth); 10 ns; -DHLS_USE_AP_INT (ap_int<10>/<32>/<20>); part xc7z020clg400-1",
+  "note_on_target": "xc7z020clg400-1 is a PROVISIONAL measurement target (usable margin); NOT the final selected board. Numbers are C-synth ESTIMATES, core only (no DMA/PS/bitstream); interval~=latency because the top is ap_ctrl_hs (no window overlap).",
+  "real_time_requirement": {
+    "sample_rate_hz": 50000,
+    "window": 1024,
+    "acq_ms": 20.48,
+    "required_interval_cycles": 2048000,
+    "required_wps": 48.828125
+  },
+  "model_invariants_preserved": "SEQ=1024,D=32,NHEAD=4,DFF=64,CH=8,weights,int10/Q40 scales,LUTs,class IDs,tensor order,AXI iface,golden vectors; full O(SEQ^2) softmax attention; bit-exact",
+  "stage0_cycle_attribution_v3_measured": {
+    "total": 44930707,
+    "query_loop_LOOP273": {
+      "cycles": 42004480,
+      "pct": 93.5,
+      "per_query": 41020,
+      "trip": 1024,
+      "pipelined": false
+    },
+    "per_head_measured": {
+      "scores_II": 4,
+      "scores_cyc": 4107,
+      "rowmax": 1023,
+      "exp_num": 1026,
+      "norm_div": 1056,
+      "context": 1027
+    },
+    "scores_total_cyc": 16822272,
+    "scores_pct": 37.4,
+    "scores_limit": "K-memory read ports (200-885) -> II=4",
+    "finish_token_per_query": 5889,
+    "finish_token_pct": 13.4,
+    "prequery_serial_prefix_cyc_approx": 2883600,
+    "prequery_note": "input+pe+K proj(1.05M)+V proj(1.54M); MUST complete before any query (every query reads all keys)"
+  },
+  "stage0_theoretical_lower_bounds_ANALYTICAL": {
+    "disclaimer": "PROJECTIONS, not measured. interval=latency without query pipelining.",
+    "S1_scoreII1_headsSeq": {
+      "interval": 32184969,
+      "gap": 15.7
+    },
+    "S2_+2heads": {
+      "interval": 21625481,
+      "gap": 10.6
+    },
+    "S3_+4heads": {
+      "interval": 16345737,
+      "gap": 8.0
+    },
+    "S4_+queryDATAFLOW_4head_finishNotSplit": {
+      "interval": 8913936,
+      "gap": 4.4
+    },
+    "S5_+finishSplit_ffRolled": {
+      "interval": 4990992,
+      "gap": 2.4
+    },
+    "S6_+ffUnroll2": {
+      "interval": 3964944,
+      "gap": 1.9
+    },
+    "gate_conclusion": "Even the full unchanged-architecture stack (score II=1 + 4-head parallel + query DATAFLOW + finish split + FF unroll) floors at ~3.9M cycles (gap ~1.9x) and CANNOT reach 2,048,000, because the serial K/V-projection prefix (~2.88M) alone nearly exhausts the budget. Reaching real-time additionally requires accelerating the K/V (and FFN) projections -> a much larger, higher-risk redesign. The ~1.05M memory-bandwidth floor is not realizable while K/V generation stays a serial rolled prefix."
+  },
+  "measured_variants": [
+    {
+      "name": "baseline (frozen)",
+      "source": "transformer_top.cpp",
+      "csim": "16/16",
+      "latency": 74246781,
+      "interval": 74246782,
+      "ms": 742.5,
+      "wps": 1.347,
+      "rt_gap": 36.3,
+      "est_clk_ns": 7.297,
+      "BRAM": 104,
+      "DSP": 40,
+      "FF": 20610,
+      "LUT": 24738,
+      "fit_7020": true,
+      "real_time": false,
+      "report": "artifacts/results/hls_z7020_q40_bounded_snapshot/",
+      "evidence": "measured"
+    },
+    {
+      "name": "v1 fast (no-fit)",
+      "source": "transformer_top_opt.cpp",
+      "csim": "16/16",
+      "latency": 36993244,
+      "interval": 36993245,
+      "ms": 369.9,
+      "wps": 2.703,
+      "rt_gap": 18.1,
+      "est_clk_ns": 8.253,
+      "BRAM": 382,
+      "DSP": 186,
+      "FF": 30752,
+      "LUT": 42350,
+      "fit_7020": false,
+      "fit_blocker": "BRAM 382/280",
+      "real_time": false,
+      "report": "artifacts/results/hls_z7020_opt_ctx_v1_aggressive_inline/",
+      "evidence": "measured"
+    },
+    {
+      "name": "v3 balanced",
+      "source": "transformer_top_opt_bram.cpp",
+      "sha256": "21AE87EEEA656E499E7CF7B35938B30652AC88FEFF1B1066373EEDE51622887B",
+      "csim": "16/16",
+      "latency": 44930707,
+      "interval": 44930708,
+      "ms": 449.3,
+      "wps": 2.226,
+      "rt_gap": 21.9,
+      "est_clk_ns": 7.3,
+      "slack_ns": 0.0,
+      "BRAM": 108,
+      "DSP": 46,
+      "FF": 23736,
+      "LUT": 26857,
+      "fit_7020": true,
+      "real_time": false,
+      "report": "artifacts/results/hls_z7020_opt_ctx_v3_bram_fixed/",
+      "evidence": "measured"
+    },
+    {
+      "name": "T1 K-banked (score II=1)",
+      "source": "transformer_top_rt_t1_kbank.cpp",
+      "sha256": "8c64cc1f4de9ad4eb135ab2ac45e20ee082aedefdf46ab9f24e89987da899fd4",
+      "csim": "16/16",
+      "latency": 32835208,
+      "interval": 32835209,
+      "ms": 328.4,
+      "wps": 3.046,
+      "rt_gap": 16.0,
+      "est_clk_ns": 8.468,
+      "slack_ns": 1.17,
+      "BRAM": 112,
+      "DSP": 45,
+      "FF": 22710,
+      "LUT": 25991,
+      "fit_7020": true,
+      "real_time": false,
+      "report": "artifacts/results/hls_rt_t1_kbank/",
+      "evidence": "measured",
+      "change": "cyclic-partition k factor 8 + in-scope k write -> score loop II 4->1 (200-885 K-port warning removed)",
+      "speedup_vs_v3": 1.368
+    },
+    {
+      "name": "T2 +shared ctx requant",
+      "source": "transformer_top_rt_t2_reqshare.cpp",
+      "sha256": "4b04e68bfca020c0d7d1416bb3cb5dd854e59ae5cb5fee22bd8cfde359ff0ddf",
+      "csim": "16/16",
+      "latency": 32863880,
+      "interval": 32863881,
+      "ms": 328.6,
+      "wps": 3.043,
+      "rt_gap": 16.0,
+      "est_clk_ns": 8.468,
+      "slack_ns": 1.17,
+      "BRAM": 112,
+      "DSP": 45,
+      "FF": 18829,
+      "LUT": 22150,
+      "fit_7020": true,
+      "real_time": false,
+      "report": "artifacts/results/hls_rt_t2_reqshare/",
+      "evidence": "measured",
+      "change": "roll context-output requant loop -> share 1 requant datapath",
+      "lut_saved_vs_T1": 3841,
+      "ff_saved_vs_T1": 3881,
+      "latency_delta_vs_T1": 28672
+    }
+  ],
+  "not_implemented_this_session": {
+    "T3_head_parallel": "ANALYZED not built: needs K/V partition factor 16 (2 heads) or 32 (4 heads) + head-loop unroll; projected S2/S3 = 21.6M/16.3M (gap 10.6x/8.0x) -> still far from real-time; deferred per stop-condition (cannot reach target without dataflow).",
+    "Stage4_query_DATAFLOW": "ANALYZED not built: the only route below ~4M, but gate shows floor ~3.9M > target due to serial K/V prefix; high risk of 2020.2 code-transformation stall (seen previously with partitioned-pointer boundaries). Requires K/V+FFN projection acceleration to approach 2.048M.",
+    "Stage5_key_lane_parallel": "not needed before dataflow; would risk denominator ordering/exactness."
+  },
+  "selection": {
+    "fastest_fitting_bit_exact": "T2 (or T1) \u2014 interval 32.86M (T2) / 32.84M (T1) cycles; T2 preferred for its LUT/FF headroom (LUT 41.6%) at equal latency",
+    "remaining_gap_to_realtime": "32,863,881 / 2,048,000 = 16.0x (T2)",
+    "real_time_achieved": false,
+    "reason_not_achieved": "interval=latency (no cross-query overlap); attention is O(SEQ^2)=1024^2 and the K/V-projection serial prefix (~2.88M) alone exceeds the 2.048M budget. Within-query optimizations (T1/T2) cut the score bottleneck but cannot break interval<<latency.",
+    "smallest_next_justified_change": "Query-loop DATAFLOW (split attention into bounded hls::stream stages, pipelined across the 1024 independent queries) + 4-head parallelism + K/V (and FFN) projection acceleration. Even then real-time is marginal (~2-4M); if 2.048M must be met, a scope change (e.g. accepting a larger interval, or overlapping window acquisition with compute) may be required. This is high-risk on Vitis 2020.2 and should be a dedicated follow-up."
+  },
+  "regressions": {
+    "vitis_csim_ap_int": "16/16 all variants",
+    "native_gpp_ab": "byte-identical all variants",
+    "numpy_oracle": "16/16",
+    "unittest": "30/30 OK",
+    "git_diff_check": "clean except pre-existing user file"
+  },
+  "timing_caveat": "Estimated (C-synth) only: target 10 ns, estimated clock 8.468 ns (T1/T2), HLS slack +1.17 ns. Post-implementation timing UNRESOLVED. Not board-ready."
+}

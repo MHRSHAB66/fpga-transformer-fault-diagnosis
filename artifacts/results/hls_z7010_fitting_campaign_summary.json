@@ -1,0 +1,307 @@
+{
+  "report": "z7010_v3_lut_fitting_campaign",
+  "generated": "2026-09-25",
+  "evidence_class": "MEASURED (Vitis HLS 2020.2 csim+csynth); 10 ns target; -DHLS_USE_AP_INT (ap_int<10>/<32>/<20>)",
+  "note_on_target": "xc7z010clg400-1 and xc7z020clg400-1 are PROVISIONAL experimental targets; final board NOT selected (AGENTS.md). Numbers are C-synth ESTIMATES, not post-implementation; core only (no DMA/PS/bitstream).",
+  "model_invariants_preserved": "SEQ=1024,D=32,4 heads,1 layer,weights,int10/Q40 scales,LUTs,class IDs,tensor order,AXI iface,golden vectors",
+  "lut_hierarchy_7010_v3": {
+    "total_core_lut": 26607,
+    "eight_context_output_requant_units_lut": 4440,
+    "finish_token_lut": 8779,
+    "classifier_layernorm_lut": 2477,
+    "expression_glue_lut": 4846,
+    "multiplexer_lut": 2140,
+    "register_lut": 1568,
+    "softmax_sdiv_lut": 1347,
+    "confirmation": "8x context-output requant = 8*555 = 4440 LUT CONFIRMED"
+  },
+  "variants": [
+    {
+      "variant": "baseline (frozen)",
+      "device": "xc7z020",
+      "src": "transformer_top.cpp",
+      "sha": null,
+      "csim": "16/16",
+      "lat": 74246781,
+      "interval": 74246782,
+      "clk": 7.297,
+      "slack": null,
+      "bram": 104,
+      "dsp": 40,
+      "ff": 20610,
+      "lut": 24738,
+      "cap": {
+        "bram": 280,
+        "dsp": 220,
+        "ff": 106400,
+        "lut": 53200
+      },
+      "fit": true,
+      "cls": "measured (7020 ref)",
+      "report": "artifacts/results/hls_z7020_q40_bounded_snapshot/",
+      "latency_ms_at_10ns": 742.47,
+      "util_pct": {
+        "bram": 37.1,
+        "dsp": 18.2,
+        "ff": 19.4,
+        "lut": 46.5
+      },
+      "fits_all_resources": true
+    },
+    {
+      "variant": "v3 BRAM-fixed",
+      "device": "xc7z020",
+      "src": "transformer_top_opt_bram.cpp",
+      "sha": "21ae87eeea656e499e7cf7b35938b30652ac88feff1b1066373eede51622887b",
+      "csim": "16/16",
+      "lat": 44930707,
+      "interval": 44930708,
+      "clk": 7.3,
+      "slack": 0.0,
+      "bram": 108,
+      "dsp": 46,
+      "ff": 23736,
+      "lut": 26857,
+      "cap": {
+        "bram": 280,
+        "dsp": 220,
+        "ff": 106400,
+        "lut": 53200
+      },
+      "fit": true,
+      "cls": "measured",
+      "report": "artifacts/results/hls_z7020_opt_ctx_v3_bram_fixed/",
+      "latency_ms_at_10ns": 449.31,
+      "util_pct": {
+        "bram": 38.6,
+        "dsp": 20.9,
+        "ff": 22.3,
+        "lut": 50.5
+      },
+      "fits_all_resources": true
+    },
+    {
+      "variant": "v3 BRAM-fixed",
+      "device": "xc7z010",
+      "src": "transformer_top_opt_bram.cpp",
+      "sha": "21ae87eeea656e499e7cf7b35938b30652ac88feff1b1066373eede51622887b",
+      "csim": "16/16",
+      "lat": 44930707,
+      "interval": 44930708,
+      "clk": 7.3,
+      "slack": 0.0,
+      "bram": 108,
+      "dsp": 46,
+      "ff": 23736,
+      "lut": 26857,
+      "cap": {
+        "bram": 120,
+        "dsp": 80,
+        "ff": 35200,
+        "lut": 17600
+      },
+      "fit": false,
+      "cls": "measured",
+      "report": "artifacts/results/hls_z7010_opt_ctx_v3_bram_fixed/",
+      "latency_ms_at_10ns": 449.31,
+      "util_pct": {
+        "bram": 90.0,
+        "dsp": 57.5,
+        "ff": 67.4,
+        "lut": 152.6
+      },
+      "fits_all_resources": false
+    },
+    {
+      "variant": "A shared ctx-requant",
+      "device": "xc7z010",
+      "src": "transformer_top_opt_z7010_a.cpp",
+      "sha": "57f5153a89785d4f4112622312a6d2f4563e2b3299e98294af7cb109d64b3682",
+      "csim": "16/16",
+      "lat": 44914033,
+      "interval": 44922236,
+      "clk": 7.299,
+      "slack": -0.0,
+      "bram": 108,
+      "dsp": 49,
+      "ff": 21523,
+      "lut": 24576,
+      "cap": {
+        "bram": 120,
+        "dsp": 80,
+        "ff": 35200,
+        "lut": 17600
+      },
+      "fit": false,
+      "cls": "measured",
+      "report": "artifacts/results/hls_z7010_opt_a_shared_requant/",
+      "latency_ms_at_10ns": 449.14,
+      "util_pct": {
+        "bram": 90.0,
+        "dsp": 61.2,
+        "ff": 61.1,
+        "lut": 139.6
+      },
+      "fits_all_resources": false
+    },
+    {
+      "variant": "B +shared layernorm",
+      "device": "xc7z010",
+      "src": "transformer_top_opt_z7010_b.cpp",
+      "sha": "c27aa454d7c7c1921812f30bff552543559183da7d19ca738c69dc518d5ce9de",
+      "csim": "16/16",
+      "lat": 44666235,
+      "interval": 44666236,
+      "clk": 7.3,
+      "slack": -0.0,
+      "bram": 107,
+      "dsp": 45,
+      "ff": 20116,
+      "lut": 22197,
+      "cap": {
+        "bram": 120,
+        "dsp": 80,
+        "ff": 35200,
+        "lut": 17600
+      },
+      "fit": false,
+      "cls": "measured",
+      "report": "artifacts/results/hls_z7010_opt_b_shared_nonlinear/",
+      "latency_ms_at_10ns": 446.66,
+      "util_pct": {
+        "bram": 89.2,
+        "dsp": 56.2,
+        "ff": 57.1,
+        "lut": 126.1
+      },
+      "fits_all_resources": false
+    },
+    {
+      "variant": "C 4 context lanes",
+      "device": "xc7z010",
+      "src": "transformer_top_opt_z7010_c.cpp",
+      "sha": "2b256741f4c466c30829a1c44a9e4945cdc8867964c9b1dee807c901e0149a5a",
+      "csim": "16/16",
+      "lat": 48860539,
+      "interval": 48860540,
+      "clk": 7.3,
+      "slack": -0.0,
+      "bram": 103,
+      "dsp": 41,
+      "ff": 20017,
+      "lut": 22608,
+      "cap": {
+        "bram": 120,
+        "dsp": 80,
+        "ff": 35200,
+        "lut": 17600
+      },
+      "fit": false,
+      "cls": "measured",
+      "report": "artifacts/results/hls_z7010_opt_c_context_lanes4/",
+      "latency_ms_at_10ns": 488.61,
+      "util_pct": {
+        "bram": 85.8,
+        "dsp": 51.2,
+        "ff": 56.9,
+        "lut": 128.5
+      },
+      "fits_all_resources": false
+    },
+    {
+      "variant": "D 2 context lanes",
+      "device": "xc7z010",
+      "src": "transformer_top_opt_z7010_d.cpp",
+      "sha": "07900f318f3e7f789ba2ab0f6f48875a91413fdb69b7815ed665c63439164dcf",
+      "csim": "16/16",
+      "lat": 57347451,
+      "interval": 57347452,
+      "clk": 7.3,
+      "slack": -0.0,
+      "bram": 103,
+      "dsp": 39,
+      "ff": 20250,
+      "lut": 22287,
+      "cap": {
+        "bram": 120,
+        "dsp": 80,
+        "ff": 35200,
+        "lut": 17600
+      },
+      "fit": false,
+      "cls": "measured",
+      "report": "artifacts/results/hls_z7010_opt_d_context_lanes2/",
+      "latency_ms_at_10ns": 573.47,
+      "util_pct": {
+        "bram": 85.8,
+        "dsp": 48.8,
+        "ff": 57.5,
+        "lut": 126.6
+      },
+      "fits_all_resources": false
+    },
+    {
+      "variant": "E +shared requant/residual",
+      "device": "xc7z010",
+      "src": "transformer_top_opt_z7010_e.cpp",
+      "sha": "04f688729ee271f50ac8e16ba2418cc70519ae2baa0e2d4199e0e732c0f050d3",
+      "csim": "16/16",
+      "lat": 49129442,
+      "interval": 49129443,
+      "clk": 8.396,
+      "slack": 1.1,
+      "bram": 107,
+      "dsp": 36,
+      "ff": 11905,
+      "lut": 15138,
+      "cap": {
+        "bram": 120,
+        "dsp": 80,
+        "ff": 35200,
+        "lut": 17600
+      },
+      "fit": true,
+      "cls": "measured",
+      "report": "artifacts/results/hls_z7010_opt_e_shared_arith/",
+      "latency_ms_at_10ns": 491.29,
+      "util_pct": {
+        "bram": 89.2,
+        "dsp": 45.0,
+        "ff": 33.8,
+        "lut": 86.0
+      },
+      "fits_all_resources": true
+    }
+  ],
+  "selected_fitting_candidate": {
+    "name": "E (+shared requant/residual)",
+    "fits_7010": true,
+    "lut": "15138/17600 = 86.0%",
+    "bram": "107/120 = 89.2%",
+    "dsp": "36/80 = 45.0%",
+    "ff": "11905/35200 = 33.8%",
+    "latency_cycles": 49129442,
+    "latency_ms_at_10ns": 491.29,
+    "est_clock_ns": 8.396,
+    "slack_ns": 1.1,
+    "csim": "16/16 exact ap_int",
+    "native_ab": "byte-identical to baseline",
+    "speedup_vs_baseline_x": 1.511,
+    "latency_penalty_vs_v3_7020": "+9.3% (49.13M vs 44.93M cycles) \u2014 the cost of time-sharing arithmetic to fit 7010",
+    "limiting_resource": "BRAM (89.2%) is now the tightest; LUT 86.0%",
+    "sha256": "04f688729ee271f50ac8e16ba2418cc70519ae2baa0e2d4199e0e732c0f050d3"
+  },
+  "key_findings": [
+    "Operator sharing is the effective LUT lever: v3 152.6% -> A 139% -> B 126% -> E 86% (FIT).",
+    "Context-lane reduction (C=4,D=2) does NOT reduce LUT (C=128%,D=126.6%, both >= B's 126%) and only raises latency; the LUT is dominated by lane-independent nonlinear/normalization/requant/residual arithmetic.",
+    "Sharing the requant+residual 64-bit multiply/round datapaths (ALLOCATION limit=1) removed ~7,059 LUT and ~8,211 FF vs B \u2014 the decisive change."
+  ],
+  "regressions": {
+    "vitis_csim_ap_int": "16/16 all variants",
+    "native_gpp_ab": "byte-identical all variants",
+    "numpy_oracle": "16/16",
+    "unittest": "30/30 OK",
+    "git_diff_check": "clean except pre-existing user file"
+  },
+  "board_readiness": "NOT established. C-synth estimate only; place-and-route/bitstream/on-board validation still required."
+}

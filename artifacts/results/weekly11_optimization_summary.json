@@ -1,0 +1,89 @@
+{
+  "report": "weekly_11",
+  "scope": "F_1layer int10 HLS inference core only; DMA, PS, bitstream, board excluded",
+  "target_part_status": "PROVISIONAL test part xc7z020-clg400-1; final board not selected (see AGENTS.md)",
+  "tool_for_measured_numbers": "Vitis HLS 2020.2 (on laptop; NOT installed on dev machine)",
+  "dev_machine_tools": ["g++ (GCC) 15.2.0", "Python 3.12 + NumPy 2.2.3"],
+  "baseline_revalidation": {
+    "all_7_snapshot_hashes_match_manifest": true,
+    "live_vitis_source_matches_frozen_snapshot": true,
+    "derived_numbers_recomputed_consistent": true,
+    "discrepancy_found": {
+      "field": "hls_z7020_current_summary.json:quadratic_attention_share_percent",
+      "stored": 88.58329943,
+      "correct": 88.58064140,
+      "impact": "immaterial (rounds to 88.58%); flagged not silently edited"
+    },
+    "functional_oracles_on_dev_machine": {
+      "numpy_second_source_verify_export": "PASS 16/16 bit-exact",
+      "gpp_reference_testbench_make_test": "PASS 16/16 bit-exact",
+      "gpp_csim_of_synthesizable_top": "PASS 16/16 bit-exact"
+    }
+  },
+  "baseline_measured": {
+    "source": "artifacts/results/hls_z7020_q40_bounded_snapshot/transformer_top_csynth.rpt",
+    "latency_cycles": 74246781,
+    "estimated_clock_ns": 7.297,
+    "latency_seconds_at_target_clock": 0.74246781,
+    "throughput_windows_per_second": 1.346859738,
+    "resources": {"BRAM_18K": 104, "LUT": 24738, "FF": 20610, "DSP": 40},
+    "device_capacity": {"BRAM_18K": 280, "LUT": 53200, "FF": 106400, "DSP": 220},
+    "csim": "16/16 exact logits, 0 errors"
+  },
+  "latency_attribution": {
+    "method": "analytical cycle model reconciled to measured total; see docs/reports/hls_attention_bottleneck_analysis.md",
+    "headline": "context accumulation is the dominant CYCLE cost (~45.2% of measured), 8x the score-loop cycles despite equal MAC count, because context does not unroll its HD=8 lanes",
+    "attn_context_baseline_cycles": 33554432,
+    "attn_context_percent_of_measured": 45.1931,
+    "attn_scores_cycles": 4194304,
+    "attn_scores_percent_of_measured": 5.6491,
+    "ideal_II1_total_cycles": 50985091,
+    "reconciliation_residual_cycles": 23261690,
+    "residual_percent_of_measured": 31.3302,
+    "residual_causes": ["runtime integer division in softmax normalization", "pipeline fill/drain of short per-token loops", "per-token module handshake"]
+  },
+  "optimization": {
+    "name": "bit-exact context HD-unroll + cyclic v partition (factor 8)",
+    "file": "hls/f1_int10/vitis/transformer_top_opt.cpp",
+    "isolation": "separate file; frozen baseline transformer_top.cpp untouched",
+    "bit_exact_rationale": "per-d accumulation Sum_j qattn[j]*v[j,off+d] preserved in ascending j; only loop-nest order changed; accumulator width and requant identical",
+    "functional_validation_status": "VERIFIED by g++ C-simulation (native width): 16/16 golden, byte-identical to baseline top; AND VERIFIED by Vitis HLS 2020.2 C-simulation (ap_int widths): 16/16 exact",
+    "csim_ap_int_status": "MEASURED PASS 16/16 (Vitis HLS 2020.2, 2026-09-25)",
+    "csynth_status": "MEASURED (Vitis HLS 2020.2, 2026-09-25). See artifacts/results/hls_z7020_opt_ctx_measured_summary.json. NOTE: the synthesizable variant required #pragma HLS INLINE on attention0_row/attention0_kv/linear; it is MEASURED 2.007x faster but OVERFLOWS Z7020 BRAM (382/280 = 136%). The no-inline variant HANGS 2020.2 csynth.",
+    "projection_analytical_SUPERSEDED_BY_MEASUREMENT": "The values below are the ANALYTICAL PROJECTIONS made before synthesis. They are retained for the record and NOT edited. The measured latency speedup (2.007x) falls inside the projected 1.654-2.358x range, but the projected assumption of Z7020 resource fit was WRONG: the measured core overflows BRAM. See the measured summary JSON.",
+    "projection_analytical": {
+      "context_cycles_after": 4194304,
+      "context_cycle_reduction": 29360128,
+      "ideal_total_cycles_after": 21624963,
+      "ideal_speedup": 2.358,
+      "projected_measured_latency_cycles_conservative": 44886653,
+      "projected_measured_latency_cycles_optimistic": 31491243,
+      "projected_speedup_range_x": [1.654, 2.358],
+      "projected_throughput_wps_range": [2.228, 3.175],
+      "resource_direction": "expected +DSP (up to ~7 more for HD-parallel context MACs) and possible +BRAM banking from cyclic v partition; ample headroom on baseline (DSP 18%, BRAM 37%, LUT 46%); MUST be measured"
+    }
+  },
+  "realtime_assessment": {
+    "required_windows_per_second": 48.828125,
+    "window_acquisition_seconds": 0.02048,
+    "baseline_gap_x": 36.25,
+    "projected_gap_after_opt_x": [15.4, 21.9],
+    "conclusion": "optimization is necessary but NOT sufficient for continuous non-overlapping real-time; further head-level parallelism and softmax-division rework are required"
+  },
+  "blockers": {
+    "csynth_measured_numbers": "DONE 2026-09-25: Vitis HLS 2020.2 available and run; measured results in hls_z7020_opt_ctx_measured_summary.json",
+    "resource_fit": "OPEN: synthesizable v1 overflows Z7020 BRAM (136%); needs weight-ROM-sharing rework to fit (see recommended_next_optimization in measured summary)",
+    "rtl_cosim": "requires a resource-fitting synthesized candidate; not attempted (v1 does not fit; v2 hangs csynth)",
+    "ip_packaging_bitstream_pynq_pc_ui": "all downstream of a stable, fitting synthesized candidate; not started"
+  },
+  "reproduce": {
+    "hash_audit": "sha256sum artifacts/results/hls_z7020_q40_bounded_snapshot/{transformer_top.cpp,ap_types.h,weights_int10.h,testbench_top.cpp,run_verify_and_synth.tcl} artifacts/results/hls_z7020_q40_bounded_snapshot/golden/{golden_in.txt,golden_expected.txt}",
+    "numpy_oracle": "python hls/f1_int10/verify_export.py",
+    "gpp_reference": "cd hls/f1_int10 && make test",
+    "gpp_csim_baseline": "g++ -O2 -std=c++17 -Wno-unknown-pragmas -Ihls/f1_int10/gpp_csim/stubs -Ihls/f1_int10/vitis hls/f1_int10/vitis/transformer_top.cpp hls/f1_int10/vitis/testbench_top.cpp -o tb_top_baseline && ./tb_top_baseline hls/f1_int10/golden",
+    "gpp_csim_optimized": "g++ -O2 -std=c++17 -Wno-unknown-pragmas -Ihls/f1_int10/gpp_csim/stubs -Ihls/f1_int10/vitis hls/f1_int10/vitis/transformer_top_opt.cpp hls/f1_int10/vitis/testbench_top.cpp -o tb_top_opt && ./tb_top_opt hls/f1_int10/golden",
+    "bottleneck_model": "python docs/reports/analyze_hls_bottleneck.py",
+    "figure": "python docs/reports/plot_hls_bottleneck.py",
+    "laptop_csynth_optimized": "cd hls/f1_int10/vitis && vitis_hls -f run_top_opt_verify_and_synth.tcl"
+  }
+}

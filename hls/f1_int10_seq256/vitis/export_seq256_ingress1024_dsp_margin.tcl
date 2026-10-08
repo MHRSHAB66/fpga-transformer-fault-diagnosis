@@ -1,0 +1,4 @@
+open_project seq256_ingress1024_dsp_margin
+open_solution sol1
+export_design -format ip_catalog
+exit

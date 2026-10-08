@@ -1,0 +1,204 @@
+
+
+================================================================
+== Vitis HLS Report for 'transformer_top'
+================================================================
+* Date:           Sat Sep 26 22:34:21 2026
+
+* Version:        2020.2 (Build 3064766 on Wed Nov 18 09:12:45 MST 2020)
+* Project:        seq256_int10_xc7z020clg400_1
+* Solution:       sol1 (Vivado IP Flow Target)
+* Product family: zynq
+* Target device:  xc7z020-clg400-1
+
+
+================================================================
+== Performance Estimates
+================================================================
++ Timing: 
+    * Summary: 
+    +--------+----------+----------+------------+
+    |  Clock |  Target  | Estimated| Uncertainty|
+    +--------+----------+----------+------------+
+    |ap_clk  |  10.00 ns|  7.299 ns|     2.70 ns|
+    +--------+----------+----------+------------+
+
++ Latency: 
+    * Summary: 
+    +---------+---------+-----------+-----------+---------+---------+---------+
+    |  Latency (cycles) |   Latency (absolute)  |      Interval     | Pipeline|
+    |   min   |   max   |    min    |    max    |   min   |   max   |   Type  |
+    +---------+---------+-----------+-----------+---------+---------+---------+
+    |  1477997|  1477997|  14.780 ms|  14.780 ms|  1477998|  1477998|     none|
+    +---------+---------+-----------+-----------+---------+---------+---------+
+
+    + Detail: 
+        * Instance: 
+        +-----------------------------+------------------+---------+---------+-----------+-----------+---------+---------+---------+
+        |                             |                  |  Latency (cycles) |   Latency (absolute)  |      Interval     | Pipeline|
+        |           Instance          |      Module      |   min   |   max   |    min    |    max    |   min   |   max   |   Type  |
+        +-----------------------------+------------------+---------+---------+-----------+-----------+---------+---------+---------+
+        |grp_transformer_core_fu_395  |transformer_core  |  1475939|  1475939|  14.759 ms|  14.759 ms|  1475939|  1475939|     none|
+        +-----------------------------+------------------+---------+---------+-----------+-----------+---------+---------+---------+
+
+        * Loop: 
+        +--------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |                    |  Latency (cycles) | Iteration|  Initiation Interval  | Trip |          |
+        |      Loop Name     |   min   |   max   |  Latency |  achieved |   target  | Count| Pipelined|
+        +--------------------+---------+---------+----------+-----------+-----------+------+----------+
+        |- VITIS_LOOP_490_1  |     2048|     2048|         1|          1|          1|  2048|       yes|
+        |- VITIS_LOOP_497_2  |        5|        5|         3|          1|          1|     4|       yes|
+        +--------------------+---------+---------+----------+-----------+-----------+------+----------+
+
+
+
+================================================================
+== Utilization Estimates
+================================================================
+* Summary: 
++-----------------+---------+-----+--------+-------+-----+
+|       Name      | BRAM_18K| DSP |   FF   |  LUT  | URAM|
++-----------------+---------+-----+--------+-------+-----+
+|DSP              |        -|    -|       -|      -|    -|
+|Expression       |        -|    -|       0|     66|    -|
+|FIFO             |        -|    -|       -|      -|    -|
+|Instance         |      143|  160|   46438|  49670|    -|
+|Memory           |        2|    -|      20|      1|    -|
+|Multiplexer      |        -|    -|       -|    156|    -|
+|Register         |        -|    -|      28|      -|    -|
++-----------------+---------+-----+--------+-------+-----+
+|Total            |      145|  160|   46486|  49893|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Available        |      280|  220|  106400|  53200|    0|
++-----------------+---------+-----+--------+-------+-----+
+|Utilization (%)  |       51|   72|      43|     93|    0|
++-----------------+---------+-----+--------+-------+-----+
+
++ Detail: 
+    * Instance: 
+    +-----------------------------+------------------+---------+-----+-------+-------+-----+
+    |           Instance          |      Module      | BRAM_18K| DSP |   FF  |  LUT  | URAM|
+    +-----------------------------+------------------+---------+-----+-------+-------+-----+
+    |ctrl_s_axi_U                 |ctrl_s_axi        |        0|    0|     36|     40|    0|
+    |grp_transformer_core_fu_395  |transformer_core  |      143|  160|  46402|  49630|    0|
+    +-----------------------------+------------------+---------+-----+-------+-------+-----+
+    |Total                        |                  |      143|  160|  46438|  49670|    0|
+    +-----------------------------+------------------+---------+-----+-------+-------+-----+
+
+    * DSP: 
+    N/A
+
+    * Memory: 
+    +------------+----------+---------+----+----+-----+------+-----+------+-------------+
+    |   Memory   |  Module  | BRAM_18K| FF | LUT| URAM| Words| Bits| Banks| W*Bits*Banks|
+    +------------+----------+---------+----+----+-----+------+-----+------+-------------+
+    |input_V_U   |input_V   |        2|   0|   0|    0|  2048|   10|     1|        20480|
+    |logits_V_U  |logits_V  |        0|  20|   1|    0|     4|   10|     1|           40|
+    +------------+----------+---------+----+----+-----+------+-----+------+-------------+
+    |Total       |          |        2|  20|   1|    0|  2052|   20|     2|        20520|
+    +------------+----------+---------+----+----+-----+------+-----+------+-------------+
+
+    * FIFO: 
+    N/A
+
+    * Expression: 
+    +---------------------------+----------+----+---+----+------------+------------+
+    |       Variable Name       | Operation| DSP| FF| LUT| Bitwidth P0| Bitwidth P1|
+    +---------------------------+----------+----+---+----+------------+------------+
+    |add_ln490_fu_632_p2        |         +|   0|  0|  12|          12|           1|
+    |add_ln497_fu_658_p2        |         +|   0|  0|  11|           3|           1|
+    |ap_block_state2            |       and|   0|  0|   2|           1|           1|
+    |ap_block_state6_io         |       and|   0|  0|   2|           1|           1|
+    |ap_block_state7_io         |       and|   0|  0|   2|           1|           1|
+    |icmp_ln490_fu_638_p2       |      icmp|   0|  0|  12|          12|          13|
+    |icmp_ln497_fu_664_p2       |      icmp|   0|  0|   9|           3|           4|
+    |t_last_V_fu_675_p2         |      icmp|   0|  0|   8|           3|           2|
+    |ap_block_pp1_stage0_01001  |        or|   0|  0|   2|           1|           1|
+    |ap_block_pp1_stage0_11001  |        or|   0|  0|   2|           1|           1|
+    |ap_enable_pp1              |       xor|   0|  0|   2|           1|           2|
+    |ap_enable_reg_pp1_iter1    |       xor|   0|  0|   2|           2|           1|
+    +---------------------------+----------+----+---+----+------------+------------+
+    |Total                      |          |   0|  0|  66|          41|          29|
+    +---------------------------+----------+----+---+----+------------+------------+
+
+    * Multiplexer: 
+    +-------------------------+----+-----------+-----+-----------+
+    |           Name          | LUT| Input Size| Bits| Total Bits|
+    +-------------------------+----+-----------+-----+-----------+
+    |ap_NS_fsm                |  37|          7|    1|          7|
+    |ap_enable_reg_pp1_iter1  |   9|          2|    1|          2|
+    |ap_enable_reg_pp1_iter2  |   9|          2|    1|          2|
+    |c_reg_384                |   9|          2|    3|          6|
+    |i_reg_373                |   9|          2|   12|         24|
+    |in_r_TDATA_blk_n         |   9|          2|    1|          2|
+    |input_V_address0         |  14|          3|   11|         33|
+    |input_V_ce0              |  14|          3|    1|          3|
+    |logits_V_address0        |  14|          3|    2|          6|
+    |logits_V_ce0             |  14|          3|    1|          3|
+    |logits_V_we0             |   9|          2|    1|          2|
+    |out_r_TDATA_blk_n        |   9|          2|    1|          2|
+    +-------------------------+----+-----------+-----+-----------+
+    |Total                    | 156|         33|   36|         92|
+    +-------------------------+----+-----------+-----+-----------+
+
+    * Register: 
+    +------------------------------------------+----+----+-----+-----------+
+    |                   Name                   | FF | LUT| Bits| Const Bits|
+    +------------------------------------------+----+----+-----+-----------+
+    |ap_CS_fsm                                 |   6|   0|    6|          0|
+    |ap_enable_reg_pp1_iter0                   |   1|   0|    1|          0|
+    |ap_enable_reg_pp1_iter1                   |   1|   0|    1|          0|
+    |ap_enable_reg_pp1_iter2                   |   1|   0|    1|          0|
+    |c_reg_384                                 |   3|   0|    3|          0|
+    |grp_transformer_core_fu_395_ap_start_reg  |   1|   0|    1|          0|
+    |i_reg_373                                 |  12|   0|   12|          0|
+    |icmp_ln497_reg_699                        |   1|   0|    1|          0|
+    |icmp_ln497_reg_699_pp1_iter1_reg          |   1|   0|    1|          0|
+    |t_last_V_reg_708                          |   1|   0|    1|          0|
+    +------------------------------------------+----+----+-----+-----------+
+    |Total                                     |  28|   0|   28|          0|
+    +------------------------------------------+----+----+-----+-----------+
+
+
+
+================================================================
+== Interface
+================================================================
+* Summary: 
++--------------------+-----+-----+------------+-----------------+--------------+
+|      RTL Ports     | Dir | Bits|  Protocol  |  Source Object  |    C Type    |
++--------------------+-----+-----+------------+-----------------+--------------+
+|s_axi_ctrl_AWVALID  |   in|    1|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_AWREADY  |  out|    1|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_AWADDR   |   in|    4|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_WVALID   |   in|    1|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_WREADY   |  out|    1|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_WDATA    |   in|   32|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_WSTRB    |   in|    4|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_ARVALID  |   in|    1|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_ARREADY  |  out|    1|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_ARADDR   |   in|    4|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_RVALID   |  out|    1|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_RREADY   |   in|    1|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_RDATA    |  out|   32|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_RRESP    |  out|    2|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_BVALID   |  out|    1|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_BREADY   |   in|    1|       s_axi|             ctrl|   return void|
+|s_axi_ctrl_BRESP    |  out|    2|       s_axi|             ctrl|   return void|
+|ap_clk              |   in|    1|  ap_ctrl_hs|  transformer_top|  return value|
+|ap_rst_n            |   in|    1|  ap_ctrl_hs|  transformer_top|  return value|
+|interrupt           |  out|    1|  ap_ctrl_hs|  transformer_top|  return value|
+|in_r_TDATA          |   in|   32|        axis|      in_V_data_V|       pointer|
+|in_r_TVALID         |   in|    1|        axis|      in_V_last_V|       pointer|
+|in_r_TREADY         |  out|    1|        axis|      in_V_last_V|       pointer|
+|in_r_TLAST          |   in|    1|        axis|      in_V_last_V|       pointer|
+|in_r_TKEEP          |   in|    4|        axis|      in_V_keep_V|       pointer|
+|in_r_TSTRB          |   in|    4|        axis|      in_V_strb_V|       pointer|
+|out_r_TDATA         |  out|   32|        axis|     out_V_data_V|       pointer|
+|out_r_TVALID        |  out|    1|        axis|     out_V_last_V|       pointer|
+|out_r_TREADY        |   in|    1|        axis|     out_V_last_V|       pointer|
+|out_r_TLAST         |  out|    1|        axis|     out_V_last_V|       pointer|
+|out_r_TKEEP         |  out|    4|        axis|     out_V_keep_V|       pointer|
+|out_r_TSTRB         |  out|    4|        axis|     out_V_strb_V|       pointer|
++--------------------+-----+-----+------------+-----------------+--------------+
+

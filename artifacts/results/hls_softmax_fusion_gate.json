@@ -1,0 +1,35 @@
+{
+  "report": "softmax_pass_reduction_feasibility_gate",
+  "generated": "2026-09-26",
+  "experiment": "hardware-only reduction of attention softmax/context key-length passes; no retraining, model/weights/SEQ/goldens unchanged",
+  "target_part": "xc7z020clg400-1 (provisional comparison target)", "clock_target_ns": 10.0,
+  "realtime_target_cycles": 2048000,
+  "reference": {"name":"rt_prefix_opt2","sha256":"880D43730D3A43BCCE15CD203A948A8F619CBF786079F1A1C376F4EF1B8D10CA",
+    "interval_cycles":6229677,"query_region_cycles":4893100,"prefix_cycles":1328374,
+    "bram_18k":216,"dsp":160,"ff":46839,"lut":49889,"csim":"16/16"},
+  "phase0_numerical_contract_measured": {
+    "score":"sc[j]=requant(sum_d q[d]*k[j][d], M_l0_scores_q40); acc_t=ap_int<32>; requant=round-half-even(acc*Mq>>40) clamp +/-511 int10; sc[] stored",
+    "row_max":"rowmax=max_j sc[j] (exact)",
+    "exp_denom":"dd=clamp(sc[j]-rowmax,-exp_clamp_l0,0); num[j]=exp_l0[dd+exp_clamp_l0] (lut_t=ap_int<20>); denom+=num[j] (acc_t)",
+    "normalize":"qattn[j]=(num[j]*ATTN_QMAX(511)+denom/2)/denom (integer divide, round-half-up); stored int10",
+    "context":"cacc[d]+=qattn[j]*vh[j][d]; ctxh[d]=requant(cacc[d], M_l0_ctx_q40)",
+    "passes":5, "attn2_keys_per_cycle":2, "per_stage_trip":512
+  },
+  "phase0_stage_balance_measured": {
+    "per_query_dataflow_interval":4774, "df_attn_cycles":4773, "finish_token_cycles":4452,
+    "df_head_attention_5pass_cycles":2638,
+    "note":"per-query II = max(df_attn, finish_token); df_attn and finish_token already overlap across queries in the query DATAFLOW region."
+  },
+  "phase1_gate_analytical": {
+    "finish_token_is_hard_floor_cycles":4452,
+    "bit_exact_3pass":{"fusions":["score+max","normalize+context"],"bit_exact":true,"accuracy_change":"none (16/16 exact by construction)","df_attn_est":3730,"per_query_II":4452,"total_interval_est":5895425,"gap_x":2.879,"speedup_vs_prefix_opt2_x":1.057},
+    "approximate_2pass":{"fusions":["score+max","exp+denom+ctx-numerator; divide at end"],"bit_exact":false,"reason":"moving ÷denom to the end removes per-key int10 rounding of qattn -> different result","df_attn_est":3208,"per_query_II":4452,"total_interval_est":5895425,"gap_x":2.879,"note":"same interval as bit-exact 3-pass (finish-limited) but costs accuracy -> strictly worse"},
+    "online_softmax":{"bit_exact":false,"reason":"running-max rescaling of denominator+numerator under fixed point is not equivalent to per-key int10 rounding; adds rescale + overflow-width risk","per_query_II":4452,"total_interval_est":5895425,"gap_x":2.879,"note":"same finish-limited ceiling; approximate; higher risk"},
+    "verdict":"REJECT ALL before synthesis. Every softmax-pass-reduction converges to the finish_token-limited floor ~5,895,425 cycles (gap 2.88x), only 1.057x (5.4%) better than prefix_opt2 and not a large approach to the 2,048,000 target. Per the Phase-1 gate, none is synthesized. finish_token/FFN is the co-bottleneck.",
+    "measured_vs_analytical":"finish_token=4,452, df_attn=4,773, per-query II=4,774, df_head=2,638 are MEASURED; the fused df_attn (~3,730/~3,208) and the ~5,895,425 total are ANALYTICAL (derived from the measured finish_token floor and pass counts)."
+  },
+  "realtime_achieved": false,
+  "fastest_fitting_candidate": "rt_prefix_opt2 (6,229,677 cycles, 62.30 ms, gap 3.042x) -- unchanged",
+  "next_justified_experiment": "isolated SEQ=256 token-aggregation/retraining branch (NOT started; requires retrain + re-quantize + new goldens + accuracy). Because attention is O(SEQ^2) AND finish_token runs per token, SEQ 1024->256 reduces BOTH the query region and the finish_token contribution (256 tokens), analytically ~1.47M cycles -> real-time plausible.",
+  "scope_caveat": "C-synthesis estimates only; nothing committed or pushed; no existing artifact/golden/checkpoint modified."
+}

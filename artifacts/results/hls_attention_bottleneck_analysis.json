@@ -1,0 +1,147 @@
+{
+  "scope": "F_1layer int10 HLS core, transformer_top.cpp, SEQ=1024, xc7z020clg400-1, 10 ns",
+  "method": "analytical cycle model from loop structure + pragmas, reconciled to the one measured top-level latency",
+  "measured": {
+    "source": "artifacts/results/hls_z7020_q40_bounded_snapshot/transformer_top_csynth.rpt",
+    "total_latency_cycles": 74246781,
+    "note": "This is the only measured latency available on this machine; per-function HLS latencies were not regenerated (Vitis HLS not installed here)."
+  },
+  "analytical_cycle_model": {
+    "per_token_cycles": {
+      "q_proj": 32,
+      "attn_scores": 4096,
+      "attn_rowmax": 4096,
+      "attn_exp_denom": 4096,
+      "attn_softmax_div": 4096,
+      "attn_context_baseline": 32768,
+      "out_proj": 32,
+      "finish_token": 414
+    },
+    "per_token_total": 49630,
+    "token_loop_trip": 1024,
+    "one_time_cycles": {
+      "input_proj": 32768,
+      "pe_add": 32768,
+      "kv_proj": 65536,
+      "pooling": 32768,
+      "classifier_tail": 131
+    },
+    "ideal_token_loop_cycles": 50821120,
+    "ideal_one_time_cycles": 163971,
+    "ideal_total_cycles_II1": 50985091,
+    "reconciliation_residual_cycles": 23261690,
+    "reconciliation_residual_percent_of_measured": 31.3302,
+    "residual_attribution": [
+      "runtime integer division in softmax normalization (qattn = numerator/denom, variable denominator; a 32-bit divider does not pipeline at II=1 on this device)",
+      "pipeline fill/drain across the many short per-token inner loops (context restarts the j-pipeline HD times per head in the baseline)",
+      "per-token module handshake / control overhead (finish_token is INLINE off)"
+    ]
+  },
+  "component_cycle_shares_baseline": {
+    "attn_context_baseline": {
+      "cycles": 33554432,
+      "percent_of_measured_total": 45.1931
+    },
+    "attn_scores": {
+      "cycles": 4194304,
+      "percent_of_measured_total": 5.6491
+    },
+    "attn_rowmax": {
+      "cycles": 4194304,
+      "percent_of_measured_total": 5.6491
+    },
+    "attn_exp_denom": {
+      "cycles": 4194304,
+      "percent_of_measured_total": 5.6491
+    },
+    "attn_softmax_div": {
+      "cycles": 4194304,
+      "percent_of_measured_total": 5.6491
+    },
+    "finish_token": {
+      "cycles": 423936,
+      "percent_of_measured_total": 0.571
+    },
+    "kv_proj": {
+      "cycles": 65536,
+      "percent_of_measured_total": 0.0883
+    },
+    "q_proj": {
+      "cycles": 32768,
+      "percent_of_measured_total": 0.0441
+    },
+    "out_proj": {
+      "cycles": 32768,
+      "percent_of_measured_total": 0.0441
+    },
+    "input_proj": {
+      "cycles": 32768,
+      "percent_of_measured_total": 0.0441
+    },
+    "pe_add": {
+      "cycles": 32768,
+      "percent_of_measured_total": 0.0441
+    },
+    "pooling": {
+      "cycles": 32768,
+      "percent_of_measured_total": 0.0441
+    },
+    "classifier_tail": {
+      "cycles": 131,
+      "percent_of_measured_total": 0.0002
+    }
+  },
+  "headline_finding": {
+    "text": "In MAC COUNT scores and context are symmetric (33,554,432 each, 88.58% combined). In CYCLES they are NOT: the score loop unrolls the HD=8 dot product (8 MAC/cyc) while the baseline context loop does not (1 MAC/cyc), so context costs 8x more cycles than scores.",
+    "attn_context_baseline_cycles": 33554432,
+    "attn_context_baseline_percent_of_measured": 45.1931,
+    "attn_scores_cycles": 4194304,
+    "attn_scores_percent_of_measured": 5.6491,
+    "context_to_scores_cycle_ratio": 8,
+    "evidence_label": "ANALYTICAL estimate: the 45.19% is the modelled context-loop cycle count normalized against the MEASURED total latency (74,246,781 cycles). It is NOT a directly measured per-function HLS latency (Vitis does not emit a bounded per-function latency for the baseline top)."
+  },
+  "optimization_projection": {
+    "change": "context accumulation restructured to j-outer / HD-unrolled (bit-exact), v cyclic-partitioned factor 8",
+    "file": "hls/f1_int10/vitis/transformer_top_opt.cpp",
+    "functional_status": "bit-exact vs baseline: verified by g++ C-simulation on 16/16 golden vectors (byte-identical logits); ap_int csim + csynth still PENDING on laptop",
+    "context_opt_cycles": 4194304,
+    "context_cycle_reduction": 29360128,
+    "ideal_total_cycles_opt": 21624963,
+    "ideal_speedup": 2.358,
+    "projected_measured_latency_cycles_conservative": 44886653,
+    "projected_measured_latency_cycles_optimistic": 31491243,
+    "projected_speedup_range": [
+      1.654,
+      2.358
+    ],
+    "projected_throughput_wps_range": [
+      2.228,
+      3.175
+    ],
+    "required_realtime_wps": 48.828125,
+    "note": "PROJECTION ONLY. Speedup and throughput must be MEASURED by csynth (run_top_opt_verify_and_synth.tcl). Even the optimistic projection stays well below the 48.83 wps continuous non-overlapping input rate; this optimization is necessary but not sufficient for real-time.",
+    "evidence_label": "PROJECTION made before synthesis. Superseded for latency by measurement: the MEASURED speedup 2.007x lies inside the projected 1.654-2.358x range. However the projection's implicit assumption that the optimized core would fit Z7020 was FALSE -- see measured_update."
+  },
+  "corrected_summary_json_note": {
+    "field": "quadratic_attention_share_percent in artifacts/results/hls_z7020_current_summary.json",
+    "stored_value": 88.58329943,
+    "recomputed_value": 88.5806414,
+    "impact": "immaterial (both round to 88.58%); flagged for correction"
+  },
+  "measured_update_2026_09_25": {
+    "evidence_class": "MEASURED (Vitis HLS 2020.2 csim+csynth, xc7z020clg400-1, 10 ns)",
+    "detail_json": "artifacts/results/hls_z7020_opt_ctx_measured_summary.json",
+    "synthesizable_variant": "context reorder + cyclic v partition + #pragma HLS INLINE (attention0_row/kv/linear)",
+    "measured_latency_cycles": 36993244,
+    "measured_speedup_x": 2.007,
+    "measured_resources": {
+      "BRAM_18K": 382,
+      "DSP": 186,
+      "FF": 30752,
+      "LUT": 42350
+    },
+    "fits_z7020": false,
+    "fit_blocker": "BRAM 382/280=136% (weight-ROM replication from inlining linear)",
+    "noinline_variant": "HANGS 2020.2 csynth (no report); evidence artifacts/results/hls_z7020_opt_ctx_v2_noinline_HANG/"
+  }
+}
