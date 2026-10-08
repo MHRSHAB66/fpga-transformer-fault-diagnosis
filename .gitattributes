@@ -1,0 +1,13 @@
+# Hash-pinned deployment & golden artifacts must stay byte-identical on every
+# platform. With core.autocrlf=true, Windows checkouts would otherwise rewrite
+# LF->CRLF and break the SHA-256 MANIFESTs (verified by the unit tests). Mark
+# them -text so no end-of-line conversion is ever applied.
+artifacts/deploy/** -text
+artifacts/results/**/golden_in.txt -text
+artifacts/results/**/golden_expected.txt -text
+hls/**/golden_in.txt -text
+hls/**/golden_expected.txt -text
+hls/**/golden_ingress1024/** -text
+*.hwh -text
+# Integrity manifests themselves: keep LF so their own bytes are stable too.
+*.sha256 -text
