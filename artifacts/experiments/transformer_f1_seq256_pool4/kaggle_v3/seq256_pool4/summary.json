@@ -1,0 +1,155 @@
+{
+  "status": "complete",
+  "selection_rule": "highest validation macro-F1",
+  "winner": "scratch",
+  "candidates": {
+    "warm_start": {
+      "best_epoch": 11,
+      "best_val_macro_f1": 0.9538250526922436,
+      "elapsed_seconds": 782.6110489368439
+    },
+    "scratch": {
+      "best_epoch": 22,
+      "best_val_macro_f1": 0.9634226148431064,
+      "elapsed_seconds": 1289.1083545684814
+    }
+  },
+  "winner_test": {
+    "loss": 0.0666703979023136,
+    "accuracy": 0.9764894553687476,
+    "macro_f1": 0.9545513146168503,
+    "per_class_precision": [
+      0.9094790777113578,
+      0.9542211652794292,
+      0.9623165091494068,
+      0.9936936761585924
+    ],
+    "per_class_recall": [
+      0.8729508196721312,
+      0.9817714705162711,
+      0.9905613512170889,
+      0.9731795653831491
+    ],
+    "per_class_f1": [
+      0.8908406524466751,
+      0.9678002894356006,
+      0.9762346749352317,
+      0.9833296416498937
+    ],
+    "confusion_matrix": [
+      [
+        2130,
+        19,
+        282,
+        9
+      ],
+      [
+        7,
+        16050,
+        9,
+        282
+      ],
+      [
+        81,
+        114,
+        23928,
+        33
+      ],
+      [
+        124,
+        637,
+        646,
+        51053
+      ]
+    ],
+    "count": 95404
+  },
+  "data_stats": {
+    "data_dir": "/kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda",
+    "max_files": null,
+    "total_files_after_filter": 1951,
+    "train_files_total": 1365,
+    "val_files_total": 195,
+    "test_files_total": 391,
+    "train_files_kept": 1365,
+    "train_files_dropped": 0,
+    "val_files_kept": 195,
+    "val_files_dropped": 0,
+    "test_files_kept": 391,
+    "test_files_dropped": 0,
+    "train_samples": 333060,
+    "val_samples": 47580,
+    "test_samples": 95404,
+    "window_shape": [
+      1024,
+      8
+    ],
+    "window_size": 1024,
+    "window_stride": 1024,
+    "aggregation_factor": 4,
+    "model_seq_len": 256,
+    "batch_size": 64,
+    "normalization": {
+      "scope": "per_window",
+      "method": "zscore",
+      "epsilon": 1e-08
+    },
+    "window_counts": {
+      "train": {
+        "normalized": 333060
+      },
+      "val": {
+        "normalized": 47580
+      },
+      "test": {
+        "normalized": 95404
+      },
+      "total_normalized": 476044
+    },
+    "train_class_window_counts": {
+      "normal": 8296,
+      "imbalance": 56852,
+      "misalignment": 85156,
+      "bearing_fault": 182756
+    },
+    "val_class_window_counts": {
+      "normal": 1220,
+      "imbalance": 8052,
+      "misalignment": 12200,
+      "bearing_fault": 26108
+    },
+    "test_class_window_counts": {
+      "normal": 2440,
+      "imbalance": 16348,
+      "misalignment": 24156,
+      "bearing_fault": 52460
+    },
+    "preprocessing_timing_seconds": {
+      "split_materialization": {
+        "train": 572.618734033,
+        "val": 80.78738332000012,
+        "test": 159.67204767599992
+      },
+      "total_split_materialization": 813.078165029
+    },
+    "estimated_materialized_ram_bytes": {
+      "train": 10916374560,
+      "val": 1559482080,
+      "test": 3126961504,
+      "total": 15602818144
+    },
+    "estimated_materialized_ram_gib": {
+      "train": 10.167,
+      "val": 1.452,
+      "test": 2.912,
+      "total": 14.531
+    },
+    "num_workers": 0,
+    "pin_memory": true,
+    "persistent_workers": false
+  },
+  "checkpoint_source": "/kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-f1-ckpt/best.pt",
+  "device": "Tesla T4",
+  "seed": 42,
+  "test_evaluated_once_after_selection": true
+}

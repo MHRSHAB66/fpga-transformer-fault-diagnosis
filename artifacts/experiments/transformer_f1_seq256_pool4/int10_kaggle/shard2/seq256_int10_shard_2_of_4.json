@@ -1,0 +1,51 @@
+{
+  "status": "complete",
+  "stage": "seq256_pool4_fulltest_int10_shard",
+  "bits": 10,
+  "shard": 2,
+  "num_shards": 4,
+  "full_test_windows": 95404,
+  "shard_windows": 23851,
+  "shard_correct": 23287,
+  "confusion_matrix": [
+    [
+      533,
+      5,
+      67,
+      5
+    ],
+    [
+      2,
+      4012,
+      1,
+      72
+    ],
+    [
+      18,
+      30,
+      5984,
+      7
+    ],
+    [
+      29,
+      174,
+      154,
+      12758
+    ]
+  ],
+  "calibration": {
+    "split": "train",
+    "seed": 42,
+    "files_requested": 12,
+    "files_kept": 12,
+    "files_dropped": 0,
+    "windows": 2928
+  },
+  "test_files_kept": 391,
+  "test_files_dropped": 0,
+  "integer_inference_seconds": 406.87824818499985,
+  "total_elapsed_seconds": 825.359469381,
+  "checkpoint": "/kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-seq256-pool4-ckpt/best.pt",
+  "model_seq_len": 256,
+  "aggregation_factor": 4
+}

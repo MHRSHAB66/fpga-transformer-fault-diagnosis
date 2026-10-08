@@ -1,0 +1,69 @@
+{
+  "status": "complete",
+  "stage": "seq256_pool4_fulltest_int10_combined",
+  "bits": 10,
+  "num_shards": 4,
+  "test_windows": 95404,
+  "correct": 93168,
+  "accuracy": 0.9765628275544003,
+  "macro_f1": 0.9559999457694748,
+  "per_class_precision": [
+    0.9191745485812554,
+    0.9512700574338326,
+    0.9631805561144421,
+    0.9939615879075928
+  ],
+  "per_class_recall": [
+    0.8762295081967213,
+    0.982750183508686,
+    0.9908925318761385,
+    0.9727030118185284
+  ],
+  "per_class_f1": [
+    0.897188417960554,
+    0.9667539188254054,
+    0.9768400432591262,
+    0.9832174030328138
+  ],
+  "confusion_matrix": [
+    [
+      2138,
+      16,
+      275,
+      11
+    ],
+    [
+      7,
+      16066,
+      9,
+      266
+    ],
+    [
+      72,
+      115,
+      23936,
+      33
+    ],
+    [
+      109,
+      692,
+      631,
+      51028
+    ]
+  ],
+  "float_reference": {
+    "accuracy": 0.9764894553687476,
+    "macro_f1": 0.9545513146168503
+  },
+  "accuracy_drop_vs_float": -7.337218565262038e-05,
+  "macro_f1_drop_vs_float": -0.0014486311526245021,
+  "shard_elapsed_seconds": [
+    605.5881632879999,
+    649.8496213889999,
+    825.359469381,
+    596.405164901
+  ],
+  "checkpoint": "/kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-seq256-pool4-ckpt/best.pt",
+  "model_seq_len": 256,
+  "aggregation_factor": 4
+}

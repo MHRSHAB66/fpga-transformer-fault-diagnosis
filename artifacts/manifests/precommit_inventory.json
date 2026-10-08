@@ -1,0 +1,2419 @@
+{
+ "generated_utc": "2026-10-08T17:11:35.866139Z",
+ "note": "pre-commit inventory; NOT a university report. Decisions: commit / ignore / artifact-local / user-owned.",
+ "counts": {
+  "modified_tracked": 11,
+  "untracked_committable": 328
+ },
+ "total_committable_bytes": 10200541,
+ "rows": [
+  {
+   "path": ".gitignore",
+   "size": 7887,
+   "state": "modified-tracked",
+   "decision": "commit",
+   "reason": "tracked file edited this work-cycle; group by topic"
+  },
+  {
+   "path": "docs/project_status.md",
+   "size": 5191,
+   "state": "modified-tracked",
+   "decision": "commit",
+   "reason": "tracked file edited this work-cycle; group by topic"
+  },
+  {
+   "path": "docs/session_notes.md",
+   "size": 9237,
+   "state": "modified-tracked",
+   "decision": "commit",
+   "reason": "tracked file edited this work-cycle; group by topic"
+  },
+  {
+   "path": "host/README.md",
+   "size": 4464,
+   "state": "modified-tracked",
+   "decision": "commit",
+   "reason": "tracked file edited this work-cycle; group by topic"
+  },
+  {
+   "path": "host/frame_protocol.py",
+   "size": 4109,
+   "state": "modified-tracked",
+   "decision": "commit",
+   "reason": "tracked file edited this work-cycle; group by topic"
+  },
+  {
+   "path": "kaggle/code_dataset/src/data/make_dataloaders.py",
+   "size": 23636,
+   "state": "modified-tracked",
+   "decision": "commit",
+   "reason": "tracked file edited this work-cycle; group by topic"
+  },
+  {
+   "path": "pynq/README.md",
+   "size": 4229,
+   "state": "modified-tracked",
+   "decision": "commit",
+   "reason": "tracked file edited this work-cycle; group by topic"
+  },
+  {
+   "path": "pynq/fault_classifier.py",
+   "size": 15267,
+   "state": "modified-tracked",
+   "decision": "commit",
+   "reason": "tracked file edited this work-cycle; group by topic"
+  },
+  {
+   "path": "pynq/run_demo.py",
+   "size": 4352,
+   "state": "modified-tracked",
+   "decision": "commit",
+   "reason": "tracked file edited this work-cycle; group by topic"
+  },
+  {
+   "path": "src/data/make_dataloaders.py",
+   "size": 23636,
+   "state": "modified-tracked",
+   "decision": "commit",
+   "reason": "tracked file edited this work-cycle; group by topic"
+  },
+  {
+   "path": "src/train_transformer_baseline.py",
+   "size": 23961,
+   "state": "modified-tracked",
+   "decision": "commit",
+   "reason": "tracked file edited this work-cycle; group by topic"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq/MANIFEST.sha256",
+   "size": 1119,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq/README.md",
+   "size": 4065,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq/config/hwh_contract.json",
+   "size": 742,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq/config/integer_config_scales.json",
+   "size": 978,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq/config/model_manifest.json",
+   "size": 704,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq/driver/fault_classifier.py",
+   "size": 12832,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq/driver/frame_protocol.py",
+   "size": 3271,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq/driver/run_demo.py",
+   "size": 4388,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq/golden/golden_expected.txt",
+   "size": 416,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq/golden/golden_in.txt",
+   "size": 437041,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq/overlay/design_1_wrapper.hwh",
+   "size": 338744,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/MANIFEST.sha256",
+   "size": 1119,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/README.md",
+   "size": 4534,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/config/hwh_contract.json",
+   "size": 927,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/config/integer_config_scales.json",
+   "size": 978,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/config/model_manifest.json",
+   "size": 704,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/driver/fault_classifier.py",
+   "size": 15267,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/driver/frame_protocol.py",
+   "size": 4109,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/driver/run_demo.py",
+   "size": 4352,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/golden/golden_expected.txt",
+   "size": 416,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/golden/golden_in.txt",
+   "size": 437041,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/overlay/design_1_wrapper.hwh",
+   "size": 338228,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/experiment_design.md",
+   "size": 6499,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/int10_ingress_local/combined.json",
+   "size": 1200,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/int10_ingress_local/pids.txt",
+   "size": 28,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/int10_ingress_local/shard0.json",
+   "size": 1130,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/int10_ingress_local/shard1.json",
+   "size": 1126,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/int10_ingress_local/shard2.json",
+   "size": 1127,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/int10_ingress_local/shard3.json",
+   "size": 1126,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/int10_kaggle/combined.json",
+   "size": 1381,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/int10_kaggle/shard0/seq256_int10_shard_0_of_4.json",
+   "size": 893,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/int10_kaggle/shard1/seq256_int10_shard_1_of_4.json",
+   "size": 900,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/int10_kaggle/shard2/seq256_int10_shard_2_of_4.json",
+   "size": 895,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/int10_kaggle/shard3/seq256_int10_shard_3_of_4.json",
+   "size": 894,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/kaggle_v3/seq256_pool4/scratch/best.pt",
+   "size": 77779,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/kaggle_v3/seq256_pool4/scratch/history.json",
+   "size": 27034,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/kaggle_v3/seq256_pool4/summary.json",
+   "size": 3494,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/kaggle_v3/seq256_pool4/warm_start/best.pt",
+   "size": 77779,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/kaggle_v3/seq256_pool4/warm_start/history.json",
+   "size": 16429,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/quantized/f_seq256_int10/integer_config.json",
+   "size": 978,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/fpga_fulltest_20261008_141335/fpga_fulltest_metrics.json",
+   "size": 1385,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/fpga_fulltest_20261008_141335/fpga_pred.txt",
+   "size": 190808,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/fpga_fulltest_20261008_141335/fpga_run.status",
+   "size": 181,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/fpga_fulltest_20261008_141335/labels.txt",
+   "size": 286212,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/fpga_fulltest_20261008_141335/meta.json",
+   "size": 362,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/fpga_live_test_20261008_200509/live_evidence.json",
+   "size": 2441,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/fpga_live_test_20261008_200509/live_results.txt",
+   "size": 3040,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_attention_bottleneck_analysis.json",
+   "size": 6353,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_bottleneck_optimization.png",
+   "size": 135784,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_measured_opt_vs_baseline.png",
+   "size": 115252,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_realtime_continuation_summary.json",
+   "size": 6629,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_realtime_phase2.png",
+   "size": 104674,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_realtime_phase2_verdict.json",
+   "size": 4513,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020/run_seq256_ingress1024_verify_and_synth.tcl",
+   "size": 971,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020/transformer_core_csynth.rpt",
+   "size": 103385,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020/transformer_top_csynth.rpt",
+   "size": 30765,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020/transformer_top_seq256_ingress1024.cpp",
+   "size": 24647,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020_postroute/post_place_timing_summary.rpt",
+   "size": 263115,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020_postroute/post_place_utilization.rpt",
+   "size": 9998,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020_postroute/post_route_drc.rpt",
+   "size": 173945,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020_postroute/post_route_status.rpt",
+   "size": 714,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020_postroute/post_route_timing_summary.rpt",
+   "size": 206005,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020_postroute/post_route_utilization.rpt",
+   "size": 9987,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020_postroute/post_synth_timing_summary.rpt",
+   "size": 247971,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020_postroute/post_synth_utilization.rpt",
+   "size": 7759,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020_postroute/run_seq256_ingress1024_postroute.tcl",
+   "size": 1704,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_ingress1024_z7020_postroute/transformer_top_seq256_ingress1024.cpp",
+   "size": 24647,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_summary.json",
+   "size": 7908,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_z7010/run_seq256_verify_and_synth.tcl",
+   "size": 900,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_z7010/transformer_core_csynth.rpt",
+   "size": 103356,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_z7010/transformer_top_csynth.rpt",
+   "size": 12981,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_z7010/transformer_top_seq256.cpp",
+   "size": 23896,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_z7010/weights_int10.h",
+   "size": 77881,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_z7020/run_seq256_verify_and_synth.tcl",
+   "size": 900,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_z7020/transformer_core_csynth.rpt",
+   "size": 103373,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_z7020/transformer_top_csynth.rpt",
+   "size": 12998,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_z7020/transformer_top_seq256.cpp",
+   "size": 23896,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_seq256_int10_z7020/weights_int10.h",
+   "size": 77881,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_softmax_fusion_gate.json",
+   "size": 3832,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_softmax_gate.png",
+   "size": 121927,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_throughput_study.png",
+   "size": 116359,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_throughput_study_summary.json",
+   "size": 8210,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_z7010_fitting_campaign.png",
+   "size": 111873,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_z7010_fitting_campaign_summary.json",
+   "size": 9184,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_z7020_current_summary.json",
+   "size": 3343,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/hls_z7020_opt_ctx_measured_summary.json",
+   "size": 9717,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/MANIFEST.sha256",
+   "size": 2597,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/README.md",
+   "size": 5652,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/bitstream/design_1.hwh",
+   "size": 338228,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/hls_csim/golden_expected.txt",
+   "size": 416,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/hls_csim/golden_in.txt",
+   "size": 437041,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/hls_reports/transformer_top_csynth.rpt",
+   "size": 30754,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/hls_src/ap_types.h",
+   "size": 1413,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/hls_src/testbench_ingress1024.cpp",
+   "size": 3396,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/hls_src/transformer_top_seq256_ingress1024_dsp_margin.cpp",
+   "size": 26344,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/hls_src/weights_int10.h",
+   "size": 77881,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/software_evidence/fulltest_int10_ingress_combined.json",
+   "size": 1200,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/software_evidence/integer_config_scales.json",
+   "size": 978,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/software_evidence/model_manifest.json",
+   "size": 704,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/summary.json",
+   "size": 7268,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/tcl/export_seq256_ingress1024_dsp_margin.tcl",
+   "size": 100,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/tcl/run_seq256_dma_system_dsp_margin.tcl",
+   "size": 5714,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/tcl/run_seq256_ingress1024_dsp_margin_verify_and_synth.tcl",
+   "size": 691,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/vivado_reports/post_route_drc.rpt",
+   "size": 185876,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/vivado_reports/post_route_status.rpt",
+   "size": 651,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/vivado_reports/post_route_timing_summary.rpt",
+   "size": 90523,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/vivado_reports/post_route_utilization.rpt",
+   "size": 10785,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/vivado_reports/post_synth_timing_summary.rpt",
+   "size": 87891,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/vivado_reports/post_synth_utilization.rpt",
+   "size": 8600,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/MANIFEST.sha256",
+   "size": 2597,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/README.md",
+   "size": 5533,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/bitstream/design_1.hwh",
+   "size": 338744,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/hls_csim/golden_expected.txt",
+   "size": 416,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/hls_csim/golden_in.txt",
+   "size": 437041,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/hls_reports/transformer_top_csynth.rpt",
+   "size": 30754,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/hls_src/ap_types.h",
+   "size": 1413,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/hls_src/testbench_ingress1024.cpp",
+   "size": 3396,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/hls_src/transformer_top_seq256_ingress1024_dsp_margin.cpp",
+   "size": 26344,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/hls_src/weights_int10.h",
+   "size": 77881,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/software_evidence/fulltest_int10_ingress_combined.json",
+   "size": 1200,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/software_evidence/integer_config_scales.json",
+   "size": 978,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/software_evidence/model_manifest.json",
+   "size": 704,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/summary.json",
+   "size": 7279,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/tcl/export_seq256_ingress1024_dsp_margin.tcl",
+   "size": 100,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/tcl/run_seq256_dma_system_dsp_margin.tcl",
+   "size": 5365,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/tcl/run_seq256_ingress1024_dsp_margin_verify_and_synth.tcl",
+   "size": 691,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/vivado_reports/post_route_drc.rpt",
+   "size": 185876,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/vivado_reports/post_route_status.rpt",
+   "size": 651,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/vivado_reports/post_route_timing_summary.rpt",
+   "size": 84784,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/vivado_reports/post_route_utilization.rpt",
+   "size": 10785,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/vivado_reports/post_synth_timing_summary.rpt",
+   "size": 87891,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_dsp_margin_z7020/vivado_reports/post_synth_utilization.rpt",
+   "size": 8600,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_z7020/design.hwh",
+   "size": 338744,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_z7020/post_route_drc.rpt",
+   "size": 200269,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_z7020/post_route_status.rpt",
+   "size": 651,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_z7020/post_route_timing_summary.rpt",
+   "size": 52397,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_z7020/post_route_utilization.rpt",
+   "size": 10714,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_z7020/post_synth_timing_summary.rpt",
+   "size": 55952,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_z7020/post_synth_utilization.rpt",
+   "size": 8529,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/seq256_dma_system_z7020/run_seq256_dma_system.tcl",
+   "size": 4897,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/uart_boot_test_20261008_194030/boot_capture.meta.json",
+   "size": 873,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/uart_boot_test_20261008_194030/summary.json",
+   "size": 3631,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/uart_boot_test_20261008_194030/validate.meta.json",
+   "size": 670,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/ui_smoke_20261008/live_tab.png",
+   "size": 212037,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/ui_smoke_20261008/replay_tab.png",
+   "size": 118441,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/weekly11_hls_progress.png",
+   "size": 94244,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/weekly11_optimization_summary.json",
+   "size": 6537,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/learning_handoff_since_integer_ops_fa.md",
+   "size": 47538,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/analyze_hls_bottleneck.py",
+   "size": 10466,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/hls_attention_bottleneck_analysis.md",
+   "size": 7470,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/hls_realtime_continuation.md",
+   "size": 15408,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/hls_seq256_int10_results.md",
+   "size": 8069,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/hls_throughput_study.md",
+   "size": 6913,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/hls_z7010_fitting_campaign.md",
+   "size": 5357,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/hls_z7010_vs_z7020_v3_comparison.md",
+   "size": 3304,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/plot_hls_bottleneck.py",
+   "size": 4680,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/plot_measured_opt.py",
+   "size": 3331,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/plot_realtime_phase2.py",
+   "size": 2861,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/plot_softmax_gate.py",
+   "size": 2623,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/plot_throughput_study.py",
+   "size": 3246,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/plot_weekly11_hls_progress.py",
+   "size": 2849,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/plot_z7010_campaign.py",
+   "size": 2470,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/seq256_preboard_readiness.md",
+   "size": 5411,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/seq256_repo_cleanup_plan.md",
+   "size": 4817,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/weekly_11_engineering_log.md",
+   "size": 12220,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/weekly_11_evidence_notes.md",
+   "size": 3999,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/weekly_11_report_outline_fa.md",
+   "size": 7051,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "docs/reports/weekly_12_hls_realtime_section_fa.md",
+   "size": 14569,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/gpp_csim/README.md",
+   "size": 2084,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/gpp_csim/stubs/ap_axi_sdata.h",
+   "size": 746,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/gpp_csim/stubs/hls_stream.h",
+   "size": 1155,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt3a_kv2.tcl",
+   "size": 1115,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt5.tcl",
+   "size": 1833,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_attn2_ff4.tcl",
+   "size": 968,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_combined_kv2_df.tcl",
+   "size": 978,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_dataflow.tcl",
+   "size": 1828,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_dataflow2.tcl",
+   "size": 1832,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_df_2head.tcl",
+   "size": 1828,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_explicit_2head.tcl",
+   "size": 968,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_explicit_4head.tcl",
+   "size": 969,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_kv_dataflow.tcl",
+   "size": 972,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_prefix_opt1.tcl",
+   "size": 972,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_prefix_opt2.tcl",
+   "size": 972,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_t1.tcl",
+   "size": 1826,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_rt_t2.tcl",
+   "size": 1840,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_top_opt_bram_verify_and_synth.tcl",
+   "size": 1645,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_top_opt_bram_z7010_verify_and_synth.tcl",
+   "size": 1811,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_top_opt_verify_and_synth.tcl",
+   "size": 1891,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_z7010_a.tcl",
+   "size": 1820,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_z7010_b.tcl",
+   "size": 1820,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_z7010_c.tcl",
+   "size": 1820,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_z7010_d.tcl",
+   "size": 1820,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/run_z7010_e.tcl",
+   "size": 1820,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_opt.cpp",
+   "size": 12548,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_opt_bram.cpp",
+   "size": 13714,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_opt_z7010_a.cpp",
+   "size": 14834,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_opt_z7010_b.cpp",
+   "size": 15996,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_opt_z7010_c.cpp",
+   "size": 16329,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_opt_z7010_d.cpp",
+   "size": 16329,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_opt_z7010_e.cpp",
+   "size": 16509,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt3a_kv2.cpp",
+   "size": 16317,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt5_splitbuf.cpp",
+   "size": 16390,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_attn2_ff4.cpp",
+   "size": 23389,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_combined_kv2_df.cpp",
+   "size": 18604,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_dataflow.cpp",
+   "size": 17293,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_dataflow2.cpp",
+   "size": 18331,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_df_2head.cpp",
+   "size": 18848,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_explicit_2head.cpp",
+   "size": 20721,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_explicit_4head.cpp",
+   "size": 21561,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_kv_dataflow.cpp",
+   "size": 24356,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_prefix_opt1.cpp",
+   "size": 24562,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_prefix_opt2.cpp",
+   "size": 23898,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_t1_kbank.cpp",
+   "size": 15039,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10/vitis/transformer_top_rt_t2_reqshare.cpp",
+   "size": 15581,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_cls1.txt",
+   "size": 26,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_cls4.txt",
+   "size": 26,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_l0.ctx.txt",
+   "size": 25,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_l0.ff0.txt",
+   "size": 26,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_l0.ff3.txt",
+   "size": 26,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_l0.out.txt",
+   "size": 26,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_l0.scores.txt",
+   "size": 26,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_l0.wk.txt",
+   "size": 24,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_l0.wq.txt",
+   "size": 25,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_l0.wv.txt",
+   "size": 26,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_pool.txt",
+   "size": 24,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/M_proj.txt",
+   "size": 26,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/W_cls1.txt",
+   "size": 1974,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/W_cls4.txt",
+   "size": 257,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/W_l0.ff0.txt",
+   "size": 8039,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/W_l0.ff3.txt",
+   "size": 7776,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/W_l0.out.txt",
+   "size": 3843,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/W_l0.wk.txt",
+   "size": 3705,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/W_l0.wq.txt",
+   "size": 3679,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/W_l0.wv.txt",
+   "size": 3851,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/W_proj.txt",
+   "size": 949,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/add_l0.res1.txt",
+   "size": 42,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/add_l0.res2.txt",
+   "size": 43,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/b_cls1.txt",
+   "size": 109,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/b_cls4.txt",
+   "size": 26,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/b_l0.ff0.txt",
+   "size": 414,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/b_l0.ff3.txt",
+   "size": 168,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/b_l0.out.txt",
+   "size": 157,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/b_l0.wk.txt",
+   "size": 169,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/b_l0.wq.txt",
+   "size": 171,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/b_l0.wv.txt",
+   "size": 161,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/b_proj.txt",
+   "size": 174,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/exp_clamp_l0.txt",
+   "size": 8,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/exp_l0.txt",
+   "size": 358,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/gelu_cls.txt",
+   "size": 3095,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/gelu_l0.txt",
+   "size": 3159,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/ln_bt_cls_ln.txt",
+   "size": 611,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/ln_bt_l0.ln1.txt",
+   "size": 610,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/ln_bt_l0.ln2.txt",
+   "size": 614,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/ln_epsq_cls_ln.txt",
+   "size": 6,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/ln_epsq_l0.ln1.txt",
+   "size": 6,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/ln_epsq_l0.ln2.txt",
+   "size": 6,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/ln_gm_cls_ln.txt",
+   "size": 684,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/ln_gm_l0.ln1.txt",
+   "size": 700,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/ln_gm_l0.ln2.txt",
+   "size": 691,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/pe_codes.txt",
+   "size": 24351,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/data/rsqrt.txt",
+   "size": 1542,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/golden/golden_expected.txt",
+   "size": 415,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/golden/golden_in.txt",
+   "size": 105712,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/golden_ingress1024/golden_expected.txt",
+   "size": 416,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/golden_ingress1024/golden_in.txt",
+   "size": 437041,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/model_manifest.json",
+   "size": 704,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/ap_types.h",
+   "size": 1413,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/export_seq256_ingress1024_dsp_margin.tcl",
+   "size": 100,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/gen_weights_header.py",
+   "size": 4740,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/inspect_seq256_dma_dsp_cells.tcl",
+   "size": 494,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/report_seq256_dma_hierarchy.tcl",
+   "size": 374,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/resume_seq256_dma_system_dsp_margin_impl.tcl",
+   "size": 1180,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/run_seq256_dma_system.tcl",
+   "size": 4769,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/run_seq256_dma_system_dsp_margin.tcl",
+   "size": 5714,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/run_seq256_ingress1024_dsp_margin_verify_and_synth.tcl",
+   "size": 691,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/run_seq256_ingress1024_impl.tcl",
+   "size": 307,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/run_seq256_ingress1024_postroute.tcl",
+   "size": 1704,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/run_seq256_ingress1024_verify_and_synth.tcl",
+   "size": 971,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/run_seq256_verify_and_synth.tcl",
+   "size": 900,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/testbench_ingress1024.cpp",
+   "size": 3396,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/testbench_top.cpp",
+   "size": 3395,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/transformer_top_seq256.cpp",
+   "size": 23896,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/transformer_top_seq256_ingress1024.cpp",
+   "size": 24647,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/transformer_top_seq256_ingress1024_dsp_margin.cpp",
+   "size": 26344,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/validate_zturn_7z020_ps_config.tcl",
+   "size": 1334,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/weights_int10.h",
+   "size": 77881,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/zturn_7z020_ps_config.tcl",
+   "size": 2555,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "host/fpga_result_viewer.py",
+   "size": 31215,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "host/live_fpga.py",
+   "size": 15086,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "host/replay_data.py",
+   "size": 8832,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/code_dataset/src/data/token_aggregation.py",
+   "size": 4019,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_ckpt_dataset/best.pt",
+   "size": 77779,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_ckpt_dataset/dataset-metadata.json",
+   "size": 169,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_ingress_int10_shard/_template.py",
+   "size": 5249,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_ingress_int10_shard/shard0/kernel-metadata.json",
+   "size": 795,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_ingress_int10_shard/shard0/seq256-ingress-int10-shard0.py",
+   "size": 5233,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_ingress_int10_shard/shard1/kernel-metadata.json",
+   "size": 795,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_ingress_int10_shard/shard1/seq256-ingress-int10-shard1.py",
+   "size": 5233,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_ingress_int10_shard/shard2/kernel-metadata.json",
+   "size": 795,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_ingress_int10_shard/shard2/seq256-ingress-int10-shard2.py",
+   "size": 5233,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_ingress_int10_shard/shard3/kernel-metadata.json",
+   "size": 795,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_ingress_int10_shard/shard3/seq256-ingress-int10-shard3.py",
+   "size": 5233,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_int10_shard/_template.py",
+   "size": 4614,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_int10_shard/shard0/kernel-metadata.json",
+   "size": 768,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_int10_shard/shard0/seq256-int10-shard0.py",
+   "size": 4598,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_int10_shard/shard1/kernel-metadata.json",
+   "size": 768,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_int10_shard/shard1/seq256-int10-shard1.py",
+   "size": 4598,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_int10_shard/shard2/kernel-metadata.json",
+   "size": 768,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_int10_shard/shard2/seq256-int10-shard2.py",
+   "size": 4598,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_int10_shard/shard3/kernel-metadata.json",
+   "size": 768,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_int10_shard/shard3/seq256-int10-shard3.py",
+   "size": 4598,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_train/fpga-fault-seq256-pool4.py",
+   "size": 9282,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "kaggle/seq256_train/kernel-metadata.json",
+   "size": 544,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "src/data/token_aggregation.py",
+   "size": 4019,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "src/quantize/evaluate_seq256_ingress_int10_shard.py",
+   "size": 4620,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "src/quantize/export_hls_seq256_int10.py",
+   "size": 12708,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tests/test_frame_protocol.py",
+   "size": 3250,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tests/test_hardware_backend_mock.py",
+   "size": 11084,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tests/test_live_fpga.py",
+   "size": 1932,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tests/test_pynq_seq256_ingress.py",
+   "size": 3717,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tests/test_replay_data.py",
+   "size": 5037,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tests/test_token_aggregation.py",
+   "size": 4567,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tools/board/fpga_live_runner.py",
+   "size": 7063,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tools/board/temp_monitor_clean.sh",
+   "size": 1103,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tools/export_fpga_testset.py",
+   "size": 5945,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tools/package_seq256_pynq_deploy.py",
+   "size": 14079,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tools/uart_boot_capture.ps1",
+   "size": 4758,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "tools/zturn_temp_dashboard.py",
+   "size": 13003,
+   "state": "untracked",
+   "decision": "commit",
+   "reason": "new source/evidence/doc (<=1MB text)"
+  },
+  {
+   "path": "artifacts/results/fpga_fulltest_20261008_141335/fpga_testset_in.txt",
+   "size": 2610655917,
+   "state": "ignored",
+   "decision": "artifact-local (manifest, not committed)",
+   "reason": "multi-MB/GB or binary; recorded in artifact_manifest.json"
+  },
+  {
+   "path": "artifacts/results/fpga_fulltest_20261008_141335/fpga_testset_in.txt.gz",
+   "size": 897006827,
+   "state": "ignored",
+   "decision": "artifact-local (manifest, not committed)",
+   "reason": "multi-MB/GB or binary; recorded in artifact_manifest.json"
+  },
+  {
+   "path": "artifacts/results/fpga_fulltest_20261008_141335/fpga_testset_in.i32.gz",
+   "size": 1128562912,
+   "state": "ignored",
+   "decision": "artifact-local (manifest, not committed)",
+   "reason": "multi-MB/GB or binary; recorded in artifact_manifest.json"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/overlay/design_1_wrapper.bit",
+   "size": 4045676,
+   "state": "ignored",
+   "decision": "artifact-local (manifest, not committed)",
+   "reason": "multi-MB/GB or binary; recorded in artifact_manifest.json"
+  },
+  {
+   "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/overlay/seq256_dma_system.xsa",
+   "size": 1366654,
+   "state": "ignored",
+   "decision": "artifact-local (manifest, not committed)",
+   "reason": "multi-MB/GB or binary; recorded in artifact_manifest.json"
+  }
+ ]
+}
