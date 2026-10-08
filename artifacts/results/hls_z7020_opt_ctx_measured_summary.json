@@ -1,0 +1,211 @@
+{
+  "report": "weekly_11_measured_optimization",
+  "generated": "2026-09-25",
+  "evidence_class": "MEASURED (Vitis HLS 2020.2 csim + csynth on this machine)",
+  "provenance": {
+    "tool": "Vitis HLS 2020.2 (Build 3064766)",
+    "vitis_bin": "G:/Xilinx/Vitis_HLS/2020.2/bin/vitis_hls.bat",
+    "tcl": "hls/f1_int10/vitis/run_top_opt_verify_and_synth.tcl",
+    "top_function": "transformer_top",
+    "sequence_length": 1024,
+    "input_channels": 8,
+    "target_part": "xc7z020clg400-1",
+    "target_clock_ns": 10.0,
+    "datatypes_csim_csynth": "ap_int<10> act, ap_int<32> acc, ap_int<20> lut (ap_types.h under -DHLS_USE_AP_INT)",
+    "note_on_target": "xc7z020clg400-1 is the PROVISIONAL measurement part; final board not selected (AGENTS.md)."
+  },
+  "baseline_measured": {
+    "source_file": "hls/f1_int10/vitis/transformer_top.cpp (frozen)",
+    "report": "artifacts/results/hls_z7020_q40_bounded_snapshot/transformer_top_csynth.rpt",
+    "estimated_clock_ns": 7.297,
+    "latency_cycles": 74246781,
+    "interval_cycles": 74246782,
+    "latency_ms_at_target_clock": 742.47,
+    "throughput_windows_per_second": 1.3469,
+    "resources": {
+      "BRAM_18K": 104,
+      "DSP": 40,
+      "FF": 20610,
+      "LUT": 24738
+    },
+    "csim": "16/16 exact (previously verified)"
+  },
+  "optimized_v1_aggressive_inline_MEASURED": {
+    "source_file": "hls/f1_int10/vitis/transformer_top_opt.cpp",
+    "source_sha256": "50F08D6E695F06DA1D5240D239216FC0AD98603DBAFF7F1DD1FBF66BB2C90484",
+    "preserved_reports": "artifacts/results/hls_z7020_opt_ctx_v1_aggressive_inline/",
+    "changes_vs_baseline": [
+      "context accumulation restructured j-outer / HD-unrolled (bit-exact reorder)",
+      "cyclic ARRAY_PARTITION factor=8 on v",
+      "#pragma HLS INLINE on attention0_row, attention0_kv, and linear (required so the v partition reaches the context loop AND to keep each linear call site's Din compile-time-constant; without the linear inline the shared linear has a variable-Din inner loop and transformer_core latency becomes unbounded '?')"
+    ],
+    "csim_ap_int": "16/16 exact golden vectors, 0 errors (Vitis, ap_int widths)",
+    "csynth_status": "completed",
+    "estimated_clock_ns": 8.253,
+    "timing_met_at_10ns": true,
+    "estimated_fmax_mhz": 121.17,
+    "latency_cycles": 36993244,
+    "interval_cycles": 36993245,
+    "latency_ms_at_target_clock": 369.93,
+    "throughput_windows_per_second": 2.7032,
+    "resources": {
+      "BRAM_18K": 382,
+      "DSP": 186,
+      "FF": 30752,
+      "LUT": 42350
+    },
+    "device_capacity": {
+      "BRAM_18K": 280,
+      "DSP": 220,
+      "FF": 106400,
+      "LUT": 53200
+    },
+    "utilization_percent": {
+      "BRAM_18K": 136.4,
+      "DSP": 84.5,
+      "FF": 28.9,
+      "LUT": 79.6
+    },
+    "fits_zynq7020_core": false,
+    "fit_blocker": "BRAM_18K 382/280 = 136% OVERFLOW"
+  },
+  "measured_comparison_v1_vs_baseline": {
+    "latency_speedup_x": 2.007,
+    "latency_reduction_percent": 50.18,
+    "throughput_gain_x": 2.007,
+    "clock_change_ns": "+0.956 (7.297 -> 8.253; still <= 10 ns target)",
+    "resource_delta": {
+      "BRAM_18K": "+278 (+267%)  -> OVERFLOW",
+      "DSP": "+146 (+365%)",
+      "FF": "+10142 (+49%)",
+      "LUT": "+17612 (+71%)"
+    },
+    "bram_overflow_root_cause": "weight-ROM replication from inlining linear (its inner MAC loop unrolls, forcing multi-port weight ROMs). finish_token FFN alone: W_l0_ff3=126 BRAM, W_l0_ff0=62 BRAM. The v cyclic partition itself is cheap (v_V_0..7 = 24 BRAM total)."
+  },
+  "optimized_v2_noinline_HANG": {
+    "source_file_preserved": "artifacts/results/hls_z7020_opt_ctx_v2_noinline_HANG/transformer_top_opt_SOURCE_noinline.cpp",
+    "changes_vs_baseline": "context reorder + cyclic v partition ONLY (no explicit INLINE)",
+    "csim_ap_int": "16/16 exact (before csynth)",
+    "csynth_status": "HANG - no report produced",
+    "last_phase": "Starting code transformations ...",
+    "stall_seconds_no_log_output": 1493,
+    "action": "stopped safely (taskkill vitis_hls.exe)",
+    "interpretation": "2020.2 scheduler stalls when the cyclic-partitioned v is passed by pointer to a non-inlined attention0_row; consistent with the known 2020.2 code-transformation stall on this design at SEQ=1024",
+    "evidence": "artifacts/results/hls_z7020_opt_ctx_v2_noinline_HANG/"
+  },
+  "realtime_assessment": {
+    "required_windows_per_second": 48.828125,
+    "window_acquisition_ms": 20.48,
+    "baseline_gap_x": 36.25,
+    "optimized_v1_gap_x": 18.06,
+    "conclusion": "MEASURED 2.0x latency improvement, but (a) v1 overflows Z7020 BRAM so it does not fit as-is, and (b) even at 2.0x the core is still ~18x slower than the continuous non-overlapping 50 kHz input rate. Real-time is NOT achieved and NOT claimed."
+  },
+  "verification_summary": {
+    "vitis_csim_ap_int_v1": "PASS 16/16",
+    "vitis_csim_ap_int_v2": "PASS 16/16 (csynth then hung)",
+    "gpp_native_width_ab_vs_baseline": "byte-identical (distinct from the ap_int check above)",
+    "numpy_second_source_oracle": "PASS 16/16",
+    "python_unittest": "30/30 OK"
+  },
+  "recommended_next_optimization": "Retain the context parallelism but stop the weight-ROM replication that overflows BRAM: cap linear's inner-loop unrolling / bind multiplier+ROM instances (e.g. HLS ALLOCATION, or pipeline the inner MAC loop so weights stay single-port), OR copy each head's V-slice into a small locally-partitioned buffer inside a still-separate attention function (avoids the pointer-partition scheduler hang). Then re-measure fit on xc7z020clg400-1.",
+  "optimized_v3_bram_fixed_MEASURED": {
+    "evidence_class": "MEASURED (Vitis HLS 2020.2 csim+csynth, xc7z020clg400-1, 10 ns, 2026-09-25)",
+    "source_file": "hls/f1_int10/vitis/transformer_top_opt_bram.cpp",
+    "tcl": "hls/f1_int10/vitis/run_top_opt_bram_verify_and_synth.tcl",
+    "preserved_reports": "artifacts/results/hls_z7020_opt_ctx_v3_bram_fixed/",
+    "changes_vs_v1": [
+      "generic runtime-dim `linear` replaced by compile-time template linear_fixed<ROWS,DIN,DOUT> (constant loop bounds; NOT force-inlined; one shared module per shape)",
+      "inner MAC (Din) reduction loop pipelined instead of outer loop -> single weight read per cycle -> weight ROMs single-port, NOT replicated",
+      "v projection written by an in-scope loop inside inlined attention0_kv (partitioned v never crosses a non-inlined function pointer -> avoids the v2 code-transformation hang)",
+      "context j-outer/HD=8-unrolled loop and cyclic v partition kept identical to v1 (the speedup; bit-exact)"
+    ],
+    "csim_ap_int": "16/16 exact golden vectors, 0 errors",
+    "native_gpp_ab_vs_baseline": "byte-identical (16/16)",
+    "csynth_status": "completed (no hang; ~520 s elapsed)",
+    "estimated_clock_ns": 7.3,
+    "reported_slack_ns": 0.0,
+    "estimated_fmax_mhz": 136.99,
+    "timing_met_at_10ns": true,
+    "latency_cycles": 44930707,
+    "interval_cycles": 44930708,
+    "latency_ms_at_target_clock": 449.31,
+    "throughput_windows_per_second": 2.2257,
+    "resources": {
+      "BRAM_18K": 108,
+      "DSP": 46,
+      "FF": 23736,
+      "LUT": 26857
+    },
+    "device_capacity": {
+      "BRAM_18K": 280,
+      "DSP": 220,
+      "FF": 106400,
+      "LUT": 53200
+    },
+    "utilization_percent": {
+      "BRAM_18K": 38.6,
+      "DSP": 20.9,
+      "FF": 22.3,
+      "LUT": 50.5
+    },
+    "fits_zynq7020_core": true,
+    "limiting_resource": "LUT (50.5%)",
+    "weight_rom_replication_removed": "CONFIRMED from hierarchy: W_l0_wq/out/cls1 now 1 BRAM each (were 31); finish_token (ff0/ff3) 14 BRAM (was 198)",
+    "speedup_vs_baseline_x": 1.6525,
+    "note_vs_v1": "1.65x vs v1's 2.007x; v3 trades ~18% latency for fitting the device (v1 overflowed BRAM at 136%). Fitting has priority over max speed."
+  },
+  "three_way_measured_comparison": [
+    {
+      "variant": "baseline (frozen)",
+      "fits": true,
+      "latency_cycles": 74246781,
+      "latency_ms": 742.47,
+      "interval_cycles": 74246782,
+      "est_clock_ns": 7.297,
+      "BRAM_18K": 104,
+      "DSP": 40,
+      "FF": 20610,
+      "LUT": 24738,
+      "csim": "16/16",
+      "report": "artifacts/results/hls_z7020_q40_bounded_snapshot/"
+    },
+    {
+      "variant": "v1 aggressive-inline",
+      "fits": false,
+      "latency_cycles": 36993244,
+      "latency_ms": 369.93,
+      "interval_cycles": 36993245,
+      "est_clock_ns": 8.253,
+      "BRAM_18K": 382,
+      "DSP": 186,
+      "FF": 30752,
+      "LUT": 42350,
+      "csim": "16/16",
+      "report": "artifacts/results/hls_z7020_opt_ctx_v1_aggressive_inline/",
+      "note": "BRAM 382/280=136% OVERFLOW"
+    },
+    {
+      "variant": "v2 no-inline",
+      "fits": null,
+      "status": "HANG (no report)",
+      "report": "artifacts/results/hls_z7020_opt_ctx_v2_noinline_HANG/"
+    },
+    {
+      "variant": "v3 BRAM-fixed (template linear_fixed, rolled MAC)",
+      "fits": true,
+      "latency_cycles": 44930707,
+      "latency_ms": 449.31,
+      "interval_cycles": 44930708,
+      "est_clock_ns": 7.3,
+      "reported_slack_ns": 0.0,
+      "BRAM_18K": 108,
+      "DSP": 46,
+      "FF": 23736,
+      "LUT": 26857,
+      "csim": "16/16",
+      "speedup_vs_baseline_x": 1.6525,
+      "report": "artifacts/results/hls_z7020_opt_ctx_v3_bram_fixed/"
+    }
+  ],
+  "headline_conclusion": "v3 is the recommended candidate: MEASURED 1.65x faster than baseline AND fits xc7z020clg400-1 (all four resources within capacity). Real-time (48.83 wps) still NOT achieved (gap ~22x) and board-readiness still requires implementation/bitstream + hardware validation."
+}

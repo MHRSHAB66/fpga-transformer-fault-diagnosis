@@ -1,0 +1,49 @@
+{
+  "report": "query_attention_phase0_2_verdict",
+  "generated": "2026-09-26",
+  "target_part": "xc7z020clg400-1 (provisional experimental comparison target)",
+  "clock_target_ns": 10.0,
+  "realtime_target_cycles": 2048000,
+  "evidence_class": "measured cycle model + analytical lower bound (no new synthesis: all unchanged-model query variants fail the Phase-1 synthesis gate)",
+  "reference_candidate": {
+    "name": "rt_prefix_opt2", "sha256": "880D43730D3A43BCCE15CD203A948A8F619CBF786079F1A1C376F4EF1B8D10CA",
+    "interval_cycles": 6229677, "prefix_cycles": 1328374, "query_region_cycles": 4893100,
+    "bram_18k": 216, "dsp": 160, "ff": 46839, "lut": 49889, "lut_pct": 93.8, "csim": "16/16"
+  },
+  "phase0_measured_query_cycle_model": {
+    "source_reports": "artifacts/results/hls_rt_attn2_ff4/report/{df_head_0_s,df_attn,finish_token}_csynth.rpt",
+    "per_head_stages_cycles": {"score":524,"row_max":511,"exp_numerator":514,"normalize_divide":544,"context_accum":515,"output":13},
+    "per_head_total_cycles": 2638, "stages_are_sequential_within_a_head": true,
+    "heads_run_concurrently": true, "df_head_all_cycles": 2638,
+    "attn2_keys_per_cycle": 2, "per_stage_trip": 512,
+    "df_attn_cycles_per_query": 4773, "finish_token_cycles_per_query": 4452,
+    "query_dataflow_interval_per_query": 4774, "query_region_total": 4893100,
+    "note": "df_attn and finish_token already overlap across queries in the existing query DATAFLOW region."
+  },
+  "phase2_lower_bound_analytical": {
+    "budget_cycles": 2048000,
+    "required_query_reduction_if_prefix_zero_x": 2.39,
+    "required_query_reduction_if_prefix_unchanged_x": 6.80,
+    "mechanism_needed": "key-lane parallelism P>=5..8 over the key dimension (each of the 5 sequential softmax passes traverses SEQ keys) PLUS a >=2.5x finish_token/FFN speedup",
+    "resource_projection": "doubling attention parallelism from the current P=2 (attn2)+4-head+ff4 design already exceeds the 3,311 free LUT; P>=4..8 pushes LUT well beyond the 53,200 device limit. DSP 160/220 and FF 46,839/106,400 have room; LUT is the binding constraint.",
+    "verdict": "B: real-time (<=2,048,000 cycles) is NOT achievable with the unchanged four-class int10 model on xc7z020clg400-1. The query attention region is LUT-bound.",
+    "supporting_measured_evidence": ["prefix_opt2 94% LUT at query 4.89M", "explicit 4-head gave no gain over 2-head (9.84M)", "attn2+ff4 already at 94% LUT", "kv_dataflow overflowed BRAM (296/280)"]
+  },
+  "phase1_synthesis_gate_result": "No unchanged-model query candidate was synthesized: bit-exact pass-fusion lower bound ~4.6M (>target, fails gate); key-lane 8x is LUT-infeasible (fails resource gate). Per the task, variants whose analytical lower bound exceeds 2,048,000 are rejected before synthesis.",
+  "phase3_plan_analytical": {
+    "authorized_because": "Phase 2 concludes unchanged model cannot reach target",
+    "approach": "token aggregation: map the 1024x8 window to fewer transformer tokens (4:1 -> SEQ=256), preserving all 8 channels and the 20.48 ms observation window; retrain the same F_1layer transformer (d_model=32, 4 heads, FFN 64) on aggregated tokens, re-quantize to int10, regenerate golden vectors, evaluate accuracy on the preserved file-level split.",
+    "analytical_interval_estimate_SEQ256": {
+      "query_region": "256 queries x max(df_attn ~1,200, finish_token 4,452) ~= 1,140,000 (finish-limited)",
+      "prefix": "~330,000 (K/V+input projections scale with SEQ)",
+      "total_estimate": 1470000, "rt_gap_estimate_x": 0.72, "real_time": "achievable (analytical, ~1.4x margin)"
+    },
+    "SEQ512_note": "SEQ=512 (2:1) analytical total ~2.28M (finish-limited) -> marginally OVER target; SEQ=256 recommended.",
+    "feasibility": "GPU (torch cu118, CUDA available), processed dataset (data/processed), and train/quantize/export scripts are present locally.",
+    "requirements_per_acceptance": "retrain (val first, test once), report accuracy/macro-P/R/F1/confusion vs float+int10 references, new weights/scales/golden under a NEW artifact name, native int + Vitis CSim, then C-synthesis interval/resources.",
+    "status": "PLANNED / NOT YET EXECUTED (analytical estimates only; requires a retrain+re-quantize+re-synthesize cycle)"
+  },
+  "realtime_achieved": false,
+  "fastest_fitting_candidate": "rt_prefix_opt2 (6,229,677 cycles, 62.30 ms, gap 3.042x) [unchanged model]",
+  "scope_caveat": "C-synthesis estimates only; not place-and-route, bitstream, or board results. Nothing committed or pushed."
+}

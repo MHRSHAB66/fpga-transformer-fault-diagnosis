@@ -1,0 +1,95 @@
+{
+  "status": "completed_c_synthesis",
+  "scope": "F_1layer int10 HLS inference core only; DMA, processing system, bitstream implementation, and board execution are excluded",
+  "tool": "Vitis HLS 2020.2",
+  "top": "transformer_top",
+  "target_device": "xc7z020-clg400-1",
+  "sequence_length": 1024,
+  "input_channels": 8,
+  "target_clock_ns": 10.0,
+  "estimated_clock_ns": 7.297,
+  "estimated_fmax_mhz": 137.04,
+  "latency_cycles": 74246781,
+  "latency_seconds_at_target_clock": 0.74246781,
+  "estimated_throughput_windows_per_second": 1.346859767,
+  "input_sample_rate_hz": 50000,
+  "window_acquisition_seconds": 0.02048,
+  "required_nonoverlap_windows_per_second": 48.828125,
+  "latency_to_acquisition_ratio": 36.25331104,
+  "continuous_nonoverlap_realtime_at_target_clock": false,
+  "analytical_workload": {
+    "scope": "Matrix-multiply MAC counts derived from the frozen architecture; these are analytical counts, not per-function latency measurements.",
+    "input_projection_macs": 262144,
+    "key_value_projection_macs": 2097152,
+    "query_projection_macs": 1048576,
+    "attention_score_macs": 33554432,
+    "attention_context_macs": 33554432,
+    "attention_output_projection_macs": 1048576,
+    "feedforward_macs": 4194304,
+    "classifier_macs": 576,
+    "total_listed_macs": 75760192,
+    "quadratic_attention_macs": 67108864,
+    "quadratic_attention_share_percent": 88.58329943
+  },
+  "resources": {
+    "BRAM_18K": {
+      "used": 104,
+      "available": 280,
+      "percent_exact": 37.14285714
+    },
+    "LUT": {
+      "used": 24738,
+      "available": 53200,
+      "percent_exact": 46.5
+    },
+    "FF": {
+      "used": 20610,
+      "available": 106400,
+      "percent_exact": 19.37030075
+    },
+    "DSP": {
+      "used": 40,
+      "available": 220,
+      "percent_exact": 18.18181818
+    }
+  },
+  "functional_check": {
+    "kind": "Vitis HLS C simulation against exported golden vectors",
+    "vectors_exact": 16,
+    "vectors_total": 16,
+    "all_four_logits_exact": true,
+    "errors": 0
+  },
+  "comparison_with_intermediate_z7020_version": {
+    "intermediate_resources": {
+      "BRAM_18K": 242,
+      "LUT": 43381,
+      "FF": 18023,
+      "DSP": 71
+    },
+    "current_resources": {
+      "BRAM_18K": 104,
+      "LUT": 24738,
+      "FF": 20610,
+      "DSP": 40
+    },
+    "change_percent": {
+      "BRAM_18K": -57.02479339,
+      "LUT": -42.97411309,
+      "FF": 14.35388115,
+      "DSP": -43.66197183
+    },
+    "note": "The two measurements are different source versions; the comparison documents design progression, not an isolated single-factor experiment."
+  },
+  "evidence": {
+    "synthesis_report": "artifacts/results/hls_z7020_q40_bounded_snapshot/transformer_top_csynth.rpt",
+    "c_simulation_log": "artifacts/results/hls_z7020_q40_bounded_snapshot/transformer_top_csim.log",
+    "frozen_source_manifest": "artifacts/results/hls_z7020_q40_bounded_snapshot/snapshot_manifest.md"
+  },
+  "limitations": [
+    "C synthesis estimates are not post-place-and-route measurements.",
+    "The complete Zynq system resource use is unknown until DMA and processing-system integration.",
+    "RTL co-simulation, bitstream generation, timing closure, and board execution have not been completed.",
+    "The current estimated latency does not sustain consecutive non-overlapping 1024-sample windows at 50 kHz."
+  ]
+}
