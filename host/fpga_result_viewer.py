@@ -474,7 +474,12 @@ class LiveFrame:
         ctrl.pack(fill="x", padx=8, pady=6)
         tk.Label(ctrl, text="windows:").pack(side="left")
         self.n_var = tk.StringVar(value="150")
-        tk.Entry(ctrl, textvariable=self.n_var, width=8).pack(side="left", padx=(2, 12))
+        tk.Entry(ctrl, textvariable=self.n_var, width=8).pack(side="left", padx=(2, 8))
+        tk.Label(ctrl, text="sampling:").pack(side="left")
+        from tkinter import ttk as _ttk
+        self.sample_var = tk.StringVar(value="sequential")
+        _ttk.OptionMenu(ctrl, self.sample_var, "sequential",
+                        "sequential", "strided", "class_balanced").pack(side="left", padx=(2, 12))
         # Note: "Pause Display" only pauses the PC-side view; the FPGA keeps
         # running on the board. "Stop" is the only control that ends on-board
         # inference. Labelled honestly so no one reads it as pausing the FPGA.
@@ -542,14 +547,29 @@ class LiveFrame:
         except Exception as e:
             self.conn_var.set("live client import failed: {}".format(e))
             return
-        self.conn_var.set("connection: pushing runner + connecting...")
+        # Build an explicit index plan for non-sequential sampling (multiclass
+        # demo). Classification still happens on the FPGA; this only chooses
+        # which real dataset windows to send.
+        mode = self.sample_var.get()
+        indices = None
+        if mode != "sequential":
+            try:
+                from host.live_sampling import build_plan
+                labels = [int(x) for x in open(os.path.join(
+                    lf._REPO, "artifacts", "results", "fpga_fulltest_20261008_141335",
+                    "labels.txt"), encoding="utf-8") if x.strip()]
+                indices = build_plan(mode, total=len(labels), n=self.n_target, labels=labels)
+            except Exception as e:
+                self.conn_var.set("sampling plan failed: {}".format(e))
+                return
+        self.conn_var.set("connection: pushing runner + connecting ({})...".format(mode))
 
         def work():
             try:
                 lf.push_board_files(lf.BOARD_HOST, lf.BOARD_USER, lf.SSH_KEY, 22)
             except Exception as e:
                 self._put({"type": "status", "msg": "push warning: %s" % e})
-            self.client = lf.LiveFpgaClient(n=self.n_target)
+            self.client = lf.LiveFpgaClient(n=self.n_target, indices=indices)
             for ev in self.client.stream():
                 self._put(ev)
             self._put({"type": "status", "msg": "stream ended"})

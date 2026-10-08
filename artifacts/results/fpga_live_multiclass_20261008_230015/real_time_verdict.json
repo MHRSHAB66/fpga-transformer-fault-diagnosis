@@ -1,0 +1,46 @@
+{
+  "note": "Real-time = can a continuous 50 kHz stream of non-overlapping 1024-sample windows be kept up with. Based on repository source-of-truth config; measurements are existing + this multiclass run. No new benchmark was run.",
+  "source_of_truth": {
+    "sample_rate_hz": 50000.0,
+    "window_size": 1024,
+    "stride": 1024,
+    "overlap": 0,
+    "on_chip_aggregation": "1024->256 (factor 4, after windowing; does not change window arrival rate)",
+    "final_downsampling_applied": false,
+    "config_ref": "src/config.py (WINDOW_SIZE, WINDOW_STRIDE, MAFAULDA_SAMPLE_RATE)"
+  },
+  "required_windows_per_second": 48.828,
+  "window_signal_period_ms": 20.48,
+  "level1_fpga_core_dma": {
+    "measured_mean_latency_ms_this_run": 16.154,
+    "latency_headroom_ms": 4.326,
+    "latency_headroom_pct": 21.1,
+    "throughput_inf_s": 61.904,
+    "vs_required_ratio": 1.268,
+    "margin_pct": 26.8,
+    "meets_realtime": true,
+    "also": "bounded core/DMA probe ~61.9 inf/s (consistent)"
+  },
+  "level2_end_to_end": {
+    "sustained_full_test_inf_s": {
+      "throughput_inf_s": 46.4,
+      "vs_required_ratio": 0.95,
+      "margin_pct": -5.0,
+      "meets_realtime": false
+    },
+    "live_ssh_ui_inf_s": {
+      "throughput_inf_s": 38.9,
+      "vs_required_ratio": 0.797,
+      "margin_pct": -20.3,
+      "meets_realtime": false
+    },
+    "this_run_wall_throughput_inf_s": 0.569,
+    "this_run_wall_note": "wall throughput (0.569/s) includes gzip sequential-skip overhead: class_balanced indices are scattered across the 95404-window file, so the on-board runner decompresses up to tens of thousands of records to reach far indices. It is NOT an inference-rate measurement. The inference rate is reflected by per-window latency (mean 16.15 ms -> 61.9 inf/s core/DMA) and by the contiguous full-test sustained 46.4 inf/s."
+  },
+  "verdict": {
+    "fpga_core": "REAL-TIME CAPABLE: 61.9 inf/s core vs 48.83 required (+26.8%); 16.15 ms latency vs 20.48 ms window period (+21% headroom).",
+    "end_to_end_current_demo": "NOT real-time sustained on the current SSH/gz demo path: full-test 46.4 inf/s is 5.0% below required (shortfall 2.43/s); live SSH/UI 38.9 inf/s is ~20.3% below.",
+    "bottleneck": "host/SSH per-window streaming + on-board Python loop + gzip input read -- NOT the inference core. A direct sensor->DDR->AXI-DMA feed (no gzip, no per-window SSH) is expected to close the ~5% gap because the core itself has margin.",
+    "honest_scope": "Validated on PREPARED dataset windows, not a live 50 kHz sensor. 'Real-time' is a capacity statement under the configured stream, not a sensor-generalization claim."
+  }
+}

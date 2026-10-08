@@ -27,8 +27,10 @@ Headless CLI (real hardware; produces versioned evidence):
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
+import statistics
 import subprocess
 import threading
 import time
@@ -193,7 +195,7 @@ class LiveFpgaClient:
         try:
             # ask the board to end the independent monitor cleanly and kill runner
             subprocess.run(_ssh_base(self.host, self.user, self.key, self.port) +
-                           ["pkill -f fpga_live_runner.py; true"],
+                           ['pkill -f "[f]pga_live_runner.py"; true'],
                            capture_output=True, text=True, timeout=12,
                            creationflags=(0x08000000 if os.name == "nt" else 0))
         except Exception:
@@ -310,6 +312,8 @@ def main(argv=None):
     results: List[Dict] = []
     summary: Optional[Dict] = None
     temp_start = None
+    errors = []
+    t0 = None
     for ev in client.stream():
         t = ev["type"]
         if t == "status":
@@ -319,73 +323,151 @@ def main(argv=None):
             print("[temp_start]", temp_start)
         elif t == "meta":
             print("[meta]", ev)
+            t0 = time.monotonic()
         elif t == "result":
+            ev["elapsed_s"] = round(time.monotonic() - t0, 3) if t0 else None
             results.append(ev)
-            if ev["idx"] < 5 or ev["idx"] % 25 == 0:
+            if len(results) <= 5 or len(results) % 25 == 0:
                 print("  %s  lat=%.1fms temp=%s" % (ev["frame"], ev["lat_ms"], ev["temp_c"]))
         elif t == "summary":
             summary = ev
             print("[summary]", ev)
         elif t == "abort":
+            errors.append(ev["msg"])
             print("[ABORT]", ev["msg"])
         elif t == "error":
+            errors.append(ev["msg"])
             print("[ERROR]", ev["msg"])
 
-    # -- cross-check against ground truth + previously-recorded FPGA preds ---
-    # Index-aware: each result carries its REAL dataset idx (works for sampled
-    # and sequential runs alike).
+    out_dir = args.out_dir or os.path.join(
+        _REPO, "artifacts", "results", "fpga_live_test_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
+    os.makedirs(out_dir, exist_ok=True)
+    evidence = _build_evidence(args, results, summary, temp_start, errors, indices,
+                               all_labels, all_recorded, out_dir)
+    aborted = (summary or {}).get("aborted")
+    print("\n==== LIVE FPGA EVIDENCE ====")
+    print("requested/executed  : %d / %d" % (args.n, evidence["executed_windows"]))
+    print("aborted             :", aborted)
+    print("true-class counts   :", evidence["true_class_counts"])
+    print("pred-class counts   :", evidence["predicted_class_counts"])
+    print("accuracy vs truth   :", evidence["accuracy_vs_ground_truth"])
+    print("macro P/R/F1        : %.4f / %.4f / %.4f" % (
+        evidence["macro_precision"], evidence["macro_recall"], evidence["macro_f1"]))
+    print("match vs recorded   : %d/%d (%s)" % (
+        evidence["match_vs_recorded_fpga_pred"], evidence["executed_windows"],
+        evidence["match_rate_vs_recorded"]))
+    print("latency ms          :", evidence["latency_ms"])
+    print("throughput inf/s    :", evidence["throughput_inferences_per_second"])
+    print("temp C start/min/max/end:", evidence["temperature_c"])
+    print("errors              :", evidence["errors"])
+    print("evidence dir        :", out_dir)
+    return 0 if (evidence["executed_windows"] == args.n and not aborted and not errors) else 1
+
+
+def _file_sha256(path):
+    if not os.path.isfile(path):
+        return None
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
+
+
+def _build_evidence(args, results, summary, temp_start, errors, indices,
+                    all_labels, all_recorded, out_dir):
+    """Compute the full per-frame + summary evidence and write files."""
+    from host.replay_data import MetricsAccumulator  # reuse the scoring layer
+
     executed = len(results)
-    live_cls = [r["cls"] for r in results]
-    correct = sum(1 for r in results
-                  if r["idx"] < len(all_labels) and r["cls"] == all_labels[r["idx"]])
-    match_recorded = sum(1 for r in results
-                         if r["idx"] < len(all_recorded) and r["cls"] == all_recorded[r["idx"]])
+    acc = MetricsAccumulator()
+    frames = []
+    true_counts = {c: 0 for c in LABELS}
+    pred_counts = {c: 0 for c in LABELS}
+    correct = match_recorded = 0
+    for r in results:
+        idx = r["idx"]
+        true = all_labels[idx] if idx < len(all_labels) else None
+        rec = all_recorded[idx] if idx < len(all_recorded) else None
+        pred = r["cls"]
+        is_correct = (true == pred)
+        is_match = (rec == pred)
+        if true is not None:
+            acc.add(true, pred)
+            true_counts[true] += 1
+        pred_counts[pred] = pred_counts.get(pred, 0) + 1
+        correct += 1 if is_correct else 0
+        match_recorded += 1 if is_match else 0
+        frames.append({
+            "frame": idx, "dataset_index": idx,
+            "true_class": true, "true_label": LABELS.get(true),
+            "predicted_class": pred, "label": LABELS.get(pred),
+            "result": "CORRECT" if is_correct else "WRONG",
+            "match_recorded_fpga_pred": is_match,
+            "latency_ms": r["lat_ms"], "temperature_c": r["temp_c"],
+            "elapsed_s": r.get("elapsed_s"), "conf": "NA",
+        })
+    m = acc.finalize() if executed else {}
     lats = [r["lat_ms"] for r in results]
     temps = [r["temp_c"] for r in results if r["temp_c"] is not None]
 
-    ts = datetime.now().strftime("%Y%m%d_%H%M%S")
-    out_dir = args.out_dir or os.path.join(_REPO, "artifacts", "results", "fpga_live_test_" + ts)
-    os.makedirs(out_dir, exist_ok=True)
+    def pct(v, q):
+        return round(statistics.quantiles(v, n=100)[q - 1], 3) if len(v) >= 2 else (v[0] if v else None)
+
+    bundle = os.path.join(_REPO, "artifacts", "deploy",
+                          "seq256_z7020_pynq_dma16_py36_20261008", "overlay")
     evidence = {
         "mode": "LIVE FPGA (real on-board AXI-DMA inference over SSH/Ethernet)",
         "real_hardware": True,
-        "classification_on": "FPGA transformer_top core (PC does no inference)",
-        "board": {"host": args.host, "dep_dir": DEP_DIR, "bitstream": BIT, "input": IN_GZ},
+        "classification_on": "FPGA transformer_top core (PC performs no inference)",
+        "timestamp": datetime.now().isoformat(),
+        "board": {"host": args.host, "deployment": DEP_DIR,
+                  "bitstream_on_board": BIT, "input_on_board": IN_GZ,
+                  "bit_sha256_local_bundle": _file_sha256(os.path.join(bundle, "design_1_wrapper.bit")),
+                  "hwh_sha256_local_bundle": _file_sha256(os.path.join(bundle, "design_1_wrapper.hwh"))},
         "sample_mode": args.sample_mode,
+        "sampling_indices": list(indices) if indices is not None else "sequential",
         "requested_windows": args.n,
         "executed_windows": executed,
+        "aborted": (summary or {}).get("aborted"),
+        "true_class_counts": {LABELS[c]: true_counts.get(c, 0) for c in LABELS},
+        "predicted_class_counts": {LABELS[c]: pred_counts.get(c, 0) for c in LABELS},
         "correct_vs_ground_truth": correct,
         "accuracy_vs_ground_truth": (correct / executed) if executed else None,
+        "macro_precision": m.get("macro_precision"),
+        "macro_recall": m.get("macro_recall"),
+        "macro_f1": m.get("macro_f1"),
+        "per_class_precision": m.get("per_class_precision"),
+        "per_class_recall": m.get("per_class_recall"),
+        "per_class_f1": m.get("per_class_f1"),
+        "confusion_matrix": m.get("confusion_matrix"),
         "match_vs_recorded_fpga_pred": match_recorded,
         "match_rate_vs_recorded": (match_recorded / executed) if executed else None,
         "latency_ms": {"min": min(lats) if lats else None,
-                       "mean": (sum(lats) / len(lats)) if lats else None,
+                       "mean": round(sum(lats) / len(lats), 3) if lats else None,
+                       "p50": pct(lats, 50), "p95": pct(lats, 95),
                        "max": max(lats) if lats else None},
         "throughput_inferences_per_second": (summary or {}).get("throughput"),
         "temperature_c": {"start": temp_start,
                           "min": min(temps) if temps else None,
                           "max": max(temps) if temps else None,
                           "end": (summary or {}).get("temp_end")},
+        "errors": errors,
         "summary_line": summary,
-        "live_predictions": live_cls,
     }
     with open(os.path.join(out_dir, "live_evidence.json"), "w", encoding="utf-8") as f:
         json.dump(evidence, f, indent=2)
-    with open(os.path.join(out_dir, "live_results.txt"), "w", encoding="utf-8") as f:
-        for r in results:
-            f.write("%d %d %.3f %s\n" % (r["idx"], r["cls"], r["lat_ms"], r["temp_c"]))
-
-    print("\n==== LIVE FPGA EVIDENCE ====")
-    print("executed           :", executed)
-    print("acc vs ground truth :", evidence["accuracy_vs_ground_truth"])
-    print("match vs recorded   : %d/%d (%s)" % (match_recorded, executed,
-                                                 evidence["match_rate_vs_recorded"]))
-    print("latency ms (min/mean/max):", evidence["latency_ms"])
-    print("throughput inf/s    :", evidence["throughput_inferences_per_second"])
-    print("temp C (start/max/end):", temp_start, evidence["temperature_c"]["max"],
-          evidence["temperature_c"]["end"])
-    print("evidence dir        :", out_dir)
-    return 0
+    with open(os.path.join(out_dir, "live_frames.jsonl"), "w", encoding="utf-8") as f:
+        for fr in frames:
+            f.write(json.dumps(fr) + "\n")
+    with open(os.path.join(out_dir, "live_frames.csv"), "w", encoding="utf-8") as f:
+        f.write("frame,true_class,true_label,pred_class,label,result,match_recorded,latency_ms,temp_c,elapsed_s\n")
+        for fr in frames:
+            f.write("%s,%s,%s,%s,%s,%s,%s,%.3f,%s,%s\n" % (
+                fr["frame"], fr["true_class"], fr["true_label"], fr["predicted_class"],
+                fr["label"], fr["result"], fr["match_recorded_fpga_pred"],
+                fr["latency_ms"], fr["temperature_c"], fr["elapsed_s"]))
+    return evidence
 
 
 if __name__ == "__main__":

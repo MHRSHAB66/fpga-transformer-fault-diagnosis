@@ -1,0 +1,30 @@
+{
+  "replay_mode": {
+    "records_loaded": 95404,
+    "expected": 95404,
+    "load_ok": true,
+    "fast_eval_accuracy": 0.9776843738208042,
+    "fast_eval_macro_f1": 0.9565387808873411,
+    "matches_fpga_fulltest_metrics": true,
+    "first_frame": "bearing_fault",
+    "last_frame": "imbalance",
+    "goto_frame_50000_ok": true,
+    "screenshot": "replay_final.png"
+  },
+  "live_mode": {
+    "real_hardware": true,
+    "sample_mode": "class_balanced",
+    "windows": 40,
+    "classes_shown": 4,
+    "conf": "NA (never faked)",
+    "pause_display_honest": true,
+    "resume_ok": true,
+    "stop_idempotent": true,
+    "clean_close_worker_gone": true,
+    "queue_dropped": 0,
+    "errors": 0,
+    "board_clean_after": true,
+    "screenshot": "live_multiclass_final.png",
+    "note": "short UI run stopped via Stop/Close after capturing 4-class evidence; full 120-window multiclass completion is in live_evidence.json"
+  }
+}
