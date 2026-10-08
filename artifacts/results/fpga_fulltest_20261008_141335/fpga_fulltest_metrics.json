@@ -1,0 +1,46 @@
+{
+  "status": "complete",
+  "execution": "physical MYIR Z-Turn XC7Z020 board via PYNQ 2.4 and AXI DMA",
+  "test_windows": 95404,
+  "executed": 95404,
+  "aborted": null,
+  "correct": 93275,
+  "accuracy": 0.977684374,
+  "macro_precision": 0.959331968,
+  "macro_recall": 0.954232642,
+  "macro_f1": 0.956538781,
+  "weighted_precision": 0.977883359,
+  "weighted_recall": 0.977684374,
+  "weighted_f1": 0.977671899,
+  "class_map": {
+    "0": "normal",
+    "1": "imbalance",
+    "2": "misalignment",
+    "3": "bearing_fault"
+  },
+  "support": [2440, 16348, 24156, 52460],
+  "per_class_precision": [0.919982699, 0.961501444, 0.963572694, 0.992271037],
+  "per_class_recall": [0.871721311, 0.977734279, 0.991016725, 0.976458254],
+  "per_class_f1": [0.895202020, 0.969549921, 0.977102041, 0.984301141],
+  "confusion_matrix": [
+    [2127, 16, 285, 12],
+    [7, 15984, 9, 348],
+    [72, 106, 23939, 39],
+    [106, 518, 611, 51225]
+  ],
+  "wall_seconds": 2057.8,
+  "throughput_inferences_per_second": 46.4,
+  "temperature_c": {
+    "start": 49.708,
+    "maximum": 51.677,
+    "end": 51.308,
+    "immediate_stop_threshold": 75.0,
+    "invalid_data_timeout_seconds": 30.0
+  },
+  "software_reference": {
+    "accuracy": 0.9773594398557712,
+    "macro_f1": 0.9562824348645764,
+    "accuracy_delta_percentage_points": 0.03249341442287972,
+    "macro_f1_delta_percentage_points": 0.02563461354236085
+  }
+}

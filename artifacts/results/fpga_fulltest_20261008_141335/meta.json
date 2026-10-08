@@ -1,0 +1,15 @@
+{
+  "n_windows": 95404,
+  "seq": 1024,
+  "ch": 8,
+  "input_scale": 0.028626115354773118,
+  "test_files_kept": 391,
+  "test_files_dropped": 0,
+  "class_map": {
+    "0": "normal",
+    "1": "imbalance",
+    "2": "misalignment",
+    "3": "bearing_fault"
+  },
+  "note": "codes are row-major [sample, channel]; hardware aggregates 1024->256 internally"
+}

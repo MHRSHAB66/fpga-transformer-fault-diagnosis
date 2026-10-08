@@ -255,6 +255,14 @@ kaggle/int10_shard/_out/
 verification_workspace/
 /tmp/
 
+# Vivado / Vitis HLS temporary + reproducible build products (regenerate from
+# the checked-in Tcl + HLS sources; the canonical evidence is copied under
+# artifacts/results/seq256_dma_system_dsp_margin_z7020/).
+*.jou
+.Xil/
+# Root-level Vitis HLS project build dir for the SEQ=256 ingress core.
+/seq256_ingress1024_dsp_margin/
+
 # Weekly report build intermediates and duplicate PDF output
 /docs/reports/*.aux
 /output/pdf/*.aux
@@ -268,3 +276,22 @@ verification_workspace/
 slide_handoff_package.zip
 docs/slide_handoff/presentation_progress.pptx
 docs/slide_handoff/*.json
+
+# Overlay / bitstream synthesis binaries (large/binary). Recorded by path + size
+# + SHA-256 in artifacts/manifests/artifact_manifest.json instead of committed;
+# the canonical copies live on the board and in the local (untracked) bundles.
+*.bit
+*.xsa
+
+# Multi-GB exported FPGA test-set inputs (regenerate via tools/export_fpga_testset.py).
+# The small evidence (labels/pred/metrics/logs) in the same dir IS committed.
+artifacts/results/fpga_fulltest_*/fpga_testset_in.*
+
+# Intermediate HLS optimization-sweep synthesis REPORT dumps (regenerate from the
+# checked-in Tcl + HLS sources). The small top-level hls_*.json / hls_*.png
+# summaries and the canonical seq256_dma_system* evidence dirs are kept.
+artifacts/results/hls_rt_*/
+artifacts/results/hls_rt3a_kv2/
+artifacts/results/hls_rt5_splitbuf/
+artifacts/results/hls_z7010_opt_*/
+artifacts/results/hls_z7020_opt_*/

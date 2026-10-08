@@ -1,0 +1,5 @@
+==== RUN DONE ====
+executed=95404  aborted=None
+wall_s=2057.8  throughput=46.4 inf/s
+TEMP start=49.708 max=51.677 end=51.308
+WROTE /home/xilinx/fpga_fulltest_20261008/fpga_pred.txt
