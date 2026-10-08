@@ -1,0 +1,161 @@
+{
+  "generated_utc": "2026-10-08T17:27:10.668424+00:00",
+  "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa and the multi-GB fpga_testset_in.*) are gitignored and recorded here only (committed_in_git=false); canonical copies live on disk and on the board.",
+  "repo_relative": true,
+  "artifacts": [
+    {
+      "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/overlay/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "43e43370b538fdf5097d36eb96645632b2276640ea80069fd72f5cb27800d2c2",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/overlay/design_1_wrapper.hwh",
+      "present": true,
+      "size_bytes": 338228,
+      "sha256": "74a12b21400a975618a75fb07558e73db77d942b51cf36b8b19b785d5c250706",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/overlay/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1366654,
+      "sha256": "c2c1c7ecd3ff7b781b4f70430dc77448f468d4ee921f7f4252e9466deaa5e073",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/config/hwh_contract.json",
+      "present": true,
+      "size_bytes": 927,
+      "sha256": "0056d27a26e5ebc3e8d129d1d91614c091f00d06829a2bbbec42f8686f3e20af",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/config/model_manifest.json",
+      "present": true,
+      "size_bytes": 704,
+      "sha256": "68d88ff2e3b2bb62822e0ec32eb9461d53430e0f72e3a07add8024a2094988d3",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/MANIFEST.sha256",
+      "present": true,
+      "size_bytes": 1119,
+      "sha256": "6ce8c5f6fdd47853fb227154618df9f1eed0ec0902fb76d934c2a14283dd4ace",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "43e43370b538fdf5097d36eb96645632b2276640ea80069fd72f5cb27800d2c2",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/bitstream/design_1.hwh",
+      "present": true,
+      "size_bytes": 338228,
+      "sha256": "74a12b21400a975618a75fb07558e73db77d942b51cf36b8b19b785d5c250706",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/summary.json",
+      "present": true,
+      "size_bytes": 7268,
+      "sha256": "b8fe61e4ce3a18a279932da1488eaf17ccecc9ea59725046b3463ca3c66d409a",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_fulltest_20261008_141335/fpga_fulltest_metrics.json",
+      "present": true,
+      "size_bytes": 1385,
+      "sha256": "b360fef23faac77f262c873de6fb766ca64a72e8db6d02e6ca5f522e88613cd8",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_fulltest_20261008_141335/fpga_pred.txt",
+      "present": true,
+      "size_bytes": 190808,
+      "sha256": "8832fb82a408832c07e8bb63d571c6a65bd7ca63bcdab43335910c88bace856b",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_fulltest_20261008_141335/labels.txt",
+      "present": true,
+      "size_bytes": 286212,
+      "sha256": "91a14dc25f120a8b9a1e8e3350ac252a48a49a2d09ab90f47b141ac785102264",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_fulltest_20261008_141335/meta.json",
+      "present": true,
+      "size_bytes": 362,
+      "sha256": "7a63a6ad0ae8d01272fbda17ec8e7e85f93d2f28a2763e01de18249fb63fb9dc",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_fulltest_20261008_141335/fpga_run.log",
+      "present": true,
+      "size_bytes": 13734,
+      "sha256": "c93798302e599a69c2693f2c6227899e78888b1efc3f64fd09bbeacc917bc506",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_fulltest_20261008_141335/fpga_run.status",
+      "present": true,
+      "size_bytes": 181,
+      "sha256": "b05648f408a7009d84cbc662414a5bacd19c70e935fd931fe8983f9fed51b1d5",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_fulltest_20261008_141335/fpga_testset_in.i32.gz",
+      "present": true,
+      "size_bytes": 1128562912,
+      "sha256": "f24c08a29c4c0b6c6a78c316c155fce21ebd9f5b14fc7c8f5262301e6a3ad820",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/uart_boot_test_20261008_194030/boot_uart.log",
+      "present": true,
+      "size_bytes": 30593,
+      "sha256": "286873b2799163faa31786d478ed01523d87d605b746b5945bf434fb5ff5eb6d",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/uart_boot_test_20261008_194030/summary.json",
+      "present": true,
+      "size_bytes": 3631,
+      "sha256": "49ffb9fde02ea479286c7d183a78ae271c8b49f61a101eaa465a213e5616bfb6",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_live_test_20261008_200509/live_evidence.json",
+      "present": true,
+      "size_bytes": 2441,
+      "sha256": "b3d089fc99763c00655c0f3891b9e511bed25a897fc59ea1ce939866c114d687",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_live_test_20261008_200509/live_results.txt",
+      "present": true,
+      "size_bytes": 3040,
+      "sha256": "bb0e3ea53367e2196405a7c399e42cc03202d570393fd63a56e2442a33fd1eb7",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/ui_smoke_20261008/replay_tab.png",
+      "present": true,
+      "size_bytes": 118441,
+      "sha256": "9649899ebed63d78847f7a5c1131317dd7a539343d5aa4684270b8499cab39b9",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/ui_smoke_20261008/live_tab.png",
+      "present": true,
+      "size_bytes": 212037,
+      "sha256": "f4a72a3cf1bce940b60b6011c6c2e27beed986817edb89b9f036343d8aa8a1a9",
+      "committed_in_git": true
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "status": "complete",
+  "stage": "seq256_ingress1024_int10_fulltest_shard",
+  "numeric_order": "normalize -> quantize INT10 -> integer aggregate 4:1 -> transformer",
+  "bits": 10,
+  "shard": 3,
+  "num_shards": 4,
+  "test_files_assigned": 97,
+  "shard_windows": 23668,
+  "shard_correct": 23193,
+  "confusion_matrix": [
+    [
+      396,
+      0,
+      90,
+      2
+    ],
+    [
+      0,
+      4623,
+      7,
+      6
+    ],
+    [
+      18,
+      30,
+      6049,
+      3
+    ],
+    [
+      59,
+      123,
+      137,
+      12125
+    ]
+  ],
+  "calibration": {
+    "split": "train",
+    "seed": 42,
+    "files_requested": 12,
+    "files_kept": 12,
+    "files_dropped": 0,
+    "windows": 2928
+  },
+  "test_files_kept": 97,
+  "test_files_dropped": 0,
+  "integer_inference_seconds": 1105.0724167000153,
+  "total_elapsed_seconds": 1267.7556105999975,
+  "checkpoint": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\experiments\\transformer_f1_seq256_pool4\\kaggle_v3\\seq256_pool4\\scratch\\best.pt",
+  "model_seq_len": 256,
+  "source_seq_len": 1024,
+  "aggregation_factor": 4
+}
