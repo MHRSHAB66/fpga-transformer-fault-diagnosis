@@ -1,0 +1,21 @@
+{
+  "source_hwh": "artifacts\\results\\seq256_dma_system_dsp_margin_z7020\\bitstream\\design_1.hwh",
+  "source_hwh_sha256": "449b09bfe06226f89e0133174eb57f6422152b54a94410cbf142079f6dd7e153",
+  "dma_instance": "axi_dma_0",
+  "dma_axilite_base": "0x41E00000",
+  "transformer_ip_instance": "transformer_top_0",
+  "transformer_ctrl_base": "0x40000000",
+  "mm2s_tdata_bits": 32,
+  "s2mm_tdata_bits": 32,
+  "input_words": 8192,
+  "output_words": 4,
+  "ap_ctrl": "ap_ctrl_hs; ctrl s_axilite bundle; ap_start=reg0 bit0, auto_restart=reg0 bit7",
+  "verified_present": {
+    "axi_dma_0": true,
+    "transformer_top_0": true,
+    "ctrl_base_0x40000000": true,
+    "dma_base_0x41E00000": true,
+    "mm2s_width_32": true,
+    "s2mm_width_32": true
+  }
+}
