@@ -1,0 +1,38 @@
+{
+  "live_evidence.json": {
+    "size": 4520,
+    "sha256": "a7b86e8519d2dff1237c551aead88f43072b21e693bd40eba53e02a03498b7b0"
+  },
+  "live_frames.csv": {
+    "size": 8152,
+    "sha256": "3f031b278581ace423dae318ba3f19652da023436d4c367805883a7e69fd55c0"
+  },
+  "live_frames.jsonl": {
+    "size": 32267,
+    "sha256": "3bc8f0b3ccf837fe47b078e65b8b3f7cc605f365ba178baaf65f72d688ffd9fa"
+  },
+  "live_multiclass_final.png": {
+    "size": 126282,
+    "sha256": "7189e81f1613ed064d6451066e1c11a2b9626c4e0cf1cfe34915b63e3f6d05db"
+  },
+  "preflight.txt": {
+    "size": 848,
+    "sha256": "3a2c7a431f7809a68d4690386343d04e433e693e2f6fea619435ba4d0864d68f"
+  },
+  "real_time_verdict.json": {
+    "size": 2670,
+    "sha256": "824b51c3f7cce77a80b096666c367c48a1d1fe01671ad7f6d63e5c29f4ae268c"
+  },
+  "replay_final.png": {
+    "size": 116345,
+    "sha256": "326866fc36dde36061f7d3b738da13a25b9555bb745afb719693eb97499959a7"
+  },
+  "sampling_plan.json": {
+    "size": 1381,
+    "sha256": "bdae96accf83e70d18714215715733775c43b0c86a5f6f88fb9ec0ec2839b8d6"
+  },
+  "ui_test_summary.json": {
+    "size": 950,
+    "sha256": "d44b53ab69e48141357206ec91d4168ffbd32e0f607665de30e7f597ce97505a"
+  }
+}

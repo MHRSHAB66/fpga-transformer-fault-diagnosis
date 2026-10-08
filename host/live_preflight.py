@@ -37,7 +37,9 @@ def _probe_script(dep_dir: str, bit: str, in_gz: str) -> str:
         'echo DRIVER_IMPORT=$(cd "%(drv)s" && PYTHONPATH="%(drv)s" python3.6 -c '
         '"import fault_classifier; print(\'ok\')" 2>/dev/null || echo fail); '
         'echo XADC_RAW=$(cat /sys/bus/iio/devices/iio:device0/in_temp0_raw 2>/dev/null); '
-        'echo RUNNER=$(pgrep -f fpga_live_runner.py | head -1); '
+        # bracket trick ([f]pga...) so this pgrep does not match its own shell
+        # command line, which literally contains the pattern string
+        'echo RUNNER=$(pgrep -f "[f]pga_live_runner.py" | head -1); '
         'echo CONTRACT_EXISTS=$([ -f "%(ct)s" ] && echo 1 || echo 0); '
         'echo DMA_MAX=$(grep -o \'"dma_max_transfer_bytes"[^,]*\' "%(ct)s" | grep -o \'[0-9]*\'); '
         'echo FRAME_BYTES=$(grep -o \'"input_frame_bytes"[^,]*\' "%(ct)s" | grep -o \'[0-9]*\')'

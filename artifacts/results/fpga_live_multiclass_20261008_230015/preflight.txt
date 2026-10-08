@@ -1,0 +1,14 @@
+Live FPGA preflight (read-only; no overlay load, no inference):
+  [OK ] ssh_connectivity       reachable
+  [OK ] python3.6              Python 3.6.5
+  [OK ] deployment_dir         /home/xilinx/deployments/seq256_z7020_pynq_dma16_py36_20261008_131446
+  [OK ] bitstream_present      design_1_wrapper.bit
+  [OK ] hwh_present            design_1_wrapper.hwh
+  [OK ] input_present          /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz
+  [OK ] driver_import          import fault_classifier (no overlay load)
+  [OK ] dma_contract_65536B    dma_max_transfer_bytes=65536 (expect 65536)
+  [OK ] input_frame_32768B     input_frame_bytes=32768 (expect 32768)
+  [OK ] requested_n_valid      n=120 (allowed 1..95404)
+  [OK ] xadc_temperature       in_temp0_raw=2612
+  [OK ] no_prior_runner        clear
+RESULT: PASS -- safe to Start

@@ -106,12 +106,31 @@ These are measured, from different points in the stack — do not conflate them:
 | number | ~value | what it measures |
 |--------|--------|------------------|
 | core/DMA probe | ~61.9 inf/s (≈16.2 ms/inf) | bounded on-board probe of the DMA + core round-trip only |
-| Live end-to-end | ~38.9 inf/s (mean ~18.3 ms/inf) | full Live path incl. gzip read + per-line SSH/Ethernet streaming |
+| multiclass live (this validation) | mean 16.15 ms/inf (p95 16.42, max 17.6) | 120-window class_balanced run; latency is the real inference cost |
+| Live end-to-end (SSH/UI) | ~38.9 inf/s | full Live path incl. gzip read + per-line SSH/Ethernet streaming |
 | sustained full-test | ~46.4 inf/s | the 95404-window physical run, averaged over ~34 min |
 
-The window acquisition rate / stride for a continuous real-time deployment has
-**not** been fixed yet, so this repo makes **no hard real-time guarantee** — it
-reports latency/throughput evidence only. (Technical note, not a report.)
+Note: a *wall-clock* throughput from a `class_balanced`/`strided` live run is **not**
+an inference rate — scattered indices force the on-board runner to gzip-skip tens
+of thousands of records to reach far windows. Use the per-window latency instead.
+
+### Real-time verdict (source-of-truth: `src/config.py`)
+Continuous-stream requirement = `sample_rate / stride = 50000 / 1024 =` **48.83
+windows/s** (window period 20.48 ms; non-overlapping, no final downsampling; the
+1024→256 aggregation is on-chip and does not change the window arrival rate).
+
+- **FPGA core/DMA — REAL-TIME CAPABLE.** 61.9 inf/s (16.15 ms) vs 48.83 required:
+  **+26.8 %** throughput margin, **+21 %** latency headroom (4.3 ms spare/window).
+- **End-to-end current demo path — NOT real-time sustained.** Full-test 46.4 inf/s
+  is **−5.0 %** below required (shortfall 2.4/s); the SSH/UI live path 38.9 inf/s
+  is **−20.3 %** below. Bottleneck = host/SSH per-window streaming + on-board
+  Python loop + gzip input read, **not** the inference core. A direct
+  sensor→DDR→AXI-DMA feed (no gzip, no per-window SSH) is expected to close the
+  ~5 % gap since the core has margin.
+- **Scope:** validated on prepared dataset windows, not a live 50 kHz sensor —
+  this is a capacity statement under the configured stream, not sensor
+  generalization. Full detail: `artifacts/results/fpga_live_multiclass_<ts>/real_time_verdict.json`.
+  (Technical note, not a university report.)
 
 ## Requirements
 `replay`/Fast-eval and the Tkinter UI need only the standard library. Live mode

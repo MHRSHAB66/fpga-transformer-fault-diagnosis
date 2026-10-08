@@ -6,7 +6,7 @@ healthy probe and fails on the relevant broken fact, including the DMA contract
 """
 import unittest
 
-from host.live_preflight import evaluate, all_ok
+from host.live_preflight import evaluate, all_ok, _probe_script
 
 
 GOOD = {
@@ -72,6 +72,15 @@ class PreflightEvaluateTests(unittest.TestCase):
         self.assertFalse({c["check"]: c["ok"] for c in checks}["requested_n_valid"])
         checks = evaluate(GOOD, n=95405)
         self.assertFalse({c["check"]: c["ok"] for c in checks}["requested_n_valid"])
+
+
+class ProbeScriptTests(unittest.TestCase):
+    def test_runner_pgrep_uses_bracket_trick(self):
+        # The no_prior_runner pgrep must NOT match its own shell command line
+        # (which literally contains the pattern) -> it must use the [f]pga... form.
+        script = _probe_script("/dep", "/dep/overlay/x.bit", "/in.gz")
+        self.assertIn('pgrep -f "[f]pga_live_runner.py"', script)
+        self.assertNotIn("pgrep -f fpga_live_runner.py", script)
 
 
 if __name__ == "__main__":
