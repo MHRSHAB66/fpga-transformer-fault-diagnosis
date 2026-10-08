@@ -2,7 +2,7 @@
 
 **Project:** Real-Time Machinery Condition Monitoring Using a Transformer Neural Network on FPGA  
 **Student:** Mehrdad Sheikh Abbasi, B.Sc., Amirkabir University of Technology  
-**Last updated:** 2026-08-16
+**Last updated:** 2026-09-30 (SEQ=256 INT10 DMA-integrated system; provisional XC7Z020)
 
 ---
 
@@ -18,11 +18,11 @@
 | 5 | Clean evaluation, metrics export, artifacts | **COMPLETE** |
 | 6 | Quantization & fixed-point preparation | **COMPLETE** (int10 selected) |
 | 7 | Hardware specification & golden vectors | **COMPLETE** (F@int10 export, verify 16/16) |
-| 8 | FPGA inference core | **SOFTWARE DONE** — Vitis synthesis on laptop pending |
+| 8 | FPGA inference core | **CSim + C-synth + DMA-integrated post-route + bitstream DONE** on provisional/generic XC7Z020 — physical board pending |
 | 9 | Sensor / lab input path | TODO (optional) |
 | 10 | FPGA-to-PC communication (UART) | **SOFTWARE DONE** (host/ receiver, tested) — on-board link pending |
 | 11 | PC-side display UI | **COMPLETE** (host/fault_monitor.py) |
-| 12 | Final integration, validation, demo | **IN PROGRESS** (docs/final_report.md; HW numbers pending synth) |
+| 12 | Final integration, validation, demo | **IN PROGRESS** — provisional HW numbers available (`docs/reports/hls_seq256_int10_results.md`); physical-board demo pending |
 
 ---
 
@@ -39,12 +39,23 @@ See `docs/final_software_result.md`.
 
 For the FPGA path a smaller architecture was selected to reduce the eventual
 resource and latency cost: **F_1layer** (1 encoder layer, d_model=32, 4 heads,
-ffn=64, 9,492 params). The final FPGA board/device is not selected yet, so fit
-and resource-budget claims remain pending.
+ffn=64, 9,492 params). The final FPGA board/device is **not selected yet**; the
+XC7Z020 numbers below are a **provisional/generic** configuration for evidence.
 
-- Float full-test accuracy: **97.55%**
-- **int10 full-test accuracy: 97.11%** (drop 0.44%, no class collapse) --
-  measured on all 95,404 windows via 4 sharded Kaggle kernels
+**Current hardware path — SEQ=256 INT10 (aggregated ingress):** the acquisition
+window stays 1024×8; the hardware IP quantizes to INT10 and performs an exact 4:1
+integer aggregation (1024→256 tokens) internally.
+
+- Exact-integer-ingress full-test accuracy: **97.74%** (93,244/95,404),
+  macro-F1 **95.63%** (`artifacts/experiments/transformer_f1_seq256_pool4/int10_ingress_local/combined.json`).
+- Vitis HLS CSim: **16/16 exact**; DMA-integrated Vivado post-route timing met
+  (WNS +0.036 ns), 210/220 DSP, 31,687 LUT, bitstream/HWH/XSA generated. See
+  `docs/reports/hls_seq256_int10_results.md` and
+  `artifacts/results/seq256_dma_system_dsp_margin_z7020/`.
+
+**Earlier SEQ=1024 INT10 variant (historical):**
+- Float full-test accuracy: **97.55%**; **int10 full-test accuracy: 97.11%**
+  (drop 0.44%, no class collapse), all 95,404 windows
   (`kaggle/int10_shard/int10_fulltest_combined.json`).
 - int10 chosen from a bit-width sweep `[16,14,12,10,8]`; int8 collapses the
   imbalance class (`kaggle/sweep_multibit/`).
@@ -65,14 +76,24 @@ Consolidated numbers: `docs/final_report.md` (regen:
 - PC-side UART receiver + live UI + frame protocol (`host/`, tested end-to-end).
 - PYNQ driver with a verified NumPy backend + hardware-backend template (`pynq/`).
 
-**Still pending (needs the board / Vitis on the laptop):**
-- Actual Vitis synthesis + resource/latency report (LUT/FF/BRAM/DSP/latency/II).
-- On-board bitstream + real UART link demo.
+**Done (provisional/generic XC7Z020, in addition to the above):**
+- Vitis HLS C-synthesis (est. 14.905 ms interval at 100 MHz) for the SEQ=256
+  INT10 ingress core.
+- DMA-integrated Vivado 2020.2 implementation (PS7 + AXI-DMA + IP), post-route
+  timing met, resources measured (210/220 DSP with a reserved 10-DSP margin),
+  bitstream/HWH/XSA generated. Package:
+  `artifacts/results/seq256_dma_system_dsp_margin_z7020/`.
+
+**Still pending (physical board only):**
+- On-board bitstream loading, real DMA transfer, live UART link demo.
+- Board/device selection (XC7Z020 is provisional/generic, not confirmed).
 - Optional live sensor input path (Stage 9).
 
-Do not claim synthesized-hardware resource usage, on-board latency, or a live
-sensor demo until those are produced. The int10 accuracy and bit-exact
-functional equivalence ARE established and may be reported.
+Report the provisional post-route resource/timing numbers ONLY with the
+provisional-part caveat. Do not claim physical-board resource usage, on-board
+latency, or a live sensor/UART demo until those are produced. The int10 accuracy,
+bit-exact functional equivalence, and provisional post-route closure ARE
+established and may be reported.
 
 ---
 

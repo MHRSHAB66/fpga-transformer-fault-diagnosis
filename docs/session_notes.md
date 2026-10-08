@@ -86,3 +86,21 @@
 - ⏭️ بعدی: `src/models/transformer_baseline.py`
 
 ---
+
+## Day 25 — 2026-09-30 — SEQ=256 INT10 سیستمِ یکپارچه‌ی DMA (وضعیتِ فعلی)
+- مسیرِ سخت‌افزاریِ فعلی **SEQ=256 INT10 ingress** است: پنجره‌ی 1024×8 → INT10 →
+  تجمیعِ صحیحِ 4:1 داخلِ IP → ترنسفورمرِ 256-توکن → ۴ لاجیت → argmax.
+  دقتِ full-test: **97.74%** (93,244/95,404)، macro-F1 **95.63%**.
+- ارجاعاتِ قدیمیِ `hls/f1_int10/` (SEQ=1024) و ۲۲۰/۲۲۰ DSP دیگر مسیرِ نهایی نیستند؛
+  آرتیفکت‌های تاریخی حفظ شده‌اند اما با برچسبِ historical.
+- **انجام‌شده (روی پارتِ آزمایشیِ generic XC7Z020):** Vitis CSim 16/16، C-synth
+  (interval 14.905 ms @100MHz)، یکپارچه‌سازیِ Vivado با PS7+AXI-DMA+IP، بستنِ
+  زمان‌بندیِ post-route (WNS +0.036 ns)، 210/220 DSP با ۱۰ DSP رزرو، تولیدِ
+  bitstream/HWH/XSA. بسته: `artifacts/results/seq256_dma_system_dsp_margin_z7020/`.
+- **بلاکرِ باقی‌مونده (فقط بردِ فیزیکی):** لودِ بیت‌استریم، انتقالِ واقعیِ DMA،
+  لینکِ زنده‌ی UART. پارت هنوز provisional است (بردِ نهایی انتخاب نشده).
+- درایورِ PYNQ (`pynq/fault_classifier.py`) با نام‌های واقعیِ بلوک‌دیزاین
+  (`axi_dma_0`، `transformer_top_0`) به‌روز شد؛ NumpyBackend مرجعِ بیت‌دقیق (16/16).
+- چک‌لیستِ آمادگیِ پیش‌برد: `docs/reports/seq256_preboard_readiness.md`.
+
+---

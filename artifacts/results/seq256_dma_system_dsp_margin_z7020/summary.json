@@ -1,0 +1,153 @@
+{
+  "package": "seq256_dma_system_dsp_margin_z7020",
+  "generated_utc_note": "Assembled from verified build artifacts on 2026-09-30 (local project time).",
+  "title": "SEQ=256 INT10 Transformer + AXI-DMA integration study (provisional/generic XC7Z020)",
+  "provisional_target_disclaimer": "xc7z020clg400-1 is a PROVISIONAL, generic experimental part used for resource/timing evidence. It is NOT a selected/confirmed board. No physical board has been programmed or validated.",
+  "numeric_contract": {
+    "pipeline": "normalize [1024,8] window -> quantize signed INT10 (round, clamp +/-511) -> exact integer 4:1 aggregation -> [256,8] transformer inference -> 4 integer logits -> argmax class",
+    "input_scale": 0.028626115354773118,
+    "act_bits": 10,
+    "weight_bits": 10,
+    "attn_bits": 10,
+    "act_qmax": 511,
+    "aggregation": "signed round-half-away-from-zero mean, factor=4: q=(|sum|+2)>>2 with sign restored, then clamp to INT10",
+    "ingress_axi_stream_order": "row-major [sample, channel]; word = sample*8 + channel; 1024*8 = 8192 int32 words per window; TLAST on word 8191",
+    "egress": "4 int32 logits; TLAST on logit 3; class = argmax",
+    "class_map": {"0": "normal", "1": "imbalance", "2": "misalignment", "3": "bearing_fault"}
+  },
+  "measured_software_accuracy": {
+    "source": "software_evidence/fulltest_int10_ingress_combined.json",
+    "test_windows": 95404,
+    "correct": 93244,
+    "accuracy": 0.9773594398557712,
+    "macro_f1": 0.9562824348645764,
+    "per_class_f1": [0.8952702702702703, 0.9690103298900367, 0.9768741332898279, 0.9839750060081711],
+    "reference_float_aggregate_then_quantize_accuracy": 0.9765628275544003,
+    "reference_float_aggregate_then_quantize_macro_f1": 0.9559999457694748
+  },
+  "measured_csim_correctness": {
+    "source": "hls_csim/transformer_top_csim.log",
+    "tool": "Vitis HLS 2020.2 CSim (GCC)",
+    "golden_vectors": 16,
+    "exact_matches": 16,
+    "result": "16/16 exact"
+  },
+  "hls_synthesis_estimates": {
+    "source": "hls_reports/transformer_top_csynth.rpt",
+    "tool": "Vitis HLS 2020.2 C-synthesis",
+    "target_part": "xc7z020-clg400-1",
+    "clock_target_ns": 10.0,
+    "estimated_clock_ns": 7.299,
+    "latency_cycles": 1490526,
+    "interval_cycles": 1490527,
+    "time_at_100mhz_ms": 14.90527,
+    "note_estimates_only": "These are HLS operator-count estimates, NOT place-and-route results. HLS estimate DSP=156, LUT=52864/53200. Vivado post-route below is authoritative for real resources.",
+    "estimate_bram18k": 145,
+    "estimate_dsp": 156,
+    "estimate_ff": 46948,
+    "estimate_lut": 52864
+  },
+  "vivado_post_route": {
+    "source_reports": [
+      "vivado_reports/post_route_timing_summary.rpt",
+      "vivado_reports/post_route_utilization.rpt",
+      "vivado_reports/post_route_status.rpt",
+      "vivado_reports/post_route_drc.rpt"
+    ],
+    "tool": "Vivado 2020.2 implementation (synth + place + route + write_bitstream)",
+    "part": "xc7z020clg400-1",
+    "system": "Zynq PS7 + AXI DMA (MM2S+S2MM, 32-bit) + AXI interconnect (HP0) + transformer_top HLS IP, 100 MHz FCLK0",
+    "flow": "in-context implemented system (not OOC IP-only)",
+    "timing": {
+      "clock_target_ns": 10.0,
+      "wns_ns": 0.036,
+      "tns_ns": 0.0,
+      "whs_ns": 0.020,
+      "ths_ns": 0.0,
+      "wpws_ns": 3.750,
+      "all_constraints_met": true
+    },
+    "resources": {
+      "slice_luts": 31687,
+      "slice_luts_total": 53200,
+      "slice_luts_pct": 59.56,
+      "slice_registers": 30889,
+      "slice_registers_total": 106400,
+      "slice_registers_pct": 29.03,
+      "block_ram_tile": 70.5,
+      "block_ram_tile_total": 140,
+      "block_ram_tile_pct": 50.36,
+      "dsp48e1": 210,
+      "dsp48e1_total": 220,
+      "dsp48e1_pct": 95.45
+    },
+    "routing": {
+      "fully_routed_nets": 66275,
+      "routable_nets": 66275,
+      "nets_with_routing_errors": 0
+    }
+  },
+  "dsp_margin": {
+    "reason": "The transformer_top IP OOC synthesis is constrained with synth_design -max_dsp 210 so ten DSP48E1 sites remain free at the implemented-system level. HLS operator estimates count multipliers, but Vivado can expand wide multipliers into extra DSP48 primitives during synthesis; the limit makes the margin real rather than an HLS estimate.",
+    "dsp_reserved": 10,
+    "comparison_vs_prior_220dsp": {
+      "prior_build_path": "artifacts/results/seq256_dma_system_z7020/",
+      "prior_dsp": 220,
+      "prior_dsp_pct": 100.0,
+      "prior_slice_luts": 30892,
+      "prior_slice_registers": 30603,
+      "prior_block_ram_tile": 70.5,
+      "prior_wns_ns": 0.280,
+      "prior_whs_ns": 0.017,
+      "prior_fully_routed_nets": 65365,
+      "prior_latency_cycles": 1489004,
+      "prior_interval_cycles": 1489005,
+      "margin_build_dsp": 210,
+      "margin_build_dsp_pct": 95.45,
+      "margin_build_slice_luts": 31687,
+      "margin_build_slice_registers": 30889,
+      "margin_build_wns_ns": 0.036,
+      "margin_build_latency_cycles": 1490526,
+      "margin_build_interval_cycles": 1490527,
+      "cost_of_margin": {
+        "dsp_freed": 10,
+        "extra_luts": 795,
+        "extra_registers": 286,
+        "wns_reduction_ns": 0.244,
+        "latency_change_cycles": 1522,
+        "interval_change_cycles": 1522,
+        "latency_change_ms_at_100mhz": 0.01522,
+        "latency_change_percent": 0.1022,
+        "note": "Measured, not zero. The DSP-margin build uses a revised HLS core (Q40 arithmetic + token-buffer reuse), so its scheduled latency is +1,522 cycles (+0.01522 ms at 100 MHz, ~+0.1022%) vs the earlier 220-DSP integrated build (1,489,004 cyc) -- negligible but measured, still far below the 20.48 ms acquisition period. The 10 freed DSP are re-implemented as LUT logic (+795 LUT, +286 FF; setup slack +0.280 -> +0.036 ns). BRAM unchanged. Both builds fully route with 0 errors."
+      }
+    }
+  },
+  "realtime_assessment": {
+    "compute_time_ms": 14.90527,
+    "acquisition_window_period_ms": 20.48,
+    "computational_realtime_met_at_target_clock": true,
+    "note": "Computational real-time condition (compute < acquisition period) is met at the 100 MHz target clock, based on the HLS scheduled interval and Vivado post-route timing closure. This is NOT a live/measured on-board throughput."
+  },
+  "artifacts": {
+    "bitstream": "bitstream/design_1_wrapper.bit",
+    "hwh": "bitstream/design_1.hwh",
+    "xsa": "bitstream/seq256_dma_system.xsa",
+    "bit_and_hwh_same_build": true,
+    "block_design": {
+      "dma_instance": "axi_dma_0",
+      "dma_axilite_base": "0x41E00000",
+      "transformer_ip_instance": "transformer_top_0",
+      "transformer_axilite_ctrl_base": "0x40000000",
+      "mm2s_tdata_bits": 32,
+      "s2mm_tdata_bits": 32,
+      "input_words_per_window": 8192,
+      "output_words_per_window": 4
+    }
+  },
+  "limitations": [
+    "Target part is a PROVISIONAL/generic XC7Z020 configuration, not a selected board.",
+    "Bitstream generation and post-route timing are complete; physical-board loading, real DMA transfer, UART communication and live end-to-end validation are NOT done.",
+    "HLS C-synthesis numbers are estimates; only the Vivado post-route numbers are place-and-route measurements.",
+    "Confidence/probability output is NOT available from the integer hardware path; class = argmax of 4 integer logits."
+  ]
+}

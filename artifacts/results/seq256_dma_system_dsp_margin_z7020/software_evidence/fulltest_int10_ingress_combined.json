@@ -1,0 +1,27 @@
+{
+  "status": "complete",
+  "stage": "seq256_ingress1024_int10_fulltest",
+  "numeric_order": "normalize -> quantize INT10 -> integer aggregate 4:1 -> transformer",
+  "test_windows": 95404,
+  "correct": 93244,
+  "accuracy": 0.9773594398557712,
+  "macro_precision": 0.9595927972582562,
+  "macro_recall": 0.9535733312549765,
+  "macro_f1": 0.9562824348645764,
+  "per_class_precision": [0.9233449477351916, 0.9598511672567965, 0.9626607717041801, 0.9925143023368564],
+  "per_class_recall": [0.8688524590163934, 0.9783459750428187, 0.9915134956118563, 0.9755813953488373],
+  "per_class_f1": [0.8952702702702703, 0.9690103298900367, 0.9768741332898279, 0.9839750060081711],
+  "support": [2440, 16348, 24156, 52460],
+  "confusion_matrix": [
+    [2120, 17, 292, 11],
+    [6, 15994, 9, 339],
+    [66, 103, 23951, 36],
+    [104, 549, 628, 51179]
+  ],
+  "shard_windows": [23912, 23912, 23912, 23668],
+  "test_files_per_shard": [98, 98, 98, 97],
+  "reference_float_aggregate_then_quantize_accuracy": 0.9765628275544003,
+  "reference_float_aggregate_then_quantize_macro_f1": 0.9559999457694748,
+  "accuracy_delta_percentage_points": 0.07966123013709211,
+  "macro_f1_delta_percentage_points": 0.02824890951015857
+}
