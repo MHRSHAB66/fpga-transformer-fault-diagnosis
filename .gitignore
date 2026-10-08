@@ -255,6 +255,15 @@ kaggle/int10_shard/_out/
 verification_workspace/
 /tmp/
 
+# Weekly report build intermediates and duplicate PDF output
+/docs/reports/*.aux
+/output/pdf/*.aux
+/output/pdf/weekly_report_10.pdf
+
+# Preserve selected HLS verification evidence despite the global log ignore
+!/artifacts/results/hls_*_csim.log
+!/artifacts/results/hls_z7020_q40_bounded_snapshot/transformer_top_csim.log
+
 # Slide handoff ZIP and duplicated assets (regenerate from docs/slide_handoff/)
 slide_handoff_package.zip
 docs/slide_handoff/presentation_progress.pptx

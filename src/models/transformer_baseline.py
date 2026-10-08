@@ -1,16 +1,25 @@
 """
 Lightweight Transformer encoder classifier for MAFAULDA fault diagnosis.
 
-This is the project's primary model family (config describes F_1layer, the
-FPGA-deployed variant). It is kept intentionally small so it can later be
-quantized and mapped to the target FPGA:
+Main pipeline:
 
-    input projection -> positional encoding -> N encoder blocks
-    -> mean pooling over time -> classification head -> class logits
+    raw input
+        -> input projection
+        -> positional encoding
+        -> N Transformer encoder blocks
+        -> mean pooling over time
+        -> classification head
+        -> raw class logits
 
-Input tensor shape is [batch, seq_len, input_dim] (e.g. [B, 1024, 8]) and the
-output is raw logits of shape [batch, num_classes]. Softmax is applied by the
-loss function during training or separately at inference, not inside the model.
+Expected input:
+    [batch_size, seq_len, input_dim]
+    e.g. [B, 1024, 8]
+
+Output:
+    [batch_size, num_classes]
+
+The model intentionally remains lightweight to simplify later quantization
+and FPGA deployment.
 """
 
 import math
@@ -30,138 +39,453 @@ from src.config import (
 )
 
 
+# ============================================================
+# Positional Encoding
+# ============================================================
+
 class PositionalEncoding(nn.Module):
     """
-    Fixed (non-learned) sinusoidal positional encoding.
+    Fixed sinusoidal positional encoding.
 
-    A Transformer is order-agnostic on its own, so each time position is given a
-    unique signature that is added to the token embedding. Even and odd feature
-    dimensions use sine and cosine at geometrically spaced frequencies, matching
-    the original "Attention Is All You Need" formulation.
+    Transformer attention itself does not know the order of samples in the
+    sequence. Therefore, each time position receives a unique d_model-
+    dimensional positional signature.
 
-    The table is registered as a buffer (not a trainable parameter): it is fixed
-    but still saved and moved with the model.
+    For the current defaults (d_model = 32 and max_len = 1024):
 
-    Parameters
-    ----------
-    d_model : int
-        Token/feature dimension the encoding is added to.
-    max_len : int
-        Maximum sequence length the table is precomputed for.
-    dropout : float, default=0.1
-        Dropout applied after adding the positional encoding.
+        pe shape before batch dimension:
+            [1024, 32]
+
+        pe shape after unsqueeze:
+            [1, 1024, 32]
+
+    Even dimensions use sine.
+    Odd dimensions use cosine.
+
+    The positional encoding is registered as a buffer:
+        - it belongs to the model
+        - it moves with the model to CPU/GPU
+        - it is saved in state_dict
+        - it is NOT trainable
     """
 
-    def __init__(self, d_model: int, max_len: int, dropout: float = 0.1):
+    def __init__(
+        self,
+        d_model: int,
+        max_len: int,
+        dropout: float = 0.1,
+    ):
         super().__init__()
-        position = torch.arange(max_len, dtype=torch.float32).unsqueeze(1)
+
+        if d_model <= 0:
+            raise ValueError("d_model must be positive.")
+
+        if max_len <= 0:
+            raise ValueError("max_len must be positive.")
+
+        if not 0.0 <= dropout < 1.0:
+            raise ValueError("dropout must be in the range [0, 1).")
+
+        # ----------------------------------------------------
+        # Position indices
+        #
+        # [0, 1, 2, ..., max_len - 1]
+        #
+        # shape:
+        #     [max_len]
+        #
+        # after unsqueeze(1):
+        #     [max_len, 1]
+        #
+        # Example:
+        #
+        # [[0],
+        #  [1],
+        #  [2],
+        #  ...]
+        # ----------------------------------------------------
+        position = torch.arange(
+            max_len,
+            dtype=torch.float32,
+        ).unsqueeze(1)
+
+        # ----------------------------------------------------
+        # Frequencies used by sine/cosine.
+        #
+        # For d_model = 32:
+        #
+        # arange:
+        #     [0, 2, 4, ..., 30]
+        #
+        # therefore 16 frequency values are generated.
+        #
+        # Different feature dimensions use different
+        # frequencies so positions receive distinct patterns.
+        # ----------------------------------------------------
         div_term = torch.exp(
-            torch.arange(0, d_model, 2, dtype=torch.float32) * (-math.log(10000.0) / d_model)
+            torch.arange(
+                0,
+                d_model,
+                2,
+                dtype=torch.float32,
+            )
+            * (-math.log(10000.0) / d_model)
         )
 
-        pe = torch.zeros(max_len, d_model, dtype=torch.float32)
-        pe[:, 0::2] = torch.sin(position * div_term)
-        pe[:, 1::2] = torch.cos(position * div_term)
+        # ----------------------------------------------------
+        # Positional encoding table
+        #
+        # shape:
+        #     [max_len, d_model]
+        #
+        # With the current defaults this is [1024, 32], but
+        # both dimensions follow the constructor arguments.
+        # ----------------------------------------------------
+        pe = torch.zeros(
+            max_len,
+            d_model,
+            dtype=torch.float32,
+        )
 
+        # Even feature dimensions:
+        #
+        # 0, 2, 4, ...
+        pe[:, 0::2] = torch.sin(position * div_term)
+
+        # Odd feature dimensions:
+        #
+        # 1, 3, 5, ...
+        #
+        # The slice on div_term also makes this safe if
+        # d_model happens to be odd.
+        num_odd_features = pe[:, 1::2].shape[1]
+
+        pe[:, 1::2] = torch.cos(
+            position * div_term[:num_odd_features]
+        )
+
+        # Regularization applied after:
+        #
+        # projected_input + positional_encoding
         self.dropout = nn.Dropout(dropout)
-        self.register_buffer("pe", pe.unsqueeze(0))
+
+        # Add batch dimension:
+        #
+        # [max_len, d_model]
+        #        ->
+        # [1, max_len, d_model]
+        self.register_buffer(
+            "pe",
+            pe.unsqueeze(0),
+        )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """Add positional encoding to ``x`` ([B, seq_len, d_model]); shape is unchanged."""
+        """
+        Add positional information to the projected input.
+
+        Input:
+            [B, seq_len, d_model]
+
+        Output:
+            [B, seq_len, d_model]
+        """
+
+        if x.ndim != 3:
+            raise ValueError(
+                f"Expected a 3-D tensor [B, seq_len, d_model], "
+                f"but got shape {tuple(x.shape)}."
+            )
+
         seq_len = x.size(1)
-        x = x + self.pe[:, :seq_len, :]
+
+        if seq_len > self.pe.size(1):
+            raise ValueError(
+                f"Input sequence length ({seq_len}) exceeds "
+                f"maximum positional encoding length ({self.pe.size(1)})."
+            )
+
+        # Only use PE entries required for this sequence.
+        positional_encoding = self.pe[:, :seq_len, :]
+
+        # Keep dtype consistent with x.
+        # Useful for mixed precision / later FPGA-related workflows.
+        positional_encoding = positional_encoding.to(dtype=x.dtype)
+
+        x = x + positional_encoding
+
         return self.dropout(x)
 
+
+# ============================================================
+# Transformer Encoder Block
+# ============================================================
 
 class TransformerEncoderBlock(nn.Module):
     """
     One post-norm Transformer encoder block.
 
-    Two sub-layers, each wrapped in a residual connection followed by
-    LayerNorm (i.e. ``norm(x + sublayer(x))``):
+    Architecture:
 
-    1. Multi-head self-attention, letting each time step attend to all others.
-    2. Position-wise feed-forward network (Linear -> GELU -> Dropout -> Linear).
+        x
+        |
+        v
+        Multi-Head Self-Attention
+        |
+        v
+        Dropout
+        |
+        + <----- residual x
+        |
+        v
+        LayerNorm
+        |
+        v
+        Feed-Forward Network
+        |
+        v
+        Dropout
+        |
+        + <----- residual
+        |
+        v
+        LayerNorm
 
-    Input and output shapes are both [B, seq_len, d_model].
+    Input/output:
+        [B, seq_len, d_model]
 
-    Parameters
-    ----------
-    d_model : int
-        Token/feature dimension.
-    nhead : int
-        Number of attention heads (must divide ``d_model``).
-    dim_feedforward : int
-        Hidden size of the feed-forward network.
-    dropout : float
-        Dropout rate used in attention and the feed-forward network.
+    For the current project configuration:
+
+        d_model = 32
+        nhead = 4
+        head_dim = 8
+        dim_feedforward = 64
     """
 
-    def __init__(self, d_model: int, nhead: int, dim_feedforward: int, dropout: float):
+    def __init__(
+        self,
+        d_model: int,
+        nhead: int,
+        dim_feedforward: int,
+        dropout: float,
+    ):
         super().__init__()
+
+        if d_model <= 0:
+            raise ValueError("d_model must be positive.")
+
+        if nhead <= 0:
+            raise ValueError("nhead must be positive.")
+
+        if d_model % nhead != 0:
+            raise ValueError(
+                "d_model must be divisible by nhead."
+            )
+
+        if dim_feedforward <= 0:
+            raise ValueError(
+                "dim_feedforward must be positive."
+            )
+
+        if not 0.0 <= dropout < 1.0:
+            raise ValueError(
+                "dropout must be in the range [0, 1)."
+            )
+
+        # ----------------------------------------------------
+        # Multi-Head Self-Attention
+        #
+        # For d_model = 32, nhead = 4:
+        #
+        # Q: 32 -> 32 -> 4 heads x 8
+        # K: 32 -> 32 -> 4 heads x 8
+        # V: 32 -> 32 -> 4 heads x 8
+        #
+        # Each Q/K/V dimension after projection can contain
+        # information from all 32 input dimensions.
+        # ----------------------------------------------------
         self.self_attention = nn.MultiheadAttention(
             embed_dim=d_model,
             num_heads=nhead,
             dropout=dropout,
             batch_first=True,
         )
+
+        # Dropout applied to the attention output before
+        # residual addition.
         self.attention_dropout = nn.Dropout(dropout)
+
+        # Post-norm:
+        #
+        # LayerNorm(x + Attention(x))
         self.attention_norm = nn.LayerNorm(d_model)
 
+        # ----------------------------------------------------
+        # Position-wise Feed-Forward Network
+        #
+        # For the current model:
+        #
+        # 32
+        #  ↓
+        # Linear
+        #  ↓
+        # 64
+        #  ↓
+        # GELU
+        #  ↓
+        # Dropout
+        #  ↓
+        # Linear
+        #  ↓
+        # 32
+        #
+        # This is independently applied to every time step,
+        # using the same weights at all positions.
+        # ----------------------------------------------------
         self.feedforward = nn.Sequential(
             nn.Linear(d_model, dim_feedforward),
             nn.GELU(),
             nn.Dropout(dropout),
             nn.Linear(dim_feedforward, d_model),
         )
+
         self.feedforward_dropout = nn.Dropout(dropout)
+
+        # Post-norm:
+        #
+        # LayerNorm(x + FeedForward(x))
         self.feedforward_norm = nn.LayerNorm(d_model)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """Run self-attention then the feed-forward network, each with residual + LayerNorm."""
-        attention_output, _ = self.self_attention(x, x, x, need_weights=False)
-        x = self.attention_norm(x + self.attention_dropout(attention_output))
+        """
+        Apply self-attention followed by the feed-forward network.
 
+        Shape remains:
+
+            [B, seq_len, d_model]
+        """
+
+        # ----------------------------------------------------
+        # Self-attention
+        #
+        # x is passed as query, key and value:
+        #
+        #     attention(x, x, x)
+        #
+        # therefore this is SELF-attention.
+        #
+        # Internally:
+        #
+        # Q = x W_Q
+        # K = x W_K
+        # V = x W_V
+        #
+        # Attention:
+        #
+        # softmax(Q K^T / sqrt(head_dim)) V
+        # ----------------------------------------------------
+        attention_output, _ = self.self_attention(
+            query=x,
+            key=x,
+            value=x,
+            need_weights=False,
+        )
+
+        # ----------------------------------------------------
+        # Residual + post LayerNorm
+        #
+        # x_new =
+        #     LayerNorm(
+        #         x + Dropout(Attention(x))
+        #     )
+        # ----------------------------------------------------
+        x = self.attention_norm(
+            x
+            + self.attention_dropout(attention_output)
+        )
+
+        # ----------------------------------------------------
+        # Feed-forward network
+        # ----------------------------------------------------
         feedforward_output = self.feedforward(x)
-        x = self.feedforward_norm(x + self.feedforward_dropout(feedforward_output))
+
+        # ----------------------------------------------------
+        # Second residual + post LayerNorm
+        # ----------------------------------------------------
+        x = self.feedforward_norm(
+            x
+            + self.feedforward_dropout(feedforward_output)
+        )
+
         return x
 
 
+# ============================================================
+# Complete Transformer Classifier
+# ============================================================
+
 class TransformerBaseline(nn.Module):
     """
-    Lightweight Transformer encoder classifier (the project's main model).
+    Lightweight Transformer classifier for MAFAULDA fault diagnosis.
 
-    Pipeline: project the raw channels to ``d_model``, add positional encoding,
-    pass through ``num_layers`` encoder blocks, mean-pool over time, then a small
-    classification head produces one logit per class. Mean pooling and raw-logit
-    output are chosen to keep quantization and the FPGA mapping simple.
+    Architecture (current default dimensions shown as an example):
 
-    Defaults are read from ``src.config`` and describe F_1layer (the deployed
-    model). Shapes: input [B, seq_len, input_dim] -> output [B, num_classes].
+        Raw input
+        [B, seq_len, input_dim]  (default: [B, 1024, 8])
 
-    Parameters
-    ----------
-    input_dim : int
-        Number of input channels per time step.
-    seq_len : int
-        Window length (number of time steps); sets the positional-encoding size.
-    num_classes : int
-        Number of output classes.
-    d_model : int
-        Token/feature dimension inside the encoder.
-    nhead : int
-        Number of attention heads (must divide ``d_model``).
-    num_layers : int
-        Number of stacked encoder blocks.
-    dim_feedforward : int
-        Hidden size of each block's feed-forward network.
-    dropout : float
-        Dropout rate used throughout the model.
+              |
+              v
 
-    Raises
-    ------
-    ValueError
-        If ``d_model`` is not divisible by ``nhead``.
+        Input projection
+        Linear(input_dim -> d_model)  (default: 8 -> 32)
+
+              |
+              v
+
+        [B, seq_len, d_model]
+
+              |
+              v
+
+        Positional Encoding
+
+              |
+              v
+
+        N x TransformerEncoderBlock
+
+              |
+              v
+
+        [B, seq_len, d_model]
+
+              |
+              v
+
+        Mean Pooling over time
+
+              |
+              v
+
+        [B, d_model]
+
+              |
+              v
+
+        Classification Head
+
+        LayerNorm(d_model)
+        Linear(d_model -> d_model // 2)
+        GELU
+        Dropout
+        Linear(d_model // 2 -> num_classes)
+
+              |
+              v
+
+        [B, num_classes]
+
+    Raw logits are returned.
+    Softmax is NOT applied inside the model.
     """
 
     def __init__(
@@ -177,15 +501,93 @@ class TransformerBaseline(nn.Module):
     ):
         super().__init__()
 
-        if d_model % nhead != 0:
-            raise ValueError("d_model must be divisible by nhead.")
+        # ----------------------------------------------------
+        # Parameter validation
+        # ----------------------------------------------------
+        if input_dim <= 0:
+            raise ValueError("input_dim must be positive.")
 
-        self.input_projection = nn.Linear(input_dim, d_model)
+        if seq_len <= 0:
+            raise ValueError("seq_len must be positive.")
+
+        if num_classes <= 1:
+            raise ValueError(
+                "num_classes must be greater than 1."
+            )
+
+        if d_model <= 0:
+            raise ValueError("d_model must be positive.")
+
+        if nhead <= 0:
+            raise ValueError("nhead must be positive.")
+
+        if d_model % nhead != 0:
+            raise ValueError(
+                "d_model must be divisible by nhead."
+            )
+
+        if num_layers <= 0:
+            raise ValueError(
+                "num_layers must be at least 1."
+            )
+
+        if dim_feedforward <= 0:
+            raise ValueError(
+                "dim_feedforward must be positive."
+            )
+
+        if not 0.0 <= dropout < 1.0:
+            raise ValueError(
+                "dropout must be in the range [0, 1)."
+            )
+
+        self.input_dim = input_dim
+        self.max_seq_len = seq_len
+
+        # ----------------------------------------------------
+        # Raw sensor channels -> transformer representation
+        #
+        # Current MAFAULDA input:
+        #
+        # 0 tachometer
+        # 1 acc_axial_b1
+        # 2 acc_radial_b1
+        # 3 acc_tangential_b1
+        # 4 acc_axial_b2
+        # 5 acc_radial_b2
+        # 6 acc_tangential_b2
+        # 7 microphone
+        #
+        # With the current config this is 8 -> 32.
+        #
+        # Each projected value may depend on every selected
+        # input channel.
+        # ----------------------------------------------------
+        self.input_projection = nn.Linear(
+            input_dim,
+            d_model,
+        )
+
+        # ----------------------------------------------------
+        # Add position information.
+        #
+        # PE shape: [1, seq_len, d_model]
+        # ----------------------------------------------------
         self.positional_encoding = PositionalEncoding(
             d_model=d_model,
             max_len=seq_len,
             dropout=dropout,
         )
+
+        # ----------------------------------------------------
+        # Stack N independent Transformer encoder blocks.
+        #
+        # Each block has its OWN trainable weights.
+        #
+        # If num_layers = 1:
+        #
+        #     only one encoder block is used.
+        # ----------------------------------------------------
         self.encoder_layers = nn.ModuleList(
             [
                 TransformerEncoderBlock(
@@ -197,33 +599,133 @@ class TransformerBaseline(nn.Module):
                 for _ in range(num_layers)
             ]
         )
+
+        # ----------------------------------------------------
+        # Final classification head
+        #
+        # d_model
+        #  ↓
+        # LayerNorm
+        #  ↓
+        # d_model // 2
+        #  ↓
+        # GELU
+        #  ↓
+        # Dropout
+        #  ↓
+        # num_classes
+        #
+        # No Softmax here because CrossEntropyLoss expects
+        # raw logits.
+        # ----------------------------------------------------
+        classifier_hidden_dim = d_model // 2
+
+        if classifier_hidden_dim < 1:
+            raise ValueError(
+                "d_model is too small for the classifier head."
+            )
+
         self.classifier = nn.Sequential(
             nn.LayerNorm(d_model),
-            nn.Linear(d_model, d_model // 2),
+            nn.Linear(
+                d_model,
+                classifier_hidden_dim,
+            ),
             nn.GELU(),
             nn.Dropout(dropout),
-            nn.Linear(d_model // 2, num_classes),
+            nn.Linear(
+                classifier_hidden_dim,
+                num_classes,
+            ),
         )
 
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
+    def forward(
+        self,
+        x: torch.Tensor,
+    ) -> torch.Tensor:
         """
-        Classify a batch of windows.
+        Classify a batch of MAFAULDA windows.
 
-        Parameters
-        ----------
-        x : torch.Tensor
-            Input of shape [batch, seq_len, input_dim].
+            Input:
+            [B, seq_len, input_dim]
 
-        Returns
-        -------
-        torch.Tensor
-            Raw class logits of shape [batch, num_classes].
+        Example:
+            [64, 1024, 8]
+
+        Output:
+            [B, num_classes]
         """
+
+        if x.ndim != 3:
+            raise ValueError(
+                f"Expected input shape [B, seq_len, input_dim], "
+                f"but got {tuple(x.shape)}."
+            )
+
+        if x.size(-1) != self.input_dim:
+            raise ValueError(
+                f"Expected {self.input_dim} input features, "
+                f"but got {x.size(-1)}."
+            )
+
+        if x.size(1) == 0:
+            raise ValueError("Sequence length must be positive.")
+
+        if x.size(1) > self.max_seq_len:
+            raise ValueError(
+                f"Sequence length {x.size(1)} exceeds "
+                f"configured maximum {self.max_seq_len}."
+            )
+
+        # ----------------------------------------------------
+        # 1. Input projection
+        #
+        # [B, seq_len, input_dim]
+        #        ->
+        # [B, seq_len, d_model]
+        # ----------------------------------------------------
         x = self.input_projection(x)
+
+        # ----------------------------------------------------
+        # 2. Add positional information
+        #
+        # shape remains:
+        #
+        # [B, seq_len, d_model]
+        # ----------------------------------------------------
         x = self.positional_encoding(x)
 
+        # ----------------------------------------------------
+        # 3. Transformer encoder stack
+        #
+        # shape remains:
+        #
+        # [B, seq_len, d_model]
+        # ----------------------------------------------------
         for encoder_layer in self.encoder_layers:
             x = encoder_layer(x)
 
+        # ----------------------------------------------------
+        # 4. Mean pooling over time
+        #
+        # [B, seq_len, d_model]
+        #        ->
+        # [B, d_model]
+        #
+        # All time positions are averaged into one
+        # representation for each input window.
+        # ----------------------------------------------------
         x = x.mean(dim=1)
-        return self.classifier(x)
+
+        # ----------------------------------------------------
+        # 5. Classification
+        #
+        # [B, 32]
+        #    ->
+        # [B, num_classes]
+        #
+        # Returns raw logits.
+        # ----------------------------------------------------
+        logits = self.classifier(x)
+
+        return logits

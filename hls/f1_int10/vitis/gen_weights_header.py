@@ -14,11 +14,14 @@ Run
 """
 from __future__ import annotations
 
+import argparse
+from decimal import Decimal, ROUND_HALF_EVEN
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 DATA = HERE.parent / "data"
 OUT = HERE / "weights_int10.h"
+SCALE_FRAC_BITS = 40
 
 # layer prefixes present for the 1-layer model
 LIN_NAMES = ["proj", "cls1", "cls4",
@@ -44,6 +47,12 @@ def emit_int_array(fh, cname, values):
 def emit_double_array(fh, cname, values):
     fh.write(f"static const double {cname}[{len(values)}] = {{")
     fh.write(",".join(values))
+    fh.write("};\n")
+    multiplier = Decimal(1 << SCALE_FRAC_BITS)
+    fixed = [str(int((Decimal(value) * multiplier).to_integral_value(rounding=ROUND_HALF_EVEN)))
+             for value in values]
+    fh.write(f"static const long long {cname}_q{SCALE_FRAC_BITS}[{len(values)}] = {{")
+    fh.write(",".join(fixed))
     fh.write("};\n")
 
 
@@ -96,4 +105,12 @@ def main():
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--frac-bits", type=int, default=SCALE_FRAC_BITS)
+    parser.add_argument("--output", type=Path, default=OUT)
+    args = parser.parse_args()
+    if not 1 <= args.frac_bits <= 40:
+        parser.error("--frac-bits must be between 1 and 40")
+    SCALE_FRAC_BITS = args.frac_bits
+    OUT = args.output
     main()

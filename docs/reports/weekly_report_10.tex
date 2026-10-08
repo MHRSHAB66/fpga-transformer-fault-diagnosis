@@ -1,0 +1,171 @@
+\documentclass{article}
+
+% Same layout and visual style as report/template/template.tex and report no. 9.
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{calc,positioning}
+\usepackage{setspace}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{xepersian}
+
+\linespread{1.0}
+\geometry{margin=2.5cm}
+\setlength{\parindent}{0.7cm}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+
+\definecolor{main_blue}{RGB}{0,70,140}
+\definecolor{light_blue}{RGB}{0,120,200}
+\definecolor{light_gray}{RGB}{112,146,190}
+
+\newcommand{\reportnumber}[1]{\def\ReportNumber{#1}}
+\newcommand{\reportdate}[1]{\def\ReportDate{#1}}
+\newcommand{\reportstartdate}[1]{\def\ReportStartDate{#1}}
+\newcommand{\reportenddate}[1]{\def\ReportEndDate{#1}}
+\newcommand{\studentname}[1]{\def\StudentName{#1}}
+\newcommand{\supervisorname}[1]{\def\SupervisorName{#1}}
+
+\reportnumber{۱۰}
+\reportdate{۱۴۰۵/۰۶/۲۸}
+\reportstartdate{۱۴۰۵/۰۶/۱۸}
+\reportenddate{۱۴۰۵/۰۶/۲۷}
+\studentname{مهرداد شیخ عباسی}
+\supervisorname{دکتر صاحب‌الزمانی}
+
+\settextfont[
+Scale=1.3,
+Path=fonts/,
+Extension=.TTF,
+BoldFont=B-NAZANIN-Bold
+]{B-NAZANIN}
+
+\setlatintextfont[
+Scale=1.1,
+Path=fonts/,
+Extension=.TTF,
+BoldFont=timesbd,
+ItalicFont=timesi
+]{Times}
+
+\renewcommand{\labelitemi}{\textcolor{main_blue}{\large$\bullet$}}
+
+\newcommand{\mysection}[2]{
+\par\vspace{0.7cm}
+\noindent
+\begingroup
+\def\mysectionNumW{1.1cm}
+\def\mysectionH{1.2cm}
+\def\mysectionR{3pt}
+\def\mysectionGap{0pt}
+\begin{tikzpicture}
+    \coordinate (rightedge) at (\dimexpr\textwidth-9pt\relax,0);
+    \node[rectangle, fill=light_blue, text=white, anchor=east,
+    minimum width=\mysectionNumW, minimum height=\mysectionH,
+    rounded corners=\mysectionR, align=center, inner sep=2pt, outer sep=0pt,
+    font=\Large\bfseries] (num) at (rightedge) {#1};
+    \node[rectangle, fill=main_blue, text=white, anchor=east,
+    minimum height=\mysectionH, rounded corners=\mysectionR,
+    align=right, inner sep=6pt, outer sep=0pt,
+    font=\Large\bfseries] (title) at ([xshift=-\mysectionGap]num.west) {#2};
+    \draw[light_gray, line width=3pt, line cap=round]
+    ($(0,0 |- num.north)+(0.5\pgflinewidth,0)$) --
+    ($(rightedge |- num.north)+(-0.5\pgflinewidth,0)$);
+\end{tikzpicture}
+\endgroup
+\par\vspace{0.35cm}
+}
+
+\newcommand{\reportheader}{
+\vspace{0.5cm}
+\noindent\makebox[\linewidth]{
+{\Large گزارش هفتگی شماره \ReportNumber}
+\hfill
+{\Large \ReportDate}
+}
+\vspace{0.4cm}
+\noindent{\color{light_gray}\rule{\linewidth}{0.5mm}}
+\vspace{0.6cm}
+\hspace{0.7cm}
+\begin{minipage}{0.93\linewidth}
+\textcolor{main_blue}{\textbf{تهیه‌کننده:}}~\StudentName
+\hfill
+\textcolor{main_blue}{\textbf{استاد راهنما:}}~\SupervisorName
+\vspace{0.3cm}
+
+\textcolor{main_blue}{\textbf{بازه زمانی:}}~\ReportStartDate~الی~\ReportEndDate
+\end{minipage}
+\vspace{0.4cm}
+}
+
+\begin{document}
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=4cm]{AUT.png}
+\end{figure}
+\reportheader
+
+\noindent
+با سلام و احترام،\\
+هدف این مرحله، سنجش امکان اجرای مدل روی بردی با محیط \lr{PYNQ} بود. نخست \lr{Zynq-7020}، قطعه به‌کاررفته در برد \lr{PYNQ-Z2}، و سپس \lr{Zynq-7010} با منابع کمتر برای آزمون انتخاب شدند. این بررسی‌ها هنوز به انتخاب برد نهایی منجر نشده‌اند. در این بازه آزمون دقت جدیدی روی داده‌های آزمون انجام نشد و اعداد دقت گزارش پیشین تغییری نکرده‌اند.
+
+\mysection{۱}{\rl{آماده‌سازی مدل و آزمون اولیه روی ۷۰۲۰}}
+
+\noindent\textbf{مسیر داده.}
+توابع بارگذاری و پیش‌پردازش داده و ساخت بارگذار\LTRfootnote{\lr{DataLoader}} بازبینی شدند. کنترل ورودی‌های نامعتبر و آزمون‌های مربوط به تقسیم در سطح فایل و پنجره‌سازی\LTRfootnote{\lr{Windowing}} تکمیل شد. تقسیم داده و تعریف برچسب‌ها تغییر نکرد. در اجرای فعلی، \lr{24/24} آزمون مرتبط گذر کرد و راهنمای مرور کد تا بخش مدل به‌روز شد.
+
+\medskip
+\noindent\textbf{آماده‌سازی هسته و سنتز\LTRfootnote{\lr{Synthesis}} اولیه.}
+در هسته \lr{F\_1layer @ int10}، بافر\LTRfootnote{\lr{Buffer}} فعال‌سازی\LTRfootnote{\lr{Activation}} به ۱۰ بیت و انباره\LTRfootnote{\lr{Accumulator}} ضرب‌وجمع به ۳۲ بیت محدود شد. برخی بافرهای غیرهم‌زمان نیز دوباره استفاده شدند. برآورد \lr{Vitis HLS 2020.2} برای نسخه ردیفی با ضرایب صحیح \lr{Q40} روی قطعه \lr{XC7Z020CLG400-1} چنین است:
+
+\begin{center}
+\begin{latin}
+\begin{tabular}{lrrrr}
+\toprule
+ & BRAM\_18K & LUT & FF & DSP \\
+\midrule
+Core estimate & 104 & 24,738 & 20,610 & 40 \\
+Device capacity & 280 & 53,200 & 106,400 & 220 \\
+\bottomrule
+\end{tabular}
+\end{latin}
+\end{center}
+
+\noindent
+در این برآورد، مصرف هر چهار منبع هسته زیر ظرفیت قطعه است؛ اما منابع \lr{DMA} و دیگر اجزای سامانه، پیاده‌سازی نهایی و زمان‌بندی روی برد در آن نیامده‌اند. بنابراین از این جدول نمی‌توان جا شدن سامانه کامل روی ۷۰۲۰ را نتیجه گرفت.
+
+\newpage
+\noindent\textbf{کاهش حافظه میانی مدل.}
+برای آزمودن قطعه کوچک‌تر، پردازش توکن‌ها\LTRfootnote{\lr{Tokens}} ردیفی شد. کلید\LTRfootnote{\lr{Key}} و مقدار\LTRfootnote{\lr{Value}} برای دنباله ۱۰۲۴ نمونه‌ای حفظ می‌شوند، اما پرس‌وجو\LTRfootnote{\lr{Query}} و مراحل پس از توجه\LTRfootnote{\lr{Attention}} هر بار برای یک ردیف محاسبه می‌شوند؛ بنابراین هر پرس‌وجو همچنان به کل دنباله دسترسی دارد. ضرایب باز‌مقیاس‌دهی\LTRfootnote{\lr{Requantization}} نیز به صورت صحیح \lr{Q40} درآمدند. شبیه‌سازی \lr{C} با طول اصلی دنباله، خروجی هر ۱۶ بردار مرجع\LTRfootnote{\lr{Golden vector}} را دقیقاً بازتولید کرد (\lr{16/16}).
+
+برای اینکه برآورد منابع به همین نسخه نسبت داده شود، کد و بردارهای آزمون جداگانه ثبت شدند. اجرای نخست سنتز روی ۷۰۲۰ پس از حدود ۹۱ دقیقه بدون گزارش متوقف شد؛ اجرای دوباره همان نسخه کامل شد و اعداد آن در جدول صفحه پیش آمده‌اند. تأخیر تخمینی هر پنجره \lr{74,246,781} چرخه، معادل حدود \lr{0.742 s} با ساعت هدف \lr{10 ns} است. این عدد هنوز با هم‌شبیه‌سازی و آزمون روی برد تأیید نشده و برای ادعای بلادرنگ بودن کافی نیست.
+
+\mysection{۲}{\rl{آزمون ۷۰۱۰ و نتیجه منابع}}
+
+\noindent
+سنتز نسخه ردیفی روی قطعه \lr{XC7Z010CLG400-1} در اجرای نخست بسیار طول کشید و گزارش نداد. خاموش‌کردن پایپ‌لاین\LTRfootnote{\lr{Pipeline}} حلقه‌ها نیز مشکل را رفع نکرد. پس از جداکردن محاسبات بعد از توجه در یک تابع، سنتز طول اصلی ۱۰۲۴ پس از حدود \lr{81.5} دقیقه کامل شد. شبیه‌سازی همین نسخه نیز هر چهار خروجی ۱۶ بردار مرجع را دقیقاً حفظ کرد.
+
+جدول زیر تخمین منابع \emph{هسته کامل با طول اصلی} و ظرفیت قطعه ۷۰۱۰ را نشان می‌دهد:
+
+\begin{center}
+\begin{latin}
+\begin{tabular}{lrrrr}
+\toprule
+ & BRAM\_18K & LUT & FF & DSP \\
+\midrule
+SEQ=1024 estimate & 104 & 24,518 & 21,072 & 40 \\
+Z-7010 capacity & 120 & 17,600 & 35,200 & 80 \\
+\bottomrule
+\end{tabular}
+\end{latin}
+\end{center}
+
+\noindent
+مصرف \lr{LUT} معادل \lr{139\%} ظرفیت ۷۰۱۰ است؛ در نتیجه این نسخه فعلاً روی آن جا نمی‌شود. سه منبع دیگر در تخمین \lr{HLS} زیر ظرفیت‌اند. دوره ساعت تخمینی \lr{7.297 ns} در برابر هدف \lr{10 ns} است، اما تأخیر\LTRfootnote{\lr{Latency}} هر پنجره در گزارش نامشخص مانده و هنوز نمی‌توان درباره سرعت استنتاج قضاوت کرد.
+
+برای بررسی راه کاهش منابع، ضرایب \lr{Q32} نیز آزمایش شدند. در شبیه‌سازی، ۱۶ بردار مرجع همان خروجی را دادند. در سنتز کوچک‌شده با طول ۶۴، مصرف \lr{LUT} از \lr{21,943} به \lr{20,991} رسید؛ این نتیجه را نمی‌توان به نسخه با طول ۱۰۲۴ تعمیم داد. نسخه \lr{Q32} هنوز روی داده آزمون کامل ارزیابی و برای طول اصلی سنتز نشده است.
+
+گام بعد، کاهش مصرف \lr{LUT} در طول اصلی و تعیین تأخیر هر پنجره است. پس از آن باید هم‌شبیه‌سازی\LTRfootnote{\lr{Co-simulation}} \lr{C/RTL}، ساخت \lr{bitstream} و آزمون روی برد انجام شود. این مراحل هنوز تکمیل نشده‌اند.
+
+\end{document}

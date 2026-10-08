@@ -1,0 +1,92 @@
+<div id="pe-explainer">
+  <h2>امضای مکانی سینوسی</h2>
+  <div class="viz-controls" dir="rtl">
+    <label class="form-label" for="pe-position">موقعیت: <strong id="pe-position-value" class="tabular-nums">0</strong></label>
+    <input class="form-range" id="pe-position" type="range" min="0" max="30" value="0" step="1">
+  </div>
+  <svg id="pe-chart" role="img" aria-labelledby="pe-title pe-desc">
+    <title id="pe-title">بردار positional encoding برای موقعیت انتخاب‌شده</title>
+    <desc id="pe-desc">هشت بعد سینوسی و کسینوسی با فرکانس‌های متفاوت، امضای یک موقعیت را می‌سازند.</desc>
+  </svg>
+  <div id="pe-detail" class="text-small" dir="rtl" aria-live="polite"></div>
+</div>
+<style>
+  #pe-explainer { width: 100%; color: var(--foreground); }
+  #pe-explainer h2 { text-align: right; }
+  #pe-explainer .viz-controls { align-items: center; }
+  #pe-explainer .form-range { flex: 1 1 340px; }
+  #pe-chart { width: 100%; min-height: 310px; display: block; }
+  #pe-chart .axis { fill: var(--foreground); font-size: 12px; }
+  #pe-chart .grid { stroke: var(--border); stroke-width: 1; }
+  #pe-chart .zero { stroke: var(--muted-foreground); stroke-width: 1; }
+  #pe-chart .bar-even { fill: var(--viz-series-1); }
+  #pe-chart .bar-odd { fill: var(--viz-series-2); }
+  #pe-chart .value { fill: var(--foreground); font-size: 12px; text-anchor: middle; }
+  #pe-detail { text-align: right; margin-top: 8px; color: var(--muted-foreground); }
+</style>
+<script>
+(() => {
+  const root = document.getElementById('pe-explainer');
+  const slider = root.querySelector('#pe-position');
+  const valueLabel = root.querySelector('#pe-position-value');
+  const svg = root.querySelector('#pe-chart');
+  const detail = root.querySelector('#pe-detail');
+  const ns = 'http://www.w3.org/2000/svg';
+  const dModel = 8;
+
+  function encoding(position) {
+    const values = [];
+    for (let i = 0; i < dModel; i += 2) {
+      const divisor = Math.exp(i * (-Math.log(10000) / dModel));
+      values[i] = Math.sin(position * divisor);
+      values[i + 1] = Math.cos(position * divisor);
+    }
+    return values;
+  }
+
+  function add(tag, attrs, text) {
+    const node = document.createElementNS(ns, tag);
+    Object.entries(attrs).forEach(([key, val]) => node.setAttribute(key, val));
+    if (text !== undefined) node.textContent = text;
+    svg.appendChild(node);
+    return node;
+  }
+
+  function draw() {
+    const width = Math.max(320, svg.getBoundingClientRect().width || 720);
+    const height = 310;
+    const margin = { top: 28, right: 18, bottom: 48, left: 42 };
+    const innerW = width - margin.left - margin.right;
+    const innerH = height - margin.top - margin.bottom;
+    const zeroY = margin.top + innerH / 2;
+    const p = Number(slider.value);
+    const values = encoding(p);
+    valueLabel.textContent = String(p);
+    svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+    svg.replaceChildren();
+
+    [-1, 0, 1].forEach(v => {
+      const y = zeroY - v * innerH / 2;
+      add('line', { x1: margin.left, x2: width - margin.right, y1: y, y2: y, class: v === 0 ? 'zero' : 'grid' });
+      add('text', { x: margin.left - 8, y: y + 4, class: 'axis', 'text-anchor': 'end' }, String(v));
+    });
+
+    const slot = innerW / dModel;
+    const barW = Math.min(54, slot * 0.62);
+    values.forEach((v, i) => {
+      const x = margin.left + slot * i + (slot - barW) / 2;
+      const yValue = zeroY - v * innerH / 2;
+      const y = Math.min(zeroY, yValue);
+      const h = Math.max(1, Math.abs(v) * innerH / 2);
+      add('rect', { x, y, width: barW, height: h, class: i % 2 === 0 ? 'bar-even' : 'bar-odd', rx: 2 });
+      add('text', { x: x + barW / 2, y: height - 25, class: 'axis', 'text-anchor': 'middle' }, `d${i}`);
+      add('text', { x: x + barW / 2, y: v >= 0 ? y - 7 : y + h + 16, class: 'value' }, v.toFixed(2));
+    });
+    detail.textContent = `این هشت مقدار با هم امضای موقعیت ${p} هستند؛ ستون‌های زوج sin و ستون‌های فرد cos هستند.`;
+  }
+
+  slider.addEventListener('input', draw);
+  new ResizeObserver(draw).observe(root);
+  draw();
+})();
+</script>

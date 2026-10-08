@@ -19,6 +19,7 @@ This module is intentionally limited to reusable preprocessing and windowing
 helpers.
 """
 
+from numbers import Real
 from typing import List, Optional, Union
 
 import numpy as np
@@ -29,6 +30,7 @@ from src.config import (
     WINDOW_STRIDE,
     MISSING_RATIO_THRESHOLD,
     MISSING_FILL_METHOD,
+    NORMALIZATION_METHOD,
     EPSILON,
 )
 
@@ -42,11 +44,32 @@ def create_windows_from_dataframe(
     Split a preprocessed DataFrame or ndarray into fixed-length windows.
 
     Trailing samples shorter than window_size are discarded.
+
+    Input must have shape (samples, channels). window_size and stride must
+    be positive integers (booleans are not accepted).
+
+    Raises
+    ------
+    TypeError
+        If window_size or stride is not an integer.
+    ValueError
+        If window_size or stride is not positive, or input is not two-dimensional.
     """
+    for name, value in (("window_size", window_size), ("stride", stride)):
+        if isinstance(value, (bool, np.bool_)) or not isinstance(value, (int, np.integer)):
+            raise TypeError(f"{name} must be a positive integer; got {value!r}")
+        if value <= 0:
+            raise ValueError(f"{name} must be positive; got {value!r}")
+
     if hasattr(df, "to_numpy"):
         values = df.to_numpy(copy=True)
     else:
         values = np.asarray(df, dtype=np.float32)
+
+    if values.ndim != 2:
+        raise ValueError(
+            f"Input must be two-dimensional (samples, channels); got shape {values.shape}"
+        )
 
     windows: List[np.ndarray] = []
     num_rows = len(values)
@@ -99,13 +122,21 @@ def should_drop_file(
     df : pandas.DataFrame
         Input DataFrame.
     missing_ratio_threshold : float, default=MISSING_RATIO_THRESHOLD
-        Maximum allowed ratio of missing cells before dropping the file.
+        Maximum allowed ratio of missing cells, finite and within [0, 1].
 
     Returns
     -------
     bool
         True if the file should be dropped, otherwise False.
     """
+    if (
+        isinstance(missing_ratio_threshold, (bool, np.bool_))
+        or not isinstance(missing_ratio_threshold, Real)
+        or not np.isfinite(missing_ratio_threshold)
+        or not 0 <= missing_ratio_threshold <= 1
+    ):
+        raise ValueError("missing_ratio_threshold must be a finite number in [0, 1]")
+
     total_cells = df.shape[0] * df.shape[1]
     missing_cells = df.isna().sum().sum()
 
@@ -170,22 +201,54 @@ def fill_missing_values(
 def normalize_windows_array(
     windows: np.ndarray,
     epsilon: float = EPSILON,
+    method: str = NORMALIZATION_METHOD,
 ) -> np.ndarray:
     """
     Apply per-window z-score normalization to a stack of windows.
 
-    Each window is normalized independently: mean and std are computed over
-    all samples in that window. Reproducible for FPGA inference because no
-    global dataset statistics are needed.
+    Input shape is (windows, samples, channels). Each channel in each window
+    is normalized independently over its time samples; no dataset-wide
+    statistics are needed. An empty batch is allowed, but samples and channels
+    must be nonempty. Only method='zscore' is supported.
+
+    Raises ValueError for invalid shape, non-finite values, non-positive or
+    non-finite epsilon, unsupported methods, or float32 arithmetic overflow.
     """
-    windows = np.asarray(windows, dtype=np.float32)
+    if method != "zscore":
+        raise ValueError(
+            "normalize_windows_array supports only method='zscore'; "
+            f"got {method!r}"
+        )
+
+    if (
+        isinstance(epsilon, (bool, np.bool_))
+        or not isinstance(epsilon, Real)
+        or not np.isfinite(epsilon)
+        or epsilon <= 0
+    ):
+        raise ValueError("epsilon must be a finite positive number")
+
+    with np.errstate(over="ignore", invalid="ignore"):
+        windows = np.asarray(windows, dtype=np.float32)
+    if windows.ndim != 3 or windows.shape[1] == 0 or windows.shape[2] == 0:
+        raise ValueError(
+            "windows must have shape (windows, samples, channels) with nonempty "
+            f"samples and channels; got {windows.shape}"
+        )
+    if not np.isfinite(windows).all():
+        raise ValueError("windows must contain only finite float32 values")
     if windows.size == 0:
         return windows.astype(np.float32, copy=False)
 
-    mean = windows.mean(axis=1, keepdims=True)
-    std = windows.std(axis=1, keepdims=True)
-    safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
-    return ((windows - mean) / safe_std).astype(np.float32)
+    with np.errstate(over="ignore", invalid="ignore", divide="ignore"):
+        mean = windows.mean(axis=1, keepdims=True)
+        std = windows.std(axis=1, keepdims=True)
+        safe_std = np.where((std == 0) | (np.abs(std) < epsilon), 1.0, std)
+        result = ((windows - mean) / safe_std).astype(np.float32)
+    if not (np.isfinite(mean).all() and np.isfinite(std).all()
+            and np.isfinite(result).all()):
+        raise ValueError("float32 overflow during window normalization")
+    return result
 
 
 def preprocess_dataframe(df: pd.DataFrame, normalize: bool = False) -> Optional[pd.DataFrame]:
@@ -201,7 +264,7 @@ def preprocess_dataframe(df: pd.DataFrame, normalize: bool = False) -> Optional[
     -------
     pandas.DataFrame or None
         Preprocessed DataFrame if the file is valid. Returns None if the file
-        exceeds the missing threshold or cannot be fully filled.
+        exceeds the missing threshold, cannot be fully filled, or contains infinity.
 
     Pipeline
     --------
@@ -216,7 +279,18 @@ def preprocess_dataframe(df: pd.DataFrame, normalize: bool = False) -> Optional[
     breadcrumb: passing normalize=True raises, pointing to the removed
     file-level normalization path.
     """
+    if normalize:
+        raise NotImplementedError(
+            "normalize_dataframe was removed (2026-09-01). "
+            "Active pipeline uses per-window z-score in make_dataloaders.py. "
+            "See archive/preprocess_data.py for the old file-level normalization path."
+        )
+
     df = convert_dataframe_to_numeric(df)
+
+    # Infinity is not missing data: reject it rather than invent replacements.
+    if df.isin([np.inf, -np.inf]).any().any():
+        return None
 
     if should_drop_file(df):
         return None
@@ -227,14 +301,7 @@ def preprocess_dataframe(df: pd.DataFrame, normalize: bool = False) -> Optional[
 
     # Median/mean cannot fill a column whose every value is missing. Reject
     # such files instead of silently feeding NaNs or invented zeros downstream.
-    if df.isna().any().any():
+    if df.isna().any().any() or df.isin([np.inf, -np.inf]).any().any():
         return None
-
-    if normalize:
-        raise NotImplementedError(
-            "normalize_dataframe was removed (2026-09-01). "
-            "Active pipeline uses per-window z-score in make_dataloaders.py. "
-            "See archive/preprocess_data.py for the old file-level normalization path."
-        )
 
     return df

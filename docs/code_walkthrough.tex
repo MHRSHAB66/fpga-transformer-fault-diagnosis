@@ -585,7 +585,7 @@ def load_one_csv(file_path) -> pd.DataFrame:
 # make_dataloaders.py  (build_X_y_from_file_index)
 df = load_one_csv(file_path)     # read raw CSV
 df = preprocess_dataframe(df)    # numeric + drop + fill
-if df is None:                   # file dropped (too many NaNs)
+if df is None:                   # file failed data-quality checks
     continue
 \end{lstlisting}
 \end{latin}
@@ -613,18 +613,24 @@ if df is None:                   # file dropped (too many NaNs)
 \begin{latin}
 \begin{lstlisting}
 def preprocess_dataframe(df, normalize=False):
+    if normalize:
+        raise NotImplementedError(...)      # no file-level normalization
     df = convert_dataframe_to_numeric(df)   # step 1: coerce to float
+    if df.isin([np.inf, -np.inf]).any().any():
+        return None                          # reject infinity
     if should_drop_file(df):                # step 2: >20% NaN -> drop
         return None
     if df.isna().any().any():               # step 3: fill remaining NaN
         df = fill_missing_values(df)
-    if normalize:
-        raise NotImplementedError(...)      # removed 2026-09-01
+    if df.isna().any().any() or df.isin([np.inf, -np.inf]).any().any():
+        return None                          # reject unfilled/invalid values
     return df
 \end{lstlisting}
 \end{latin}
 
 این تابع همیشه با \lr{normalize=False} از \lr{make\_dataloaders.py} صدا زده می‌شود.
+گزینه‌ی \lr{normalize=True} همان ابتدای تابع خطا می‌دهد، حتی اگر ورودی خالی باشد.
+\lr{None} فقط به معنی کنارگذاشتن فایل از پردازش است؛ چیزی از دیسک حذف نمی‌شود.
 تابع \lr{normalize\_dataframe} (نرمال‌سازی سطح فایل) در \lr{2026-09-01} حذف شد \pmdash{}
 کد یتیم بود و آخرین صدازننده‌اش در مسیر قدیمی آرشیوشده بود.
 نرمال‌سازی فعال روی پنجره‌ها در \lr{make\_dataloaders.py} انجام می‌شود.
@@ -680,17 +686,22 @@ for start in range(0, num_rows - window_size + 1, stride):
 \begin{itemize}
 \item با \lr{stride = window\_size} (پیش‌فرض): پنجره‌ها همپوشانی ندارند.
 \item نمونه‌های دم‌دار کوتاه‌تر از \lr{window\_size} دور انداخته می‌شوند.
-\item خروجی لیستی از آرایه‌های \lr{(1024, 8)} از نوع \lr{float32} است.
+\item خروجی لیستی از آرایه‌های \lr{(1024, 8)} است. برای ورودی \lr{DataFrame} نوع داده‌ی آرایه حفظ می‌شود؛ مسیر فعال پیش از فراخوانی آن را به \lr{float32} تبدیل می‌کند.
 \end{itemize}
 
 \mysubsection{نرمال‌سازی پنجره: \lr{normalize\_windows\_array}}
 
 \begin{latin}
 \begin{lstlisting}
-def normalize_windows_array(windows, epsilon=EPSILON):
+def normalize_windows_array(windows, epsilon=EPSILON,
+                            method=NORMALIZATION_METHOD):
+    if method != "zscore":
+        raise ValueError(...)
+    windows = np.asarray(windows, dtype=np.float32)
+    # validate 3-D shape, finite input and positive finite epsilon
     mean = windows.mean(axis=1, keepdims=True)   # (N, 1, 8)
     std  = windows.std( axis=1, keepdims=True)   # (N, 1, 8)
-    safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
+    safe_std = np.where((std == 0) | (np.abs(std) < epsilon), 1.0, std)
     return (windows - mean) / safe_std           # shape: (N, 1024, 8)
 \end{lstlisting}
 \end{latin}
@@ -699,7 +710,8 @@ def normalize_windows_array(windows, epsilon=EPSILON):
 \item \lr{axis=1}: آمار روی ۱۰۲۴ نمونه محاسبه می‌شود \pmdash{} هر پنجره مستقل است.
 \item \lr{safe\_std}: اگر انحراف معیار کمتر از \lr{epsilon} باشد (کانال ثابت)،
 با ۱.۰ جایگزین می‌شود تا تقسیم بر صفر نشود.
-\item پارامترهای \lr{scope} و \lr{method} حذف شدند (2026-09-01) \pmdash{} فقط یک حالت فعال بود.
+\item فقط روش \lr{zscore} پذیرفته می‌شود؛ \lr{scope=per\_window} در کانفیگ کنترل می‌شود.
+\item ورودی و خروجی غیرمتناهی، شکل نامعتبر و \lr{epsilon} نامعتبر رد می‌شوند. \lr{batch} خالی با محور نمونه و کانال غیرخالی مجاز است.
 \end{itemize}
 
 % ==============================================================
@@ -742,19 +754,27 @@ train_df, val_df, test_df = split_file_index(index_df)
 \item تقسیم در دو مرحله است: ابتدا \lr{train} در مقابل \lr{temp}، سپس \lr{val} و \lr{test} از \lr{temp}.
 \item استراتیفای بر اساس برچسب کلاس: نسبت کلاس‌ها در هر بخش حفظ می‌شود.
 \item اگر استراتیفای ممکن نباشد (مثلا دیتاست خیلی کوچک)، به تقسیم ساده بازمی‌گردد.
+\item خطای غیرمنتظره‌ی \lr{sklearn} پنهان نمی‌شود؛ حداقل چهار فایل معتبر برای ساخت سه بخش غیرخالی لازم است.
 \end{itemize}
 
 \mysubsection{پنجره‌سازی: \lr{build\_X\_y\_from\_file\_index}}
 
-این تابع داخلی روی فایل‌های هر بخش حلقه می‌زند:
+این تابع روی فایل‌های هر بخش حلقه می‌زند و جداگانه در ارزیابی کوانتیزه نیز استفاده می‌شود:
 
 \begin{latin}
 \begin{lstlisting}
 for each file in index_df:
+    if label_name not in LABEL_MAP:
+        dropped_files += 1       # invalid label
+        continue
     df = load_one_csv(file_path)
     df = preprocess_dataframe(df)   # numeric + drop + fill
     if df is None:
+        dropped_files += 1
         continue                    # file dropped
+    if df.shape[1] != 8 or len(df) < window_size:
+        dropped_files += 1
+        continue
     values = df.to_numpy().astype(np.float32)
 
     windows = create_windows_from_dataframe(
@@ -763,8 +783,9 @@ for each file in index_df:
     # each window shape: (1024, 8)
     # stride=window_size => no overlap between windows
 
-    windows = normalize_windows_array(windows)
-    # per-window z-score: mean=0, std=1 (no global stats needed)
+    if windows:
+        windows = normalize_windows_array(np.asarray(windows, dtype=np.float32))
+    # independent per-window, per-channel z-score
 
     for window in windows:
         X.append(window)
@@ -774,34 +795,43 @@ for each file in index_df:
 
 نکته مهم: همه پنجره‌های یک فایل یک برچسب می‌گیرند (برچسب فایل).
 یعنی اگر فایلی ۱۵۰ پنجره داشته باشد، همه ۱۵۰ تا \lr{bearing\_fault} هستند.
+تابع وجود ستون‌های \lr{filepath} و \lr{label}، صحیح و مثبت بودن \lr{window\_size/stride}،
+و برابری تعداد \lr{X} و \lr{y} را هم بررسی می‌کند. آمار پنجره‌های نرمال‌شده با
+کلید \lr{normalized} ثبت می‌شود؛ این کلید نام کلاس \lr{normal} نیست.
 
 \mysubsection{نرمال‌سازی: \lr{per-window z-score}}
 
 \begin{latin}
 \begin{lstlisting}
-# applied independently to each (1024, 8) window:
-mu  = window.mean()           # scalar: mean over all values
-std = window.std()            # scalar: std  over all values
-normalized = (window - mu) / (std + 1e-8)
+# window shape: (1024, 8); one statistic per channel
+mu  = window.mean(axis=0)     # shape: (8,)
+std = window.std(axis=0)      # shape: (8,)
+safe_std = np.where((std == 0) | (std < 1e-8), 1.0, std)
+normalized = (window - mu) / safe_std
 \end{lstlisting}
 \end{latin}
 
 \begin{itemize}
-\item هر پنجره مستقل نرمال می‌شود: نیازی به آمار سراسری دیتاست نیست.
-\item برای \lr{FPGA} ایده‌آل است: محاسبه فقط با همان ۱۰۲۴ نمونه انجام می‌شود.
-\item \lr{1e-8}: اگر کانالی ثابت باشد و \lr{std=0} شود، از تقسیم بر صفر جلوگیری می‌کند.
+\item هر کانال در هر پنجره مستقل نرمال می‌شود؛ آمار سراسری دیتاست استفاده نمی‌شود.
+\item برای کانال ثابت یا \lr{std} کوچک‌تر از \lr{epsilon}، مخرج ۱ می‌شود؛ فرمول \lr{std+epsilon} نیست.
+\item این کد پایتون، اجرای نرمال‌سازی روی خود \lr{FPGA} را اثبات نمی‌کند.
 \end{itemize}
 
 \mysubsection{ساخت \lr{DataLoader}}
 
 \begin{latin}
 \begin{lstlisting}
+pin_memory = torch.cuda.is_available()
+persistent_workers = num_workers > 0
 train_loader = DataLoader(train_dataset, batch_size=64,
-                          shuffle=True,  pin_memory=True)
-val_loader   = DataLoader(val_dataset,   batch_size=64,
-                          shuffle=False, pin_memory=True)
-test_loader  = DataLoader(test_dataset,  batch_size=64,
-                          shuffle=False, pin_memory=True)
+                          shuffle=True, pin_memory=pin_memory,
+                          persistent_workers=persistent_workers)
+val_loader   = DataLoader(val_dataset, batch_size=64,
+                          shuffle=False, pin_memory=pin_memory,
+                          persistent_workers=persistent_workers)
+test_loader  = DataLoader(test_dataset, batch_size=64,
+                          shuffle=False, pin_memory=pin_memory,
+                          persistent_workers=persistent_workers)
 
 # each batch:
 #   X: (64, 1024, 8)  float32
@@ -813,6 +843,8 @@ test_loader  = DataLoader(test_dataset,  batch_size=64,
 \item \lr{train}: \lr{shuffle=True} \pmdash{} ترتیب پنجره‌ها در هر \lr{epoch} تصادفی می‌شود (یادگیری بهتر).
 \item \lr{val/test}: \lr{shuffle=False} \pmdash{} ترتیب ثابت برای ارزیابی پایدار.
 \item \lr{pin\_memory}: اگر \lr{GPU} در دسترس باشد، انتقال داده به \lr{GPU} را سریع‌تر می‌کند.
+\item \lr{persistent\_workers} فقط وقتی \lr{num\_workers>0} باشد فعال است؛ پیش‌فرض ویندوز صفر است.
+\item \lr{drop\_last=False} است؛ \lr{batch} پایانی می‌تواند کوچک‌تر از ۶۴ باشد و حذف نمی‌شود.
 \end{itemize}
 
 \mysubsection{تابع اصلی: \lr{build\_dataloaders}}
@@ -828,7 +860,10 @@ train_loader, val_loader, test_loader, stats = build_dataloaders(
 \end{latin}
 
 \lr{stats} یک \lr{dict} است که خلاصه‌ای از اطلاعات \lr{pipeline} را برمی‌گرداند:
-تعداد فایل‌ها و پنجره‌های هر بخش، توزیع کلاس‌ها، میزان \lr{RAM} مصرفی، و زمان پردازش.
+تعداد فایل‌ها و پنجره‌های هر بخش، توزیع کلاس‌ها، برآورد حجم آرایه‌های \lr{X/y}، و زمان
+ساخت آرایه‌های هر بخش. \lr{train\_samples} در این آمار تعداد پنجره‌های آموزشی است،
+نه تعداد سطرهای خام \lr{CSV}. \lr{files\_total=files\_kept+files\_dropped} برای هر بخش
+کنترل می‌شود. برآورد حافظه، اوج مصرف واقعی \lr{RAM} را شامل نمی‌شود.
 
 % ==============================================================
 \mysection{۵}{\lr{src/models/transformer\_baseline.py} \pmdash{} معماری مدل}
