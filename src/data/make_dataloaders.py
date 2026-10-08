@@ -51,6 +51,7 @@ from src.data.prepare_dataset import (
     normalize_windows_array,
     preprocess_dataframe,
 )
+from src.data.token_aggregation import aggregate_mean_float, aggregated_seq_len
 
 
 def _require_file_index_columns(index_df):
@@ -203,6 +204,7 @@ def build_X_y_from_file_index(
     index_df,
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
+    aggregation_factor: int = 1,
 ) -> Tuple[np.ndarray, np.ndarray, int, int, dict]:
     """
     Materialize windowed training arrays from a file index DataFrame.
@@ -246,6 +248,14 @@ def build_X_y_from_file_index(
             raise TypeError(f"{name} must be a positive integer.")
         if value <= 0:
             raise ValueError(f"{name} must be greater than 0.")
+    if (
+        isinstance(aggregation_factor, (bool, np.bool_))
+        or not isinstance(aggregation_factor, Integral)
+    ):
+        raise TypeError("aggregation_factor must be a positive integer.")
+    aggregation_factor = int(aggregation_factor)
+    if aggregation_factor < 1:
+        raise ValueError("aggregation_factor must be greater than 0.")
 
     X = []
     y = []
@@ -300,6 +310,14 @@ def build_X_y_from_file_index(
 
         if windows:
             windows = normalize_windows_array(np.asarray(windows, dtype=np.float32))
+            if aggregation_factor > 1:
+                # Aggregate per file to avoid materializing a full-size split
+                # and its reduced copy at the same time.
+                windows = aggregate_mean_float(
+                    windows,
+                    aggregation_factor,
+                    output_dtype=np.float32,
+                )
             normalized_windows += len(windows)
 
         for window in windows:
@@ -309,7 +327,10 @@ def build_X_y_from_file_index(
     if X:
         X = np.array(X, dtype=np.float32)
     else:
-        X = np.empty((0, window_size, EXPECTED_NUM_COLUMNS), dtype=np.float32)
+        X = np.empty(
+            (0, aggregated_seq_len(window_size, aggregation_factor), EXPECTED_NUM_COLUMNS),
+            dtype=np.float32,
+        )
 
     y = np.array(y, dtype=np.int64)
     if len(X) != len(y):
@@ -329,6 +350,7 @@ def build_dataloaders(
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
     num_workers: int = DATALOADER_NUM_WORKERS,
+    aggregation_factor: int = 1,
 ):
     """
     Build train, validation, and test DataLoaders.
@@ -347,6 +369,14 @@ def build_dataloaders(
         Step size between consecutive windows.
     num_workers : int, default=DATALOADER_NUM_WORKERS
         Number of worker processes used by PyTorch DataLoader.
+    aggregation_factor : int, default=1
+        ISOLATED SEQ=256 experiment flag. When 1 (default) the approved SEQ=1024
+        path is used EXACTLY as before (no aggregation call is made). When > 1
+        (must be a power of two dividing ``window_size``), each split's normalized
+        windows [N, window_size, C] are aggregated by a non-overlapping mean into
+        [N, window_size // aggregation_factor, C] float32 tokens AFTER the approved
+        per-window z-score normalization. The physical window and all C channels are
+        preserved; only the transformer token count is reduced.
 
     Returns
     -------
@@ -384,6 +414,21 @@ def build_dataloaders(
         raise ValueError("stride must be greater than 0.")
     if num_workers < 0:
         raise ValueError("num_workers must be greater than or equal to 0.")
+
+    if isinstance(aggregation_factor, bool) or not isinstance(aggregation_factor, Integral):
+        raise TypeError("aggregation_factor must be an integer.")
+    aggregation_factor = int(aggregation_factor)
+    if aggregation_factor < 1:
+        raise ValueError("aggregation_factor must be >= 1.")
+    if aggregation_factor > 1:
+        # Fail fast before materializing windows if the factor is incompatible.
+        if aggregation_factor & (aggregation_factor - 1) != 0:
+            raise ValueError("aggregation_factor must be a power of two.")
+        if window_size % aggregation_factor != 0:
+            raise ValueError(
+                f"window_size ({window_size}) must be divisible by "
+                f"aggregation_factor ({aggregation_factor})."
+            )
 
     if max_files is not None:
         if isinstance(max_files, bool) or not isinstance(max_files, Integral):
@@ -432,6 +477,7 @@ def build_dataloaders(
             train_index_df,
             window_size=window_size,
             stride=stride,
+            aggregation_factor=aggregation_factor,
         )
     )
     split_materialization_seconds["train"] = time.perf_counter() - train_materialize_start
@@ -445,6 +491,7 @@ def build_dataloaders(
         val_index_df,
         window_size=window_size,
         stride=stride,
+        aggregation_factor=aggregation_factor,
     )
     split_materialization_seconds["val"] = time.perf_counter() - val_materialize_start
     val_dataset = TensorDataset(
@@ -457,6 +504,7 @@ def build_dataloaders(
         test_index_df,
         window_size=window_size,
         stride=stride,
+        aggregation_factor=aggregation_factor,
     )
     split_materialization_seconds["test"] = time.perf_counter() - test_materialize_start
     test_dataset = TensorDataset(
@@ -565,6 +613,12 @@ def build_dataloaders(
         "window_shape": [int(window_size), EXPECTED_NUM_COLUMNS],
         "window_size": int(window_size),
         "window_stride": int(stride),
+        "aggregation_factor": int(aggregation_factor),
+        "model_seq_len": int(
+            aggregated_seq_len(window_size, aggregation_factor)
+            if aggregation_factor > 1
+            else window_size
+        ),
         "batch_size": int(batch_size),
         "normalization": {
             "scope": NORMALIZATION_SCOPE,

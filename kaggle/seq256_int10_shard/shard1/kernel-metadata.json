@@ -1,0 +1,25 @@
+{
+    "id":  "mehrdadsheikhabbasi/fpga-fault-seq256-int10-shard-1",
+    "title":  "FPGA Fault SEQ256 int10 Shard 1",
+    "code_file":  "seq256-int10-shard1.py",
+    "language":  "python",
+    "kernel_type":  "script",
+    "is_private":  true,
+    "enable_gpu":  false,
+    "enable_tpu":  false,
+    "enable_internet":  false,
+    "dataset_sources":  [
+                            "mehrdadsheikhabbasi/fpga-fault-src",
+                            "mehrdadsheikhabbasi/fpga-fault-seq256-pool4-ckpt",
+                            "vuxuancu/mafaulda-full"
+                        ],
+    "competition_sources":  [
+
+                            ],
+    "kernel_sources":  [
+
+                       ],
+    "model_sources":  [
+
+                      ]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "mehrdadsheikhabbasi/fpga-fault-seq256-pool4",
+  "title": "FPGA Fault SEQ256 Pool4",
+  "code_file": "fpga-fault-seq256-pool4.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": [
+    "mehrdadsheikhabbasi/fpga-fault-src",
+    "mehrdadsheikhabbasi/fpga-fault-f1-ckpt",
+    "vuxuancu/mafaulda-full"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

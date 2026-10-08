@@ -5,42 +5,39 @@ This module is responsible for:
 1. Building a file index from the dataset directory
 2. Filtering valid labels
 3. Splitting files into train/validation/test sets at file level
-4. Reusing disk-cached base-preprocessed files for window creation
-5. Materializing split windows from the preprocessed cache
-6. Keeping validation and test datasets clean and unaugmented
-7. Creating Dataset and DataLoader objects for PyTorch
+4. Loading and preprocessing each file, then creating windows
+5. Materializing windowed arrays per split
+6. Creating Dataset and DataLoader objects for PyTorch
 
 Important
 ---------
 - Splitting is performed at file level before window creation.
 - This reduces leakage between train, validation, and test because
   multiple windows extracted from the same file are highly related.
-- Base preprocessing is cached per file on disk and reused across splits.
-- Augmentation cache remains train-only.
+- Each file is loaded and preprocessed in memory on every run (no disk cache).
 """
 
-from pathlib import Path
+from collections import Counter
+import math
+from numbers import Integral, Real
+import time
 from typing import Optional, Tuple
 
 import numpy as np
 import torch
 from sklearn.model_selection import train_test_split
 from torch.utils.data import DataLoader, TensorDataset
-import time
 
 from src.config import (
     DATA_RAW_DIR,
-    PROJECT_ROOT,
     LABEL_MAP,
     NUM_CLASSES,
+    NORMALIZATION_METHOD,
+    NORMALIZATION_SCOPE,
     RANDOM_SEED,
     WINDOW_SIZE,
     WINDOW_STRIDE,
-    INCLUDE_TAIL_WINDOW,
-    TAIL_WINDOW_MODE,
     EXPECTED_NUM_COLUMNS,
-    NORMALIZATION_METHOD,
-    NORMALIZATION_SCOPE,
     EPSILON,
     TRAIN_RATIO,
     VAL_RATIO,
@@ -48,122 +45,20 @@ from src.config import (
     BATCH_SIZE,
     DATALOADER_NUM_WORKERS,
 )
-from src.data.load_data import build_file_index
+from src.data.load_data import build_file_index, load_one_csv
 from src.data.prepare_dataset import (
     create_windows_from_dataframe,
-    count_normal_windows,
-    normalize_array,
     normalize_windows_array,
+    preprocess_dataframe,
 )
-from src.data.preprocessed_cache import (
-    load_or_create_preprocessed_array,
-    CACHE_DIR as PREPROCESSED_CACHE_DIR,
-)
+from src.data.token_aggregation import aggregate_mean_float, aggregated_seq_len
 
 
-def _save_bar_plot(
-    values: dict,
-    output_path: Path,
-    title: str,
-    ylabel: str,
-    *,
-    display_labels: Optional[dict] = None,
-    figure_size=(6, 4),
-    rotation: int = 0,
-) -> None:
-    """
-    Save a simple bar chart for the provided mapping.
-
-    This helper is used only from the direct-run path so normal library usage
-    remains unchanged.
-    """
-    if not values:
-        return
-
-    import matplotlib
-
-    matplotlib.use("Agg")
-    import matplotlib.pyplot as plt
-
-    labels = list(values.keys())
-    numeric_values = list(values.values())
-    tick_labels = [display_labels.get(label, label) for label in labels] if display_labels else labels
-
-    fig, ax = plt.subplots(figsize=figure_size)
-    bars = ax.bar(labels, numeric_values, color=["#4C78A8", "#F58518", "#54A24B"])
-    ax.set_title(title)
-    ax.set_ylabel(ylabel)
-    ax.grid(axis="y", linestyle="--", linewidth=0.5, alpha=0.4)
-    ax.set_xticks(range(len(labels)))
-    ax.set_xticklabels(tick_labels, rotation=rotation, ha="right" if rotation else "center")
-
-    for label, bar, value in zip(labels, bars, numeric_values):
-        ax.text(
-            bar.get_x() + bar.get_width() / 2,
-            bar.get_height(),
-            (
-                f"{value:.6f}"
-                if label == "second_train_batch_seconds" and isinstance(value, float)
-                else f"{value:.3f}" if isinstance(value, float) else str(value)
-            ),
-            ha="center",
-            va="bottom",
-            fontsize=9,
-        )
-
-    fig.tight_layout()
-    fig.savefig(output_path, dpi=150, bbox_inches="tight")
-    plt.close(fig)
-
-
-def _save_direct_run_plots(stats: dict, timings: dict) -> None:
-    """
-    Save lightweight summary plots for direct execution only.
-    """
-    output_dir = PROJECT_ROOT / "artifacts" / "results"
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    _save_bar_plot(
-        {
-            "train": stats["train_files_kept"],
-            "val": stats["val_files_kept"],
-            "test": stats["test_files_kept"],
-        },
-        output_dir / "dataloader_file_counts.png",
-        "Kept Files Per Split",
-        "Files",
-    )
-
-    _save_bar_plot(
-        {
-            "train": stats["train_samples"],
-            "val": stats["val_samples"],
-            "test": stats["test_samples"],
-        },
-        output_dir / "dataloader_sample_counts.png",
-        "Samples Per Split",
-        "Samples",
-    )
-
-    available_timings = {
-        key: value
-        for key, value in timings.items()
-        if value is not None
-    }
-    if available_timings:
-        _save_bar_plot(
-            available_timings,
-            output_dir / "dataloader_timing_seconds.png",
-            "DataLoader Build And Batch Timing",
-            "Seconds",
-            display_labels={
-                "build_dataloaders_seconds": "build_dataloaders",
-                "first_train_batch_seconds": "first_train_batch",
-                "second_train_batch_seconds": "second_train_batch",
-            },
-            figure_size=(7.5, 4),
-            rotation=0,
-        )
+def _require_file_index_columns(index_df):
+    required = {"filepath", "label"}
+    missing = required.difference(index_df.columns)
+    if missing:
+        raise ValueError(f"File index is missing required columns: {', '.join(sorted(missing))}.")
 
 
 def deterministic_small_split(index_df, train_size):
@@ -173,6 +68,14 @@ def deterministic_small_split(index_df, train_size):
     This is only a fallback path. Normal dataset sizes still use
     train_test_split with the configured random seed.
     """
+    if (
+        isinstance(train_size, bool)
+        or not isinstance(train_size, Real)
+        or not np.isfinite(train_size)
+        or not 0 < train_size < 1
+    ):
+        raise ValueError("train_size must be a finite real number strictly between 0 and 1.")
+
     shuffled = index_df.sample(frac=1, random_state=RANDOM_SEED).reset_index(drop=True)
 
     if len(shuffled) < 2:
@@ -215,31 +118,41 @@ def safe_train_test_split(index_df, train_size, stratify_labels):
     Notes
     -----
     - `shuffle=True` is required for meaningful random splitting.
-    - If stratified splitting fails, the function falls back to a
-      non-stratified split and prints a warning.
+    - Known small-sample limitations trigger a fallback; unexpected sklearn
+      errors propagate instead of being hidden.
     """
-    try:
-        return train_test_split(
-            index_df,
-            train_size=train_size,
-            random_state=RANDOM_SEED,
-            shuffle=True,
-            stratify=stratify_labels,
-        )
-    except ValueError:
-        if stratify_labels is not None:
-            print("[WARN] Stratified split failed. Falling back to non-stratified split.")
-        try:
-            return train_test_split(
-                index_df,
-                train_size=train_size,
-                random_state=RANDOM_SEED,
-                shuffle=True,
-                stratify=None,
-            )
-        except ValueError:
-            print("[WARN] Split too small for sklearn. Using deterministic debug split.")
-            return deterministic_small_split(index_df, train_size)
+    if (
+        isinstance(train_size, bool)
+        or not isinstance(train_size, Real)
+        or not np.isfinite(train_size)
+        or not 0 < train_size < 1
+    ):
+        raise ValueError("train_size must be a finite real number strictly between 0 and 1.")
+
+    if stratify_labels is not None and len(stratify_labels) != len(index_df):
+        raise ValueError("stratify_labels must have the same length as index_df.")
+
+    sample_count = len(index_df)
+    first_count = math.floor(sample_count * train_size)
+    second_count = sample_count - first_count
+    if first_count == 0 or second_count == 0:
+        print("[WARN] Split too small for sklearn. Using deterministic debug split.")
+        return deterministic_small_split(index_df, train_size)
+
+    if stratify_labels is not None:
+        class_counts = Counter(stratify_labels)
+        class_count = len(class_counts)
+        if min(class_counts.values()) < 2 or min(first_count, second_count) < class_count:
+            print("[WARN] Stratified split is infeasible. Falling back to non-stratified split.")
+            stratify_labels = None
+
+    return train_test_split(
+        index_df,
+        train_size=train_size,
+        random_state=RANDOM_SEED,
+        shuffle=True,
+        stratify=stratify_labels,
+    )
 
 
 def split_file_index(index_df):
@@ -266,6 +179,7 @@ def split_file_index(index_df):
 
     Stratification is used when more than one class is present.
     """
+    _require_file_index_columns(index_df)
     if index_df.empty:
         return index_df.copy(), index_df.copy(), index_df.copy()
 
@@ -286,101 +200,11 @@ def split_file_index(index_df):
     )
 
 
-def fit_global_normalization_stats(
-    index_df,
-    method: str = NORMALIZATION_METHOD,
-    epsilon: float = EPSILON,
-) -> dict:
-    """
-    Fit per-channel normalization constants from training files only.
-
-    Validation/test files are never inspected here, which keeps
-    ``global_train`` leakage-free.
-    """
-    total_rows = 0
-    kept_files = 0
-    dropped_files = 0
-    sum_values = None
-    sum_squares = None
-    min_values = None
-    max_values = None
-
-    for _, row in index_df.iterrows():
-        values = load_or_create_preprocessed_array(row["filepath"])
-        if values is None:
-            dropped_files += 1
-            continue
-        if values.size == 0:
-            continue
-
-        values64 = values.astype(np.float64, copy=False)
-        kept_files += 1
-        total_rows += int(values64.shape[0])
-
-        file_sum = values64.sum(axis=0)
-        file_sum_squares = np.square(values64).sum(axis=0)
-        file_min = values64.min(axis=0)
-        file_max = values64.max(axis=0)
-
-        if sum_values is None:
-            sum_values = file_sum
-            sum_squares = file_sum_squares
-            min_values = file_min
-            max_values = file_max
-        else:
-            sum_values += file_sum
-            sum_squares += file_sum_squares
-            min_values = np.minimum(min_values, file_min)
-            max_values = np.maximum(max_values, file_max)
-
-    if total_rows == 0 or sum_values is None:
-        raise ValueError("Could not fit global normalization stats: no training rows.")
-
-    if method == "zscore":
-        mean = sum_values / total_rows
-        variance = np.maximum((sum_squares / total_rows) - np.square(mean), 0.0)
-        std = np.sqrt(variance)
-        safe_std = np.where(np.abs(std) < epsilon, 1.0, std)
-        return {
-            "scope": "global_train",
-            "method": method,
-            "fitted_on": "train",
-            "files_used": int(kept_files),
-            "files_dropped": int(dropped_files),
-            "rows_used": int(total_rows),
-            "epsilon": float(epsilon),
-            "mean": mean.astype(float).tolist(),
-            "std": safe_std.astype(float).tolist(),
-        }
-
-    if method == "minmax":
-        denom = max_values - min_values
-        safe_denom = np.where(np.abs(denom) < epsilon, 1.0, denom)
-        return {
-            "scope": "global_train",
-            "method": method,
-            "fitted_on": "train",
-            "files_used": int(kept_files),
-            "files_dropped": int(dropped_files),
-            "rows_used": int(total_rows),
-            "epsilon": float(epsilon),
-            "min": min_values.astype(float).tolist(),
-            "max": max_values.astype(float).tolist(),
-            "range": safe_denom.astype(float).tolist(),
-        }
-
-    raise ValueError(f"Unsupported normalization method: {method}")
-
-
 def build_X_y_from_file_index(
     index_df,
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
-    include_tail: bool = INCLUDE_TAIL_WINDOW,
-    tail_mode: str = TAIL_WINDOW_MODE,
-    normalization_scope: str = NORMALIZATION_SCOPE,
-    normalization_method: str = NORMALIZATION_METHOD,
-    global_normalization_stats: Optional[dict] = None,
+    aggregation_factor: int = 1,
 ) -> Tuple[np.ndarray, np.ndarray, int, int, dict]:
     """
     Materialize windowed training arrays from a file index DataFrame.
@@ -395,18 +219,6 @@ def build_X_y_from_file_index(
         Number of rows per time window.
     stride : int, default=WINDOW_STRIDE
         Step size between consecutive windows.
-    include_tail : bool, default=INCLUDE_TAIL_WINDOW
-        Whether to add a backshift tail window per file when trailing samples
-        would otherwise be discarded.
-    tail_mode : str, default=TAIL_WINDOW_MODE
-        Tail strategy passed through to ``create_windows_from_dataframe``.
-    normalization_scope : str, default=NORMALIZATION_SCOPE
-        "per_file", "per_window", or "global_train".
-    normalization_method : str, default=NORMALIZATION_METHOD
-        Current supported final method is "zscore".
-    global_normalization_stats : dict or None
-        Required when normalization_scope is "global_train".
-
     Returns
     -------
     tuple
@@ -420,70 +232,93 @@ def build_X_y_from_file_index(
         - kept_files : int
             Number of files kept after preprocessing
         - dropped_files : int
-            Number of files dropped during preprocessing
+            Number of files skipped for an invalid label or dropped during preprocessing
         - window_counts : dict
-            {"normal": int, "tail": int, "total": int} window counts
-            aggregated over all kept files in this split.
+            {"normalized": int} window count aggregated over all kept files.
 
     Notes
     -----
-    - Base preprocessing is loaded from the per-file preprocessing cache
-      when available, or created once and then cached on disk.
+    - Each file is loaded and preprocessed in memory (no disk cache).
     - Each file is assigned one label, and all windows extracted from that file
       receive the same label.
     """
+    _require_file_index_columns(index_df)
+    for name, value in (("window_size", window_size), ("stride", stride)):
+        if isinstance(value, (bool, np.bool_)) or not isinstance(value, Integral):
+            raise TypeError(f"{name} must be a positive integer.")
+        if value <= 0:
+            raise ValueError(f"{name} must be greater than 0.")
+    if (
+        isinstance(aggregation_factor, (bool, np.bool_))
+        or not isinstance(aggregation_factor, Integral)
+    ):
+        raise TypeError("aggregation_factor must be a positive integer.")
+    aggregation_factor = int(aggregation_factor)
+    if aggregation_factor < 1:
+        raise ValueError("aggregation_factor must be greater than 0.")
+
     X = []
     y = []
 
     kept_files = 0
     dropped_files = 0
-    normal_windows = 0
-    tail_windows = 0
+    normalized_windows = 0
 
     for _, row in index_df.iterrows():
         file_path = row["filepath"]
         label_name = row["label"]
 
-        # Skip unexpected labels for robustness.
+        # Skip unexpected labels without leaving them out of file counts.
         if label_name not in LABEL_MAP:
-            continue
-
-        values = load_or_create_preprocessed_array(file_path)
-
-        if values is None:
+            print(f"[WARN] Dropping {file_path}: unexpected label {label_name!r}.")
             dropped_files += 1
             continue
 
-        kept_files += 1
+        df = load_one_csv(file_path)
+        df = preprocess_dataframe(df)
+        if df is None:
+            dropped_files += 1
+            continue
 
-        if normalization_scope == "per_file":
-            values = normalize_array(values, method=normalization_method)
+        if df.shape[1] != EXPECTED_NUM_COLUMNS:
+            print(
+                f"[WARN] Dropping {file_path}: expected {EXPECTED_NUM_COLUMNS} "
+                f"columns, got {df.shape[1]}."
+            )
+            dropped_files += 1
+            continue
+
+        if len(df) < window_size:
+            print(
+                f"[WARN] Dropping {file_path}: expected at least {window_size} "
+                f"rows, got {len(df)}."
+            )
+            dropped_files += 1
+            continue
+
+        values = df.to_numpy(copy=True).astype(np.float32, copy=False)
+
+        kept_files += 1
 
         windows = create_windows_from_dataframe(
             values,
             window_size=window_size,
             stride=stride,
-            include_tail=include_tail,
-            tail_mode=tail_mode,
         )
-
-        # The backshift policy appends at most one extra window per file, so the
-        # tail count for this file is whatever exceeds the standard window count.
-        file_normal = count_normal_windows(len(values), window_size, stride)
-        normal_windows += file_normal
-        tail_windows += max(0, len(windows) - file_normal)
 
         label_id = LABEL_MAP[label_name]
 
-        # Preserve alignment between inputs and labels:
-        # every appended window gets its matching file-level label.
         if windows:
-            windows = normalize_windows_array(
-                np.asarray(windows, dtype=np.float32),
-                method=normalization_method,
-                scope=normalization_scope,
-                global_stats=global_normalization_stats,
-            )
+            windows = normalize_windows_array(np.asarray(windows, dtype=np.float32))
+            if aggregation_factor > 1:
+                # Aggregate per file to avoid materializing a full-size split
+                # and its reduced copy at the same time.
+                windows = aggregate_mean_float(
+                    windows,
+                    aggregation_factor,
+                    output_dtype=np.float32,
+                )
+            normalized_windows += len(windows)
 
         for window in windows:
             X.append(window)
@@ -492,14 +327,17 @@ def build_X_y_from_file_index(
     if X:
         X = np.array(X, dtype=np.float32)
     else:
-        X = np.empty((0, window_size, EXPECTED_NUM_COLUMNS), dtype=np.float32)
+        X = np.empty(
+            (0, aggregated_seq_len(window_size, aggregation_factor), EXPECTED_NUM_COLUMNS),
+            dtype=np.float32,
+        )
 
     y = np.array(y, dtype=np.int64)
+    if len(X) != len(y):
+        raise RuntimeError("Window and label counts do not match.")
 
     window_counts = {
-        "normal": int(normal_windows),
-        "tail": int(tail_windows),
-        "total": int(normal_windows + tail_windows),
+        "normalized": int(normalized_windows),
     }
 
     return X, y, kept_files, dropped_files, window_counts
@@ -511,11 +349,8 @@ def build_dataloaders(
     batch_size: int = BATCH_SIZE,
     window_size: int = WINDOW_SIZE,
     stride: int = WINDOW_STRIDE,
-    normalization_scope: str = NORMALIZATION_SCOPE,
-    normalization_method: str = NORMALIZATION_METHOD,
     num_workers: int = DATALOADER_NUM_WORKERS,
-    include_tail: bool = INCLUDE_TAIL_WINDOW,
-    tail_mode: str = TAIL_WINDOW_MODE,
+    aggregation_factor: int = 1,
 ):
     """
     Build train, validation, and test DataLoaders.
@@ -532,18 +367,16 @@ def build_dataloaders(
         Number of rows per time window.
     stride : int, default=WINDOW_STRIDE
         Step size between consecutive windows.
-    normalization_scope : str, default=NORMALIZATION_SCOPE
-        "per_file", "per_window", or "global_train".
-    normalization_method : str, default=NORMALIZATION_METHOD
-        Normalization method. The final pipeline uses "zscore".
     num_workers : int, default=DATALOADER_NUM_WORKERS
         Number of worker processes used by PyTorch DataLoader.
-    include_tail : bool, default=INCLUDE_TAIL_WINDOW
-        Whether to add a backshift tail window per file so trailing samples that
-        would otherwise be discarded are still used. Applied identically to all
-        splits; overlap stays within a file because splitting is file-level.
-    tail_mode : str, default=TAIL_WINDOW_MODE
-        Tail strategy. Only "backshift" is supported.
+    aggregation_factor : int, default=1
+        ISOLATED SEQ=256 experiment flag. When 1 (default) the approved SEQ=1024
+        path is used EXACTLY as before (no aggregation call is made). When > 1
+        (must be a power of two dividing ``window_size``), each split's normalized
+        windows [N, window_size, C] are aggregated by a non-overlapping mean into
+        [N, window_size // aggregation_factor, C] float32 tokens AFTER the approved
+        per-window z-score normalization. The physical window and all C channels are
+        preserved; only the transformer token count is reduced.
 
     Returns
     -------
@@ -555,20 +388,53 @@ def build_dataloaders(
         - test_loader : DataLoader
         - stats : dict
             Summary information about file counts, sample counts,
-            augmentation usage, preprocessing cache usage, and
-            DataLoader settings.
+            normalization, window counts, timing, and DataLoader settings.
 
     Notes
     -----
     - File-level split happens before window creation.
-    - Validation and test remain clean and unaugmented.
-    - Base preprocessing is reused through the per-file disk cache.
-    - All splits are materialized from the per-file preprocessing cache.
+    - Each split is materialized by loading and preprocessing its files in
+      memory (no disk cache).
     """
-    if normalization_scope not in {"per_file", "per_window", "global_train"}:
-        raise ValueError(f"Unsupported normalization_scope: {normalization_scope!r}")
-    if normalization_scope == "per_window" and normalization_method != "zscore":
-        raise ValueError("per_window normalization currently supports zscore only.")
+    integer_parameters = {
+        "batch_size": batch_size,
+        "window_size": window_size,
+        "stride": stride,
+        "num_workers": num_workers,
+    }
+    for parameter_name, value in integer_parameters.items():
+        if isinstance(value, bool) or not isinstance(value, Integral):
+            raise TypeError(f"{parameter_name} must be an integer.")
+
+    if batch_size <= 0:
+        raise ValueError("batch_size must be greater than 0.")
+    if window_size <= 0:
+        raise ValueError("window_size must be greater than 0.")
+    if stride <= 0:
+        raise ValueError("stride must be greater than 0.")
+    if num_workers < 0:
+        raise ValueError("num_workers must be greater than or equal to 0.")
+
+    if isinstance(aggregation_factor, bool) or not isinstance(aggregation_factor, Integral):
+        raise TypeError("aggregation_factor must be an integer.")
+    aggregation_factor = int(aggregation_factor)
+    if aggregation_factor < 1:
+        raise ValueError("aggregation_factor must be >= 1.")
+    if aggregation_factor > 1:
+        # Fail fast before materializing windows if the factor is incompatible.
+        if aggregation_factor & (aggregation_factor - 1) != 0:
+            raise ValueError("aggregation_factor must be a power of two.")
+        if window_size % aggregation_factor != 0:
+            raise ValueError(
+                f"window_size ({window_size}) must be divisible by "
+                f"aggregation_factor ({aggregation_factor})."
+            )
+
+    if max_files is not None:
+        if isinstance(max_files, bool) or not isinstance(max_files, Integral):
+            raise TypeError("max_files must be a positive integer or None.")
+        if max_files <= 0:
+            raise ValueError("max_files must be greater than 0.")
 
     index_df = build_file_index(data_dir)
     if index_df.empty:
@@ -587,6 +453,13 @@ def build_dataloaders(
         index_df = index_df.sample(frac=1, random_state=RANDOM_SEED).reset_index(drop=True)
         index_df = index_df.head(max_files)
 
+    if len(index_df) < 4:
+        raise ValueError(
+            "At least 4 valid files are required to build non-empty train, "
+            "validation, and test splits with the two-stage split logic; "
+            f"got {len(index_df)}."
+        )
+
     train_index_df, val_index_df, test_index_df = split_file_index(index_df)
 
     if train_index_df.empty:
@@ -596,19 +469,7 @@ def build_dataloaders(
     if test_index_df.empty:
         raise ValueError("Test split is empty after file-level splitting.")
 
-    train_augmentation_cache_used = False
-    train_augmentation_cache_path = None
-    global_normalization_stats = None
-    normalization_fit_seconds = 0.0
     split_materialization_seconds = {}
-
-    if normalization_scope == "global_train":
-        fit_start = time.perf_counter()
-        global_normalization_stats = fit_global_normalization_stats(
-            train_index_df,
-            method=normalization_method,
-        )
-        normalization_fit_seconds = time.perf_counter() - fit_start
 
     train_materialize_start = time.perf_counter()
     X_train, y_train, train_kept, train_dropped, train_window_counts = (
@@ -616,11 +477,7 @@ def build_dataloaders(
             train_index_df,
             window_size=window_size,
             stride=stride,
-            include_tail=include_tail,
-            tail_mode=tail_mode,
-            normalization_scope=normalization_scope,
-            normalization_method=normalization_method,
-            global_normalization_stats=global_normalization_stats,
+            aggregation_factor=aggregation_factor,
         )
     )
     split_materialization_seconds["train"] = time.perf_counter() - train_materialize_start
@@ -629,28 +486,12 @@ def build_dataloaders(
         torch.from_numpy(y_train),
     )
 
-    if len(train_dataset) == 0:
-        raise ValueError(
-            "Training dataset contains zero samples after preprocessing/windowing."
-        )
-
-    augmentation_info = {
-        "smote_applied": False,
-        "noise_injection_applied": False,
-        "original_samples": len(X_train),
-        "augmented_samples": len(X_train),
-    }
-
     val_materialize_start = time.perf_counter()
     X_val, y_val, val_kept, val_dropped, val_window_counts = build_X_y_from_file_index(
         val_index_df,
         window_size=window_size,
         stride=stride,
-        include_tail=include_tail,
-        tail_mode=tail_mode,
-        normalization_scope=normalization_scope,
-        normalization_method=normalization_method,
-        global_normalization_stats=global_normalization_stats,
+        aggregation_factor=aggregation_factor,
     )
     split_materialization_seconds["val"] = time.perf_counter() - val_materialize_start
     val_dataset = TensorDataset(
@@ -663,11 +504,7 @@ def build_dataloaders(
         test_index_df,
         window_size=window_size,
         stride=stride,
-        include_tail=include_tail,
-        tail_mode=tail_mode,
-        normalization_scope=normalization_scope,
-        normalization_method=normalization_method,
-        global_normalization_stats=global_normalization_stats,
+        aggregation_factor=aggregation_factor,
     )
     split_materialization_seconds["test"] = time.perf_counter() - test_materialize_start
     test_dataset = TensorDataset(
@@ -675,6 +512,10 @@ def build_dataloaders(
         torch.from_numpy(y_test),
     )
 
+    if len(train_dataset) == 0:
+        raise ValueError(
+            "Training dataset contains zero samples after preprocessing/windowing."
+        )
     if len(val_dataset) == 0:
         raise ValueError(
             "Validation dataset contains zero windows after preprocessing/windowing."
@@ -683,6 +524,14 @@ def build_dataloaders(
         raise ValueError(
             "Test dataset contains zero windows after preprocessing/windowing."
         )
+
+    for split_name, file_index, kept, dropped in (
+        ("train", train_index_df, train_kept, train_dropped),
+        ("validation", val_index_df, val_kept, val_dropped),
+        ("test", test_index_df, test_kept, test_dropped),
+    ):
+        if len(file_index) != kept + dropped:
+            raise RuntimeError(f"{split_name} file counts do not match the split size.")
 
     # Shuffle training batches for better learning.
     # Validation and test remain ordered for stable evaluation.
@@ -715,10 +564,6 @@ def build_dataloaders(
         pin_memory=pin_memory,
         persistent_workers=persistent_workers,
     )
-
-    preprocessing_cache_enabled = True
-    preprocessing_cache_path = str(PREPROCESSED_CACHE_DIR)
-    train_augmented = False
 
     # Per-class window counts for distribution reporting.
     label_names_by_id = {v: k for k, v in LABEL_MAP.items()}
@@ -768,44 +613,32 @@ def build_dataloaders(
         "window_shape": [int(window_size), EXPECTED_NUM_COLUMNS],
         "window_size": int(window_size),
         "window_stride": int(stride),
+        "aggregation_factor": int(aggregation_factor),
+        "model_seq_len": int(
+            aggregated_seq_len(window_size, aggregation_factor)
+            if aggregation_factor > 1
+            else window_size
+        ),
         "batch_size": int(batch_size),
         "normalization": {
-            "scope": str(normalization_scope),
-            "method": str(normalization_method),
+            "scope": NORMALIZATION_SCOPE,
+            "method": NORMALIZATION_METHOD,
             "epsilon": float(EPSILON),
-            "global_stats": global_normalization_stats,
-            "global_stats_fitted_on": (
-                "train" if normalization_scope == "global_train" else None
-            ),
         },
-        "tail_window_info": {
-            "enabled": bool(include_tail),
-            "mode": tail_mode if include_tail else None,
+        "window_counts": {
             "train": train_window_counts,
             "val": val_window_counts,
             "test": test_window_counts,
-            "total_normal": (
-                train_window_counts["normal"]
-                + val_window_counts["normal"]
-                + test_window_counts["normal"]
-            ),
-            "total_tail": (
-                train_window_counts["tail"]
-                + val_window_counts["tail"]
-                + test_window_counts["tail"]
+            "total_normalized": (
+                train_window_counts["normalized"]
+                + val_window_counts["normalized"]
+                + test_window_counts["normalized"]
             ),
         },
         "train_class_window_counts": train_class_window_counts,
         "val_class_window_counts": val_class_window_counts,
         "test_class_window_counts": test_class_window_counts,
-        "train_augmented": train_augmented,
-        "augmentation": augmentation_info,
-        "train_augmentation_cache_used": train_augmentation_cache_used,
-        "train_augmentation_cache_path": train_augmentation_cache_path,
-        "preprocessing_cache_enabled": preprocessing_cache_enabled,
-        "preprocessing_cache_path": preprocessing_cache_path,
         "preprocessing_timing_seconds": {
-            "global_normalization_fit": float(normalization_fit_seconds),
             "split_materialization": {
                 key: float(value)
                 for key, value in split_materialization_seconds.items()
@@ -820,50 +653,3 @@ def build_dataloaders(
     }
 
     return train_loader, val_loader, test_loader, stats
-
-
-if __name__ == "__main__":
-    t0 = time.perf_counter()
-
-    train_loader, val_loader, test_loader, stats = build_dataloaders()
-
-    t1 = time.perf_counter()
-
-    train_iter = iter(train_loader)
-    x_batch, y_batch = next(train_iter)
-
-    t2 = time.perf_counter()
-
-    try:
-        _ = next(train_iter)
-        t3 = time.perf_counter()
-    except StopIteration:
-        t3 = t2
-
-    print("Stats:")
-    for key, value in stats.items():
-        print(f"{key}: {value}")
-
-    print("\nTiming:")
-    print(f"build_dataloaders_seconds: {t1 - t0:.3f}")
-    print(f"first_train_batch_seconds: {t2 - t1:.3f}")
-    print(f"second_train_batch_seconds: {t3 - t2:.10f}")
-    print(f"total_seconds: {t3 - t0:.3f}")
-
-    _save_direct_run_plots(
-        stats,
-        {
-            "build_dataloaders_seconds": t1 - t0,
-            "first_train_batch_seconds": t2 - t1,
-            "second_train_batch_seconds": t3 - t2,
-        },
-    )
-
-    print("\nNumber of batches:")
-    print("train:", len(train_loader))
-    print("val:", len(val_loader))
-    print("test:", len(test_loader))
-
-    print("\nBatch X shape:", x_batch.shape)
-    print("Batch y shape:", y_batch.shape)
-    print("Batch labels:", y_batch.tolist())
