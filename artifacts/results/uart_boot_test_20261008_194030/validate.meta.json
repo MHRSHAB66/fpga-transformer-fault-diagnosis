@@ -1,0 +1,20 @@
+﻿{
+    "port":  "COM6",
+    "baud":  115200,
+    "data_bits":  8,
+    "parity":  "none",
+    "stop_bits":  1,
+    "flow_control":  "none",
+    "out_file":  "g:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\uart_boot_test_20261008_194030\\validate.log",
+    "duration_seconds":  5,
+    "stop_pattern":  "",
+    "reboot_cmd":  "",
+    "opened_utc":  "2026-10-08T16:10:30.4207349Z",
+    "trigger_sent_utc":  null,
+    "trigger_exit_code":  null,
+    "first_byte_utc":  "2026-10-08T16:10:30.4469239Z",
+    "stop_match_utc":  null,
+    "closed_utc":  "2026-10-08T16:10:35.5181227Z",
+    "stopped_reason":  "timeout",
+    "total_bytes":  34
+}

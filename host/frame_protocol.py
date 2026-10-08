@@ -15,10 +15,7 @@ terminal before a binary protocol is ever considered (per the project plan).
 This module is the single source of truth for formatting and parsing so the
 mock source, the receiver and any tests agree byte-for-byte.
 """
-from __future__ import annotations
-
 import re
-from dataclasses import dataclass
 from typing import Optional
 
 # class_id -> label, mirrors src.config.LABEL_MAP (kept local so the PC tool has
@@ -34,17 +31,36 @@ _FRAME_RE = re.compile(
 )
 
 
-@dataclass
 class Frame:
-    frame_id: int
-    class_id: int
-    label: str
-    confidence: Optional[float]  # None when the core sent the NA sentinel
+    """One decoded wire frame.
+
+    Plain class (not ``dataclasses.dataclass``) so this module imports on Python
+    3.6 -- the MYIR Z-Turn PYNQ 2.4 image -- where ``dataclasses`` is not in the
+    stdlib. ``__eq__``/``__repr__`` reproduce the previous dataclass semantics.
+    """
+
+    __slots__ = ("frame_id", "class_id", "label", "confidence")
+
+    def __init__(self, frame_id, class_id, label, confidence):
+        self.frame_id = frame_id
+        self.class_id = class_id
+        self.label = label
+        self.confidence = confidence  # None when the core sent the NA sentinel
 
     def format(self) -> str:
         conf = "NA" if self.confidence is None else f"{self.confidence:.3f}"
         return (f"FRAME={self.frame_id},CLASS={self.class_id},"
                 f"LABEL={self.label},CONF={conf}\n")
+
+    def __eq__(self, other):
+        if not isinstance(other, Frame):
+            return NotImplemented
+        return (self.frame_id, self.class_id, self.label, self.confidence) == \
+               (other.frame_id, other.class_id, other.label, other.confidence)
+
+    def __repr__(self):
+        return (f"Frame(frame_id={self.frame_id!r}, class_id={self.class_id!r}, "
+                f"label={self.label!r}, confidence={self.confidence!r})")
 
 
 def format_frame(frame_id: int, class_id: int,
