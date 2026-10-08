@@ -1,0 +1,74 @@
+{
+  "test": "USB-UART boot capture + reboot of MYIR Z-Turn (XC7Z020, PynqLinux 2.4 / Ubuntu 18.04)",
+  "date_local": "2026-10-08",
+  "real_hardware": true,
+  "board_ip": "192.168.2.99",
+  "uart": {
+    "port": "COM6",
+    "adapter": "Silicon Labs CP210x USB to UART Bridge",
+    "baud": 115200,
+    "data_bits": 8,
+    "parity": "none",
+    "stop_bits": 1,
+    "flow_control": "none",
+    "capture_tool": "tools/uart_boot_capture.ps1",
+    "console_device": "ttyPS0",
+    "autologin": "xilinx (serial getty autologin)"
+  },
+  "capture_validation": {
+    "pre_reboot_prompt_seen": true,
+    "note": "validate.log captured live 'xilinx@pynq:~$' prompt before any reboot; capture path proven."
+  },
+  "reboot": {
+    "method": "single SSH command: sync; reboot (root@192.168.2.99 via key id_zturn)",
+    "issued_once": true,
+    "trigger_delivered": true,
+    "trigger_delivery_evidence": "shutdown sequence appeared on UART ~8 s after trigger; post-boot uptime = 1 min",
+    "reboot_cmd_exit_code_recorded": -1,
+    "reboot_cmd_exit_code_note": "ssh connection drops when the board reboots; the -1 is the dropped session, not a failure to reboot."
+  },
+  "timing": {
+    "trigger_sent_utc": "2026-10-08T16:12:00.707Z",
+    "first_uart_byte_utc": "2026-10-08T16:12:08.544Z",
+    "login_prompt_utc": "2026-10-08T16:12:46.390Z",
+    "reboot_command_to_login_prompt_seconds": 45.68,
+    "shutdown_to_first_byte_seconds": 7.84,
+    "cold_boot_to_login_seconds_approx": 37.8,
+    "total_captured_bytes": 30593
+  },
+  "boot_checklist": {
+    "fsbl": "not printed to this UART (FSBL stage silent); first PS output is U-Boot",
+    "u_boot": "U-Boot 2018.01 (Nov 13 2019), Board Xilinx Zynq, Silicon v3.1, DRAM 1 GiB (ECC disabled)",
+    "qspi_flash": "s25fl128s detected (16 MiB), 4 MTD partitions (boot/bootenv/kernel/spare)",
+    "sd_detected": "mmc@e0100000: SD32G 29 GiB, SD v3.0, High Capacity",
+    "kernel_load": "image.ub FIT read (4173540 B), kernel@0 hash OK, Linux 4.14.0-xilinx",
+    "device_tree_load": "fdt@0 (14904 B) hash OK, 'xlnx,zynq-7000'; zynq device is 7z020",
+    "rootfs_mount": "EXT4 /dev/mmcblk0p2 mounted; VFS mounted root (ext4) on 179:2",
+    "pynqlinux_up": "systemd 237; 'Welcome to PynqLinux, based on Ubuntu 18.04!'",
+    "login_prompt": "'PYNQ Linux ... pynq ttyPS0' -> 'pynq login: xilinx (automatic login)'"
+  },
+  "anomalies_non_fatal": [
+    "U-Boot: '*** Warning - bad CRC, using default environment' (QSPI env not written; cosmetic, boots from default env)",
+    "kernel: 'genirq: Flags mismatch irq 47' + 'uio_pdrv_genirq uio@0: unable to register uio device ... -16' (no PL bitstream at boot; PYNQ loads the overlay at runtime, harmless for this flow)",
+    "kernel: 'hctosys: unable to open rtc device (rtc0)' and 'System time before build time' (no battery-backed RTC; expected)",
+    "systemd: \"Failed to insert module 'autofs4'\" (module absent; cosmetic)"
+  ],
+  "errors_fatal": {
+    "kernel_panic": false,
+    "filesystem_error": false,
+    "failed_critical_service": false,
+    "notes": "No panic, no ext4 errors, no failed critical units observed through login."
+  },
+  "connectivity_after_boot": {
+    "ping": "3/3 replies, 0% loss (avg ~0 ms)",
+    "ssh": "connected with key id_zturn; uptime 1 min; /proc/uptime ~70 s (confirms fresh reboot)"
+  },
+  "files": {
+    "boot_uart_log": "boot_uart.log",
+    "boot_capture_meta": "boot_capture.meta.json",
+    "validation_log": "validate.log",
+    "validation_meta": "validate.meta.json"
+  },
+  "second_reboot_performed": false,
+  "safety": "No SD flash/format; no boot/network config changed. Existing fpga_fulltest_* artifacts untouched."
+}

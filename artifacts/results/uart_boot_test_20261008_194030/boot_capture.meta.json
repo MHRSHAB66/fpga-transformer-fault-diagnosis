@@ -1,0 +1,20 @@
+﻿{
+    "port":  "COM6",
+    "baud":  115200,
+    "data_bits":  8,
+    "parity":  "none",
+    "stop_bits":  1,
+    "flow_control":  "none",
+    "out_file":  "g:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\uart_boot_test_20261008_194030\\boot_uart.log",
+    "duration_seconds":  220,
+    "stop_pattern":  "login:|xilinx@pynq",
+    "reboot_cmd":  "ssh -i C:\\Users\\mine_pc\\.ssh\\id_zturn -o StrictHostKeyChecking=no -o ConnectTimeout=8 root@192.168.2.99 \"sync; reboot\"",
+    "opened_utc":  "2026-10-08T16:11:57.6584262Z",
+    "trigger_sent_utc":  "2026-10-08T16:12:00.7075859Z",
+    "trigger_exit_code":  -1,
+    "first_byte_utc":  "2026-10-08T16:12:08.5448418Z",
+    "stop_match_utc":  "2026-10-08T16:12:46.3904314Z",
+    "closed_utc":  "2026-10-08T16:12:48.5275641Z",
+    "stopped_reason":  "stop_pattern",
+    "total_bytes":  30593
+}
