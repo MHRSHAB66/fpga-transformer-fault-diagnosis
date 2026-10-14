@@ -3,6 +3,13 @@
 *Real-Time Machinery Condition Monitoring with a Transformer on FPGA*  
 Generated 2026-09-09 -- auto-assembled by `src/reporting/generate_final_report.py` from committed artifacts.
 
+> **⚠ Superseded snapshot (2026-09-09).** This auto-generated report describes the
+> earlier **SEQ=1024** F_1layer variant (int10 full-test 97.11 %) *before* the
+> physical hardware work. The **deployed system is SEQ=256 INT10**, physically
+> validated on a MYIR Z-Turn XC7Z020: **full-test accuracy 97.7684 %, macro-F1
+> 95.6539 %**; live multiclass 95.0 %. For the canonical deployed-system numbers and
+> the live demo flow, see **`docs/demo_runbook.md`** and **`docs/project_status.md`**.
+
 ## 1. Model & data
 
 - **Deployed model:** F_1layer (1 encoder layer, d_model=32, 4 heads, ffn=64, 9,492 params)
