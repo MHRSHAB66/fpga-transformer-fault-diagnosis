@@ -2,7 +2,7 @@
 
 **Project:** Real-Time Machinery Condition Monitoring Using a Transformer Neural Network on FPGA  
 **Student:** Mehrdad Sheikh Abbasi, B.Sc., Amirkabir University of Technology  
-**Last updated:** 2026-09-30 (SEQ=256 INT10 DMA-integrated system; provisional XC7Z020)
+**Last updated:** 2026-10-08 (physically validated on real MYIR Z-Turn XC7Z020; tag `fpga-demo-validated-20261008`). Demo runbook: `docs/demo_runbook.md`.
 
 ---
 
@@ -18,11 +18,11 @@
 | 5 | Clean evaluation, metrics export, artifacts | **COMPLETE** |
 | 6 | Quantization & fixed-point preparation | **COMPLETE** (int10 selected) |
 | 7 | Hardware specification & golden vectors | **COMPLETE** (F@int10 export, verify 16/16) |
-| 8 | FPGA inference core | **CSim + C-synth + DMA-integrated post-route + bitstream DONE** on provisional/generic XC7Z020 — physical board pending |
+| 8 | FPGA inference core | **COMPLETE — physically validated** on real MYIR Z-Turn XC7Z020 (full-test 95,404 windows + live multiclass) |
 | 9 | Sensor / lab input path | TODO (optional) |
-| 10 | FPGA-to-PC communication (UART) | **SOFTWARE DONE** (host/ receiver, tested) — on-board link pending |
-| 11 | PC-side display UI | **COMPLETE** (host/fault_monitor.py) |
-| 12 | Final integration, validation, demo | **IN PROGRESS** — provisional HW numbers available (`docs/reports/hls_seq256_int10_results.md`); physical-board demo pending |
+| 10 | FPGA-to-PC communication | **COMPLETE** — real USB-UART boot capture (COM6) + live results over SSH/Ethernet on the board |
+| 11 | PC-side display UI | **COMPLETE** — Replay + Live FPGA viewer (`host/fpga_result_viewer.py`) |
+| 12 | Final integration, validation, demo | **COMPLETE (hardware-validated)** — physical full-test + live multiclass + UART boot; demo flow in `docs/demo_runbook.md` |
 
 ---
 
@@ -39,15 +39,23 @@ See `docs/final_software_result.md`.
 
 For the FPGA path a smaller architecture was selected to reduce the eventual
 resource and latency cost: **F_1layer** (1 encoder layer, d_model=32, 4 heads,
-ffn=64, 9,492 params). The final FPGA board/device is **not selected yet**; the
-XC7Z020 numbers below are a **provisional/generic** configuration for evidence.
+ffn=64, 9,492 params). The deployment board is the **MYIR Z-Turn XC7Z020** (PYNQ
+2.4 / Python 3.6); the system has been **physically validated** on it (below).
 
 **Current hardware path — SEQ=256 INT10 (aggregated ingress):** the acquisition
 window stays 1024×8; the hardware IP quantizes to INT10 and performs an exact 4:1
 integer aggregation (1024→256 tokens) internally.
 
-- Exact-integer-ingress full-test accuracy: **97.74%** (93,244/95,404),
-  macro-F1 **95.63%** (`artifacts/experiments/transformer_f1_seq256_pool4/int10_ingress_local/combined.json`).
+- **Physical FPGA full-test (deployed system, demo headline):** accuracy
+  **97.7684%** (93,275/95,404), macro-F1 **95.6539%** (macro-P 95.9332%, macro-R
+  95.4233%) on the real board, all 95,404 windows
+  (`artifacts/results/fpga_fulltest_20261008_141335/fpga_fulltest_metrics.json`).
+- Software INT10 reference: **97.7359%** (93,244/95,404), macro-F1 **95.6282%**;
+  the FPGA matches it within **+0.03 pp** (board marginally higher)
+  (`artifacts/experiments/transformer_f1_seq256_pool4/int10_ingress_local/combined.json`).
+- Live multiclass (120-window class-balanced, real board): accuracy **95.0%**,
+  macro-F1 **95.0%**, **120/120** match the recorded FPGA predictions, latency mean
+  **16.15 ms** (`artifacts/results/fpga_live_multiclass_20261008_230015/`).
 - Vitis HLS CSim: **16/16 exact**; DMA-integrated Vivado post-route timing met
   (WNS +0.036 ns), 210/220 DSP, 31,687 LUT, bitstream/HWH/XSA generated. See
   `docs/reports/hls_seq256_int10_results.md` and
@@ -61,8 +69,10 @@ integer aggregation (1024→256 tokens) internally.
   imbalance class (`kaggle/sweep_multibit/`).
 - Bit-exact HLS export verified 16/16 (`hls/f1_int10/verify_export.py`).
 
-Consolidated numbers: `docs/final_report.md` (regen:
-`python -m src.reporting.generate_final_report`).
+Consolidated numbers: **`docs/demo_runbook.md` §1** (canonical, deployed SEQ=256
+system). Note: `docs/final_report.md` is an older 2026-09-09 auto-snapshot of the
+**SEQ=1024** variant (97.11% int10, hardware "TBD") and is superseded for the
+deployed-system numbers by the runbook.
 
 ---
 
@@ -84,9 +94,17 @@ Consolidated numbers: `docs/final_report.md` (regen:
   bitstream/HWH/XSA generated. Package:
   `artifacts/results/seq256_dma_system_dsp_margin_z7020/`.
 
-**Still pending (physical board only):**
-- On-board bitstream loading, real DMA transfer, live UART link demo.
-- Board/device selection (XC7Z020 is provisional/generic, not confirmed).
+**Done (physical board, 2026-10-08, tag `fpga-demo-validated-20261008`):**
+- On-board bitstream loading + real AXI-DMA transfer: full-test 95,404 windows and
+  120-window live multiclass (all four classes), 120/120 match recorded predictions.
+- Real USB-UART boot capture (COM6) and live results over SSH/Ethernet.
+- Board confirmed: MYIR Z-Turn XC7Z020 (dma16 deployment, 64 KB DMA transfer).
+
+**Still pending / future work:**
+- End-to-end real-time: the core is capable (+26.8%), but the SSH/gzip demo path is
+  ~5% below the 48.83 windows/s requirement — a direct sensor/DDR→AXI-DMA feed would
+  close it (see `docs/demo_runbook.md` §7).
+- Hardware confidence/softmax output (currently CONF=N/A; the class output is valid).
 - Optional live sensor input path (Stage 9).
 
 Report the provisional post-route resource/timing numbers ONLY with the

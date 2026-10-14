@@ -100,8 +100,12 @@ PC (Windows)                         MYIR Z-Turn XC7Z020 (PYNQ 2.4, 192.168.2.99
 and can trigger a single `sync; reboot` over SSH, saving the full boot log +
 timing. Evidence: `../artifacts/results/uart_boot_test_<ts>/`.
 
-## Throughput / latency numbers (what each one means)
-These are measured, from different points in the stack — do not conflate them:
+## Accuracy & throughput numbers (what each one means)
+Deployed FPGA full-test (95,404 windows): **accuracy 97.7684 %, macro-F1 95.6539 %**;
+live multiclass (120-window class-balanced): **95.0 % / 95.0 %**, 120/120 match the
+recorded FPGA predictions. Canonical table + demo flow: `../docs/demo_runbook.md`.
+The throughput/latency figures below are measured from different points in the stack
+— do not conflate them:
 
 | number | ~value | what it measures |
 |--------|--------|------------------|
