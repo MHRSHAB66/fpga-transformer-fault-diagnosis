@@ -34,9 +34,12 @@ import statistics
 import subprocess
 import threading
 import time
+import uuid
+import shlex
 from datetime import datetime
 from typing import Dict, Iterator, List, Optional
 
+from host.confidence import confidence_from_logits, display_confidence
 from host.frame_protocol import LABELS, format_frame
 
 # -- board defaults (match the proven full-test deployment) -------------------
@@ -46,12 +49,14 @@ SSH_KEY = os.path.join(os.path.expanduser("~"), ".ssh", "id_zturn")
 # The DMA-fixed deployment (C_SG_LENGTH_WIDTH=16 -> 64KB max) is the one that
 # actually transfers a full 32768-byte window in a single MM2S; it backed the
 # proven 95404-window full test. The earlier _114947 build is capped at 16KB.
-DEP_DIR = "/home/xilinx/deployments/seq256_z7020_pynq_dma16_py36_20261008_131446"
+# Versioned 2026-10-22 overlay: class register verified on 40 golden vectors.
+# The earlier dma16 deployment remains available on the board.
+DEP_DIR = "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f"
 BOARD_WORK = "/home/xilinx/fpga_fulltest_20261008"
 BIT = DEP_DIR + "/overlay/design_1_wrapper.bit"
 IN_GZ = BOARD_WORK + "/fpga_testset_in.i32.gz"
 RUNNER_REMOTE = "/home/xilinx/fpga_live_runner.py"
-MONITOR_REMOTE = "/tmp/temp_monitor_clean.sh"
+MONITOR_REMOTE = None  # no legacy monitor can substitute for the independent guard
 SEQ, CH = 1024, 8
 
 _REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
@@ -75,7 +80,7 @@ class LiveFpgaClient:
                  dep_dir=DEP_DIR, bit=BIT, in_gz=IN_GZ, n=150,
                  runner_remote=RUNNER_REMOTE, monitor_remote=MONITOR_REMOTE,
                  driver_subdir="driver", line_timeout=45.0, indices=None,
-                 indices_remote="/home/xilinx/fpga_live_indices.txt"):
+                 indices_remote=None):
         self.host, self.user, self.key, self.port = host, user, key, port
         self.dep_dir, self.bit, self.in_gz, self.n = dep_dir, bit, in_gz, n
         self.driver_subdir = driver_subdir
@@ -86,9 +91,10 @@ class LiveFpgaClient:
         self.indices = list(indices) if indices is not None else None
         if self.indices is not None:
             self.n = len(self.indices)
-        self.indices_remote = indices_remote
+        self.indices_remote = indices_remote or (os.path.dirname(runner_remote).replace('\\', '/') + '/indices_' + uuid.uuid4().hex + '.txt')
         self.proc: Optional[subprocess.Popen] = None
         self._stop = False
+        self._end_lock = threading.Lock()
 
     def push_indices(self) -> None:
         """Write the index list to the board (one per line) before a sampled run."""
@@ -119,21 +125,42 @@ class LiveFpgaClient:
 
     # -- stream -------------------------------------------------------------
     def _remote_cmd(self) -> str:
-        """Single clean foreground command: run the live DMA runner and stream
-        its per-window lines back over this SSH channel. The runner samples die
-        temperature in its OWN thread (TempMonitor), so no external monitor
-        process is needed and nothing holds the SSH pipe open after it exits."""
+        """Run the workload with an independent temperature guard."""
         drv = "%s/%s" % (self.dep_dir, self.driver_subdir)
-        base = ("cd %s && PYTHONPATH=%s python3.6 -u %s %s %s %d %d %d"
-                % (drv, drv, self.runner_remote, self.bit, self.in_gz, SEQ, CH, self.n))
+        q = shlex.quote
+        base = ("PYTHONPATH=%s python3.6 -u %s %s %s %d %d %d"
+                % (q(drv), q(self.runner_remote), q(self.bit), q(self.in_gz), SEQ, CH, self.n))
         if self.indices is not None:
-            base += " - %s" % self.indices_remote   # out_pred="-" (none) + indices file
-        return base
+            base += " - %s" % q(self.indices_remote)
+        log = os.path.dirname(self.runner_remote) + '/guard.log'
+        return ("cd %s || exit 1; test -r %s || { echo 'ABORT guard missing'; exit 1; }; "
+                "%s & P=$!; bash %s $P %s 75 1 & G=$!; "
+                "while kill -0 $P 2>/dev/null; do "
+                "if ! kill -0 $G 2>/dev/null; then kill -TERM $P 2>/dev/null; "
+                "wait $P; wait $G; echo 'ABORT independent guard exited'; exit 1; fi; sleep 1; done; "
+                "wait $P; R=$?; wait $G; S=$?; "
+                "echo GUARD_RC=$S; if [ $R -ne 0 ] || [ $S -ne 0 ]; then exit 1; fi"
+                % (q(drv), q(self.monitor_remote), base, q(self.monitor_remote), q(log)))
 
     def stream(self) -> Iterator[Dict]:
-        self._stop = False
+        # _stop is NOT reset here: a Stop issued while the client was still being
+        # set up (push/preflight) must prevent the launch, not be forgotten.
+        if self._stop:
+            yield {"type": "status", "msg": "stop requested before launch; nothing started"}
+            return
         if not self.check_connection():
             yield {"type": "error", "msg": "SSH connect failed to %s@%s" % (self.user, self.host)}
+            return
+        from host.live_preflight import run_probe, evaluate, all_ok
+        checks = evaluate(run_probe(host=self.host, user=self.user, key=self.key,
+                                    port=self.port, dep_dir=self.dep_dir,
+                                    bit=self.bit, in_gz=self.in_gz), self.n)
+        if not all_ok(checks):
+            yield {"type": "error", "msg": "preflight failed: " +
+                   "; ".join(c['check'] + ': ' + c['detail'] for c in checks if not c['ok'])}
+            return
+        if not self.monitor_remote:
+            yield {"type": "error", "msg": "no independent temperature guard configured"}
             return
         if self.indices is not None:
             try:
@@ -146,6 +173,9 @@ class LiveFpgaClient:
                "msg": "connected to %s; starting temperature monitor + live runner (N=%d)"
                       % (self.host, self.n)}
 
+        if self._stop:
+            yield {"type": "status", "msg": "stop requested before launch; nothing started"}
+            return
         argv = _ssh_base(self.host, self.user, self.key, self.port, timeout=15) + [self._remote_cmd()]
         self.proc = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                      text=True, bufsize=1,
@@ -187,24 +217,54 @@ class LiveFpgaClient:
                 break
             time.sleep(0.05)
 
+        if self.proc.poll() is None:
+            # stop / timeout / reader ended early: never leave this run's
+            # workload behind on the board (idempotent with stop()).
+            self._end_remote()
         rc = self.proc.poll()
+        if rc not in (None, 0) and not self._stop:
+            yield {"type": "error", "msg": "runner or independent guard failed (rc=%s)" % rc}
         yield {"type": "status", "msg": "runner exited rc=%s" % rc}
 
+    def _kill_pattern(self) -> str:
+        """pkill -f pattern for THIS run's runner only (its unique run dir)."""
+        # Anchored on the python command line, so it matches the runner (and a
+        # forked reader child) but NOT the remote `bash -c` wrapper, whose command
+        # line also contains the runner path; killing that wrapper would drop the
+        # SSH session before it reports GUARD_RC.
+        d = os.path.dirname(self.runner_remote).replace("\\", "/")
+        base = "[f]pga_live_runner[.]py" if d in ("", "/home/xilinx") else d + "/[f]pga_live_runner[.]py"
+        return "^python3[.]6 -u " + base
+
     def stop(self) -> None:
+        """Request stop. Safe before launch (prevents it), during, and after."""
         self._stop = True
-        try:
-            # ask the board to end the independent monitor cleanly and kill runner
-            subprocess.run(_ssh_base(self.host, self.user, self.key, self.port) +
-                           ['pkill -f "[f]pga_live_runner.py"; true'],
-                           capture_output=True, text=True, timeout=12,
-                           creationflags=(0x08000000 if os.name == "nt" else 0))
-        except Exception:
-            pass
-        if self.proc and self.proc.poll() is None:
-            try:
-                self.proc.terminate()
-            except Exception:
-                pass
+        if self.proc is not None:
+            self._end_remote()
+
+    def _end_remote(self, grace_s: float = 6.0) -> None:
+        """Kill this run's runner on the board, let the SSH wrapper finish
+        (it waits for the guard and prints GUARD_RC), then terminate the local
+        SSH process only if it is still alive. Idempotent."""
+        with self._end_lock:
+            cf = (0x08000000 if os.name == "nt" else 0)
+            if self.proc is not None and self.proc.poll() is None:
+                try:
+                    # The guard exits when the runner PID is gone (polls 1 s).
+                    subprocess.run(_ssh_base(self.host, self.user, self.key, self.port) +
+                                   ["pkill -f %s; true" % shlex.quote(self._kill_pattern())],
+                                   capture_output=True, text=True, timeout=12, creationflags=cf)
+                except Exception:
+                    pass
+                try:
+                    self.proc.wait(timeout=grace_s)
+                except Exception:
+                    pass
+            if self.proc is not None and self.proc.poll() is None:
+                try:
+                    self.proc.terminate()
+                except Exception:
+                    pass
 
 
 # ---------------------------------------------------------------------------
@@ -219,15 +279,30 @@ def parse_line(line: str) -> Optional[Dict]:
         idx, cls = int(kv["idx"]), int(kv["cls"])
         temp = None if kv.get("temp_c", "NA") == "NA" else float(kv["temp_c"])
         label = LABELS.get(cls, "?")
+        # Optional trailing `logits=a,b,c,d` (newer runner): confidence is the
+        # softmax of the FPGA's own logits (host.confidence); absent -> NA.
+        # CONF in the frame = calibrated value when the frozen calibration
+        # applies to the deployed model (see host.confidence), else uncalibrated;
+        # conf_kind says which. No logits -> NA (never from the class alone).
+        logits, conf, conf_uncal, conf_kind = None, None, None, None
+        if "logits" in kv:
+            logits = [int(v) for v in kv["logits"].split(",")]
+            conf_uncal = confidence_from_logits(logits, cls)
+            conf, conf_kind = display_confidence(logits, cls)
         return {"type": "result", "idx": idx, "cls": cls, "label": label,
-                "frame": format_frame(idx, cls, None).strip(),
-                "lat_ms": float(kv["lat_ms"]), "temp_c": temp}
+                "frame": format_frame(idx, cls, conf).strip(),
+                "lat_ms": float(kv["lat_ms"]), "temp_c": temp,
+                "logits": logits, "conf": conf, "conf_uncalibrated": conf_uncal,
+                "conf_kind": conf_kind}
     if s.startswith("TEMP_START="):
         v = s.split("=", 1)[1]
         return {"type": "temp_start", "temp_c": None if v == "None" else float(v)}
     if s.startswith("META "):
         kv = _kv(s[5:])
-        return {"type": "meta", "n": int(kv["n"]), "seq": int(kv["seq"]), "ch": int(kv["ch"])}
+        ev = {"type": "meta", "n": int(kv["n"]), "seq": int(kv["seq"]), "ch": int(kv["ch"])}
+        if "class_source" in kv:          # newer runner only
+            ev["class_source"] = kv["class_source"]
+        return ev
     if s.startswith("SUMMARY "):
         kv = _kv(s[8:])
         return {"type": "summary", "executed": int(kv["executed"]),
@@ -265,16 +340,22 @@ def _load_int_file(path, limit):
 
 
 def push_board_files(host, user, key, port):
-    """Copy the runner + monitor to the board (idempotent)."""
+    """Copy files into a new, unique board directory; never overwrite a run."""
     runner = os.path.join(_REPO, "tools", "board", "fpga_live_runner.py")
-    monitor = os.path.join(_REPO, "tools", "board", "temp_monitor_clean.sh")
+    monitor = os.path.join(_REPO, "tools", "board", "temp_guard.sh")
+    remote_dir = '/home/xilinx/live_runs/' + uuid.uuid4().hex
+    runner_remote = remote_dir + '/fpga_live_runner.py'
+    monitor_remote = remote_dir + '/temp_guard.sh'
     scp = ["scp", "-o", "StrictHostKeyChecking=no", "-o", "BatchMode=yes",
            "-P", str(port), "-i", key]
     cf = (0x08000000 if os.name == "nt" else 0)
-    subprocess.run(scp + [runner, "%s@%s:%s" % (user, host, RUNNER_REMOTE)],
+    subprocess.run(_ssh_base(host, user, key, port) + ['mkdir -p /home/xilinx/live_runs && mkdir ' + shlex.quote(remote_dir)],
                    check=True, capture_output=True, text=True, creationflags=cf)
-    subprocess.run(scp + [monitor, "%s@%s:%s" % (user, host, MONITOR_REMOTE)],
+    subprocess.run(scp + [runner, "%s@%s:%s" % (user, host, runner_remote)],
                    check=True, capture_output=True, text=True, creationflags=cf)
+    subprocess.run(scp + [monitor, "%s@%s:%s" % (user, host, monitor_remote)],
+                   check=True, capture_output=True, text=True, creationflags=cf)
+    return runner_remote, monitor_remote
 
 
 def main(argv=None):
@@ -303,17 +384,22 @@ def main(argv=None):
                              labels=all_labels)
         print("sample-mode=%s -> %d indices (e.g. %s...)" % (args.sample_mode, len(indices), indices[:8]))
 
+    runner_remote, monitor_remote = RUNNER_REMOTE, MONITOR_REMOTE
     if not args.no_push:
         print("pushing runner + monitor to board...")
-        push_board_files(args.host, args.user, args.key, args.port)
+        runner_remote, monitor_remote = push_board_files(args.host, args.user, args.key, args.port)
+    else:
+        raise LiveError('--no-push is unavailable: a versioned independent guard is required')
 
     client = LiveFpgaClient(host=args.host, user=args.user, key=args.key,
-                            port=args.port, n=args.n, indices=indices)
+                            port=args.port, n=args.n, indices=indices,
+                            runner_remote=runner_remote, monitor_remote=monitor_remote)
     results: List[Dict] = []
     summary: Optional[Dict] = None
     temp_start = None
     errors = []
     t0 = None
+    class_source = None
     for ev in client.stream():
         t = ev["type"]
         if t == "status":
@@ -323,6 +409,7 @@ def main(argv=None):
             print("[temp_start]", temp_start)
         elif t == "meta":
             print("[meta]", ev)
+            class_source = ev.get("class_source")
             t0 = time.monotonic()
         elif t == "result":
             ev["elapsed_s"] = round(time.monotonic() - t0, 3) if t0 else None
@@ -343,7 +430,7 @@ def main(argv=None):
         _REPO, "artifacts", "results", "fpga_live_test_" + datetime.now().strftime("%Y%m%d_%H%M%S"))
     os.makedirs(out_dir, exist_ok=True)
     evidence = _build_evidence(args, results, summary, temp_start, errors, indices,
-                               all_labels, all_recorded, out_dir)
+                               all_labels, all_recorded, out_dir, class_source=class_source)
     aborted = (summary or {}).get("aborted")
     print("\n==== LIVE FPGA EVIDENCE ====")
     print("requested/executed  : %d / %d" % (args.n, evidence["executed_windows"]))
@@ -375,7 +462,7 @@ def _file_sha256(path):
 
 
 def _build_evidence(args, results, summary, temp_start, errors, indices,
-                    all_labels, all_recorded, out_dir):
+                    all_labels, all_recorded, out_dir, class_source=None):
     """Compute the full per-frame + summary evidence and write files."""
     from host.replay_data import MetricsAccumulator  # reuse the scoring layer
 
@@ -405,7 +492,11 @@ def _build_evidence(args, results, summary, temp_start, errors, indices,
             "result": "CORRECT" if is_correct else "WRONG",
             "match_recorded_fpga_pred": is_match,
             "latency_ms": r["lat_ms"], "temperature_c": r["temp_c"],
-            "elapsed_s": r.get("elapsed_s"), "conf": "NA",
+            "elapsed_s": r.get("elapsed_s"),
+            "conf": "NA" if r.get("conf") is None else round(r["conf"], 6),
+            "conf_kind": r.get("conf_kind"),
+            "conf_uncalibrated": None if r.get("conf_uncalibrated") is None else round(r["conf_uncalibrated"], 6),
+            "logits": r.get("logits"),
         })
     m = acc.finalize() if executed else {}
     lats = [r["lat_ms"] for r in results]
@@ -415,11 +506,12 @@ def _build_evidence(args, results, summary, temp_start, errors, indices,
         return round(statistics.quantiles(v, n=100)[q - 1], 3) if len(v) >= 2 else (v[0] if v else None)
 
     bundle = os.path.join(_REPO, "artifacts", "deploy",
-                          "seq256_z7020_pynq_dma16_py36_20261008", "overlay")
+                          "seq256_argmax_z7020_20261022", "overlay")
     evidence = {
         "mode": "LIVE FPGA (real on-board AXI-DMA inference over SSH/Ethernet)",
         "real_hardware": True,
         "classification_on": "FPGA transformer_top core (PC performs no inference)",
+        "class_source_reported_by_board": class_source,
         "timestamp": datetime.now().isoformat(),
         "board": {"host": args.host, "deployment": DEP_DIR,
                   "bitstream_on_board": BIT, "input_on_board": IN_GZ,

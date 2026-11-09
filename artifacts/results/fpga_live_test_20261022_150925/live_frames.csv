@@ -1,0 +1,5 @@
+frame,true_class,true_label,pred_class,label,result,match_recorded,latency_ms,temp_c,elapsed_s
+0,3,bearing_fault,3,bearing_fault,CORRECT,True,16.060,49.339,0.0
+1,3,bearing_fault,3,bearing_fault,CORRECT,True,15.910,49.339,0.0
+2,3,bearing_fault,3,bearing_fault,CORRECT,True,15.849,49.339,0.047
+3,3,bearing_fault,3,bearing_fault,CORRECT,True,15.867,49.339,0.047

@@ -1,0 +1,107 @@
+{
+  "mode": "LIVE FPGA (real on-board AXI-DMA inference over SSH/Ethernet)",
+  "real_hardware": true,
+  "classification_on": "FPGA transformer_top core (PC performs no inference)",
+  "timestamp": "2026-10-22T15:09:25.698978",
+  "board": {
+    "host": "192.168.2.99",
+    "deployment": "/home/xilinx/deployments/seq256_z7020_pynq_dma16_py36_20261008_131446",
+    "bitstream_on_board": "/home/xilinx/deployments/seq256_z7020_pynq_dma16_py36_20261008_131446/overlay/design_1_wrapper.bit",
+    "input_on_board": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+    "bit_sha256_local_bundle": "43e43370b538fdf5097d36eb96645632b2276640ea80069fd72f5cb27800d2c2",
+    "hwh_sha256_local_bundle": "74a12b21400a975618a75fb07558e73db77d942b51cf36b8b19b785d5c250706"
+  },
+  "sample_mode": "sequential",
+  "sampling_indices": "sequential",
+  "requested_windows": 4,
+  "executed_windows": 4,
+  "aborted": null,
+  "true_class_counts": {
+    "normal": 0,
+    "imbalance": 0,
+    "misalignment": 0,
+    "bearing_fault": 4
+  },
+  "predicted_class_counts": {
+    "normal": 0,
+    "imbalance": 0,
+    "misalignment": 0,
+    "bearing_fault": 4
+  },
+  "correct_vs_ground_truth": 4,
+  "accuracy_vs_ground_truth": 1.0,
+  "macro_precision": 0.25,
+  "macro_recall": 0.25,
+  "macro_f1": 0.25,
+  "per_class_precision": [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  ],
+  "per_class_recall": [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  ],
+  "per_class_f1": [
+    0.0,
+    0.0,
+    0.0,
+    1.0
+  ],
+  "confusion_matrix": [
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      4
+    ]
+  ],
+  "match_vs_recorded_fpga_pred": 4,
+  "match_rate_vs_recorded": 1.0,
+  "latency_ms": {
+    "min": 15.849,
+    "mean": 15.921,
+    "p50": 15.888,
+    "p95": 16.172,
+    "max": 16.06
+  },
+  "throughput_inferences_per_second": 58.744,
+  "temperature_c": {
+    "start": 49.955,
+    "min": 49.339,
+    "max": 49.339,
+    "end": "49.339"
+  },
+  "errors": [],
+  "summary_line": {
+    "type": "summary",
+    "executed": 4,
+    "aborted": null,
+    "wall_s": 0.068,
+    "throughput": 58.744,
+    "temp_start": "49.955",
+    "temp_max": "49.955",
+    "temp_end": "49.339"
+  }
+}
