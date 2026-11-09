@@ -1,0 +1,53 @@
+{
+  "source": "artifacts\\results\\fpga_timing_20261023\\A_legacy_unpaced_full\\remote\\workload.out",
+  "windows": 95404,
+  "warmup_excluded": 100,
+  "indices_as_expected": true,
+  "match_recorded_fpga_pred": 95404,
+  "correct_vs_labels": 93275,
+  "deadline_ms": 20.48,
+  "summary_line": "SUMMARY executed=95404 aborted=None wall_s=1732.232 throughput=55.076 temp_start=49.093 temp_max=50.078 temp_end=48.601 prefetch=0 underruns=0 qmin=None pace_hz=0 late_release=0",
+  "duration_s": 1732.211,
+  "rate_inf_s_after_warmup": 55.072,
+  "output_interval_ms": {
+    "n": 95303,
+    "mean": 18.158,
+    "p50": 16.322,
+    "p95": 16.828,
+    "p99": 19.96,
+    "p99.9": 635.839,
+    "max": 1502.573,
+    "over_20.48ms": 871,
+    "over_50ms": 396,
+    "over_100ms": 309
+  },
+  "output_interval_ms_warmup": {
+    "n": 100,
+    "mean": 17.081,
+    "p50": 16.555,
+    "p95": 18.552,
+    "p99": 25.116,
+    "p99.9": 34.956,
+    "max": 36.049,
+    "over_20.48ms": 4,
+    "over_50ms": 0,
+    "over_100ms": 0
+  },
+  "lat_ms_field": {
+    "n": 95304,
+    "mean": 17.14,
+    "p50": 15.897,
+    "p95": 16.216,
+    "p99": 18.011,
+    "p99.9": 575.684,
+    "max": 1502.163,
+    "over_20.48ms": 537,
+    "over_50ms": 252,
+    "over_100ms": 206
+  },
+  "resp_ms_paced": null,
+  "queue_depth": null,
+  "queue_empty_at_dequeue": null,
+  "queue_wait_ms": null,
+  "producer_read_ms": null
+}

@@ -1,0 +1,19 @@
+4e2e63f21bc785bc6d8677f1ced5fd565920b3d1c71c52406dadba3cdc5cb0ef  tools/board/fpga_live_runner.py
+823bfa395bf33e7736e771055b2063e101636779617c215d5d55a7311f49b0b4  tests/test_runner_prefetch.py
+test_bounded_queue_blocks_and_stop_exits (test_runner_prefetch.PrefetcherUnitTests) ... ok
+TypeError: 'bool' object is not callable
+test_past_last_index_ends_with_reason (test_runner_prefetch.PrefetcherUnitTests) ... ok
+test_producer_error_reaches_consumer (test_runner_prefetch.PrefetcherUnitTests) ... ok
+TypeError: 'bool' object is not callable
+TypeError: 'bool' object is not callable
+TypeError: 'bool' object is not callable
+TypeError: 'bool' object is not callable
+TypeError: 'bool' object is not callable
+TypeError: 'bool' object is not callable
+TypeError: 'bool' object is not callable
+TypeError: 'bool' object is not callable
+TypeError: 'bool' object is not callable
+TypeError: 'bool' object is not callable
+Ran 12 tests in 104.608s
+OK
+bash -c cd /home/xilinx/timing_runs_20261023/unittest_process_reader && sha256sum tools/board/fpga_live_runner.py tests/test_runner_prefetch.py && timeout 300 python3.6 -m unittest discover -s tests -p 'test_runner_prefetch.py' -v 2>&1 | grep -E ' ok$|FAIL|ERROR|^Ran|^OK|skipped|Error' ; ps -eo args= | grep -E '[t]est_runner|[r]unner_under_test' || echo no-leftover-processes

@@ -1,0 +1,14 @@
+{
+  "tag": "diag_dma_ram",
+  "remote_dir": "/home/xilinx/timing_runs_20261023/diag_dma_ram",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "pc_start": "2026-10-23T19:39:22",
+  "preflight_s": 6.32,
+  "uploaded_sha256": {
+    "fpga_tail_diag.py": "9fe080d8f1c4e3148dfc3dc0a53923534b006c861e7a0e9d64757e15408f4168",
+    "temp_guard.sh": "602432ae5ed1c0e5663c7ccd03014b98ff0a63f9877c5b52d73bfd80dca40848"
+  },
+  "workload": "python3.6 -u /home/xilinx/timing_runs_20261023/diag_dma_ram/fpga_tail_diag.py dma /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz 256 20000 /home/xilinx/timing_runs_20261023/diag_dma_ram/out"
+}

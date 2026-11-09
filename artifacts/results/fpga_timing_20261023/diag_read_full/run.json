@@ -1,0 +1,18 @@
+{
+  "tag": "diag_read_full",
+  "remote_dir": "/home/xilinx/timing_runs_20261023/diag_read_full",
+  "note": "collected with --finalize-only (launch call timed out locally; job kept running under its guard)",
+  "board_wall_s": 152.6,
+  "run_out": [
+    "START_UTC=2019-11-12T22:03:42Z",
+    "WORKLOAD_RC=0",
+    "GUARD_RC=0",
+    "END_UTC=2019-11-12T22:07:23Z",
+    "DONE"
+  ],
+  "workload_rc": "0",
+  "guard_rc": "0",
+  "result": "OK",
+  "post_run_process_check": "CLEAN",
+  "pc_end": "2026-10-23T19:39:13"
+}

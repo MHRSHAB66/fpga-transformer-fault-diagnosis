@@ -1,0 +1,19 @@
+{
+  "tag": "diag_dma_ram_c_extload",
+  "remote_dir": "/home/xilinx/timing_runs_20261023/diag_dma_ram_c_extload",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "pc_start": "2026-10-23T22:18:05",
+  "preflight_s": 4.64,
+  "uploaded_sha256": {
+    "fpga_tail_diag.py": "4a928f341485b897400a32f51014dbb12b4daad8c962d527d1bf391522f66bc5",
+    "temp_guard.sh": "602432ae5ed1c0e5663c7ccd03014b98ff0a63f9877c5b52d73bfd80dca40848"
+  },
+  "workload": "python3.6 -u /home/xilinx/timing_runs_20261023/diag_dma_ram_c_extload/fpga_tail_diag.py dma /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz 256 20000 /home/xilinx/timing_runs_20261023/diag_dma_ram_c_extload/out",
+  "board_wall_s": 2170.2,
+  "run_out": [],
+  "result": "INCOMPLETE: not finished within 15 min (left running under its guard)",
+  "post_run_process_check": "",
+  "pc_end": "2026-10-23T22:54:47"
+}

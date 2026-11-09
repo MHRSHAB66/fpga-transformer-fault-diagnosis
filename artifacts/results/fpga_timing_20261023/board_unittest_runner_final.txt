@@ -1,0 +1,9 @@
+970e40061f0e67fc1f7a99be058612ff301697f53fe7e49192600cfdb4fc4d85  tools/board/fpga_live_runner.py
+f4f98f2cee869fc7ab5008404ecc991cf31b62b87c6a427fed266a51ea6cc82e  tests/test_runner_prefetch.py
+test_bounded_queue_blocks_and_stop_exits (test_runner_prefetch.PrefetcherUnitTests) ... ok
+test_past_last_index_ends_with_reason (test_runner_prefetch.PrefetcherUnitTests) ... ok
+test_producer_error_reaches_consumer (test_runner_prefetch.PrefetcherUnitTests) ... ok
+test_reader_exits_when_parent_is_gone (test_runner_prefetch.ProcessReaderTests) ... ok
+test_readahead_requests_ranges_ahead_of_reader (test_runner_prefetch.ReadaheadTests) ... ok
+Ran 15 tests in 137.421s
+OK

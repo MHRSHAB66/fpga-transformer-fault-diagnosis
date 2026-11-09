@@ -1,0 +1,27 @@
+{
+  "tag": "A_legacy_unpaced_full",
+  "remote_dir": "/home/xilinx/timing_runs_20261023/A_legacy_unpaced_full",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "pc_start": "2026-10-23T20:00:21",
+  "preflight_s": 3.57,
+  "uploaded_sha256": {
+    "fpga_live_runner.py": "5bb2db8e9f7fc076b88a05b7a04698601cc74475ebf6808c285fd190a08135eb",
+    "temp_guard.sh": "602432ae5ed1c0e5663c7ccd03014b98ff0a63f9877c5b52d73bfd80dca40848"
+  },
+  "workload": "FPGA_RUNNER_PREFETCH=0 FPGA_RUNNER_TIMING=1 python3.6 -u /home/xilinx/timing_runs_20261023/A_legacy_unpaced_full/fpga_live_runner.py /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz 1024 8 95404 /home/xilinx/timing_runs_20261023/A_legacy_unpaced_full/pred.txt",
+  "board_wall_s": 1743.2,
+  "run_out": [
+    "START_UTC=2019-11-12T22:28:49Z",
+    "WORKLOAD_RC=0",
+    "GUARD_RC=0",
+    "END_UTC=2019-11-12T22:57:48Z",
+    "DONE"
+  ],
+  "workload_rc": "0",
+  "guard_rc": "0",
+  "result": "OK",
+  "post_run_process_check": "CLEAN",
+  "pc_end": "2026-10-23T20:29:38"
+}

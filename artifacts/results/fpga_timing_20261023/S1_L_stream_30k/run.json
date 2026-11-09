@@ -1,0 +1,30 @@
+{
+  "tag": "S1_L_stream_30k",
+  "remote_dir": "/home/xilinx/timing_runs_20261023/S1_L_stream_30k",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "pc_start": "2026-10-23T23:31:52",
+  "preflight_s": 3.98,
+  "uploaded_sha256": {
+    "fpga_live_runner.py": "970e40061f0e67fc1f7a99be058612ff301697f53fe7e49192600cfdb4fc4d85",
+    "temp_guard.sh": "602432ae5ed1c0e5663c7ccd03014b98ff0a63f9877c5b52d73bfd80dca40848"
+  },
+  "workload": "FPGA_RUNNER_PREFETCH=0 FPGA_RUNNER_READAHEAD_MB=0 FPGA_RUNNER_TIMING=1 python3.6 -u /home/xilinx/timing_runs_20261023/S1_L_stream_30k/fpga_live_runner.py /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz 1024 8 30000 -",
+  "board_wall_s": 522.5,
+  "run_out": [
+    "START_UTC=2019-11-13T00:52:51Z",
+    "TEMP_START=48.970",
+    "META n=30000 seq=1024 ch=8 class_source=fpga_register",
+    "SUMMARY executed=30000 aborted=None wall_s=513.571 throughput=58.414 temp_start=48.970 temp_max=50.447 temp_end=49.708 prefetch=0 prefetch_kind=none underruns=0 qmin=None pace_hz=0 late_release=0 readahead_mb=0",
+    "WORKLOAD_RC=0",
+    "GUARD_RC=0",
+    "END_UTC=2019-11-13T01:01:32Z",
+    "DONE"
+  ],
+  "workload_rc": "0",
+  "guard_rc": "0",
+  "result": "OK",
+  "post_run_process_check": "CLEAN",
+  "pc_end": "2026-10-23T23:40:48"
+}

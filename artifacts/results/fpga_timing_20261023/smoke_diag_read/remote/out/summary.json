@@ -1,0 +1,30 @@
+{
+  "mode": "read",
+  "n": 2000,
+  "aborted": null,
+  "wall_s": 4.38,
+  "wall_ms": {
+    "mean": 1.81,
+    "p50": 1.668,
+    "p99": 2.685,
+    "p99.9": 4.823,
+    "max": 6.83
+  },
+  "cpu_ms": {
+    "mean": 1.828,
+    "p50": 1.69,
+    "p99": 2.616,
+    "p99.9": 3.241,
+    "max": 4.151
+  },
+  "slow_threshold_ms": 10.0,
+  "slow_count": 0,
+  "slow_with_block_input": 0,
+  "slow_with_involuntary_preemption": 0,
+  "slow_with_voluntary_wait": 0,
+  "slow_with_major_fault": 0,
+  "slow_wall_minus_cpu_ms_mean": null,
+  "all_block_input_ops": 0,
+  "temps_c": [],
+  "temp_max_c": null
+}

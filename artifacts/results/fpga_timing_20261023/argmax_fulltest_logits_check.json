@@ -1,0 +1,11 @@
+{
+  "frames": "artifacts\\results\\fpga_argmax_fulltest_20261023\\live_frames.jsonl",
+  "n": 95404,
+  "frames_without_logits": 0,
+  "logits_equal_reference": 95404,
+  "class_equals_argmax_logits": 95404,
+  "conf_equals_recomputed": 95404,
+  "reference": "artifacts\\results\\board_vs_reference_20261022\\numpy_reference\\numpy_export_logits.txt",
+  "scales": "artifacts\\deploy\\seq256_argmax_z7020_20261022\\config\\integer_config_scales.json",
+  "logits_scale": 0.10779884107882078
+}

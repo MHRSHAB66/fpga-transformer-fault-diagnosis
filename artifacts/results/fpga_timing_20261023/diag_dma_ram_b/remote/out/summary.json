@@ -1,0 +1,53 @@
+{
+  "mode": "dma",
+  "n": 20000,
+  "aborted": null,
+  "wall_s": 335.66,
+  "wall_ms": {
+    "mean": 16.164,
+    "p50": 16.07,
+    "p99": 17.267,
+    "p99.9": 23.145,
+    "max": 42.298
+  },
+  "cpu_ms": {
+    "mean": 16.039,
+    "p50": 16.085,
+    "p99": 16.566,
+    "p99.9": 16.706,
+    "max": 16.909
+  },
+  "slow_threshold_ms": 20.48,
+  "slow_count": 36,
+  "slow_with_block_input": 0,
+  "slow_with_involuntary_preemption": 36,
+  "slow_with_voluntary_wait": 0,
+  "slow_with_major_fault": 0,
+  "slow_wall_minus_cpu_ms_mean": 12.756,
+  "all_block_input_ops": 0,
+  "temps_c": [
+    48.355,
+    48.847,
+    49.093,
+    49.216,
+    48.97,
+    48.847,
+    49.093,
+    48.847,
+    48.97,
+    49.216,
+    49.216,
+    49.585,
+    49.462,
+    49.093,
+    49.462,
+    49.093,
+    49.462,
+    49.462,
+    49.339,
+    49.462,
+    49.216
+  ],
+  "temp_max_c": 49.708471679536,
+  "k_windows_in_ram": 256
+}
