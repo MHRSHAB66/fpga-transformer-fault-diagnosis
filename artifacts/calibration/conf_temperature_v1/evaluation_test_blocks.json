@@ -1,0 +1,96 @@
+{
+  "note": "test split cut into 10 contiguous blocks (windows are file-ordered); evaluation only, T fixed from validation",
+  "blocks": [
+    {
+      "block": 0,
+      "windows": [
+        0,
+        9540
+      ],
+      "ece_uncal": 0.008286,
+      "ece_cal": 0.003358
+    },
+    {
+      "block": 1,
+      "windows": [
+        9541,
+        19081
+      ],
+      "ece_uncal": 0.012704,
+      "ece_cal": 0.005058
+    },
+    {
+      "block": 2,
+      "windows": [
+        19082,
+        28622
+      ],
+      "ece_uncal": 0.016719,
+      "ece_cal": 0.006627
+    },
+    {
+      "block": 3,
+      "windows": [
+        28623,
+        38163
+      ],
+      "ece_uncal": 0.00688,
+      "ece_cal": 0.002307
+    },
+    {
+      "block": 4,
+      "windows": [
+        38164,
+        47703
+      ],
+      "ece_uncal": 0.008472,
+      "ece_cal": 0.001973
+    },
+    {
+      "block": 5,
+      "windows": [
+        47704,
+        57243
+      ],
+      "ece_uncal": 0.008809,
+      "ece_cal": 0.003132
+    },
+    {
+      "block": 6,
+      "windows": [
+        57244,
+        66783
+      ],
+      "ece_uncal": 0.006084,
+      "ece_cal": 0.004758
+    },
+    {
+      "block": 7,
+      "windows": [
+        66784,
+        76323
+      ],
+      "ece_uncal": 0.005051,
+      "ece_cal": 0.00623
+    },
+    {
+      "block": 8,
+      "windows": [
+        76324,
+        85863
+      ],
+      "ece_uncal": 0.00435,
+      "ece_cal": 0.003073
+    },
+    {
+      "block": 9,
+      "windows": [
+        85864,
+        95403
+      ],
+      "ece_uncal": 0.007078,
+      "ece_cal": 0.004193
+    }
+  ],
+  "calibrated_better_blocks": 9
+}

@@ -1,0 +1,17 @@
+{
+  "method": "temperature scaling of the FPGA's integer logits",
+  "formula": "conf = max softmax(s_logits * logits_int / T)",
+  "T": 1.42482066327489,
+  "s_logits": 0.10779884107882078,
+  "fitted_on": "validation split (195 files, 47,580 windows), Python INT10 reference logits with the deployed export scales (bit-exact with the board on the test set)",
+  "objective": "validation NLL (golden-section on log T)",
+  "test_used_for_fitting": false,
+  "argmax_unchanged": "T>0 scalar: class is unchanged for every window",
+  "inputs_sha256": {
+    "validation_logits": "65ca13640c0a3b5399086c7134206d8f0af56946eeb6126b5a5b4961fba5c14f",
+    "scales": "76381cbfb1e54a325043ea078a525ccdb789d621dc5740eed5a0ba1a057874bf"
+  },
+  "command": "python -m tools.fit_confidence_temperature --out artifacts/calibration/conf_temperature_v1",
+  "python": "3.12.2",
+  "numpy": "2.2.3"
+}
