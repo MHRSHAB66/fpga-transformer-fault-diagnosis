@@ -36,7 +36,8 @@ def main():
     with open(os.path.join(directory, 'golden_in.txt')) as inputs, \
             open(os.path.join(directory, 'golden_expected.txt')) as expected:
         count, seq, channels = map(int, inputs.readline().split())
-        if (count, seq, channels) != (40, 1024, 8):
+        # 40 vectors for golden_ingress1024_argmax, 41 for golden_raw1024_argmax
+        if count < 1 or (seq, channels) != (1024, 8):
             raise RuntimeError('unexpected golden geometry')
         expected.readline()
         ties = 0

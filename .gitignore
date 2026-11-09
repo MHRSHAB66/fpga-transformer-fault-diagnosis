@@ -330,3 +330,5 @@ artifacts/ram_demo_sets/*/set.i32
 /seq256_raw1024_dsp_margin_argmax/
 # Multi-GB raw-sample test input for the on-FPGA preprocessing core (tools/export_fpga_testset_raw.py).
 artifacts/results/fpga_rawinput_testset_*/fpga_testset_raw.*
+# Per-window board output of the raw-core full test (6 MB; pred.txt and the check JSON are committed)
+artifacts/results/raw_core_board_fulltest_*/fulltest.out

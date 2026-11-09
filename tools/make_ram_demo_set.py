@@ -13,6 +13,8 @@ Output (versioned, never overwritten): artifacts/ram_demo_sets/<name>/
                    recorded FPGA class (2026-10-08) and INT10 reference logits per record
 
 Usage: python -m tools.make_ram_demo_set --n 256 --name class_balanced_256_v1
+Raw-input core (preprocessing in the FPGA): same windows from the raw 24-bit input,
+    python -m tools.make_ram_demo_set --name class_balanced_256_raw_v1 \n        --source artifacts/results/fpga_rawinput_testset_20261109/fpga_testset_raw.i32.gz \n        --reference artifacts/results/onchip_preprocess_20261109/numpy_reference_raw/numpy_export_logits.txt
 """
 import argparse
 import gzip
@@ -43,16 +45,19 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n", type=int, default=256)
     ap.add_argument("--name", default="class_balanced_256_v1")
+    ap.add_argument("--source", type=Path, default=SRC, help="input gz (INT10 codes or raw codes)")
+    ap.add_argument("--reference", type=Path, default=REF, help="reference logits for that input")
     args = ap.parse_args()
+    src, ref_path = args.source.resolve(), args.reference.resolve()
     out = ROOT / "artifacts/ram_demo_sets" / args.name
     out.mkdir(parents=True, exist_ok=False)
     labels = [int(x) for x in (FULL / "labels.txt").read_text().split()]
     pred = np.loadtxt(FULL / "fpga_pred.txt", dtype=np.int64)
-    ref = np.loadtxt(REF, dtype=np.int64)[:, 1:]
+    ref = np.loadtxt(ref_path, dtype=np.int64)[:, 1:]
     idx = build_plan("class_balanced", total=len(labels), n=args.n, labels=labels)
     want = {i: k for k, i in enumerate(idx)}
     recs = [None] * len(idx)
-    with gzip.open(SRC, "rb") as f:
+    with gzip.open(src, "rb") as f:
         for i in range(max(idx) + 1):
             b = f.read(REC)
             if len(b) != REC:
@@ -66,7 +71,8 @@ def main():
     counts = {c: sum(1 for i in idx if labels[i] == c) for c in range(4)}
     prov = {"name": args.name, "n": len(idx), "record_bytes": REC, "layout": "<i4, 1024 samples x 8 channels",
             "plan": "host.live_sampling.build_plan('class_balanced', seed=0)",
-            "source": str(SRC.relative_to(ROOT)).replace("\\", "/"), "source_sha256": sha256(SRC),
+            "source": str(src.relative_to(ROOT)).replace("\\", "/"), "source_sha256": sha256(src),
+            "reference": str(ref_path.relative_to(ROOT)).replace("\\", "/"),
             "set_sha256": sha256(out / "set.i32"), "true_class_counts": counts,
             "indices": idx,
             "recorded_fpga_class_20261008": [int(pred[i]) for i in idx],

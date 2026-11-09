@@ -1,8 +1,7 @@
 # Preprocessing inside the FPGA (raw-input core) — 2026-11-09
 
-**Status:** design, bit-exact reference and C-model done; results sections are
-filled in as each step is measured. Nothing here replaces the deployed argmax
-overlay, which stays the fallback.
+**Status:** validated on the real board (golden, full test, hard real-time).
+The deployed INT10-input argmax overlay is kept unchanged as the fallback.
 
 ## 1. What changes
 
@@ -64,5 +63,22 @@ quantize + aggregate) plus the factors, ≈ 0.26 ms at 100 MHz.
 | Full test, Python reference on the raw input (`numpy_reference_raw/`) | logits equal to the C-model on **95,404 / 95,404** windows (`cmodel_vs_reference.json`) |
 | Vitis HLS C-simulation, golden `golden_raw1024_argmax` (41 vectors: 37 real incl. 8 ties, 4 edge) | **41/41 exact** (logits + class register) |
 | HLS C-synthesis (synthesis-only probe, same source) | core interval 15.04 ms at 100 MHz (INT10-input core 14.905 ms, +0.13 ms); preprocessing block: 0 DSP, 12 BRAM18, ~8.3 k LUT (estimate); estimated Fmax 130 MHz |
-| Vivado post-route timing / resources | pending |
-| Board: golden, full test, real-time | pending |
+| HLS C-synthesis of the final source (`seq256_dma_raw_argmax_z7020_20261109/hls_reports/`) | interval 1,502,098 cycles = 15.02 ms at 100 MHz; estimated Fmax 130 MHz; preprocessing block 0 DSP |
+| Vivado 2020.2 post-route, dma16 system, IP synthesized with MAX_DSP 210 | **timing met: WNS +0.167 ns**, WHS +0.014 ns, 0 failing endpoints, 0 routing errors; LUT 36,670 (68.9 %), FF 36,163 (34.0 %), BRAM 76.5 tiles (54.6 %), DSP 210/220 — vs the deployed INT10-input build: +4,904 LUT, +5,211 FF, +6 BRAM, +0 DSP |
+| Board: golden `golden_raw1024_argmax` on the real Z-Turn | **41/41 exact** (logits + class register, 8 ties, 4 edge windows), class_source = fpga_register (`raw_core_board_golden_*`) |
+| Board: all 95,404 raw test windows | **95,404 / 95,404 logits equal to the C-model**, accuracy **97.7705 %** (93,277), per-window DMA-to-result p50 16.03 ms (INT10-input core 15.95 ms), die ≤ 54.3 °C (`raw_core_board_fulltest_*`) |
+| Board: hard real-time acceptance (R1 configuration: RAM windows, 30,000 + 200 warm-up, SCHED_FIFO 50 on CPU 1) | **0 deadline misses in 30,000**, response p50 15.96 ms, p99.9 16.56 ms, max 16.64 ms (INT10-input core: p50 15.82, max 16.55 ms); all 30,200 classes and logits equal to the C-model (`raw_core_board_rt_*`) |
+
+### Timing closure notes
+
+Two builds failed timing before the final one: (1) the per-sample multiplies were
+placed in LUTs because the transformer IP is synthesized with MAX_DSP 210 (all
+DSP48s already used) and one LUT multiplier took 11 ns; (2) splitting them into
+small multiplies let Vivado give those DSPs, which pushed a transformer
+requantization multiply into LUTs (−0.85 ns). The final source computes both
+products without multipliers (two-bit digits selecting 0/a/2a/3a plus an adder
+chain, `pp_mul_digits`), which the HLS scheduler pipelines; the transformer keeps
+its original DSP mapping. Vitis HLS 2020.2 also needs the IP core revision set to
+"1" when packaging (date-based revision overflow), and the Vivado project uses a
+short path (`tmp/vraw`) because the HLS module file names exceed the Windows
+260-character limit otherwise. Build script: `tools/build_raw_core.ps1`.

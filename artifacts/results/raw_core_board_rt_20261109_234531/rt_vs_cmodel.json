@@ -1,0 +1,5 @@
+{
+ "records": 30200,
+ "logits_equal_cmodel": 30200,
+ "class_equal_cmodel": 30200
+}

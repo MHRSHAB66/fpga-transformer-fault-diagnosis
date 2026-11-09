@@ -47,7 +47,7 @@ PKG = BUNDLE = HWH_SOURCE = None
 OVERLAY = DRIVER = CONFIG = GOLDEN = ALL_COPIES = None
 
 
-def _configure(pkg, bundle) -> None:
+def _configure(pkg, bundle, golden=None) -> None:
     """Set the source->dest copy spec for a given build package + bundle dir.
 
     Overlay binaries come from the (tracked, stable) build package `pkg`, NOT a
@@ -76,11 +76,11 @@ def _configure(pkg, bundle) -> None:
         (REPO_ROOT / "artifacts" / "quantized" / "f_seq256_int10" / "integer_config.json",
          "config/integer_config_scales.json"),
     ]
+    golden_dir = (Path(golden).resolve() if golden is not None
+                  else REPO_ROOT / "hls" / "f1_int10_seq256" / "golden_ingress1024")
     GOLDEN = [
-        (REPO_ROOT / "hls" / "f1_int10_seq256" / "golden_ingress1024" / "golden_in.txt",
-         "golden/golden_in.txt"),
-        (REPO_ROOT / "hls" / "f1_int10_seq256" / "golden_ingress1024" / "golden_expected.txt",
-         "golden/golden_expected.txt"),
+        (golden_dir / "golden_in.txt", "golden/golden_in.txt"),
+        (golden_dir / "golden_expected.txt", "golden/golden_expected.txt"),
     ]
     ALL_COPIES = OVERLAY + DRIVER + CONFIG + GOLDEN
 
@@ -309,7 +309,11 @@ if __name__ == "__main__":
     ap.add_argument("--bundle", default=None,
                     help="output bundle dir (default: artifacts/deploy/seq256_z7020_pynq). "
                          "Use a NEW versioned path to avoid overwriting the old bundle.")
+    ap.add_argument("--golden", default=None,
+                    help="golden vector dir copied into golden/ (default: "
+                         "hls/f1_int10_seq256/golden_ingress1024); e.g. the raw-input set "
+                         "hls/f1_int10_seq256/golden_raw1024_argmax")
     args = ap.parse_args()
-    if args.pkg is not None or args.bundle is not None:
-        _configure(args.pkg or DEFAULT_PKG, args.bundle or DEFAULT_BUNDLE)
+    if args.pkg is not None or args.bundle is not None or args.golden is not None:
+        _configure(args.pkg or DEFAULT_PKG, args.bundle or DEFAULT_BUNDLE, args.golden)
     sys.exit(build(check_only=args.check))

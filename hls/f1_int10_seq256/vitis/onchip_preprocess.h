@@ -16,6 +16,8 @@
 //
 // Words outside the signed 24-bit range are clamped to it (the reference does
 // the same). Cost: three 8,192-cycle passes plus the factors, ~0.26 ms at 100 MHz.
+// Its two per-sample products use selects and adds instead of multipliers
+// (all DSP48s are taken by the transformer), see pp_mul_digits.
 #ifndef ONCHIP_PREPROCESS_H
 #define ONCHIP_PREPROCESS_H
 
@@ -30,9 +32,10 @@
   typedef ap_int<36>  pp_s1_t;     // sum of 1024 samples
   typedef ap_int<26>  pp_d_t;      // x - mu
   typedef ap_uint<25> pp_mag_t;    // |d|
-  typedef ap_uint<49> pp_sq_t;     // d^2
+  typedef ap_uint<50> pp_sq_t;     // |d|^2 (exact product width)
   typedef ap_uint<60> pp_q_t;      // sum of d^2
   typedef ap_uint<34> pp_m_t;      // per-channel multiplier
+  typedef ap_uint<59> pp_mul_t;    // |d| * m (exact product width)
   typedef ap_uint<60> pp_prod_t;   // |d| * m + rounding term
 #else
   typedef long long raw_t;
@@ -42,7 +45,35 @@
   typedef unsigned long long pp_sq_t;
   typedef unsigned long long pp_q_t;
   typedef unsigned long long pp_m_t;
+  typedef unsigned long long pp_mul_t;
   typedef unsigned long long pp_prod_t;
+#endif
+
+#if defined(__SYNTHESIS__) || defined(HLS_USE_AP_INT)
+// Exact unsigned product a * b without a multiplier: b is taken two bits at a
+// time and each term is 0, a, 2a or 3a, then all terms are added. All DSP48s
+// are used by the transformer (MAX_DSP 210); a LUT multiplier of this width
+// does not fit the 10 ns clock and DSP-bound pieces take DSPs from the
+// transformer. Selects and adds let the HLS scheduler pipeline the product.
+template<int AW, int BW>
+static ap_uint<AW + BW> pp_mul_digits(ap_uint<AW> a, ap_uint<BW> b) {
+#pragma HLS INLINE
+    const ap_uint<AW + 2> a1 = a;
+    const ap_uint<AW + 2> a2 = (ap_uint<AW + 2>)a << 1;
+    const ap_uint<AW + 2> a3 = a1 + a2;
+    ap_uint<AW + BW> acc = 0;
+    for (int k = 0; k < (BW + 1) / 2; ++k) {
+#pragma HLS UNROLL
+        const ap_uint<2> digit = (ap_uint<2>)(b >> (2 * k));
+        const ap_uint<AW + 2> term = digit == 0 ? (ap_uint<AW + 2>)0
+                                   : digit == 1 ? a1 : digit == 2 ? a2 : a3;
+        acc += (ap_uint<AW + BW>)term << (2 * k);
+    }
+    return acc;
+}
+#define PP_MUL(AW, BW, a, b) pp_mul_digits<AW, BW>((a), (b))
+#else
+#define PP_MUL(AW, BW, a, b) ((a) * (b))
 #endif
 
 static const long long PP_CODE_MIN = -(1LL << 23);
@@ -94,7 +125,8 @@ static int pp_bitlen(unsigned long long v) {
 static inline long long pp_quant(pp_d_t d, pp_m_t m, int sh) {
     if (m == 0) return 0;
     const pp_mag_t mag_in = (pp_mag_t)(d < 0 ? (pp_d_t)(-d) : d);
-    const pp_prod_t prod = (pp_prod_t)mag_in * (pp_prod_t)m + ((pp_prod_t)1 << (sh - 1));
+    const pp_mul_t product = PP_MUL(25, 34, mag_in, m);
+    const pp_prod_t prod = (pp_prod_t)product + ((pp_prod_t)1 << (sh - 1));
     long long mag = (long long)(unsigned long long)(prod >> sh);
     if (mag > PP_QMAX) mag = PP_QMAX;
     return d < 0 ? -mag : mag;
@@ -140,7 +172,9 @@ PP_VAR:
 #pragma HLS PIPELINE II=1
 #pragma HLS DEPENDENCE variable=qsum inter false
         const pp_d_t d = (pp_d_t)(raw[i] - mu[i % NCH]);
-        qsum[i % NCH] += (pp_sq_t)(d * d);
+        const pp_mag_t md = (pp_mag_t)(d < 0 ? (pp_d_t)(-d) : d);
+        const pp_sq_t sq = PP_MUL(25, 25, md, md);
+        qsum[i % NCH] += (pp_q_t)sq;
     }
 
 PP_FACTORS:
