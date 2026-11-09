@@ -41,10 +41,23 @@ Files are grouped into 4 classes: `normal`, `imbalance`, `misalignment`,
 | 2 | done | Preprocessing, windowing, DataLoaders |
 | 3–4 | done | MLP sanity baseline + lightweight Transformer baseline |
 | 5 | done | Reproducibility, config snapshots, final software evaluation |
-| 6–8 | done | INT10 quantization, golden vectors, HLS core; physically run on the board (class decided on the Zynq PS; on-FPGA argmax variant C-model-verified only) |
+| 6–8 | done | INT10 quantization, golden vectors, HLS core; physically run on the board, class decided in FPGA logic (`pred_class` register) since 2026-10-23 |
 | 9 | not done | Live sensor input (optional) |
 | 10–11 | done | Results to PC over SSH/Ethernet (UART boot capture), Replay/Live viewer |
 | 12 | done (prepared windows) | Integration and validation; see the consolidated results for limits |
+
+Key results of the deployed system (MYIR Z-Turn XC7Z020, 95,404 unseen test
+windows; evidence in the consolidated results):
+
+| Metric | Value |
+|---|---|
+| Accuracy / macro-F1 / macro AUC | 97.77 % / 95.65 % / 0.9991 |
+| Board output vs Python INT10 reference | identical on all windows, incl. all 4 logits |
+| Sustained throughput (board) | 60.9 windows/s vs 48.83 required (50 kHz, 1,024 stride) |
+| Hard deadline, board side (RAM input, SCHED_FIFO) | 0 misses in 100,000 windows, max 16.56 ms of 20.48 ms |
+| FPGA resources (post-route, 100 MHz) | LUT 59.7 %, FF 29.1 %, BRAM 50.4 %, DSP 95.5 % |
+
+Figures: `docs/figures/final/` (regenerate with `python -m tools.plot_final_figures`).
 
 Per-stage detail: `docs/project_status.md`. Design decisions: `docs/DECISION_LOG.md`.
 Stage plan and constraints: `CLAUDE.md` / `AGENTS.md`.

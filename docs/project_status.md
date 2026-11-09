@@ -2,7 +2,7 @@
 
 **Project:** Real-Time Machinery Condition Monitoring Using a Transformer Neural Network on FPGA  
 **Student:** Mehrdad Sheikh Abbasi, B.Sc., Amirkabir University of Technology  
-**Last updated:** 2026-10-24 (hard real-time acceptance test, calibrated confidence, power blocker). Reports: `docs/reports/hard_rt_calibration_power_20261024.md`, `docs/reports/gui_demo_timing_20261023.md`, `docs/reports/consolidated_results_20261022.md`. Demo runbook: `docs/demo_runbook.md`.
+**Last updated:** 2026-11-09 (final review: all 2026-10-22..24 work committed, off-repo backup, ROC/AUC + final figures, artifact manifest; remaining board work planned). Reports: `docs/reports/consolidated_results_20261022.md` (canonical numbers, §8 ROC/AUC), `docs/reports/hard_rt_calibration_power_20261024.md`, `docs/reports/gui_demo_timing_20261023.md`. Figures: `docs/figures/final/`. Demo runbook: `docs/demo_runbook.md`.
 
 ---
 
@@ -176,6 +176,28 @@ deployed-system numbers by the runbook.
 - Power/energy: BLOCKED — no current/power telemetry on the board and no external
   instrument (`docs/reports/power_measurement_blocker_20261024.md`).
 
+**Done 2026-11-09 (final review):**
+- Every deliverable of the signed proposal (v5) checked against code and evidence;
+  `python -m unittest discover -s tests`: 203 tests OK (4 skipped).
+- The 2026-10-22..24 work committed in 16 topical commits; bulky raw dumps and
+  board binaries gitignored and recorded by SHA-256 in
+  `artifacts/manifests/artifact_manifest.json` (73 items, tracked files hashed
+  from their committed bytes).
+- Off-repo backup `D:\fpga_fault_diagnosis_backup_20261109\`: git bundle of all
+  refs + 2,941 untracked files (2.16 GB), every copy re-hashed.
+- ROC/AUC of the deployed model from the physical logits (macro AUC 0.9991,
+  micro 0.9993) and seven final figures (`python -m tools.plot_final_figures`).
+
+**Planned while the board is available (until ≈ 2026-12-09):**
+1. Send the per-window result over the board's USB-UART to the PC and show it
+   (the proposal's block diagram names UART/USB; so far UART carried only the
+   boot console and results travelled over Ethernet).
+2. On-board preprocessing: the FPGA receives raw samples and performs the
+   per-window z-score and INT10 quantization itself (today done offline on the
+   PC; DECISION_LOG D016), so a sensor can later replace the file feed.
+3. UI refresh, then a recorded demo video (the defense will not use the board).
+4. Power/energy only if a meter becomes available (last, optional).
+
 **Still pending / future work:**
 - Legacy live demo path (gzip from SD, SSH, GUI) remains AVERAGE-THROUGHPUT VERIFIED,
   HARD REAL-TIME NOT VERIFIED; the RAM mode covers the board boundary only — a sensor
@@ -195,6 +217,6 @@ established and may be reported.
 
 ## Branch
 
-All work is merged to `main` (HEAD `e42ec4f`; tag `fpga-demo-validated-20261008`
-points to the earlier merge `40548f0`); day-per-branch history is preserved on
-`origin`. The 2026-10-22 changes are uncommitted in the working tree.
+All work is on `main`. The 2026-10-22..24 work was committed on 2026-11-09 as
+topical commits after `e42ec4f`; tag `fpga-demo-validated-20261008` still points
+to the earlier merge `40548f0`; day-per-branch history is preserved on `origin`.

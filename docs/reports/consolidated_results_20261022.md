@@ -249,6 +249,14 @@ in `docs/reports/live_guard_argmax_progress_20261022.md`.
 (`artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/config/integer_config_scales.json`).
 It is the model's own softmax probability of the class the FPGA chose. It never
 changes the class. Nothing is fitted (no temperature scaling, no thresholds).
+
+> **Update 2026-10-24:** the Live display now uses a temperature-scaled CONF,
+> T = 1.4248 fitted on the validation split only
+> (`artifacts/calibration/conf_temperature_v1/`): test ECE 0.79 % → 0.09 %, NLL
+> 0.0628 → 0.0584, classes unchanged. Details:
+> `docs/reports/hard_rt_calibration_power_20261024.md`; reliability diagram:
+> `docs/figures/final/reliability_confidence.png`. The uncalibrated numbers below
+> remain correct for the raw softmax.
 Implementation: `host/confidence.py` (PC side), from logits that the live
 runner now emits as a trailing `logits=a,b,c,d` field.
 
@@ -319,3 +327,38 @@ python -m tools.evaluate_confidence_calibration --test-logits <new_dir>/numpy_re
 # artifacts/results/fpga_realtime_bench_20261022/), PC end-to-end: python -m tools.measure_live_e2e ...
 python -m unittest discover -s tests
 ```
+
+---
+
+## 8. ROC/AUC and final figures (added 2026-11-09)
+
+ROC/AUC is listed in the proposal as an optional metric ("if possible"); it is
+now computed for the **deployed** model from the 4 physical board logits of all
+95,404 test windows (`fpga_realtime_bench_20261022/board_full_pipelined/logits_i32.bin`,
+bit-exact with the INT10 reference, section 2). Score = softmax(s_logits ·
+logits), uncalibrated; one class vs rest. MEASURED-SOFTWARE on physical outputs.
+
+| Class | AUC (one vs rest) | Precision | Recall | F1 | Support |
+|---|---|---|---|---|---|
+| normal | 0.9990 | 92.00 % | 87.17 % | 89.52 % | 2,440 |
+| imbalance | 0.9991 | 96.15 % | 97.77 % | 96.96 % | 16,348 |
+| misalignment | 0.9994 | 96.36 % | 99.10 % | 97.71 % | 24,156 |
+| bearing_fault | 0.9990 | 99.23 % | 97.65 % | 98.43 % | 52,460 |
+| **macro** | **0.9991** (micro 0.9993) | 95.93 % | 95.42 % | 95.65 % | 95,404 |
+
+Normal is the weakest class: 285 of its 2,440 windows (11.7 %) are predicted as
+misalignment.
+
+Figures (PNG + PDF), all drawn from recorded evidence by
+`python -m tools.plot_final_figures`; every plotted number is in
+`artifacts/results/final_figures_20261109/figure_data.json`:
+
+| Figure | Content |
+|---|---|
+| `docs/figures/final/roc_ovr_board` | ROC per class, log FPR axis |
+| `docs/figures/final/confusion_matrix_board` | board predictions vs labels |
+| `docs/figures/final/reliability_confidence` | CONF calibration before/after T |
+| `docs/figures/final/rt_response_ccdf` | hard real-time response times vs the 20.48 ms deadline |
+| `docs/figures/final/e2e_latency_profile` | TCP end-to-end mode: board stage vs GUI render |
+| `docs/figures/final/throughput_vs_requirement` | measured windows/s vs 48.83 /s |
+| `docs/figures/final/fpga_resources` | post-route utilisation of the argmax build |

@@ -177,7 +177,10 @@ Historical evidence (earlier OOC IP-only and C-synthesis runs) is retained in
   remain unmeasured.**
 - HLS C-synthesis numbers are estimates; only the Vivado post-route numbers are
   place-and-route measurements. C-synthesis estimates are not called "post-route".
-- The integer hardware path outputs 4 logits only; the argmax class is computed
-  from them on the Zynq PS by the driver (an on-FPGA argmax variant exists as
-  C-model-verified source, see `docs/reports/consolidated_results_20261022.md`).
+- The dma16 build documented here outputs 4 logits only; with it the argmax class
+  is computed on the Zynq PS by the driver. The on-FPGA argmax variant (extra
+  AXI-Lite `pred_class` register, same output stream) was built, validated on the
+  board (40/40 golden incl. ties, full test 95,404/95,404 classes equal) and has
+  been the live deployment since 2026-10-23; see
+  `docs/reports/consolidated_results_20261022.md` §4.
   A confidence/probability value is **not** produced in hardware.

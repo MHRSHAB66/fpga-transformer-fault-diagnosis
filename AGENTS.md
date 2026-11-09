@@ -24,7 +24,7 @@ The project is **not only a model-training project**. The final goal is a comple
 
 When future code updates conflict, follow this priority order:
 
-1. **MehrdadSheikhAbbasi_Proposal_v3_final.pdf** — primary source of truth.
+1. **MehrdadSheikhAbbasi_Proposal_v5_Final_Signed.pdf** — primary source of truth (signed 1405/05/04; made the reference by the user on 2026-10-08, replacing MehrdadSheikhAbbasi_Proposal_v3_final.pdf).
 2. **Project Definition.pdf** — useful supporting definition, but the final proposal overrides it if there is a conflict.
 3. Existing working code and generated artifacts — preserve behavior unless an explicit task says otherwise.
 4. **Fault Detection in Industrial Machinery.pdf** — background only; do not implement its full thesis pipeline.
@@ -79,11 +79,10 @@ These rules are strict. Future code updates must respect them.
 
 ### FPGA target status
 
-- The final FPGA board/device has **not been selected yet**.
-- Do not describe any specific board, FPGA family, part number, resource budget,
-  clock, or tool flow as the final target unless the user explicitly confirms it.
-- Keep synthesis parameters configurable and report hardware feasibility only
-  after the actual target device is selected and measured.
+- The board is the **MYIR Z-Turn (XC7Z020-1CLG400C, PYNQ 2.4 / Python 3.6)**,
+  confirmed by the user and used for every physical validation since 2026-10-08.
+- Report resource/timing numbers from the post-route reports of the deployed
+  build; keep synthesis parameters configurable.
 
 ### Preserve defined logic
 
@@ -241,7 +240,7 @@ Feature-extraction-only or alternative preprocessing paths are experimental unle
 
 ### Stage 2 — Preprocessing, windowing, and DataLoaders
 
-**Status:** IN PROGRESS / NOT COMPLETE
+**Status:** COMPLETE (preprocessing decisions D004–D006 and D017 in `docs/DECISION_LOG.md`)
 
 **Goal:** Convert raw MAFAULDA CSV sequences into model-ready windows while preventing data leakage, and finish the remaining preprocessing experiments that can improve signal quality and FPGA feasibility. Basic loading/windowing/DataLoader logic may already exist, but this stage is not complete until the final preprocessing configuration is selected, documented, and compared against the current basic pipeline.
 
@@ -352,7 +351,7 @@ Feature-extraction-only or alternative preprocessing paths are experimental unle
 
 ### Stage 5 — Model cleanup, reproducibility, and final software evaluation
 
-**Status:** IN PROGRESS / VERIFY
+**Status:** COMPLETE
 
 **Goal:** Make the Python model path reproducible and report-ready before hardware conversion.
 
@@ -384,7 +383,7 @@ Feature-extraction-only or alternative preprocessing paths are experimental unle
 
 ### Stage 6 — Quantization and fixed-point preparation
 
-**Status:** TODO
+**Status:** COMPLETE (integer-only INT10 model; `docs/reports/consolidated_results_20261022.md`)
 
 **Goal:** Convert the selected Transformer into a hardware-oriented numeric representation while measuring accuracy impact.
 
@@ -414,7 +413,7 @@ Feature-extraction-only or alternative preprocessing paths are experimental unle
 
 ### Stage 7 — Hardware specification and golden vectors
 
-**Status:** TODO
+**Status:** COMPLETE
 
 **Goal:** Define the exact hardware-facing interface and generate test data for validating FPGA inference.
 
@@ -444,7 +443,7 @@ Feature-extraction-only or alternative preprocessing paths are experimental unle
 
 ### Stage 8 — FPGA inference core
 
-**Status:** TODO
+**Status:** COMPLETE — physically validated on the MYIR Z-Turn XC7Z020; the class is decided in FPGA logic
 
 **Goal:** Implement the selected quantized Transformer inference path on FPGA or in a hardware-development flow targeting FPGA.
 
@@ -477,7 +476,7 @@ Feature-extraction-only or alternative preprocessing paths are experimental unle
 
 ### Stage 9 — Sensor or laboratory input path
 
-**Status:** TODO / OPTIONAL DEPENDING ON AVAILABLE HARDWARE
+**Status:** TODO — on-board preprocessing (raw samples -> per-window z-score -> INT10 on the FPGA) planned for Nov 2026; a real sensor stays optional
 
 **Goal:** Add a real or laboratory input source when hardware permits, while keeping the prepared-window path usable.
 
@@ -507,7 +506,7 @@ Feature-extraction-only or alternative preprocessing paths are experimental unle
 
 ### Stage 10 — FPGA-to-PC communication
 
-**Status:** TODO
+**Status:** COMPLETE over Ethernet (SSH/TCP); the UART result path on the board is planned for Nov 2026
 
 **Goal:** Send classification results from the FPGA to the computer in a stable and debuggable format.
 
@@ -541,7 +540,7 @@ If confidence is not available in hardware, use a documented placeholder or send
 
 ### Stage 11 — PC-side user interface
 
-**Status:** TODO
+**Status:** COMPLETE (Replay/Live viewer; a UI refresh is planned before the demo video)
 
 **Goal:** Display FPGA classification results in a simple, presentable interface.
 
@@ -569,7 +568,7 @@ If confidence is not available in hardware, use a documented placeholder or send
 
 ### Stage 12 — Final integration, validation, and report support
 
-**Status:** TODO
+**Status:** COMPLETE for prepared windows (scope limits in `docs/project_status.md`)
 
 **Goal:** Connect the software, quantization, hardware inference, communication, and UI work into a defensible final project.
 
