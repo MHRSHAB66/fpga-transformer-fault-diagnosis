@@ -1,0 +1,8 @@
+2830.059	START_UTC=2019-11-13T03:17:24Z
+4349.044	TEMP_START=46.263330077984
+15490.551	META n_unique=4096 n_total=100200 warmup=200 sched=SCHED_FIFO_prio_50,_cpu_[1] class_source=fpga_register preload_s=7.97 preload_maxrss_kb=17564->149300
+2070327.064	SUMMARY {"n_unique": 4096, "n_total": 100200, "executed": 100200, "warmup": 200, "aborted": null, "sched": "SCHED_FIFO prio 50, cpu [1]", "class_source": "fpga_register", "preload_s": 7.972, "preload_maxrss_kb": [17564, 149300], "period_ms": 20.48, "acceptance_windows": 100000, "deadline_misses": 0, "response_ms": {"p50": 15.819, "p95": 16.095, "p99": 16.266, "p99.9": 16.404}, "response_ms_max": 16.559, "warmup_misses": 0, "involuntary_ctx_switches": 2, "voluntary_ctx_switches": 110100, "major_faults": 0, "temp_c": {"start": 46.263330077984, "max": 47.12461547837201, "end": 46.386370849468}}
+2071771.553	WORKLOAD_RC=0
+2071771.568	GUARD_RC=0
+2071775.839	END_UTC=2019-11-13T03:51:53Z
+2071776.243	DONE

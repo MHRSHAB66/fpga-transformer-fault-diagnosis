@@ -1,0 +1,30 @@
+{
+  "tag": "rt20261024_R0_normal_prio",
+  "remote_dir": "/home/xilinx/timing_runs_20261023/rt20261024_R0_normal_prio",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "pc_start": "2026-10-24T18:28:15",
+  "preflight_s": 3.49,
+  "uploaded_sha256": {
+    "fpga_rt_acceptance.py": "a473a225dcc00e96518f1529f9aaba72a157c2d05dea75ba5e445839b7eda3c6",
+    "temp_guard.sh": "602432ae5ed1c0e5663c7ccd03014b98ff0a63f9877c5b52d73bfd80dca40848"
+  },
+  "workload": "python3.6 -u /home/xilinx/timing_runs_20261023/rt20261024_R0_normal_prio/fpga_rt_acceptance.py /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz 4096 30200 200 0 1 0 /home/xilinx/timing_runs_20261023/rt20261024_R0_normal_prio/out",
+  "board_wall_s": 636.6,
+  "run_out": [
+    "START_UTC=2019-11-13T02:08:10Z",
+    "TEMP_START=46.632452392436",
+    "META n_unique=4096 n_total=30200 warmup=200 sched=SCHED_OTHER class_source=fpga_register preload_s=8.02 preload_maxrss_kb=17372->149108",
+    "SUMMARY {\"n_unique\": 4096, \"n_total\": 30200, \"executed\": 30200, \"warmup\": 200, \"aborted\": null, \"sched\": \"SCHED_OTHER\", \"class_source\": \"fpga_register\", \"preload_s\": 8.018, \"preload_maxrss_kb\": [17372, 149108], \"period_ms\": 20.48, \"acceptance_windows\": 30000, \"deadline_misses\": 73, \"response_ms\": {\"p50\": 15.826, \"p95\": 16.154, \"p99\": 16.924, \"p99.9\": 24.175}, \"response_ms_max\": 43.857, \"warmup_misses\": 0, \"involuntary_ctx_switches\": 4341, \"voluntary_ctx_switches\": 33496, \"major_faults\": 0, \"temp_c\": {\"start\": 46.632452392436, \"max\": 47.247656249856, \"end\": 46.87853393540401}}",
+    "WORKLOAD_RC=0",
+    "GUARD_RC=0",
+    "END_UTC=2019-11-13T02:18:44Z",
+    "DONE"
+  ],
+  "workload_rc": "0",
+  "guard_rc": "0",
+  "result": "OK",
+  "post_run_process_check": "CLEAN",
+  "pc_end": "2026-10-24T18:39:04"
+}

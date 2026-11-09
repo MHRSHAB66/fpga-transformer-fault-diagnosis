@@ -1,0 +1,197 @@
+{
+  "criterion": "docs/reports/hard_rt_acceptance_criterion_20261024.md",
+  "calibration_T": 1.42482066327489,
+  "runs": {
+    "L1_fifo50_cpu1_100k": {
+      "executed": 100200,
+      "acceptance_windows": 100000,
+      "deadline_misses": 0,
+      "response_ms": {
+        "p50": 15.819,
+        "p95": 16.095,
+        "p99": 16.266,
+        "p99.9": 16.404,
+        "p99.99": 16.488,
+        "max": 16.559
+      },
+      "start_lag_ms_max": 0.087,
+      "dma_fpga_ms": {
+        "p50": 15.814,
+        "max": 16.554
+      },
+      "release_period_ms_mean": 20.48,
+      "duration_s": 2052.1,
+      "throughput_windows_per_s": 48.8282,
+      "miss_indices": [],
+      "windows_unique": 4096,
+      "window_range": [
+        0,
+        4095
+      ],
+      "class_eq_recorded": 100200,
+      "logits_eq_reference_all4": 100200,
+      "calibrated_conf_checked": 1033,
+      "calibrated_conf_max_abs_diff_vs_reference": 0.0,
+      "guard_rc": "0",
+      "workload_rc": "0",
+      "post_run_process_check": "CLEAN",
+      "hard_rt_pass": true
+    },
+    "R0_normal_prio": {
+      "executed": 30200,
+      "acceptance_windows": 30000,
+      "deadline_misses": 73,
+      "response_ms": {
+        "p50": 15.826,
+        "p95": 16.154,
+        "p99": 16.924,
+        "p99.9": 24.175,
+        "p99.99": 36.351,
+        "max": 43.857
+      },
+      "start_lag_ms_max": 23.499,
+      "dma_fpga_ms": {
+        "p50": 15.82,
+        "max": 27.865
+      },
+      "release_period_ms_mean": 20.48,
+      "duration_s": 618.5,
+      "throughput_windows_per_s": 48.8285,
+      "miss_indices": [
+        667,
+        668,
+        1869,
+        2429,
+        2430,
+        2431,
+        3655,
+        4270,
+        4271,
+        4272,
+        5421,
+        6028,
+        6029,
+        6030,
+        6031,
+        6032,
+        6033,
+        6034,
+        6035,
+        8520,
+        9130,
+        9149,
+        11546,
+        12178,
+        12202,
+        12203,
+        12204,
+        12205,
+        12842,
+        12843,
+        14105,
+        14107,
+        15378,
+        15379,
+        15976,
+        16517,
+        16582,
+        17215,
+        17793,
+        17794,
+        17795,
+        18371,
+        18984,
+        20196,
+        22641,
+        22666,
+        22667,
+        23270,
+        24440,
+        24442
+      ],
+      "windows_unique": 4096,
+      "window_range": [
+        0,
+        4095
+      ],
+      "class_eq_recorded": 30200,
+      "logits_eq_reference_all4": 30200,
+      "calibrated_conf_checked": 312,
+      "calibrated_conf_max_abs_diff_vs_reference": 0.0,
+      "guard_rc": "0",
+      "workload_rc": "0",
+      "post_run_process_check": "CLEAN",
+      "hard_rt_pass": false
+    },
+    "R1_fifo50_cpu1": {
+      "executed": 30200,
+      "acceptance_windows": 30000,
+      "deadline_misses": 0,
+      "response_ms": {
+        "p50": 15.819,
+        "p95": 16.094,
+        "p99": 16.262,
+        "p99.9": 16.399,
+        "p99.99": 16.473,
+        "max": 16.551
+      },
+      "start_lag_ms_max": 0.044,
+      "dma_fpga_ms": {
+        "p50": 15.814,
+        "max": 16.544
+      },
+      "release_period_ms_mean": 20.48,
+      "duration_s": 618.5,
+      "throughput_windows_per_s": 48.8285,
+      "miss_indices": [],
+      "windows_unique": 4096,
+      "window_range": [
+        0,
+        4095
+      ],
+      "class_eq_recorded": 30200,
+      "logits_eq_reference_all4": 30200,
+      "calibrated_conf_checked": 312,
+      "calibrated_conf_max_abs_diff_vs_reference": 0.0,
+      "guard_rc": "0",
+      "workload_rc": "0",
+      "post_run_process_check": "CLEAN",
+      "hard_rt_pass": true
+    },
+    "R2_fifo50_cpu1_repeat": {
+      "executed": 30200,
+      "acceptance_windows": 30000,
+      "deadline_misses": 0,
+      "response_ms": {
+        "p50": 15.824,
+        "p95": 16.103,
+        "p99": 16.263,
+        "p99.9": 16.409,
+        "p99.99": 16.478,
+        "max": 16.507
+      },
+      "start_lag_ms_max": 0.063,
+      "dma_fpga_ms": {
+        "p50": 15.819,
+        "max": 16.502
+      },
+      "release_period_ms_mean": 20.48,
+      "duration_s": 618.5,
+      "throughput_windows_per_s": 48.8285,
+      "miss_indices": [],
+      "windows_unique": 4096,
+      "window_range": [
+        0,
+        4095
+      ],
+      "class_eq_recorded": 30200,
+      "logits_eq_reference_all4": 30200,
+      "calibrated_conf_checked": 312,
+      "calibrated_conf_max_abs_diff_vs_reference": 0.0,
+      "guard_rc": "0",
+      "workload_rc": "0",
+      "post_run_process_check": "CLEAN",
+      "hard_rt_pass": true
+    }
+  }
+}

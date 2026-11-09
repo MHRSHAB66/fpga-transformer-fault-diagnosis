@@ -1,0 +1,30 @@
+{
+  "tag": "rt20261024_R2_fifo50_cpu1_repeat",
+  "remote_dir": "/home/xilinx/timing_runs_20261023/rt20261024_R2_fifo50_cpu1_repeat",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "pc_start": "2026-10-24T18:50:38",
+  "preflight_s": 3.51,
+  "uploaded_sha256": {
+    "fpga_rt_acceptance.py": "a473a225dcc00e96518f1529f9aaba72a157c2d05dea75ba5e445839b7eda3c6",
+    "temp_guard.sh": "602432ae5ed1c0e5663c7ccd03014b98ff0a63f9877c5b52d73bfd80dca40848"
+  },
+  "workload": "python3.6 -u /home/xilinx/timing_runs_20261023/rt20261024_R2_fifo50_cpu1_repeat/fpga_rt_acceptance.py /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz 4096 30200 200 1 1 50 /home/xilinx/timing_runs_20261023/rt20261024_R2_fifo50_cpu1_repeat/out",
+  "board_wall_s": 636.8,
+  "run_out": [
+    "START_UTC=2019-11-13T02:30:32Z",
+    "TEMP_START=46.75549316392",
+    "META n_unique=4096 n_total=30200 warmup=200 sched=SCHED_FIFO_prio_50,_cpu_[1] class_source=fpga_register preload_s=8.02 preload_maxrss_kb=17552->149288",
+    "SUMMARY {\"n_unique\": 4096, \"n_total\": 30200, \"executed\": 30200, \"warmup\": 200, \"aborted\": null, \"sched\": \"SCHED_FIFO prio 50, cpu [1]\", \"class_source\": \"fpga_register\", \"preload_s\": 8.018, \"preload_maxrss_kb\": [17552, 149288], \"period_ms\": 20.48, \"acceptance_windows\": 30000, \"deadline_misses\": 0, \"response_ms\": {\"p50\": 15.824, \"p95\": 16.103, \"p99\": 16.263, \"p99.9\": 16.409}, \"response_ms_max\": 16.507, \"warmup_misses\": 0, \"involuntary_ctx_switches\": 0, \"voluntary_ctx_switches\": 33175, \"major_faults\": 0, \"temp_c\": {\"start\": 46.75549316392, \"max\": 47.001574706888, \"end\": 46.632452392436}}",
+    "WORKLOAD_RC=0",
+    "GUARD_RC=0",
+    "END_UTC=2019-11-13T02:41:07Z",
+    "DONE"
+  ],
+  "workload_rc": "0",
+  "guard_rc": "0",
+  "result": "OK",
+  "post_run_process_check": "CLEAN",
+  "pc_end": "2026-10-24T19:01:29"
+}

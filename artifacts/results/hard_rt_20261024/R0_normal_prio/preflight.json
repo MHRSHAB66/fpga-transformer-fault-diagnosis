@@ -1,0 +1,87 @@
+[
+  {
+    "check": "ssh_connectivity",
+    "ok": true,
+    "detail": "reachable"
+  },
+  {
+    "check": "python3.6",
+    "ok": true,
+    "detail": "Python 3.6.5"
+  },
+  {
+    "check": "deployment_dir",
+    "ok": true,
+    "detail": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f"
+  },
+  {
+    "check": "bitstream_present",
+    "ok": true,
+    "detail": "design_1_wrapper.bit"
+  },
+  {
+    "check": "hwh_present",
+    "ok": true,
+    "detail": "design_1_wrapper.hwh"
+  },
+  {
+    "check": "bit_identity",
+    "ok": true,
+    "detail": "board ce3c254b8679, expected ce3c254b8679"
+  },
+  {
+    "check": "hwh_identity",
+    "ok": true,
+    "detail": "board eabc0163be6a, expected eabc0163be6a"
+  },
+  {
+    "check": "input_present",
+    "ok": true,
+    "detail": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz"
+  },
+  {
+    "check": "input_complete",
+    "ok": true,
+    "detail": "1128562912 bytes (expect 1128562912)"
+  },
+  {
+    "check": "driver_import",
+    "ok": true,
+    "detail": "import fault_classifier (no overlay load)"
+  },
+  {
+    "check": "dma_contract_65536B",
+    "ok": true,
+    "detail": "dma_max_transfer_bytes=65536 (expect 65536)"
+  },
+  {
+    "check": "input_frame_32768B",
+    "ok": true,
+    "detail": "input_frame_bytes=32768 (expect 32768)"
+  },
+  {
+    "check": "requested_n_valid",
+    "ok": true,
+    "detail": "n=95404 (allowed 1..95404)"
+  },
+  {
+    "check": "xadc_temperature",
+    "ok": true,
+    "detail": "in_temp0_raw=2594"
+  },
+  {
+    "check": "temperature_below_stop",
+    "ok": true,
+    "detail": "46.140 C (start only below 75 C)"
+  },
+  {
+    "check": "no_other_workload_or_guard",
+    "ok": true,
+    "detail": "clear"
+  },
+  {
+    "check": "no_prior_runner",
+    "ok": true,
+    "detail": "clear"
+  }
+]
