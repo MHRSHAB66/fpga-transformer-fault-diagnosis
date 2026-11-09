@@ -177,5 +177,7 @@ Historical evidence (earlier OOC IP-only and C-synthesis runs) is retained in
   remain unmeasured.**
 - HLS C-synthesis numbers are estimates; only the Vivado post-route numbers are
   place-and-route measurements. C-synthesis estimates are not called "post-route".
-- The integer hardware path outputs 4 logits and an argmax class only; a
-  confidence/probability value is **not** produced in hardware (reported as NA).
+- The integer hardware path outputs 4 logits only; the argmax class is computed
+  from them on the Zynq PS by the driver (an on-FPGA argmax variant exists as
+  C-model-verified source, see `docs/reports/consolidated_results_20261022.md`).
+  A confidence/probability value is **not** produced in hardware.

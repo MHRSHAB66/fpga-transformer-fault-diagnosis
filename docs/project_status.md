@@ -2,7 +2,7 @@
 
 **Project:** Real-Time Machinery Condition Monitoring Using a Transformer Neural Network on FPGA  
 **Student:** Mehrdad Sheikh Abbasi, B.Sc., Amirkabir University of Technology  
-**Last updated:** 2026-10-08 (physically validated on real MYIR Z-Turn XC7Z020; tag `fpga-demo-validated-20261008`). Demo runbook: `docs/demo_runbook.md`.
+**Last updated:** 2026-10-24 (hard real-time acceptance test, calibrated confidence, power blocker). Reports: `docs/reports/hard_rt_calibration_power_20261024.md`, `docs/reports/gui_demo_timing_20261023.md`, `docs/reports/consolidated_results_20261022.md`. Demo runbook: `docs/demo_runbook.md`.
 
 ---
 
@@ -32,7 +32,8 @@ The software/model phase is complete as of 2026-06-15.
 
 **Baseline model (highest accuracy):** 2-layer Transformer,
 **98.22%** test accuracy on 95,404 unseen windows.
-Checkpoint: `artifacts/runs/20260615_223905_fpga_fault_final_t4/checkpoints/transformer_best.pt`.
+Checkpoint: `artifacts/runs/2layer_baseline/checkpoints/transformer_best.pt` (local copy of
+Kaggle run `20260615_223905_fpga_fault_final_t4`; metrics `artifacts/runs/2layer_baseline/results/metrics.json`).
 See `docs/final_software_result.md`.
 
 ## FPGA-deployed model (Stages 6-8): F_1layer @ int10
@@ -50,16 +51,20 @@ integer aggregation (1024→256 tokens) internally.
   **97.7684%** (93,275/95,404), macro-F1 **95.6539%** (macro-P 95.9332%, macro-R
   95.4233%) on the real board, all 95,404 windows
   (`artifacts/results/fpga_fulltest_20261008_141335/fpga_fulltest_metrics.json`).
-- Software INT10 reference: **97.7359%** (93,244/95,404), macro-F1 **95.6282%**;
-  the FPGA matches it within **+0.03 pp** (board marginally higher)
-  (`artifacts/experiments/transformer_f1_seq256_pool4/int10_ingress_local/combined.json`).
+- Python INT10 reference **with the deployed (export) scales**: 97.7684% (93,275) —
+  identical to the board on all 95,404 windows, including all 4 logits (physical
+  logits recorded 2026-10-22). The previously quoted 97.7359% (93,244) is a
+  *differently calibrated* INT10 model (12 vs 20 calibration files) that differs
+  from the board on 225 windows; it is not the hardware reference
+  (`artifacts/results/board_vs_reference_20261022/comparison.json`).
 - Live multiclass (120-window class-balanced, real board): accuracy **95.0%**,
   macro-F1 **95.0%**, **120/120** match the recorded FPGA predictions, latency mean
   **16.15 ms** (`artifacts/results/fpga_live_multiclass_20261008_230015/`).
-- Vitis HLS CSim: **16/16 exact**; DMA-integrated Vivado post-route timing met
-  (WNS +0.036 ns), 210/220 DSP, 31,687 LUT, bitstream/HWH/XSA generated. See
-  `docs/reports/hls_seq256_int10_results.md` and
-  `artifacts/results/seq256_dma_system_dsp_margin_z7020/`.
+- Vitis HLS CSim: **16/16 exact**. Deployed dma16 build, Vivado post-route: timing
+  met (WNS +0.364 ns), 210/220 DSP, 31,734 LUT, 30,921 FF, 70.5 BRAM tiles
+  (`artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/`). The
+  often-quoted WNS +0.036 ns / 31,687 LUT belong to the earlier 16 KB-DMA build
+  (`seq256_dma_system_dsp_margin_z7020/`), which is not deployed.
 
 **Earlier SEQ=1024 INT10 variant (historical):**
 - Float full-test accuracy: **97.55%**; **int10 full-test accuracy: 97.11%**
@@ -69,7 +74,8 @@ integer aggregation (1024→256 tokens) internally.
   imbalance class (`kaggle/sweep_multibit/`).
 - Bit-exact HLS export verified 16/16 (`hls/f1_int10/verify_export.py`).
 
-Consolidated numbers: **`docs/demo_runbook.md` §1** (canonical, deployed SEQ=256
+Consolidated numbers: **`docs/reports/consolidated_results_20261022.md`** (all
+results with evidence paths); demo figures: **`docs/demo_runbook.md` §1** (deployed SEQ=256
 system). Note: `docs/final_report.md` is an older 2026-09-09 auto-snapshot of the
 **SEQ=1024** variant (97.11% int10, hardware "TBD") and is superseded for the
 deployed-system numbers by the runbook.
@@ -100,12 +106,84 @@ deployed-system numbers by the runbook.
 - Real USB-UART boot capture (COM6) and live results over SSH/Ethernet.
 - Board confirmed: MYIR Z-Turn XC7Z020 (dma16 deployment, 64 KB DMA transfer).
 
+**Done 2026-10-22 (see `docs/reports/consolidated_results_20261022.md`):**
+- Board-vs-reference: same-input, same-model comparison bit-exact on 95,404 windows.
+- Real-time on prepared windows: board-only 60.94 inf/s (95,404) and end-to-end
+  60.30 / 58.72 inf/s (10,000) vs 48.83 required — sustained average met; hard
+  per-window deadline not demonstrated.
+- Live CONF from the FPGA logits (uncalibrated softmax, ECE measured).
+- On-FPGA argmax variant: synthesized, routed and tested on the board: 40/40
+  golden vectors including 16 ties; a separate balanced live sample achieved
+  39/40 against ground truth and 40/40 against recorded prior-board predictions.
+  The new overlay's full 95,404-window board run completed on 2026-10-23:
+  accuracy 97.768437%, 95,404/95,404 classes matching the earlier overlay.
+  See `docs/reports/live_guard_argmax_progress_20261022.md`.
+
+**Done 2026-10-23 (see `docs/reports/gui_demo_timing_20261023.md`):**
+- Physical GUI validation with the argmax overlay (real window, real board; buttons
+  triggered with Tk `invoke()`, OS mouse input was unavailable): preflight, a
+  40-window class-balanced run with all four classes, Start/Stop twice, Stop during
+  start-up, Close mid-run, and three safety faults (leftover process, missing guard,
+  guard dying mid-run) — board clean after every step.
+- Timed defense rehearsal, all steps PASS (`artifacts/results/demo_rehearsal_20261023/`).
+- Live logits of the argmax full test equal the Python INT10 reference on all
+  95,404 windows; CONF recomputed identically; the GUI labels CONF as uncalibrated.
+- Tail-latency attribution measured: SD-card input I/O stalls (up to ~0.8 s) and OS
+  preemption of the busy-polling DMA loop (up to ~42 ms); extra SSH logins add
+  CPU load. Queue-based prefetch (thread and process) measured WORSE on this board
+  and is off by default.
+
+**Done 2026-10-24 (see `docs/reports/hard_rt_calibration_power_20261024.md`):**
+- Hard real-time acceptance test (criterion fixed beforehand,
+  `docs/reports/hard_rt_acceptance_criterion_20261024.md`): board-side path with
+  RAM-backed prepared windows released every 20.48 ms — **0 deadline misses in
+  30,000 windows, twice**, with per-process SCHED_FIFO + CPU affinity (max response
+  16.55 ms); default scheduling: 73 misses. All classes and logits = reference.
+  Scope: not the live SD/SSH/GUI demo path; SMP PREEMPT kernel (empirical bound).
+- Calibrated confidence: temperature T = 1.4248 fitted on validation only; test ECE
+  0.79 % → 0.09 %, NLL 0.0628 → 0.0584; shown in Live mode, labelled; physical
+  logits = reference.
+- Long run L1 (criterion `docs/reports/hard_rt_longrun_criterion_20261024.md`):
+  same RAM-backed workload and SCHED_FIFO/CPU1 configuration, **0 deadline misses
+  in 100,000 windows** (34.2 min), p99.99 16.49 ms, max 16.56 ms; all classes and
+  logits = reference (`docs/reports/hard_rt_longrun_preempt_rt_20261024.md`).
+- PREEMPT_RT: not available on the board (stock 4.14.0-xilinx `SMP PREEMPT`);
+  read-only rollback package taken (`artifacts/rollback/board_boot_backup_20261024/`);
+  a candidate PREEMPT_RT kernel (linux-xlnx xilinx-v2018.3 + patch-4.14-rt1) was
+  built on the PC (`artifacts/preempt_rt_candidate_20261024/`).
+- PREEMPT_RT physical comparison (authorised, same day): candidate copied additively
+  (`image_rt.ub` on SD p1, own module dir), booted ONCE from U-Boot over COM6 (no
+  `saveenv`); proven `SMP PREEMPT RT`, `/sys/kernel/realtime`=1; golden 40/40 identical.
+  Same workload: **0 misses in 30,000 + 30,000 + 100,000** (max 16.47 ms) — tail only
+  ≈0.05–0.1 ms lower than stock, **no practical improvement**; K2's SSH stream was lost to
+  a board Ethernet link-down (workload completed, raw data verified, exit codes lost).
+  Board returned to the stock kernel by normal reboot and verified (boot-file hashes,
+  BIT/HWH, BOARD_IDLE). RT files left inert + labelled
+  (`docs/reports/hard_rt_preempt_rt_comparison_20261024.md`).
+- New separate GUI/CLI mode `ram_realtime_demo` (legacy live mode unchanged and default):
+  documented 256-window RAM set, FIFO 50/CPU 1 timed thread, non-blocking display
+  hand-off. Board response **0 misses in 30,000 accepted windows** (max 16.50 ms) =
+  HARD REAL-TIME VERIFIED for that boundary/duration; SSH receipt and GUI update measured
+  separately (not hard RT: 2.8 % of receipts > 20.48 ms; GUI p50 ≈ 73 ms). GUI Start/Stop/
+  Close validated on the real window (`docs/reports/ram_realtime_demo_20261024.md`).
+- End-to-end investigation (criterion frozen first: `docs/reports/e2e_hard_rt_criterion_20261024.md`):
+  existing `ram_realtime_demo` GUI path 30,000/30,000 windows late (e2e max 292 ms, 80 ms
+  GUI poll); new mode `ram_tcp_e2e_demo` (TCP data plane, no SSH, per-frame 1 ms render)
+  e2e p50 19.2–20.2 ms but 14,489 and 8,866 of 30,000 late (max 112/135 ms) ⇒
+  **END-TO-END HARD REAL-TIME NOT VERIFIED** for both; board stage still 0 misses; all
+  frames/classes/logits correct, drops accounted (`docs/reports/e2e_hard_rt_verdict_20261024.md`).
+- Manual mouse pass of the GUI by Mehrdad (2026-10-24), board idle afterwards.
+- Power/energy: BLOCKED — no current/power telemetry on the board and no external
+  instrument (`docs/reports/power_measurement_blocker_20261024.md`).
+
 **Still pending / future work:**
-- End-to-end real-time: the core is capable (+26.8%), but the SSH/gzip demo path is
-  ~5% below the 48.83 windows/s requirement — a direct sensor/DDR→AXI-DMA feed would
-  close it (see `docs/demo_runbook.md` §7).
-- Hardware confidence/softmax output (currently CONF=N/A; the class output is valid).
-- Optional live sensor input path (Stage 9).
+- Legacy live demo path (gzip from SD, SSH, GUI) remains AVERAGE-THROUGHPUT VERIFIED,
+  HARD REAL-TIME NOT VERIFIED; the RAM mode covers the board boundary only — a sensor
+  input path is future work.
+- Power/energy measurement once an inline meter or logging supply is available.
+- Optional: longer `ram_realtime_demo` run (100,000 windows); unexplained post-boot
+  warm-up (≈59 °C) seen only after the RT boot.
+- On-board preprocessing; optional live sensor input path (Stage 9).
 
 Report the provisional post-route resource/timing numbers ONLY with the
 provisional-part caveat. Do not claim physical-board resource usage, on-board
@@ -117,6 +195,6 @@ established and may be reported.
 
 ## Branch
 
-Current work branch: `day15-arch-sweep-cleanup` (Stages 6-8 quantization/HLS +
-Stages 10/11 PC-side). `main` lags at the day11-era clean state; day-per-branch
-history is preserved on `origin`.
+All work is merged to `main` (HEAD `e42ec4f`; tag `fpga-demo-validated-20261008`
+points to the earlier merge `40548f0`); day-per-branch history is preserved on
+`origin`. The 2026-10-22 changes are uncommitted in the working tree.

@@ -1,5 +1,19 @@
 # Final Project Report
 
+> ## ⛔ OBSOLETE — do not cite this file
+>
+> This is a historical auto-snapshot (2026-09-09) of the **SEQ=1024** F_1layer
+> variant, written **before** any synthesis, bitstream or physical-board work.
+> Its model geometry (seq=1024), input scale, hardware table ("TBD") and
+> pipeline status no longer describe the deployed system. It is kept unchanged
+> below only as a record.
+>
+> **Current, evidence-backed source:**
+> [`docs/reports/consolidated_results_20261022.md`](reports/consolidated_results_20261022.md)
+> — every result there is listed with its model, test type, sample count,
+> metric and evidence file, and measured / estimated / unverified items are
+> separated. Demo operation: `docs/demo_runbook.md`.
+
 *Real-Time Machinery Condition Monitoring with a Transformer on FPGA*  
 Generated 2026-09-09 -- auto-assembled by `src/reporting/generate_final_report.py` from committed artifacts.
 

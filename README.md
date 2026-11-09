@@ -16,9 +16,11 @@ MAFAULDA windows -> preprocessing/windowing -> lightweight Transformer (PyTorch)
 ```
 
 The final target is a Transformer-based fault classifier prepared for FPGA, with
-its predictions shown on a computer. This repository currently covers the
-**software phase** (data → training → evaluation → reproducibility). The
-quantization, FPGA, communication, and UI stages are future work.
+its predictions shown on a computer. The pipeline is implemented end to end and
+the INT10 FPGA core has been run on a MYIR Z-Turn XC7Z020 board. **Current
+results, each with its evidence file:**
+[`docs/reports/consolidated_results_20261022.md`](docs/reports/consolidated_results_20261022.md).
+Demo operation: [`docs/demo_runbook.md`](docs/demo_runbook.md).
 
 ## Dataset
 
@@ -36,13 +38,16 @@ Files are grouped into 4 classes: `normal`, `imbalance`, `misalignment`,
 | Stage | Status | Description |
 |------|--------|-------------|
 | 0–1 | done | Project setup, data discovery, class mapping |
-| 2 | in progress | Preprocessing, windowing, DataLoaders (signal-processing experiments optional) |
+| 2 | done | Preprocessing, windowing, DataLoaders |
 | 3–4 | done | MLP sanity baseline + lightweight Transformer baseline |
-| 5 | in progress | Reproducibility, config snapshots, final software evaluation |
-| 6–12 | TODO | Quantization, FPGA inference, FPGA↔PC communication, PC UI |
+| 5 | done | Reproducibility, config snapshots, final software evaluation |
+| 6–8 | done | INT10 quantization, golden vectors, HLS core; physically run on the board (class decided on the Zynq PS; on-FPGA argmax variant C-model-verified only) |
+| 9 | not done | Live sensor input (optional) |
+| 10–11 | done | Results to PC over SSH/Ethernet (UART boot capture), Replay/Live viewer |
+| 12 | done (prepared windows) | Integration and validation; see the consolidated results for limits |
 
-See `docs/DECISION_LOG.md` for confirmed design decisions and `CLAUDE.md` for the
-full stage plan and constraints.
+Per-stage detail: `docs/project_status.md`. Design decisions: `docs/DECISION_LOG.md`.
+Stage plan and constraints: `CLAUDE.md` / `AGENTS.md`.
 
 ## Installation
 

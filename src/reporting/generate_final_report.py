@@ -93,6 +93,9 @@ def _write_markdown(r):
     L.append("# Final Project Report\n")
     L.append(f"*{r['project']}*  \nGenerated {r['generated']} -- auto-assembled by "
              "`src/reporting/generate_final_report.py` from committed artifacts.\n")
+    L.append("> **Historical SEQ=1024 snapshot, not the deployed FPGA result.** "
+             "For current model-specific and physical-board evidence see "
+             "`docs/reports/consolidated_results_20261022.md`.\n")
     L.append("## 1. Model & data\n")
     L.append(f"- **Deployed model:** {r['deployed_model']}")
     L.append(f"- **Dataset:** {r['dataset']}")

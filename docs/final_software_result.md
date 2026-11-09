@@ -66,6 +66,12 @@
 
 ## Artifact Paths
 
+> Local copy (2026-10-22 note): the paths below are the Kaggle run layout; in this
+> repository the same run is stored under `artifacts/runs/2layer_baseline/`
+> (`results/metrics.json` records `run_dir = …/20260615_223905_fpga_fault_final_t4`).
+> This 2-layer model is the software baseline and is **not** the deployed FPGA model;
+> see `docs/reports/consolidated_results_20261022.md`.
+
 | Artifact | Path |
 |---|---|
 | Best checkpoint | `artifacts/runs/20260615_223905_fpga_fault_final_t4/checkpoints/transformer_best.pt` |
