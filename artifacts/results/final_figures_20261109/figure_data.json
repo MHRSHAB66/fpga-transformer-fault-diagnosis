@@ -1,0 +1,329 @@
+{
+ "generated_by": "tools/plot_final_figures.py",
+ "roc_auc": {
+  "score": "softmax(s_logits * board_logits), s_logits = 0.10779884107882078 (uncalibrated)",
+  "per_class_ovr": {
+   "normal": 0.998961,
+   "imbalance": 0.999117,
+   "misalignment": 0.999412,
+   "bearing_fault": 0.999029
+  },
+  "macro_ovr": 0.99913,
+  "micro": 0.99932,
+  "n_windows": 95404,
+  "logits_source": "artifacts/results/fpga_realtime_bench_20261022/board_full_pipelined/logits_i32.bin"
+ },
+ "confusion_matrix": {
+  "classes": [
+   "normal",
+   "imbalance",
+   "misalignment",
+   "bearing_fault"
+  ],
+  "counts": [
+   [
+    2127,
+    16,
+    285,
+    12
+   ],
+   [
+    7,
+    15984,
+    9,
+    348
+   ],
+   [
+    72,
+    106,
+    23939,
+    39
+   ],
+   [
+    106,
+    518,
+    611,
+    51225
+   ]
+  ],
+  "accuracy": 0.977684,
+  "per_class": {
+   "normal": {
+    "precision": 0.919983,
+    "recall": 0.871721,
+    "f1": 0.895202,
+    "support": 2440
+   },
+   "imbalance": {
+    "precision": 0.961501,
+    "recall": 0.977734,
+    "f1": 0.96955,
+    "support": 16348
+   },
+   "misalignment": {
+    "precision": 0.963573,
+    "recall": 0.991017,
+    "f1": 0.977102,
+    "support": 24156
+   },
+   "bearing_fault": {
+    "precision": 0.992271,
+    "recall": 0.976458,
+    "f1": 0.984301,
+    "support": 52460
+   }
+  },
+  "macro_f1": 0.956539,
+  "pred_source": "artifacts/results/fpga_fulltest_20261008_141335/fpga_pred.txt"
+ },
+ "reliability": {
+  "uncalibrated": {
+   "temperature": 1.0,
+   "ece_15_bins": 0.007853,
+   "bins": [
+    {
+     "bin": 5,
+     "n": 6,
+     "mean_conf": 0.38453025250109324,
+     "accuracy": 0.3333333333333333
+    },
+    {
+     "bin": 6,
+     "n": 28,
+     "mean_conf": 0.44177231805266853,
+     "accuracy": 0.5714285714285714
+    },
+    {
+     "bin": 7,
+     "n": 305,
+     "mean_conf": 0.5125799023744353,
+     "accuracy": 0.4
+    },
+    {
+     "bin": 8,
+     "n": 397,
+     "mean_conf": 0.5670630469575623,
+     "accuracy": 0.5440806045340051
+    },
+    {
+     "bin": 9,
+     "n": 578,
+     "mean_conf": 0.631379788681373,
+     "accuracy": 0.5726643598615917
+    },
+    {
+     "bin": 10,
+     "n": 636,
+     "mean_conf": 0.7013447117701106,
+     "accuracy": 0.6540880503144654
+    },
+    {
+     "bin": 11,
+     "n": 629,
+     "mean_conf": 0.7668092948647823,
+     "accuracy": 0.6756756756756757
+    },
+    {
+     "bin": 12,
+     "n": 1012,
+     "mean_conf": 0.834976728600356,
+     "accuracy": 0.7440711462450593
+    },
+    {
+     "bin": 13,
+     "n": 1661,
+     "mean_conf": 0.903605018868393,
+     "accuracy": 0.8332329921733895
+    },
+    {
+     "bin": 14,
+     "n": 90152,
+     "mean_conf": 0.9981103481194897,
+     "accuracy": 0.9939879314934776
+    }
+   ]
+  },
+  "calibrated, T = 1.4248": {
+   "temperature": 1.42482066327489,
+   "ece_15_bins": 0.000862,
+   "bins": [
+    {
+     "bin": 5,
+     "n": 12,
+     "mean_conf": 0.377005585165266,
+     "accuracy": 0.5
+    },
+    {
+     "bin": 6,
+     "n": 70,
+     "mean_conf": 0.4395006477390338,
+     "accuracy": 0.4142857142857143
+    },
+    {
+     "bin": 7,
+     "n": 376,
+     "mean_conf": 0.5080259978214259,
+     "accuracy": 0.43351063829787234
+    },
+    {
+     "bin": 8,
+     "n": 750,
+     "mean_conf": 0.5674830023592708,
+     "accuracy": 0.5746666666666667
+    },
+    {
+     "bin": 9,
+     "n": 823,
+     "mean_conf": 0.636684464404373,
+     "accuracy": 0.6294046172539489
+    },
+    {
+     "bin": 10,
+     "n": 808,
+     "mean_conf": 0.7032595187302728,
+     "accuracy": 0.7054455445544554
+    },
+    {
+     "bin": 11,
+     "n": 1094,
+     "mean_conf": 0.7701326969384334,
+     "accuracy": 0.7669104204753199
+    },
+    {
+     "bin": 12,
+     "n": 1453,
+     "mean_conf": 0.8342872850342326,
+     "accuracy": 0.8437715072264281
+    },
+    {
+     "bin": 13,
+     "n": 2583,
+     "mean_conf": 0.9026309153146803,
+     "accuracy": 0.9043747580332946
+    },
+    {
+     "bin": 14,
+     "n": 87435,
+     "mean_conf": 0.9966373164123715,
+     "accuracy": 0.9968204952250243
+    }
+   ]
+  }
+ },
+ "rt_response_ccdf": {
+  "R0_normal_prio": {
+   "windows": 30000,
+   "misses_recomputed": 73,
+   "misses_summary": 73,
+   "max_ms": 43.857,
+   "p50_ms": 15.826,
+   "p99_9_ms": 24.175
+  },
+  "R1_fifo50_cpu1": {
+   "windows": 30000,
+   "misses_recomputed": 0,
+   "misses_summary": 0,
+   "max_ms": 16.551,
+   "p50_ms": 15.819,
+   "p99_9_ms": 16.399
+  },
+  "L1_fifo50_cpu1_100k": {
+   "windows": 100000,
+   "misses_recomputed": 0,
+   "misses_summary": 0,
+   "max_ms": 16.559,
+   "p50_ms": 15.819,
+   "p99_9_ms": 16.404
+  }
+ },
+ "e2e_latency_profile": {
+  "run 1": {
+   "stage1_release_to_ready_ms": {
+    "p50": 15.85,
+    "p95": 16.1,
+    "p99": 16.27,
+    "p99.9": 16.407,
+    "p99.99": 16.506,
+    "n": 30000,
+    "max": 16.589,
+    "min": 15.818
+   },
+   "e2e_release_to_render_ms": {
+    "p50": 20.167,
+    "p95": 26.736,
+    "p99": 39.622,
+    "p99.9": 76.523,
+    "p99.99": 95.378,
+    "n": 30000,
+    "max": 112.104,
+    "min": 16.741
+   },
+   "late_with_clock_bound": 14489,
+   "max_clock_err_ms": 1.3107
+  },
+  "run 2": {
+   "stage1_release_to_ready_ms": {
+    "p50": 15.859,
+    "p95": 16.129,
+    "p99": 16.281,
+    "p99.9": 16.412,
+    "p99.99": 16.485,
+    "n": 30000,
+    "max": 16.512,
+    "min": 15.828
+   },
+   "e2e_release_to_render_ms": {
+    "p50": 19.248,
+    "p95": 23.718,
+    "p99": 28.708,
+    "p99.9": 48.499,
+    "p99.99": 115.575,
+    "n": 30000,
+    "max": 135.065,
+    "min": 16.556
+   },
+   "late_with_clock_bound": 8866,
+   "max_clock_err_ms": 0.3654
+  }
+ },
+ "throughput_inf_s": {
+  "required": 48.828,
+  "rows": {
+   "Board only, serial loop (95,404 windows)": 53.826,
+   "Board only, overlapped read (95,404 windows)": 60.938,
+   "Board only, FPGA argmax overlay (95,404 windows)": 60.851,
+   "Board to PC over SSH, serial (mean of 2 \u00d7 10,000)": 51.8165,
+   "Board to PC over SSH, overlapped (mean of 2 \u00d7 10,000)": 59.508
+  },
+  "e2e_serial_runs": [
+   51.065,
+   52.568
+  ],
+  "e2e_overlap_runs": [
+   60.298,
+   58.718
+  ]
+ },
+ "fpga_resources_post_route": {
+  "LUT": {
+   "used": 31766.0,
+   "available": 53200.0,
+   "percent": 59.71
+  },
+  "FF": {
+   "used": 30952.0,
+   "available": 106400.0,
+   "percent": 29.09
+  },
+  "BRAM tiles": {
+   "used": 70.5,
+   "available": 140.0,
+   "percent": 50.36
+  },
+  "DSP48E1": {
+   "used": 210.0,
+   "available": 220.0,
+   "percent": 95.45
+  }
+ }
+}
