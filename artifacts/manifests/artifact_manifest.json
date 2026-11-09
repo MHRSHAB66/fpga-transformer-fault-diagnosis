@@ -1,6 +1,6 @@
 {
-  "generated_utc": "2026-10-08T17:27:10.668424+00:00",
-  "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa and the multi-GB fpga_testset_in.*) are gitignored and recorded here only (committed_in_git=false); canonical copies live on disk and on the board.",
+  "generated_utc": "2026-11-09T13:53:08.615478+00:00",
+  "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, multi-MB run dumps, board boot binaries) are gitignored and recorded here only (committed_in_git=false); copies live on disk, in the off-repo backup and on the board.",
   "repo_relative": true,
   "artifacts": [
     {
@@ -34,15 +34,15 @@
     {
       "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/config/model_manifest.json",
       "present": true,
-      "size_bytes": 704,
-      "sha256": "68d88ff2e3b2bb62822e0ec32eb9461d53430e0f72e3a07add8024a2094988d3",
+      "size_bytes": 676,
+      "sha256": "eb869a291db3e33ad658e0e03ae6a8c0c09ee2948a59e1a887990a9b7ca98f76",
       "committed_in_git": true
     },
     {
       "path": "artifacts/deploy/seq256_z7020_pynq_dma16_py36_20261008/MANIFEST.sha256",
       "present": true,
       "size_bytes": 1119,
-      "sha256": "6ce8c5f6fdd47853fb227154618df9f1eed0ec0902fb76d934c2a14283dd4ace",
+      "sha256": "a0e9175a62a2f6a1294be959ccfc2f150376543a36d0366e0460e4d456832189",
       "committed_in_git": true
     },
     {
@@ -83,15 +83,15 @@
     {
       "path": "artifacts/results/fpga_fulltest_20261008_141335/labels.txt",
       "present": true,
-      "size_bytes": 286212,
-      "sha256": "91a14dc25f120a8b9a1e8e3350ac252a48a49a2d09ab90f47b141ac785102264",
+      "size_bytes": 190808,
+      "sha256": "1538649b6f095dc26fce4d2f1ac93a0d8f491e117e9befe8ea7419b8526eb151",
       "committed_in_git": true
     },
     {
       "path": "artifacts/results/fpga_fulltest_20261008_141335/meta.json",
       "present": true,
-      "size_bytes": 362,
-      "sha256": "7a63a6ad0ae8d01272fbda17ec8e7e85f93d2f28a2763e01de18249fb63fb9dc",
+      "size_bytes": 348,
+      "sha256": "3e5249e3b68cf85cb55cfac556615275a21a7f20629664a04f6ee6c8b0360391",
       "committed_in_git": true
     },
     {
@@ -132,15 +132,15 @@
     {
       "path": "artifacts/results/fpga_live_test_20261008_200509/live_evidence.json",
       "present": true,
-      "size_bytes": 2441,
-      "sha256": "b3d089fc99763c00655c0f3891b9e511bed25a897fc59ea1ce939866c114d687",
+      "size_bytes": 2251,
+      "sha256": "604b91f9f45da0610a227ff877ce4edcdd2d2e8ffa87276488cea220fd8d7ec9",
       "committed_in_git": true
     },
     {
       "path": "artifacts/results/fpga_live_test_20261008_200509/live_results.txt",
       "present": true,
-      "size_bytes": 3040,
-      "sha256": "bb0e3ea53367e2196405a7c399e42cc03202d570393fd63a56e2442a33fd1eb7",
+      "size_bytes": 2890,
+      "sha256": "11c7edf15c3b3217fde619bb4da256a0c9e9cfc540b0e51595b05bfd39e559c8",
       "committed_in_git": true
     },
     {
@@ -155,6 +155,363 @@
       "present": true,
       "size_bytes": 212037,
       "sha256": "f4a72a3cf1bce940b60b6011c6c2e27beed986817edb89b9f036343d8aa8a1a9",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/deploy/seq256_argmax_z7020_20261022/overlay/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "ce3c254b86797c58bb99e7200169db520ff39eddfd3e2a6c559b16b5846f166b",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/seq256_argmax_z7020_20261022/overlay/design_1_wrapper.hwh",
+      "present": true,
+      "size_bytes": 340937,
+      "sha256": "eabc0163be6ae333f0d32fec391708fa8bd8a097854cf7b73cf9d8387ba9a19c",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/deploy/seq256_argmax_z7020_20261022/overlay/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1356317,
+      "sha256": "87c5a26c63949aa1c8b5a1ce56e95fc4951de5740c70bd7218fbd220c148f761",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/seq256_argmax_z7020_20261022/config/hwh_contract.json",
+      "present": true,
+      "size_bytes": 910,
+      "sha256": "0eb886778ed6b014708ef09f68e64b2360efeaad3cdc34e8f06f091653837d1d",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/deploy/seq256_argmax_z7020_20261022/MANIFEST.sha256",
+      "present": true,
+      "size_bytes": 1119,
+      "sha256": "a2d250c3ac1ec5ad72b5964b48ef14dc937e56bb4ef452ddfe754f7e06bb0e06",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/seq256_dma_argmax_z7020_20261022/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "ce3c254b86797c58bb99e7200169db520ff39eddfd3e2a6c559b16b5846f166b",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/seq256_dma_argmax_z7020_20261022/bitstream/design_1.hwh",
+      "present": true,
+      "size_bytes": 340937,
+      "sha256": "eabc0163be6ae333f0d32fec391708fa8bd8a097854cf7b73cf9d8387ba9a19c",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/seq256_dma_argmax_z7020_20261022/bitstream/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1356317,
+      "sha256": "87c5a26c63949aa1c8b5a1ce56e95fc4951de5740c70bd7218fbd220c148f761",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/board_vs_reference_20261022/comparison.json",
+      "present": true,
+      "size_bytes": 3945,
+      "sha256": "bfc77053e5fa6721786e52dbc06fef406064e62e326d729e5528341cfb204f06",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_realtime_bench_20261022/realtime_verdict.json",
+      "present": true,
+      "size_bytes": 8719,
+      "sha256": "0c0af18bbe07e232345829d8d44d251cad85036877aca826b1096cbf409049a9",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_realtime_bench_20261022/board_full_pipelined/logits_i32.bin",
+      "present": true,
+      "size_bytes": 1526464,
+      "sha256": "bc95d37176b5552cee5ac4e3387021af1fa387ad196bf1cb5b7f8f64fd561540",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_realtime_bench_20261022/board_full_pipelined/timing.npz",
+      "present": true,
+      "size_bytes": 2290246,
+      "sha256": "a7ab75d49f5f7b02422dbf4ed7f134960fb568861b73d90de6040ee881f736ee",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_realtime_bench_20261022/board_full_baseline/timing.npz",
+      "present": true,
+      "size_bytes": 2290246,
+      "sha256": "4c56769270230c269dfb73b7ea48e0b1e65f578099a2e03eaf8d2e179e8aeae5",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_argmax_fulltest_20261023/live_evidence.json",
+      "present": true,
+      "size_bytes": 2662,
+      "sha256": "bd5ae4de0d2cb0fe206967f976cec52fb33c3b71931b092cd3a686d39db44686",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_argmax_fulltest_20261023/live_frames.csv",
+      "present": true,
+      "size_bytes": 6824475,
+      "sha256": "3de5df5939c23c17be5c34f60fedba58ad5bb24b26a66e894e1bf72e199dd1a1",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_argmax_fulltest_20261023/live_frames.jsonl",
+      "present": true,
+      "size_bytes": 29333963,
+      "sha256": "35f1b1487ca2a309dd519d1dfabb7cd9bf937bc6252047857287cceec15fe73b",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/calibration/conf_temperature_v1/temperature.json",
+      "present": true,
+      "size_bytes": 888,
+      "sha256": "3ecf55d77b178b06233a1bbc9887f48d8ec9f6a4e453c93cf97d6361c7c999ef",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/hard_rt_20261024/R0_normal_prio/remote/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "942459db614cc4353bb719c990b429df9a64125f3627adfdf11cf88391f6f8c7",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/hard_rt_20261024/R1_fifo50_cpu1/remote/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "b83026afdc115df2baa38beb17d9f870faea7993fc2c431bc84999743c89d675",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/hard_rt_20261024/R2_fifo50_cpu1_repeat/remote/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "ec54ade68272f5f37e8653e2b16df441bc6bf5ced1da8ba92baabb7391962006",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/hard_rt_20261024/L1_fifo50_cpu1_100k/remote/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 4510262,
+      "sha256": "f1a8f1f09803c3222431c5be4e90d679f79edac323dbd9ebd86320a74f598b11",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/hard_rt_preempt_rt_20261024/K1_rtkernel_fifo50_cpu1/remote/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "6fea4d3ae1a5af80580f86a7f4dec846b7a4f60441002712f7e9d24d9b971926",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/hard_rt_preempt_rt_20261024/K2_rtkernel_fifo50_cpu1_repeat/remote/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "54a8301e8c916f68b1e07b13ceec2d7e5b4353c742146226f2578b472d7471e7",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/hard_rt_preempt_rt_20261024/K3_rtkernel_fifo50_cpu1_100k/remote/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 4510262,
+      "sha256": "efd7b15e060e0bdb82c08ba438a9b2469314d5a43e94b77bc8848f4e60edc348",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/ram_demo_sets/class_balanced_256_v1/set.i32",
+      "present": true,
+      "size_bytes": 8388608,
+      "sha256": "06ac41bdacdc08bcbf1dc5326d57437f5ce57504ba12f3fb377503fa39909777",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/ram_demo_sets/class_balanced_256_v1/provenance.json",
+      "present": true,
+      "size_bytes": 16479,
+      "sha256": "d8ff819618d7d960c2ed78c9e442325862c4aceafd10f8f7de61169c392ac1a0",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/ram_rt_demo_20261024_criterion30k/remote/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1632628,
+      "sha256": "bf81336cc591ef5edb0d98d3e60f8dc2f19bd06a30bf161b6e6fe10aa1ba3df4",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/e2e_demo_gui_20261024_231859/pc_evidence.json",
+      "present": true,
+      "size_bytes": 9557845,
+      "sha256": "57a094b3ddbf16e5f815da18c4f89f07f73aa90825280f2b49c8c4f1b92574b5",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/e2e_demo_gui_20261024_231859/frames.tsv",
+      "present": true,
+      "size_bytes": 3460789,
+      "sha256": "85e89a7ff4209392d8b9a1653420162a1f806d024e4e4e20b1c1986fbb435889",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/e2e_demo_gui_20261024_231859/remote/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1632614,
+      "sha256": "031eeeda83c38cda1ce5d4033d97558779c945e8c47c6b8bdc8f987ed7a0b943",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/e2e_demo_gui_20261024_233000/pc_evidence.json",
+      "present": true,
+      "size_bytes": 10109969,
+      "sha256": "6b157884189593197beaa3e8762cc3c3a33efadb30c430fc2d97e21b15345dab",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/e2e_demo_gui_20261024_233000/frames.tsv",
+      "present": true,
+      "size_bytes": 3460789,
+      "sha256": "5680afdb8728239e1dda80aee21984ea96c43b55f6314db68bcec436bf6e4286",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/e2e_demo_gui_20261024_233000/remote/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1632614,
+      "sha256": "6970763e6d7b38784c973bc87fe244156ea5726c5afc7b4456b856427f6eeeb2",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_timing_20261023/A_legacy_unpaced_full/remote/workload.out",
+      "present": true,
+      "size_bytes": 8183482,
+      "sha256": "bdc86df7290a7e10d2e0d6ce91ea032dcd6fb4704efe6c45b99ac9982211e521",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_timing_20261023/B_prefetch128_unpaced_full/remote/workload.out",
+      "present": true,
+      "size_bytes": 10988755,
+      "sha256": "b357a1800f683163a706093502ba13473d62fe7f0b27384de0f3e7fc9a333b19",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_timing_20261023/B2_proc128_unpaced_full/remote/workload.out",
+      "present": true,
+      "size_bytes": 11062869,
+      "sha256": "a9180a988903f866ce8cd710fb9aadb43590319537a8b8c8976bee112c1f4ed3",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_timing_20261023/C_prefetch128_paced48828_full/remote/workload.out",
+      "present": true,
+      "size_bytes": 12660029,
+      "sha256": "ac04f5e0be5d886ecf091670441595115c7ffeff55791dbda90fe77d1435f8ae",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_timing_20261023/S1_L_stream_30k/workload_stream.out",
+      "present": true,
+      "size_bytes": 2577073,
+      "sha256": "9eaf5eeeccea0f1da89ca64e54290eb3ed590633d5433c17fe18dd456529ec79",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_timing_20261023/S2_RA32_stream_30k/workload_stream.out",
+      "present": true,
+      "size_bytes": 2576939,
+      "sha256": "9318979766a843f41f8539634e8c6be36110bfb6588debc7b1bc4916fe591a1e",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_timing_20261023/S3_L_stream_30k/workload_stream.out",
+      "present": true,
+      "size_bytes": 2576969,
+      "sha256": "1a575c44064243fdff15677c195bf6e8380b62538c74f89ef7be21012de17982",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_timing_20261023/S4_RA32_stream_30k/workload_stream.out",
+      "present": true,
+      "size_bytes": 2577009,
+      "sha256": "8479ba93b4eeda33d0f2fb793876157591fc1acc2ef868f5b1e4ccf5b87e56ca",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/rollback/board_boot_backup_20261024/BOOT.BIN",
+      "present": true,
+      "size_bytes": 4616592,
+      "sha256": "19ef4427708fd6261103c29d6e5329eed727aa69e81ac5c59898113203a92589",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/rollback/board_boot_backup_20261024/image.ub",
+      "present": true,
+      "size_bytes": 4173540,
+      "sha256": "e04eabda6723405e94648704e6c88855dbfd37b916c707515087377937195c6d",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/rollback/board_boot_backup_20261024/sd_p1_boot_files.tar",
+      "present": true,
+      "size_bytes": 8796160,
+      "sha256": "cbb6eaa84fb9aa70ed9601cbd403c4486e695984ab97ef1b051580b2887a1c88",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/rollback/board_boot_backup_20261024/qspi_mtd0.bin",
+      "present": true,
+      "size_bytes": 5242880,
+      "sha256": "5fd39493b9cfb37f57ee370175d20a57526f021ff3058fe22989b561f2a8e3d2",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/rollback/board_boot_backup_20261024/qspi_mtd1.bin",
+      "present": true,
+      "size_bytes": 131072,
+      "sha256": "f82799ecc32756610d22e30b6c62a572e39dd0faa6c0d2ac2fb95e950fbac194",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/rollback/board_boot_backup_20261024/qspi_mtd2.bin",
+      "present": true,
+      "size_bytes": 11010048,
+      "sha256": "516c9bbe0cfbb43a0c9bf3c079f8dd7b6ed2b9cb875ff4e01451911c9592b1a0",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/rollback/board_boot_backup_20261024/qspi_mtd3.bin",
+      "present": true,
+      "size_bytes": 393216,
+      "sha256": "c97fce784428a2e10cd6d4ef97ccc756f2e4c1b146a9b9dc5415d4e3e245b70a",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/preempt_rt_candidate_20261024/image_rt.ub",
+      "present": true,
+      "size_bytes": 4202380,
+      "sha256": "d939fb14e84e2a294739bec152f73c6c1caa21a2948e7ad11cda0fe0931555ae",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/preempt_rt_candidate_20261024/modules_rt.tar.gz",
+      "present": true,
+      "size_bytes": 1254851,
+      "sha256": "77b81fdd48038a06447b3a5a809678353c2367d134c404b64d737df635b6e870",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/final_figures_20261109/figure_data.json",
+      "present": true,
+      "size_bytes": 6280,
+      "sha256": "84a275b6a626ee74c867c07cb28f4174bf0536ab05c9e11ec219790a8c975e4c",
       "committed_in_git": true
     }
   ]

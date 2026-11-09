@@ -15,6 +15,7 @@ import datetime
 import hashlib
 import json
 import os
+import subprocess
 
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
@@ -50,10 +51,74 @@ TARGETS = [
     # UI screenshots
     "artifacts/results/ui_smoke_20261008/replay_tab.png",
     "artifacts/results/ui_smoke_20261008/live_tab.png",
+    # argmax overlay (class decided in FPGA logic) = live deployment since 2026-10-23
+    "artifacts/deploy/seq256_argmax_z7020_20261022/overlay/design_1_wrapper.bit",
+    "artifacts/deploy/seq256_argmax_z7020_20261022/overlay/design_1_wrapper.hwh",
+    "artifacts/deploy/seq256_argmax_z7020_20261022/overlay/seq256_dma_system.xsa",
+    "artifacts/deploy/seq256_argmax_z7020_20261022/config/hwh_contract.json",
+    "artifacts/deploy/seq256_argmax_z7020_20261022/MANIFEST.sha256",
+    "artifacts/results/seq256_dma_argmax_z7020_20261022/bitstream/design_1_wrapper.bit",
+    "artifacts/results/seq256_dma_argmax_z7020_20261022/bitstream/design_1.hwh",
+    "artifacts/results/seq256_dma_argmax_z7020_20261022/bitstream/seq256_dma_system.xsa",
+    # board vs reference, physical logits and real-time bench (2026-10-22)
+    "artifacts/results/board_vs_reference_20261022/comparison.json",
+    "artifacts/results/fpga_realtime_bench_20261022/realtime_verdict.json",
+    "artifacts/results/fpga_realtime_bench_20261022/board_full_pipelined/logits_i32.bin",
+    "artifacts/results/fpga_realtime_bench_20261022/board_full_pipelined/timing.npz",
+    "artifacts/results/fpga_realtime_bench_20261022/board_full_baseline/timing.npz",
+    # argmax overlay full test (2026-10-23)
+    "artifacts/results/fpga_argmax_fulltest_20261023/live_evidence.json",
+    "artifacts/results/fpga_argmax_fulltest_20261023/live_frames.csv",
+    "artifacts/results/fpga_argmax_fulltest_20261023/live_frames.jsonl",
+    # confidence calibration (validation-only fit)
+    "artifacts/calibration/conf_temperature_v1/temperature.json",
+    # hard real-time raw timings (stock kernel, then PREEMPT_RT one-shot boot)
+    "artifacts/results/hard_rt_20261024/R0_normal_prio/remote/out/rt_raw.npz",
+    "artifacts/results/hard_rt_20261024/R1_fifo50_cpu1/remote/out/rt_raw.npz",
+    "artifacts/results/hard_rt_20261024/R2_fifo50_cpu1_repeat/remote/out/rt_raw.npz",
+    "artifacts/results/hard_rt_20261024/L1_fifo50_cpu1_100k/remote/out/rt_raw.npz",
+    "artifacts/results/hard_rt_preempt_rt_20261024/K1_rtkernel_fifo50_cpu1/remote/out/rt_raw.npz",
+    "artifacts/results/hard_rt_preempt_rt_20261024/K2_rtkernel_fifo50_cpu1_repeat/remote/out/rt_raw.npz",
+    "artifacts/results/hard_rt_preempt_rt_20261024/K3_rtkernel_fifo50_cpu1_100k/remote/out/rt_raw.npz",
+    # RAM real-time demo set and runs, TCP end-to-end criterion runs
+    "artifacts/ram_demo_sets/class_balanced_256_v1/set.i32",
+    "artifacts/ram_demo_sets/class_balanced_256_v1/provenance.json",
+    "artifacts/results/ram_rt_demo_20261024_criterion30k/remote/out/rt_raw.npz",
+    "artifacts/results/e2e_demo_gui_20261024_231859/pc_evidence.json",
+    "artifacts/results/e2e_demo_gui_20261024_231859/frames.tsv",
+    "artifacts/results/e2e_demo_gui_20261024_231859/remote/out/rt_raw.npz",
+    "artifacts/results/e2e_demo_gui_20261024_233000/pc_evidence.json",
+    "artifacts/results/e2e_demo_gui_20261024_233000/frames.tsv",
+    "artifacts/results/e2e_demo_gui_20261024_233000/remote/out/rt_raw.npz",
+    # tail-latency study raw outputs (2026-10-23)
+    "artifacts/results/fpga_timing_20261023/A_legacy_unpaced_full/remote/workload.out",
+    "artifacts/results/fpga_timing_20261023/B_prefetch128_unpaced_full/remote/workload.out",
+    "artifacts/results/fpga_timing_20261023/B2_proc128_unpaced_full/remote/workload.out",
+    "artifacts/results/fpga_timing_20261023/C_prefetch128_paced48828_full/remote/workload.out",
+    "artifacts/results/fpga_timing_20261023/S1_L_stream_30k/workload_stream.out",
+    "artifacts/results/fpga_timing_20261023/S2_RA32_stream_30k/workload_stream.out",
+    "artifacts/results/fpga_timing_20261023/S3_L_stream_30k/workload_stream.out",
+    "artifacts/results/fpga_timing_20261023/S4_RA32_stream_30k/workload_stream.out",
+    # board boot rollback package and the PREEMPT_RT candidate build
+    "artifacts/rollback/board_boot_backup_20261024/BOOT.BIN",
+    "artifacts/rollback/board_boot_backup_20261024/image.ub",
+    "artifacts/rollback/board_boot_backup_20261024/sd_p1_boot_files.tar",
+    "artifacts/rollback/board_boot_backup_20261024/qspi_mtd0.bin",
+    "artifacts/rollback/board_boot_backup_20261024/qspi_mtd1.bin",
+    "artifacts/rollback/board_boot_backup_20261024/qspi_mtd2.bin",
+    "artifacts/rollback/board_boot_backup_20261024/qspi_mtd3.bin",
+    "artifacts/preempt_rt_candidate_20261024/image_rt.ub",
+    "artifacts/preempt_rt_candidate_20261024/modules_rt.tar.gz",
+    # final evaluation figures (numbers behind docs/figures/final/)
+    "artifacts/results/final_figures_20261109/figure_data.json",
 ]
 
-# Paths that are intentionally untracked (gitignored) -- flagged in the manifest.
-GITIGNORED_HINT = (".bit", ".xsa", "fpga_testset_in.")
+
+def tracked_paths():
+    """Paths git tracks (committed_in_git is read from git, not guessed)."""
+    out = subprocess.run(["git", "-C", REPO, "ls-files", "-z"], capture_output=True,
+                         check=True).stdout.decode("utf-8")
+    return set(p for p in out.split("\0") if p)
 
 
 def sha256(path, chunk=1 << 20):
@@ -64,27 +129,43 @@ def sha256(path, chunk=1 << 20):
     return h.hexdigest()
 
 
+def blob_digest(rel):
+    """Size and SHA-256 of the committed (index) bytes of a tracked file.
+
+    Tracked text files are checked out with CRLF on Windows (core.autocrlf), so
+    hashing the working copy would make the manifest depend on the platform.
+    """
+    data = subprocess.run(["git", "-C", REPO, "cat-file", "blob", ":" + rel],
+                          capture_output=True, check=True).stdout
+    return len(data), hashlib.sha256(data).hexdigest()
+
+
 def main():
     rows = []
+    tracked = tracked_paths()
     for rel in TARGETS:
         p = os.path.join(REPO, rel.replace("/", os.sep))
-        if os.path.isfile(p):
-            size = os.path.getsize(p)
-            rows.append({
-                "path": rel,
-                "present": True,
-                "size_bytes": size,
-                "sha256": sha256(p),
-                "committed_in_git": not any(h in rel for h in GITIGNORED_HINT),
-            })
+        if rel in tracked:
+            size, digest = blob_digest(rel)
+        elif os.path.isfile(p):
+            size, digest = os.path.getsize(p), sha256(p)
         else:
             rows.append({"path": rel, "present": False})
+            continue
+        rows.append({
+            "path": rel,
+            "present": True,
+            "size_bytes": size,
+            "sha256": digest,
+            "committed_in_git": rel in tracked,
+        })
     out = {
         "generated_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
         "note": ("Integrity manifest for delivery artifacts. Binary/large items "
-                 "(.bit/.xsa and the multi-GB fpga_testset_in.*) are gitignored and "
-                 "recorded here only (committed_in_git=false); canonical copies live "
-                 "on disk and on the board."),
+                 "(.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, "
+                 "multi-MB run dumps, board boot binaries) are gitignored and "
+                 "recorded here only (committed_in_git=false); copies live on disk, "
+                 "in the off-repo backup and on the board."),
         "repo_relative": True,
         "artifacts": rows,
     }
