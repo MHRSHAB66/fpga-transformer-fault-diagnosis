@@ -1,0 +1,2 @@
+evidence: G:\aut\project\fpga_fault_diagnosis\artifacts\results\ram_rt_demo_gui_20261024_230459 renders: 30200 polls: 7701
+EXIT=0

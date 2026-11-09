@@ -1,0 +1,7 @@
+4.14.0-xilinx
+ 07:21:13 up  1:48,  1 user,  load average: 0.19, 0.54, 0.94
+BOARD_IDLE
+0
+ce3c254b86797c58
+eabc0163be6ae333
+temp_c=48.2

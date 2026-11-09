@@ -1,0 +1,141 @@
+{
+  "criterion": "docs/reports/e2e_hard_rt_criterion_20261024.md",
+  "mode": "ram_tcp_e2e_demo",
+  "evidence_dir": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\e2e_demo_gui_20261024_230747",
+  "n_total": 1200,
+  "executed": 1200,
+  "aborted": null,
+  "accepted_expected": 1000,
+  "accepted_received": 1000,
+  "accepted_rendered": 1000,
+  "missing": [],
+  "missing_count": 0,
+  "duplicate": 0,
+  "out_of_order": 0,
+  "gui_not_rendered": 0,
+  "pc_sink_overflow": 0,
+  "board_overflow": 0,
+  "board_overflow_seqs": [],
+  "publisher": {
+    "port": 50555,
+    "pub_cpu": 0,
+    "pub_prio": 40,
+    "client": "192.168.2.10:64956",
+    "records_read": 1200,
+    "sent": 1200,
+    "undelivered": 0,
+    "undelivered_first_seq": null,
+    "disconnect_t": null,
+    "max_send_s": 0.00015729000006103888,
+    "sync_replies": 131,
+    "error": null,
+    "sched": "SCHED_FIFO 40 cpu [0]"
+  },
+  "data_error": null,
+  "stall_log": [],
+  "board_stage1_misses": 0,
+  "stage1_release_to_ready_ms": {
+    "p50": 15.87,
+    "p95": 16.123,
+    "p99": 16.262,
+    "p99.9": 16.402,
+    "p99.99": 16.451,
+    "n": 1000,
+    "max": 16.456,
+    "min": 15.839
+  },
+  "stage2_ready_to_pub_ms": {
+    "p50": 0.207,
+    "p95": 0.329,
+    "p99": 0.378,
+    "p99.9": 0.416,
+    "p99.99": 0.417,
+    "n": 1000,
+    "max": 0.417,
+    "min": 0.192
+  },
+  "stage3_pub_to_rx_ms": {
+    "p50": 0.37,
+    "p95": 0.492,
+    "p99": 1.185,
+    "p99.9": 9.658,
+    "p99.99": 28.066,
+    "n": 1000,
+    "max": 30.112,
+    "min": 0.134
+  },
+  "stage4_rx_to_render_ms": {
+    "p50": 2.507,
+    "p95": 9.09,
+    "p99": 21.497,
+    "p99.9": 34.292,
+    "p99.99": 39.826,
+    "n": 1000,
+    "max": 40.441,
+    "min": 0.624
+  },
+  "e2e_release_to_render_ms": {
+    "p50": 19.052,
+    "p95": 25.911,
+    "p99": 38.58,
+    "p99.9": 51.83,
+    "p99.99": 56.341,
+    "n": 1000,
+    "max": 56.843,
+    "min": 17.261
+  },
+  "e2e_plus_bound_ms": {
+    "p50": 19.304,
+    "p95": 26.148,
+    "p99": 38.819,
+    "p99.9": 52.074,
+    "p99.99": 56.577,
+    "n": 1000,
+    "max": 57.078,
+    "min": 17.512
+  },
+  "e2e_misses_with_bound": 251,
+  "e2e_misses_without_bound": 219,
+  "max_clock_err_ms": 0.2853,
+  "clock": {
+    "anchors": 14,
+    "rtt_ms_min": 0.3106000367552042,
+    "rtt_ms_max": 0.5442999536171556,
+    "half_rtt_ms_max": 0.2721499768085778,
+    "drift_ppm_min": -21.045213542847385,
+    "drift_ppm_max": 897.1126509427219,
+    "span_s": 25.886450450052507
+  },
+  "clock_rounds": 131,
+  "clock_max_gap_s": 0.5126183999236673,
+  "gui_tick_interval_ms": {
+    "p50": 1.015,
+    "p95": 1.179,
+    "p99": 3.516,
+    "p99.9": 14.124,
+    "p99.99": 28.172,
+    "n": 44670,
+    "max": 46.525,
+    "min": 1.004
+  },
+  "classes_ok": "1000/1000",
+  "logits_ok": "1000/1000",
+  "true_classes": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "board_temp_c": {
+    "start": 50.077593993988,
+    "max": 50.077593993988,
+    "end": 49.708471679536
+  },
+  "guard_rc": "0",
+  "workload_rc": "0",
+  "post_run_board_processes": "BOARD_IDLE",
+  "fail_reasons": [
+    "deadline"
+  ],
+  "verdict": "END-TO-END HARD REAL-TIME NOT VERIFIED"
+}

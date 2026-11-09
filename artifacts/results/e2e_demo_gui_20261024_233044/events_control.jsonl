@@ -1,0 +1,6 @@
+{"type": "status", "msg": "mode=ram_tcp_e2e_demo; data plane TCP 192.168.2.99:50555; N=30200 (warm-up 200)"}
+{"type": "temp_start", "temp_c": 50.44671630844}
+{"type": "status", "msg": "data connection open; clock sync 50 rounds; start sent"}
+{"type": "meta", "n": 30200, "seq": 1024, "ch": 8, "class_source": "fpga_register", "mode": "ram_tcp_e2e_demo"}
+{"type": "status", "msg": "stop requested"}
+{"type": "status", "msg": "runner exited rc=1"}

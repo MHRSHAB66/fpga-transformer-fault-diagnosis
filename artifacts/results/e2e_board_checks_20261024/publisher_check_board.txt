@@ -1,0 +1,23 @@
+c1d7ae0d0b3f2befd2dc47ab396ab987f9870458cd0e68ecf096d95af96b6b67  check_ram_e2e_publisher.py
+b3c36b44215f56f81b047455b3f52000864b24b9dfd625b15d7f0f252043388d  fpga_ram_e2e_demo.py
+{
+ "handshake": true,
+ "sync_rtt_ms_max_loopback": 1.411,
+ "ordered_200": true,
+ "backpressure_overflow": 19566,
+ "backpressure_queued": 434,
+ "writer_worst_us": 136.5,
+ "resume_no_gap": true,
+ "publisher_exit_s": 0.01,
+ "publisher_json": {
+  "records_read": 684,
+  "sent": 634,
+  "undelivered": 50,
+  "error": null,
+  "sched": "SCHED_OTHER cpu [0, 1]"
+ },
+ "pipe_bytes": 4096
+}
+RESULT PASS
+NO_LEFTOVER
+0

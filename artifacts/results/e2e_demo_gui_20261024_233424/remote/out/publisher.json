@@ -1,0 +1,15 @@
+{
+  "port": 50555,
+  "pub_cpu": 0,
+  "pub_prio": 40,
+  "client": "192.168.2.10:10798",
+  "records_read": 3200,
+  "sent": 3200,
+  "undelivered": 0,
+  "undelivered_first_seq": null,
+  "disconnect_t": null,
+  "max_send_s": 0.00023430300007021287,
+  "sync_replies": 212,
+  "error": null,
+  "sched": "SCHED_FIFO 40 cpu [0]"
+}

@@ -1,0 +1,8 @@
+{"type": "status", "msg": "mode=ram_tcp_e2e_demo; data plane TCP 192.168.2.99:50555; N=1200 (warm-up 200)"}
+{"type": "temp_start", "temp_c": 51.800164794764}
+{"type": "status", "msg": "data connection open; clock sync 50 rounds; start sent"}
+{"type": "meta", "n": 1200, "seq": 1024, "ch": 8, "class_source": "fpga_register", "mode": "ram_tcp_e2e_demo"}
+{"type": "summary", "executed": 1200, "aborted": null, "wall_s": 24.572, "throughput": 48.8369, "temp_start": "51.800164794764", "temp_max": "51.800164794764", "temp_end": "51.184960937344", "mode": "ram_tcp_e2e_demo", "deadline_misses": 0, "acceptance_windows": 1000, "board_overflow": 0, "resp_max_ms": "16.454"}
+{"type": "status", "msg": "WORKLOAD_RC=0"}
+{"type": "status", "msg": "GUARD_RC=0"}
+{"type": "status", "msg": "runner exited rc=0"}
