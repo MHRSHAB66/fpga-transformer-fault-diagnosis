@@ -1,0 +1,55 @@
+[    2.508029] systemd[1]: System time before build time, advancing clock.
+[    2.579989] systemd[1]: Failed to insert module 'autofs4': No such file or directory
+[    2.620654] NET: Registered protocol family 10
+[    2.625745] Segment Routing with IPv6
+[    2.670301] systemd[1]: systemd 237 running in system mode. (+PAM +AUDIT +SELINUX +IMA +APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 +SECCOMP +BLKID +ELFUTILS +KMOD -IDN2 +IDN -PCRE2 default-hierarchy=hybrid)
+[    2.691153] systemd[1]: Detected architecture arm.
+[    2.759868] systemd[1]: Set hostname to <pynq>.
+[    3.643843] systemd[1]: Created slice User and Session Slice.
+[    3.673276] systemd[1]: Started Dispatch Password Requests to Console Directory Watch.
+[    3.713107] systemd[1]: Started Forward Password Requests to Wall Directory Watch.
+[    3.753018] systemd[1]: Started ntp-systemd-netif.path.
+[    3.784003] systemd[1]: Created slice System Slice.
+[    3.813566] systemd[1]: Listening on Journal Socket (/dev/log).
+[    3.843498] systemd[1]: Listening on Journal Socket.
+[    5.995093] systemd-journald[876]: Received request to flush runtime journal from PID 1
+[    6.001975] systemd-journald[876]: File /var/log/journal/1bb53cb1093f458aa5d68063d06aa39f/system.journal corrupted or uncleanly shut down, renaming and replacing.
+[    6.524982] Adding 1048572k swap on /var/swap.  Priority:-2 extents:9 across:1990652k SS
+[    8.923983] IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+[   13.122853] macb e000b000.ethernet eth0: link up (1000/Full)
+[   13.122916] IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+[  144.328225] fpga_manager fpga0: writing design_1_wrapper.bin to Xilinx Zynq FPGA Manager
+[  241.627117] fpga_manager fpga0: writing design_1_wrapper.bin to Xilinx Zynq FPGA Manager
+[  894.586895] fpga_manager fpga0: writing design_1_wrapper.bin to Xilinx Zynq FPGA Manager
+[ 1268.811048] macb e000b000.ethernet eth0: link down
+[ 1276.082766] macb e000b000.ethernet eth0: link up (1000/Full)
+Nov 13 04:55:16 pynq systemd-logind[1547]: Removed session c40.
+Nov 13 04:55:17 pynq dhclient[1660]: DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 2 (xid=0x9cd3cd37)
+Nov 13 04:55:19 pynq dhclient[1660]: No DHCPOFFERS received.
+Nov 13 04:55:19 pynq dhclient[1660]: No working leases in persistent database - sleeping.
+Nov 13 04:55:19 pynq systemd[1]: Stopping Network Name Resolution...
+Nov 13 04:55:19 pynq systemd[1]: Stopped Network Name Resolution.
+Nov 13 04:55:19 pynq systemd[1]: Starting Network Name Resolution...
+Nov 13 04:55:19 pynq systemd-resolved[16746]: Positive Trust Anchors:
+Nov 13 04:55:19 pynq systemd-resolved[16746]: . IN DS 19036 8 2 49aac11d7b6f6446702e54a1607371607a1a41855200fd2ce1cdde32f24e8fb5
+Nov 13 04:55:19 pynq systemd-resolved[16746]: . IN DS 20326 8 2 e06d44b80b8f1d39a95c0b0d7c65d08458e880409bbc683457104237c7f8ec8d
+Nov 13 04:55:19 pynq systemd-resolved[16746]: Negative trust anchors: 10.in-addr.arpa 16.172.in-addr.arpa 17.172.in-addr.arpa 18.172.in-addr.arpa 19.172.in-addr.arpa 20.172.in-addr.arpa 21.172.in-addr.arpa 22.172.in-addr.arpa 23.172.in-addr.arpa 24.172.in-addr.arpa 25.172.in-addr.arpa 26.172.in-addr.arpa 27.172.in-addr.arpa 28.172.in-addr.arpa 29.172.in-addr.arpa 30.172.in-addr.arpa 31.172.in-addr.arpa 168.192.in-addr.arpa d.f.ip6.arpa corp home internal intranet lan local private test
+Nov 13 04:55:19 pynq systemd-resolved[16746]: Using system hostname 'pynq'.
+Nov 13 04:55:20 pynq systemd[1]: Started Network Name Resolution.
+Nov 13 04:55:20 pynq systemd[1]: Starting resolvconf-pull-resolved.service...
+Nov 13 04:55:20 pynq systemd[1]: Started resolvconf-pull-resolved.service.
+Nov 13 04:55:21 pynq dhclient[1660]: DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 3 (xid=0x68108f32)
+Nov 13 04:55:24 pynq dhclient[1660]: DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 4 (xid=0x68108f32)
+Nov 13 04:55:26 pynq sshd[16757]: Accepted publickey for root from 192.168.2.10 port 16284 ssh2: ED25519 SHA256:gf6gW0zphEQqKH8mUMs1I86XuFPUmdpwIh72+iewuGs
+Nov 13 04:55:26 pynq sshd[16757]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Nov 13 04:55:26 pynq systemd-logind[1547]: New session c41 of user root.
+Nov 13 04:55:26 pynq systemd[1]: Started Session c41 of user root.
+Nov 13 04:55:28 pynq sshd[16757]: Received disconnect from 192.168.2.10 port 16284:11: disconnected by user
+Nov 13 04:55:28 pynq sshd[16757]: Disconnected from user root 192.168.2.10 port 16284
+Nov 13 04:55:28 pynq sshd[16757]: pam_unix(sshd:session): session closed for user root
+Nov 13 04:55:28 pynq systemd-logind[1547]: Removed session c41.
+Nov 13 04:55:28 pynq dhclient[1660]: DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 4 (xid=0x68108f32)
+Nov 13 04:55:28 pynq sshd[16798]: Accepted publickey for root from 192.168.2.10 port 16291 ssh2: ED25519 SHA256:gf6gW0zphEQqKH8mUMs1I86XuFPUmdpwIh72+iewuGs
+Nov 13 04:55:28 pynq sshd[16798]: pam_unix(sshd:session): session opened for user root by (uid=0)
+Nov 13 04:55:28 pynq systemd-logind[1547]: New session c42 of user root.
+Nov 13 04:55:28 pynq systemd[1]: Started Session c42 of user root.

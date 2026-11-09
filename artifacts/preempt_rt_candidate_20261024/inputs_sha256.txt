@@ -1,0 +1,4 @@
+1025b5be6fd6a5f66c7bb27cf30976d0a5b49e075b8d3f5d5de171d255694ef6  patch-4.14-rt1.patch.xz
+b72d3b5acfb48fd5e4be5c9bd24f320291c9704ebb3da907de4fe7a11d6e5f96  orig_system.dtb
+linux-xlnx tag xilinx-v2018.3 commit 51445f9139af73c616f054a8fcc77ed2568b81b1
+arm-linux-gnueabihf-gcc-9 (Ubuntu 9.4.0-1ubuntu1~20.04.2) 9.4.0

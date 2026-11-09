@@ -1,0 +1,26 @@
+{
+  "tag": "rtk20261024_K2_rtkernel_fifo50_cpu1_repeat",
+  "remote_dir": "/home/xilinx/timing_runs_20261023/rtk20261024_K2_rtkernel_fifo50_cpu1_repeat",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "pc_start": "2026-10-24T21:05:08",
+  "preflight_s": 3.99,
+  "uploaded_sha256": {
+    "fpga_rt_acceptance.py": "a473a225dcc00e96518f1529f9aaba72a157c2d05dea75ba5e445839b7eda3c6",
+    "temp_guard.sh": "602432ae5ed1c0e5663c7ccd03014b98ff0a63f9877c5b52d73bfd80dca40848"
+  },
+  "workload": "python3.6 -u /home/xilinx/timing_runs_20261023/rtk20261024_K2_rtkernel_fifo50_cpu1_repeat/fpga_rt_acceptance.py /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz 4096 30200 200 1 1 50 /home/xilinx/timing_runs_20261023/rtk20261024_K2_rtkernel_fifo50_cpu1_repeat/out",
+  "board_wall_s": 388.4,
+  "run_out": [
+    "START_UTC=2019-11-13T04:44:29Z",
+    "TEMP_START=59.305651855288",
+    "META n_unique=4096 n_total=30200 warmup=200 sched=SCHED_FIFO_prio_50,_cpu_[1] class_source=fpga_register preload_s=8.69 preload_maxrss_kb=17712->149448",
+    "client_loop: send disconnect: Connection reset"
+  ],
+  "workload_rc": null,
+  "guard_rc": null,
+  "result": "FAILED/ABORTED (see run_out)",
+  "post_run_process_check": "10070 python3.6 -u /home/xilinx/timing_runs_20261023/rtk20261024_K2_rtkernel_fifo50_cpu1_repeat/fpga_rt_acceptance.py /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz 4096 30200 200 1 1 50 /home/xilinx/timing_runs_20261023/rtk20261024_K2_rtkernel_fifo50_cpu1_repeat/out\n10071 bash /home/xilinx/timing_runs_20261023/rtk20261024_K2_rtkernel_fifo50_cpu1_repeat/temp_guard.sh 10070 /home/xilinx/timing_runs_20261023/rtk20261024_K2_rtkernel_fifo50_cpu1_repeat/guard.log 75 1",
+  "pc_end": "2026-10-24T21:12:10"
+}

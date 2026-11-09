@@ -1,0 +1,259 @@
++ cd /tmp
++ sha256sum image_rt.ub modules_rt.tar.gz
+d939fb14e84e2a294739bec152f73c6c1caa21a2948e7ad11cda0fe0931555ae  image_rt.ub
+77b81fdd48038a06447b3a5a809678353c2367d134c404b64d737df635b6e870  modules_rt.tar.gz
++ test '!' -e /lib/modules/4.14.0-rt1-rt-xilinx+
++ mkdir -p /tmp/p1rw
++ mount -o rw /dev/mmcblk0p1 /tmp/p1rw
++ test '!' -e /tmp/p1rw/image_rt.ub
++ cp /tmp/image_rt.ub /tmp/p1rw/image_rt.ub
++ sync
++ ls -la /tmp/p1rw
+total 12712
+drwxr-xr-x  3 root root   16384 Nov 13 04:25 .
+drwxrwxrwt 11 root root    4096 Nov 13 04:25 ..
+-rwxr-xr-x  1 root root 4616592 Nov 19  2019 BOOT.BIN
+-rwxr-xr-x  1 root root 4202380 Nov 13 04:25 image_rt.ub
+-rwxr-xr-x  1 root root 4173540 Nov 19  2019 image.ub
+drwxr-xr-x  2 root root    2048 Oct  8  2026 System Volume Information
++ cd /tmp/p1rw
++ sha256sum BOOT.BIN image.ub image_rt.ub
+19ef4427708fd6261103c29d6e5329eed727aa69e81ac5c59898113203a92589  BOOT.BIN
+e04eabda6723405e94648704e6c88855dbfd37b916c707515087377937195c6d  image.ub
+d939fb14e84e2a294739bec152f73c6c1caa21a2948e7ad11cda0fe0931555ae  image_rt.ub
++ umount /tmp/p1rw
++ rmdir /tmp/p1rw
++ tar --no-same-owner -C / -xzf /tmp/modules_rt.tar.gz
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.dep.bin: time stamp 2026-10-24 16:48:28 is 219241353.222425969 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.alias: time stamp 2026-10-24 16:48:28 is 219241353.215907355 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.devname: time stamp 2026-10-24 16:48:28 is 219241353.21490105 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.builtin.alias.bin: time stamp 2026-10-24 16:48:28 is 219241353.214126 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.symbols: time stamp 2026-10-24 16:48:28 is 219241353.213123718 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.builtin.bin: time stamp 2026-10-24 16:48:28 is 219241353.212149447 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.softdep: time stamp 2026-10-24 16:48:28 is 219241353.211350733 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.order: time stamp 2026-10-24 16:48:27 is 219241352.210516127 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.builtin: time stamp 2026-10-24 16:48:27 is 219241352.209594842 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/crypto/ansi_cprng.ko: time stamp 2026-10-24 16:48:27 is 219241352.208545253 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/crypto/authencesn.ko: time stamp 2026-10-24 16:48:27 is 219241352.20806042 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/crypto/echainiv.ko: time stamp 2026-10-24 16:48:27 is 219241352.207004003 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/crypto/authenc.ko: time stamp 2026-10-24 16:48:27 is 219241352.206051803 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/crypto/crypto_engine.ko: time stamp 2026-10-24 16:48:27 is 219241352.205069798 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/crypto: time stamp 2026-10-24 16:48:27 is 219241352.204869899 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/lib/crc7.ko: time stamp 2026-10-24 16:48:28 is 219241353.204382579 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/lib/crc-itu-t.ko: time stamp 2026-10-24 16:48:28 is 219241353.203977246 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/lib: time stamp 2026-10-24 16:48:28 is 219241353.203328925 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/crypto/virtio/virtio_crypto.ko: time stamp 2026-10-24 16:48:27 is 219241352.201785374 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/crypto/virtio: time stamp 2026-10-24 16:48:27 is 219241352.201566848 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/crypto: time stamp 2026-10-24 16:48:27 is 219241352.201412369 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/virtio/virtio.ko: time stamp 2026-10-24 16:48:28 is 219241353.200763196 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/virtio/virtio_ring.ko: time stamp 2026-10-24 16:48:28 is 219241353.199671505 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/virtio: time stamp 2026-10-24 16:48:28 is 219241353.198967492 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/ssb/ssb.ko: time stamp 2026-10-24 16:48:27 is 219241352.197825887 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/ssb: time stamp 2026-10-24 16:48:27 is 219241352.197009329 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/gadget/legacy/g_zero.ko: time stamp 2026-10-24 16:48:28 is 219241353.195466777 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/gadget/legacy/g_mass_storage.ko: time stamp 2026-10-24 16:48:27 is 219241352.194448355 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/gadget/legacy/g_webcam.ko: time stamp 2026-10-24 16:48:28 is 219241353.193500679 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/gadget/legacy: time stamp 2026-10-24 16:48:28 is 219241353.192834223 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/gadget/function/usb_f_ss_lb.ko: time stamp 2026-10-24 16:48:27 is 219241352.191581582 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/gadget/function: time stamp 2026-10-24 16:48:27 is 219241352.191366512 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/gadget: time stamp 2026-10-24 16:48:27 is 219241352.1912114 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-jumpshot.ko: time stamp 2026-10-24 16:48:28 is 219241353.190570183 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-datafab.ko: time stamp 2026-10-24 16:48:28 is 219241353.189565375 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-karma.ko: time stamp 2026-10-24 16:48:28 is 219241353.188633017 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-sddr55.ko: time stamp 2026-10-24 16:48:28 is 219241353.187937692 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-usbat.ko: time stamp 2026-10-24 16:48:28 is 219241353.186902107 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-onetouch.ko: time stamp 2026-10-24 16:48:28 is 219241353.185957104 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/uas.ko: time stamp 2026-10-24 16:48:28 is 219241353.185026246 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-alauda.ko: time stamp 2026-10-24 16:48:28 is 219241353.183995959 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-eneub6250.ko: time stamp 2026-10-24 16:48:28 is 219241353.182908087 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-realtek.ko: time stamp 2026-10-24 16:48:28 is 219241353.181855837 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-sddr09.ko: time stamp 2026-10-24 16:48:28 is 219241353.180773008 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-freecom.ko: time stamp 2026-10-24 16:48:28 is 219241353.179884738 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-cypress.ko: time stamp 2026-10-24 16:48:28 is 219241353.179179897 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage/ums-isd200.ko: time stamp 2026-10-24 16:48:28 is 219241353.17867305 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/storage: time stamp 2026-10-24 16:48:28 is 219241353.17799532 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/misc/ezusb.ko: time stamp 2026-10-24 16:48:28 is 219241353.176800846 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/misc: time stamp 2026-10-24 16:48:28 is 219241353.176593117 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/quatech2.ko: time stamp 2026-10-24 16:48:28 is 219241353.175899145 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/opticon.ko: time stamp 2026-10-24 16:48:28 is 219241353.175470589 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/mct_u232.ko: time stamp 2026-10-24 16:48:28 is 219241353.174999319 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/wishbone-serial.ko: time stamp 2026-10-24 16:48:28 is 219241353.174561964 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/f81232.ko: time stamp 2026-10-24 16:48:28 is 219241353.174102415 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/ark3116.ko: time stamp 2026-10-24 16:48:28 is 219241353.173616082 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/pl2303.ko: time stamp 2026-10-24 16:48:28 is 219241353.172903786 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/ftdi_sio.ko: time stamp 2026-10-24 16:48:28 is 219241353.168394444 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/xsens_mt.ko: time stamp 2026-10-24 16:48:28 is 219241353.167858613 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/ti_usb_3410_5052.ko: time stamp 2026-10-24 16:48:28 is 219241353.166071726 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/upd78f0730.ko: time stamp 2026-10-24 16:48:28 is 219241353.165582645 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/whiteheat.ko: time stamp 2026-10-24 16:48:28 is 219241353.165080562 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/keyspan_pda.ko: time stamp 2026-10-24 16:48:28 is 219241353.163406535 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/mos7720.ko: time stamp 2026-10-24 16:48:28 is 219241353.162864699 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/belkin_sa.ko: time stamp 2026-10-24 16:48:28 is 219241353.162389091 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/cp210x.ko: time stamp 2026-10-24 16:48:28 is 219241353.160977558 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/f81534.ko: time stamp 2026-10-24 16:48:28 is 219241353.159283554 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/ssu100.ko: time stamp 2026-10-24 16:48:28 is 219241353.158794497 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/oti6858.ko: time stamp 2026-10-24 16:48:28 is 219241353.157657089 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/safe_serial.ko: time stamp 2026-10-24 16:48:28 is 219241353.157191351 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/aircable.ko: time stamp 2026-10-24 16:48:28 is 219241353.156753015 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/option.ko: time stamp 2026-10-24 16:48:28 is 219241353.151605762 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/mos7840.ko: time stamp 2026-10-24 16:48:28 is 219241353.149867466 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/symbolserial.ko: time stamp 2026-10-24 16:48:28 is 219241353.149419737 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/sierra.ko: time stamp 2026-10-24 16:48:28 is 219241353.147435084 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/mxuport.ko: time stamp 2026-10-24 16:48:28 is 219241353.146783832 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/cypress_m8.ko: time stamp 2026-10-24 16:48:28 is 219241353.145419069 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/spcp8x5.ko: time stamp 2026-10-24 16:48:28 is 219241353.144929925 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/qcaux.ko: time stamp 2026-10-24 16:48:28 is 219241353.144552639 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/empeg.ko: time stamp 2026-10-24 16:48:28 is 219241353.14413449 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/metro-usb.ko: time stamp 2026-10-24 16:48:28 is 219241353.143548959 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/ipaq.ko: time stamp 2026-10-24 16:48:28 is 219241353.141363459 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/digi_acceleport.ko: time stamp 2026-10-24 16:48:28 is 219241353.139181088 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/io_ti.ko: time stamp 2026-10-24 16:48:28 is 219241353.137399337 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/ir-usb.ko: time stamp 2026-10-24 16:48:28 is 219241353.136811223 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/cyberjack.ko: time stamp 2026-10-24 16:48:28 is 219241353.136344576 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/iuu_phoenix.ko: time stamp 2026-10-24 16:48:28 is 219241353.134884221 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/qcserial.ko: time stamp 2026-10-24 16:48:28 is 219241353.134252961 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/keyspan.ko: time stamp 2026-10-24 16:48:28 is 219241353.132432222 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/garmin_gps.ko: time stamp 2026-10-24 16:48:28 is 219241353.130657542 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/kobil_sct.ko: time stamp 2026-10-24 16:48:28 is 219241353.130196286 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/omninet.ko: time stamp 2026-10-24 16:48:28 is 219241353.129773376 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/navman.ko: time stamp 2026-10-24 16:48:28 is 219241353.129387675 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/io_edgeport.ko: time stamp 2026-10-24 16:48:28 is 219241353.127877409 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/ch341.ko: time stamp 2026-10-24 16:48:28 is 219241353.126270138 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/ipw.ko: time stamp 2026-10-24 16:48:28 is 219241353.125788293 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/kl5kusb105.ko: time stamp 2026-10-24 16:48:28 is 219241353.125269926 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/visor.ko: time stamp 2026-10-24 16:48:28 is 219241353.123479691 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/usb_debug.ko: time stamp 2026-10-24 16:48:28 is 219241353.122997192 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial/usb_wwan.ko: time stamp 2026-10-24 16:48:28 is 219241353.122530245 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb/serial: time stamp 2026-10-24 16:48:28 is 219241353.122327775 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/usb: time stamp 2026-10-24 16:48:28 is 219241353.122159637 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/input/mouse/psmouse.ko: time stamp 2026-10-24 16:48:27 is 219241352.116449145 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/input/mouse: time stamp 2026-10-24 16:48:27 is 219241352.116190461 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/input: time stamp 2026-10-24 16:48:27 is 219241352.11602376 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/stkwebcam/stkwebcam.ko: time stamp 2026-10-24 16:48:27 is 219241352.11390246 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/stkwebcam: time stamp 2026-10-24 16:48:27 is 219241352.113667257 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/zr364xx/zr364xx.ko: time stamp 2026-10-24 16:48:27 is 219241352.111341681 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/zr364xx: time stamp 2026-10-24 16:48:27 is 219241352.111104942 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/pwc/pwc.ko: time stamp 2026-10-24 16:48:27 is 219241352.107662697 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/pwc: time stamp 2026-10-24 16:48:27 is 219241352.107374151 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/uvc/uvcvideo.ko: time stamp 2026-10-24 16:48:27 is 219241352.101101451 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/uvc: time stamp 2026-10-24 16:48:27 is 219241352.100831493 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/gspca/gspca_main.ko: time stamp 2026-10-24 16:48:27 is 219241352.098804 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/gspca: time stamp 2026-10-24 16:48:27 is 219241352.098567561 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/cpia2/cpia2.ko: time stamp 2026-10-24 16:48:27 is 219241352.096162191 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/cpia2: time stamp 2026-10-24 16:48:27 is 219241352.095910176 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/s2255/s2255drv.ko: time stamp 2026-10-24 16:48:27 is 219241352.092193143 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb/s2255: time stamp 2026-10-24 16:48:27 is 219241352.091953608 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/usb: time stamp 2026-10-24 16:48:27 is 219241352.091795853 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/v4l2-core/videobuf-core.ko: time stamp 2026-10-24 16:48:27 is 219241352.091006697 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/v4l2-core/videobuf-vmalloc.ko: time stamp 2026-10-24 16:48:27 is 219241352.089517479 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media/v4l2-core: time stamp 2026-10-24 16:48:27 is 219241352.089288135 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/media: time stamp 2026-10-24 16:48:27 is 219241352.089134244 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/spi/spi-loopback-test.ko: time stamp 2026-10-24 16:48:27 is 219241352.088294775 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/spi: time stamp 2026-10-24 16:48:27 is 219241352.088083386 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/bcma/bcma.ko: time stamp 2026-10-24 16:48:27 is 219241352.085000913 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/bcma: time stamp 2026-10-24 16:48:27 is 219241352.084760529 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/video/backlight/lcd.ko: time stamp 2026-10-24 16:48:28 is 219241353.083917001 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/video/backlight: time stamp 2026-10-24 16:48:28 is 219241353.083709947 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/video: time stamp 2026-10-24 16:48:28 is 219241353.083559833 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/rpmsg/rpmsg_core.ko: time stamp 2026-10-24 16:48:27 is 219241352.082909808 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/rpmsg/virtio_rpmsg_bus.ko: time stamp 2026-10-24 16:48:27 is 219241352.081453368 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/rpmsg: time stamp 2026-10-24 16:48:27 is 219241352.081227381 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/mii.ko: time stamp 2026-10-24 16:48:27 is 219241352.080612807 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/rndis_wlan.ko: time stamp 2026-10-24 16:48:27 is 219241352.078497585 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtl8xxxu/rtl8xxxu.ko: time stamp 2026-10-24 16:48:27 is 219241352.071230607 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtl8xxxu: time stamp 2026-10-24 16:48:27 is 219241352.070951367 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtl818x/rtl8187/rtl8187.ko: time stamp 2026-10-24 16:48:27 is 219241352.068435651 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtl818x/rtl8187: time stamp 2026-10-24 16:48:27 is 219241352.068179772 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtl818x: time stamp 2026-10-24 16:48:27 is 219241352.068015063 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192c/rtl8192c-common.ko: time stamp 2026-10-24 16:48:27 is 219241352.064160611 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192c: time stamp 2026-10-24 16:48:27 is 219241352.063891493 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtlwifi/rtl_usb.ko: time stamp 2026-10-24 16:48:27 is 219241352.063405511 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtlwifi/rtlwifi.ko: time stamp 2026-10-24 16:48:27 is 219241352.057544138 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192cu/rtl8192cu.ko: time stamp 2026-10-24 16:48:27 is 219241352.051922012 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtlwifi/rtl8192cu: time stamp 2026-10-24 16:48:27 is 219241352.051640573 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek/rtlwifi: time stamp 2026-10-24 16:48:27 is 219241352.05146306 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless/realtek: time stamp 2026-10-24 16:48:27 is 219241352.05131981 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/wireless: time stamp 2026-10-24 16:48:27 is 219241352.051157231 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/cdc_eem.ko: time stamp 2026-10-24 16:48:27 is 219241352.050526463 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/cdc_ether.ko: time stamp 2026-10-24 16:48:27 is 219241352.049068589 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/cdc_subset.ko: time stamp 2026-10-24 16:48:27 is 219241352.048591397 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/cx82310_eth.ko: time stamp 2026-10-24 16:48:27 is 219241352.048160945 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/catc.ko: time stamp 2026-10-24 16:48:27 is 219241352.046633855 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/net1080.ko: time stamp 2026-10-24 16:48:27 is 219241352.046166059 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/ch9200.ko: time stamp 2026-10-24 16:48:27 is 219241352.045712699 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/smsc75xx.ko: time stamp 2026-10-24 16:48:27 is 219241352.043889245 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/ipheth.ko: time stamp 2026-10-24 16:48:27 is 219241352.043368619 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/gl620a.ko: time stamp 2026-10-24 16:48:27 is 219241352.041808289 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/int51x1.ko: time stamp 2026-10-24 16:48:27 is 219241352.041418103 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/usbnet.ko: time stamp 2026-10-24 16:48:27 is 219241352.03958195 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/rndis_host.ko: time stamp 2026-10-24 16:48:27 is 219241352.039057886 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/mcs7830.ko: time stamp 2026-10-24 16:48:27 is 219241352.037042621 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/cdc_ncm.ko: time stamp 2026-10-24 16:48:27 is 219241352.03635572 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/kalmia.ko: time stamp 2026-10-24 16:48:27 is 219241352.034379524 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/cdc_mbim.ko: time stamp 2026-10-24 16:48:27 is 219241352.033899386 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/lan78xx.ko: time stamp 2026-10-24 16:48:27 is 219241352.031533826 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/r8152.ko: time stamp 2026-10-24 16:48:27 is 219241352.027939385 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/ax88179_178a.ko: time stamp 2026-10-24 16:48:27 is 219241352.026182618 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/dm9601.ko: time stamp 2026-10-24 16:48:27 is 219241352.025601407 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/qmi_wwan.ko: time stamp 2026-10-24 16:48:27 is 219241352.022151533 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/smsc95xx.ko: time stamp 2026-10-24 16:48:27 is 219241352.021407644 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/kaweth.ko: time stamp 2026-10-24 16:48:27 is 219241352.019750945 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/lg-vl600.ko: time stamp 2026-10-24 16:48:27 is 219241352.019304281 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/sierra_net.ko: time stamp 2026-10-24 16:48:27 is 219241352.017519047 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/pegasus.ko: time stamp 2026-10-24 16:48:27 is 219241352.015484092 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/sr9700.ko: time stamp 2026-10-24 16:48:27 is 219241352.014947119 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/asix.ko: time stamp 2026-10-24 16:48:27 is 219241352.013025835 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/huawei_cdc_ncm.ko: time stamp 2026-10-24 16:48:27 is 219241352.012519165 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/plusb.ko: time stamp 2026-10-24 16:48:27 is 219241352.010974171 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/rtl8150.ko: time stamp 2026-10-24 16:48:27 is 219241352.010438914 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/sr9800.ko: time stamp 2026-10-24 16:48:27 is 219241352.009882039 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb/zaurus.ko: time stamp 2026-10-24 16:48:27 is 219241352.008322408 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net/usb: time stamp 2026-10-24 16:48:27 is 219241352.008108289 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/net: time stamp 2026-10-24 16:48:27 is 219241352.007951497 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/remoteproc/zynq_remoteproc.ko: time stamp 2026-10-24 16:48:27 is 219241352.007220448 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/remoteproc/remoteproc.ko: time stamp 2026-10-24 16:48:27 is 219241352.005114976 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers/remoteproc: time stamp 2026-10-24 16:48:27 is 219241352.004880727 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/drivers: time stamp 2026-10-24 16:48:28 is 219241353.004723119 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/ipv4/ip_tunnel.ko: time stamp 2026-10-24 16:48:28 is 219241353.002772675 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/ipv4/ipip.ko: time stamp 2026-10-24 16:48:28 is 219241353.002277045 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/ipv4/tunnel4.ko: time stamp 2026-10-24 16:48:28 is 219241353.001847163 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/ipv4: time stamp 2026-10-24 16:48:28 is 219241353.001653165 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/8021q/8021q.ko: time stamp 2026-10-24 16:48:28 is 219241352.999831094 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/8021q: time stamp 2026-10-24 16:48:28 is 219241352.999609343 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/ipv6/xfrm6_mode_tunnel.ko: time stamp 2026-10-24 16:48:28 is 219241352.999055204 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/ipv6/sit.ko: time stamp 2026-10-24 16:48:28 is 219241352.996954442 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/ipv6/ipv6.ko: time stamp 2026-10-24 16:48:28 is 219241352.973680505 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/ipv6/xfrm6_mode_transport.ko: time stamp 2026-10-24 16:48:28 is 219241352.973114 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/ipv6/xfrm6_mode_beet.ko: time stamp 2026-10-24 16:48:28 is 219241352.972074116 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net/ipv6: time stamp 2026-10-24 16:48:28 is 219241352.971858869 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel/net: time stamp 2026-10-24 16:48:28 is 219241352.971709805 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/kernel: time stamp 2026-10-24 16:48:28 is 219241352.971579434 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.dep: time stamp 2026-10-24 16:48:28 is 219241352.971127622 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.alias.bin: time stamp 2026-10-24 16:48:28 is 219241352.963034164 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+/modules.symbols.bin: time stamp 2026-10-24 16:48:28 is 219241352.962004501 s in the future
+tar: lib/modules/4.14.0-rt1-rt-xilinx+: time stamp 2026-10-24 16:48:28 is 219241352.961447821 s in the future
+tar: lib/modules: time stamp 2026-10-24 16:48:12 is 219241336.961259616 s in the future
+tar: lib: time stamp 2026-10-24 16:48:12 is 219241336.961142619 s in the future
++ sync
++ ls /lib/modules
+4.14.0-rt1-rt-xilinx+
+4.14.0-xilinx
++ wc -l
++ find /lib/modules/4.14.0-rt1-rt-xilinx+ -name '*.ko'
+148
++ cd /lib/modules/4.14.0-rt1-rt-xilinx+
++ find . -type f
++ sha256sum
++ sort
++ xargs sha256sum
+e20df124949b9c82b292391c668292de360223ad6244166d053c3fd3aa56f812  -
++ head -3
++ ls -la /lib/modules/4.14.0-xilinx
+total 588
+drwxr-xr-x 3 root root   4096 Nov 13 00:58 .
+drwxr-xr-x 4 root root   4096 Oct 24  2026 ..
++ rm -f /tmp/image_rt.ub /tmp/modules_rt.tar.gz
++ grep mmcblk0p1
++ mount
+p1-not-mounted
++ echo p1-not-mounted

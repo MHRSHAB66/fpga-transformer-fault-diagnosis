@@ -1,0 +1,111 @@
+{
+  "criterion": "docs/reports/hard_rt_acceptance_criterion_20261024.md",
+  "calibration_T": 1.42482066327489,
+  "runs": {
+    "K1_rtkernel_fifo50_cpu1": {
+      "executed": 30200,
+      "acceptance_windows": 30000,
+      "deadline_misses": 0,
+      "response_ms": {
+        "p50": 15.839,
+        "p95": 16.113,
+        "p99": 16.234,
+        "p99.9": 16.353,
+        "p99.99": 16.41,
+        "max": 16.46
+      },
+      "start_lag_ms_max": 0.07,
+      "dma_fpga_ms": {
+        "p50": 15.834,
+        "max": 16.456
+      },
+      "release_period_ms_mean": 20.48,
+      "duration_s": 618.5,
+      "throughput_windows_per_s": 48.8285,
+      "miss_indices": [],
+      "windows_unique": 4096,
+      "window_range": [
+        0,
+        4095
+      ],
+      "class_eq_recorded": 30200,
+      "logits_eq_reference_all4": 30200,
+      "calibrated_conf_checked": 312,
+      "calibrated_conf_max_abs_diff_vs_reference": 0.0,
+      "guard_rc": "0",
+      "workload_rc": "0",
+      "post_run_process_check": "CLEAN",
+      "hard_rt_pass": true
+    },
+    "K2_rtkernel_fifo50_cpu1_repeat": {
+      "executed": 30200,
+      "acceptance_windows": 30000,
+      "deadline_misses": 0,
+      "response_ms": {
+        "p50": 15.844,
+        "p95": 16.124,
+        "p99": 16.248,
+        "p99.9": 16.361,
+        "p99.99": 16.421,
+        "max": 16.451
+      },
+      "start_lag_ms_max": 0.04,
+      "dma_fpga_ms": {
+        "p50": 15.839,
+        "max": 16.447
+      },
+      "release_period_ms_mean": 20.48,
+      "duration_s": 618.5,
+      "throughput_windows_per_s": 48.8285,
+      "miss_indices": [],
+      "windows_unique": 4096,
+      "window_range": [
+        0,
+        4095
+      ],
+      "class_eq_recorded": 30200,
+      "logits_eq_reference_all4": 30200,
+      "calibrated_conf_checked": 312,
+      "calibrated_conf_max_abs_diff_vs_reference": 0.0,
+      "guard_rc": null,
+      "workload_rc": null,
+      "post_run_process_check": "10070 python3.6 -u /home/xilinx/timing_runs_20261023/rtk20261024_K2_rtkernel_fifo50_cpu1_repeat/fpga_rt_acceptance.py /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz 4096 30200 200 1 1 50 /home/xilinx/timing_runs_20261023/rtk20261024_K2_rtkernel_fifo50_cpu1_repeat/out\n10071 bash /home/xilinx/timing_runs_20261023/rtk20261024_K2_rtkernel_fifo50_cpu1_repeat/temp_guard.sh 10070 /home/xilinx/timing_runs_20261023/rtk20261024_K2_rtkernel_fifo50_cpu1_repeat/guard.log 75 1",
+      "hard_rt_pass": false
+    },
+    "K3_rtkernel_fifo50_cpu1_100k": {
+      "executed": 100200,
+      "acceptance_windows": 100000,
+      "deadline_misses": 0,
+      "response_ms": {
+        "p50": 15.844,
+        "p95": 16.118,
+        "p99": 16.241,
+        "p99.9": 16.353,
+        "p99.99": 16.417,
+        "max": 16.472
+      },
+      "start_lag_ms_max": 0.063,
+      "dma_fpga_ms": {
+        "p50": 15.84,
+        "max": 16.455
+      },
+      "release_period_ms_mean": 20.48,
+      "duration_s": 2052.1,
+      "throughput_windows_per_s": 48.8282,
+      "miss_indices": [],
+      "windows_unique": 4096,
+      "window_range": [
+        0,
+        4095
+      ],
+      "class_eq_recorded": 100200,
+      "logits_eq_reference_all4": 100200,
+      "calibrated_conf_checked": 1033,
+      "calibrated_conf_max_abs_diff_vs_reference": 0.0,
+      "guard_rc": "0",
+      "workload_rc": "0",
+      "post_run_process_check": "CLEAN",
+      "hard_rt_pass": true
+    }
+  }
+}

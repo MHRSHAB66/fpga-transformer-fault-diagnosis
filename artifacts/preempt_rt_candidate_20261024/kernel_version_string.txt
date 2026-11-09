@@ -1,0 +1,1 @@
+Linux version 4.14.0-rt1-rt-xilinx+ (mine_pc@mhrshab) (gcc version 9.4.0 (Ubuntu 9.4.0-1ubuntu1~20.04.2)) #1 SMP PREEMPT RT Sat Oct 24 20:16:36 +0330 2026

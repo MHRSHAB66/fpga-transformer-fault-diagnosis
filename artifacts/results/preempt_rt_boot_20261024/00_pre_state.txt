@@ -1,0 +1,45 @@
++ date -u
+Wed Nov 13 04:24:44 UTC 2019
++ uname -a
+Linux pynq 4.14.0-xilinx #1 SMP PREEMPT Wed Nov 13 03:44:45 UTC 2019 armv7l armv7l armv7l GNU/Linux
++ cat /proc/cmdline
+root=/dev/mmcblk0p2 rw earlyprintk rootfstype=ext4 rootwait devtmpfs.mount=1 uio_pdrv_genirq.of_id="generic-uio" clk_ignore_unused
++ zcat /proc/config.gz
++ grep -E '^CONFIG_PREEMPT|^CONFIG_HZ='
+CONFIG_PREEMPT_RCU=y
+CONFIG_PREEMPT=y
+CONFIG_PREEMPT_COUNT=y
+CONFIG_HZ=100
++ ls /sys/kernel/realtime
+ls: cannot access '/sys/kernel/realtime': No such file or directory
++ ls /lib/modules
+4.14.0-xilinx
++ lsmod
+Module                  Size  Used by
+ipv6                  307200  24
++ ps -eo pid,args
++ grep -E 'fpga_|rt_accept|temp_guard|bench'
++ grep -v grep
+BOARD_IDLE
++ echo BOARD_IDLE
++ sudo -n true
+sudo: a password is required
++ grep mmcblk
++ mount
+/dev/mmcblk0p2 on / type ext4 (rw,relatime,data=ordered)
++ df -h /
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        29G  7.2G   20G  27% /
++ sudo -n mkdir -p /tmp/p1ro
+sudo: a password is required
++ df -h /tmp/p1ro
+df: /tmp/p1ro: No such file or directory
++ sudo -n umount /tmp/p1ro
+sudo: a password is required
++ cd /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f
++ find . -name '*.bit' -o -name '*.hwh'
++ xargs sha256sum
+ce3c254b86797c58bb99e7200169db520ff39eddfd3e2a6c559b16b5846f166b  ./overlay/design_1_wrapper.bit
+eabc0163be6ae333f0d32fec391708fa8bd8a097854cf7b73cf9d8387ba9a19c  ./overlay/design_1_wrapper.hwh
++ uptime
+ 04:24:44 up  3:07,  1 user,  load average: 0.36, 0.17, 0.23

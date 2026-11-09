@@ -1,0 +1,18 @@
+	description = "U-Boot fitImage for PYNQ arm kernel";
+		kernel@0 {
+			description = "Linux Kernel";
+			type = "kernel";
+			arch = "arm";
+			os = "linux";
+			compression = "none";
+			load = <0x80000>;
+			entry = <0x80000>;
+		fdt@0 {
+			description = "Flattened Device Tree blob";
+			type = "flat_dt";
+			arch = "arm";
+			compression = "none";
+		default = "conf@1";
+			description = "Boot Linux kernel with FDT blob";
+			kernel = "kernel@0";
+			fdt = "fdt@0";

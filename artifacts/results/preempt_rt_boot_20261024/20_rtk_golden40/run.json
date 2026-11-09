@@ -1,0 +1,28 @@
+{
+  "tag": "rtk_golden40",
+  "remote_dir": "/home/xilinx/timing_runs_20261023/rtk_golden40",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "pc_start": "2026-10-24T20:52:46",
+  "preflight_s": 3.98,
+  "uploaded_sha256": {
+    "verify_argmax_golden.py": "fb01b0955b402844a8872678aea527bb279ab8f8403c709bcf483f536c545841",
+    "fpga_live_runner.py": "970e40061f0e67fc1f7a99be058612ff301697f53fe7e49192600cfdb4fc4d85",
+    "temp_guard.sh": "602432ae5ed1c0e5663c7ccd03014b98ff0a63f9877c5b52d73bfd80dca40848"
+  },
+  "workload": "python3.6 -u /home/xilinx/timing_runs_20261023/rtk_golden40/verify_argmax_golden.py /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/golden_ingress1024_argmax",
+  "board_wall_s": 14.1,
+  "run_out": [
+    "START_UTC=2019-11-13T04:32:07Z",
+    "WORKLOAD_RC=0",
+    "GUARD_RC=0",
+    "END_UTC=2019-11-13T04:32:15Z",
+    "DONE"
+  ],
+  "workload_rc": "0",
+  "guard_rc": "0",
+  "result": "OK",
+  "post_run_process_check": "CLEAN",
+  "pc_end": "2026-10-24T20:53:14"
+}

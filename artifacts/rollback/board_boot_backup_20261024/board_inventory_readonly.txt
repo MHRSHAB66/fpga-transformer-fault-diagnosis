@@ -1,0 +1,40 @@
+Linux pynq 4.14.0-xilinx #1 SMP PREEMPT Wed Nov 13 03:44:45 UTC 2019 armv7l armv7l armv7l GNU/Linux
+root=/dev/mmcblk0p2 rw earlyprintk rootfstype=ext4 rootwait devtmpfs.mount=1 uio_pdrv_genirq.of_id="generic-uio" clk_ignore_unused
+NAME="PynqLinux"
+VERSION="2.4 (Provo)"
+ID=pynqlinux
+ID_LIKE=ubuntu
+PRETTY_NAME="PynqLinux, based on Ubuntu 18.04"
+VERSION_ID="2.4"
+HOME_URL="https://www.pynq.io/"
+SUPPORT_URL="https://forums.ubuntu.com/"
+BUG_REPORT_URL="https://www.pynq.io"
+PRIVACY_POLICY_URL="https://www.pynq.io"
+VERSION_CODENAME=provo
+UBUNTU_CODENAME=bionic
+Release 2019_11_12 d9c7521
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/root        29G  7.2G   20G  27% /
+              total        used        free      shared  buff/cache   available
+Mem:           1005          95         170           1         738         888
+Swap:          1023           0        1023
+Hardware	: Xilinx Zynq Platform
+model name	: ARMv7 Processor rev 0 (v7l)
+Revision	: 0003
+Module                  Size  Used by
+ipv6                  307200  24
+4.14.0-xilinx
+dev:    size   erasesize  name
+mtd0: 00500000 00010000 "boot"
+mtd1: 00020000 00010000 "bootenv"
+mtd2: 00a80000 00010000 "kernel"
+mtd3: 00060000 00010000 "spare"
+NAME        MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+mtdblock0    31:0    0    5M  0 disk 
+mtdblock1    31:1    0  128K  0 disk 
+mtdblock2    31:2    0 10.5M  0 disk 
+mtdblock3    31:3    0  384K  0 disk 
+mmcblk0     179:0    0   29G  0 disk 
+├─mmcblk0p1 179:1    0  100M  0 part 
+└─mmcblk0p2 179:2    0   29G  0 part /
+1515

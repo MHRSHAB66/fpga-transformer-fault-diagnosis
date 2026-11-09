@@ -1,0 +1,9 @@
+Linux pynq 4.14.0-rt1-rt-xilinx+ #1 SMP PREEMPT RT Sat Oct 24 20:16:36 +0330 2026 armv7l armv7l armv7l GNU/Linux
+ 05:32:31 up  1:02,  1 user,  load average: 1.28, 1.89, 1.92
+BOARD_IDLE
+temp_c=48.6011
+857
+[    0.511559] DMA: preallocated 256 KiB pool for atomic coherent allocations
+[   13.122853] macb e000b000.ethernet eth0: link up (1000/Full)
+[ 1268.811048] macb e000b000.ethernet eth0: link down
+[ 1276.082766] macb e000b000.ethernet eth0: link up (1000/Full)

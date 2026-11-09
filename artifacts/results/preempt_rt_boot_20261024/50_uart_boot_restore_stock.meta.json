@@ -1,0 +1,18 @@
+﻿{
+    "port":  "COM6",
+    "baud":  115200,
+    "image":  "",
+    "boot_cmd":  "",
+    "saveenv_used":  false,
+    "reboot_cmd":  "ssh -i %USERPROFILE%\\.ssh\\id_zturn -o BatchMode=yes root@192.168.2.99 sync;reboot",
+    "opened_utc":  "2026-10-24T18:23:50.2880065Z",
+    "trigger_utc":  "2026-10-24T18:23:51.3282967Z",
+    "trigger_exit_code":  -1,
+    "autoboot_prompt_utc":  null,
+    "uboot_prompt_utc":  null,
+    "boot_cmd_sent_utc":  null,
+    "starting_kernel_utc":  null,
+    "done_utc":  "2026-10-24T18:24:37.0960574Z",
+    "stopped_reason":  "done_pattern",
+    "total_chars":  30593
+}

@@ -1,0 +1,7 @@
+Linux pynq 4.14.0-xilinx #1 SMP PREEMPT Wed Nov 13 03:44:45 UTC 2019 armv7l armv7l armv7l GNU/Linux
+ 06:18:46 up 45 min,  1 user,  load average: 0.27, 0.77, 0.78
+BOARD_IDLE
+ce3c254b86797c58
+eabc0163be6ae333
+temp_c=46.3
+p1-not-mounted

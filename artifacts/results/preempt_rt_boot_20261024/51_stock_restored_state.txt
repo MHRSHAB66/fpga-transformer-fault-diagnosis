@@ -1,0 +1,62 @@
++ uname -a
+Linux pynq 4.14.0-xilinx #1 SMP PREEMPT Wed Nov 13 03:44:45 UTC 2019 armv7l armv7l armv7l GNU/Linux
++ cat /proc/cmdline
+root=/dev/mmcblk0p2 rw earlyprintk rootfstype=ext4 rootwait devtmpfs.mount=1 uio_pdrv_genirq.of_id="generic-uio" clk_ignore_unused
++ cat /sys/kernel/realtime
+cat: /sys/kernel/realtime: No such file or directory
++ grep -E '^CONFIG_PREEMPT_RT|^CONFIG_PREEMPT='
++ zcat /proc/config.gz
+CONFIG_PREEMPT=y
++ uptime
+ 05:33:48 up 0 min,  1 user,  load average: 1.26, 0.35, 0.12
++ mkdir -p /tmp/p1ro
++ mount -o ro /dev/mmcblk0p1 /tmp/p1ro
++ cd /tmp/p1ro
++ ls -la
+total 12712
+drwxr-xr-x  3 root root   16384 Jan  1  1970 .
+drwxrwxrwt 10 root root    4096 Nov 13 05:33 ..
+-rwxr-xr-x  1 root root 4616592 Nov 19  2019 BOOT.BIN
+-rwxr-xr-x  1 root root 4202380 Nov 13 04:25 image_rt.ub
+-rwxr-xr-x  1 root root 4173540 Nov 19  2019 image.ub
+drwxr-xr-x  2 root root    2048 Oct  8  2026 System Volume Information
++ sha256sum BOOT.BIN image.ub image_rt.ub
+19ef4427708fd6261103c29d6e5329eed727aa69e81ac5c59898113203a92589  BOOT.BIN
+e04eabda6723405e94648704e6c88855dbfd37b916c707515087377937195c6d  image.ub
+d939fb14e84e2a294739bec152f73c6c1caa21a2948e7ad11cda0fe0931555ae  image_rt.ub
++ umount /tmp/p1ro
++ rmdir /tmp/p1ro
++ grep mmcblk0p1
++ mount
+p1-not-mounted
++ echo p1-not-mounted
++ ls /lib/modules
+4.14.0-rt1-rt-xilinx+
+4.14.0-xilinx
++ lsmod
+Module                  Size  Used by
+ipv6                  307200  22
++ cd /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f
++ sha256sum overlay/design_1_wrapper.bit overlay/design_1_wrapper.hwh
+ce3c254b86797c58bb99e7200169db520ff39eddfd3e2a6c559b16b5846f166b  overlay/design_1_wrapper.bit
+eabc0163be6ae333f0d32fec391708fa8bd8a097854cf7b73cf9d8387ba9a19c  overlay/design_1_wrapper.hwh
++ ps -eo pid,args
++ grep -E '[f]pga_|[t]emp_guard'
+BOARD_IDLE
++ echo BOARD_IDLE
++ head -14
++ top -b -n1
+top - 05:33:49 up 0 min,  1 user,  load average: 1.26, 0.35, 0.12
+Tasks:  80 total,   2 running,  50 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 46.8 us, 12.4 sy,  0.0 ni, 25.8 id, 14.7 wa,  0.0 hi,  0.1 si,  0.0 st
+KiB Mem :  1029176 total,   791608 free,    91160 used,   146408 buff/cache
+KiB Swap:  1048572 total,  1048572 free,        0 used.   918012 avail Mem 
+
+  PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
+ 1896 root      20   0   90272  15196  11688 R  89.5  1.5   0:00.43 node
+ 1903 root      20   0    6980   2640   2276 R  10.5  0.3   0:00.06 top
+    1 root      20   0   28584   5748   4396 S   0.0  0.6   0:02.42 systemd
+    2 root      20   0       0      0      0 S   0.0  0.0   0:00.00 kthreadd
+    3 root      20   0       0      0      0 I   0.0  0.0   0:00.00 kworker/0:0
+    4 root       0 -20       0      0      0 I   0.0  0.0   0:00.00 kworker/0:+
+    5 root      20   0       0      0      0 I   0.0  0.0   0:00.01 kworker/u4+

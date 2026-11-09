@@ -1,0 +1,4 @@
+START_UTC=2019-11-13T04:44:29Z
+TEMP_START=59.305651855288
+META n_unique=4096 n_total=30200 warmup=200 sched=SCHED_FIFO_prio_50,_cpu_[1] class_source=fpga_register preload_s=8.69 preload_maxrss_kb=17712->149448
+client_loop: send disconnect: Connection reset

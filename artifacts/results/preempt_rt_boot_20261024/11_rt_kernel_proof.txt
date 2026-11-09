@@ -1,0 +1,71 @@
++ uname -a
+Linux pynq 4.14.0-rt1-rt-xilinx+ #1 SMP PREEMPT RT Sat Oct 24 20:16:36 +0330 2026 armv7l armv7l armv7l GNU/Linux
++ cat /proc/cmdline
+root=/dev/mmcblk0p2 rw earlyprintk rootfstype=ext4 rootwait devtmpfs.mount=1 uio_pdrv_genirq.of_id="generic-uio" clk_ignore_unused
++ cat /sys/kernel/realtime
+1
++ grep -E '^CONFIG_PREEMPT|^CONFIG_HZ=|^CONFIG_HIGH_RES'
++ zcat /proc/config.gz
+CONFIG_HIGH_RES_TIMERS=y
+CONFIG_PREEMPT_RCU=y
+CONFIG_PREEMPT=y
+CONFIG_PREEMPT_RT_BASE=y
+CONFIG_PREEMPT_LAZY=y
+CONFIG_PREEMPT_RT_FULL=y
+CONFIG_PREEMPT_COUNT=y
+CONFIG_HZ=100
++ grep -E 'irq/|ksoftirqd|ktimersoftd|rcuc'
++ head -20
++ ps -eo pid,cls,rtprio,comm
+    7  TS      - ksoftirqd/0
+    8  FF      1 ktimersoftd/0
+   11  TS      - rcuc/0
+   19  TS      - rcuc/1
+   20  FF      1 ktimersoftd/1
+   21  TS      - ksoftirqd/1
+   81  FF     50 irq/25-f800c000
+  539  FF     50 irq/30-f8003000
+  540  FF     50 irq/31-f8003000
+  541  FF     50 irq/32-f8003000
+  542  FF     50 irq/33-f8003000
+  543  FF     50 irq/34-f8003000
+  544  FF     50 irq/35-f8003000
+  545  FF     50 irq/36-f8003000
+  546  FF     50 irq/37-f8003000
+  547  FF     50 irq/38-f8003000
+  632  FF     50 irq/27-e000d000
+  692  FF     50 irq/28-eth%d
+  708  FF     50 irq/47-fabric
+  749  FF     50 irq/45-e0002000
++ ls /lib/modules
+4.14.0-rt1-rt-xilinx+
+4.14.0-xilinx
++ lsmod
+Module                  Size  Used by
+ipv6                  335872  22
++ systemctl is-system-running
+starting
++ systemctl --failed --no-legend
+isc-dhcp-server.service  loaded failed failed ISC DHCP IPv4 server
+isc-dhcp-server6.service loaded failed failed ISC DHCP IPv6 server
++ dmesg
++ grep -iE 'BUG|WARNING|Oops|scheduling while atomic|xlnk|cma|fpga'
++ head -30
+[    0.000000] cma: Reserved 128 MiB at 0x38000000
+[    0.000000] Memory: 896528K/1048576K available (6144K kernel code, 225K rwdata, 1620K rodata, 1024K init, 299K bss, 20976K reserved, 131072K cma-reserved, 131072K highmem)
+[    0.983596] FPGA manager framework
+[    0.986092] fpga-region fpga-full: FPGA Region probed
+[    1.709691] xlnk xlnk: Major 245
+[    1.711908] xlnk xlnk: xlnk driver loaded
+[    1.714652] xlnk xlnk: xlnk_pdev is not null
+[    1.725698] fpga_manager fpga0: Xilinx Zynq FPGA Manager registered
++ free -m
+              total        used        free      shared  buff/cache   available
+Mem:           1004          88         784           1         131         895
+Swap:          1023           0        1023
++ grep -i cma
++ cat /proc/meminfo
+CmaTotal:         131072 kB
+CmaFree:           84772 kB
++ uptime
+ 04:30:33 up 0 min,  1 user,  load average: 1.49, 0.40, 0.14

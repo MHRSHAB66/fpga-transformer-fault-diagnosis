@@ -1,0 +1,30 @@
+FIT description: U-Boot fitImage for PYNQ arm kernel
+Created:         Wed Nov 13 07:15:46 2019
+ Image 0 (kernel@0)
+  Description:  Linux Kernel
+  Created:      Wed Nov 13 07:15:46 2019
+  Type:         Kernel Image
+  Compression:  uncompressed
+  Data Size:    4157344 Bytes = 4059.91 KiB = 3.96 MiB
+  Architecture: ARM
+  OS:           Linux
+  Load Address: 0x00080000
+  Entry Point:  0x00080000
+  Hash algo:    sha1
+  Hash value:   9113a80590abebcbd5a3dba3b22c8ee03421951d
+ Image 1 (fdt@0)
+  Description:  Flattened Device Tree blob
+  Created:      Wed Nov 13 07:15:46 2019
+  Type:         Flat Device Tree
+  Compression:  uncompressed
+  Data Size:    14904 Bytes = 14.55 KiB = 0.01 MiB
+  Architecture: ARM
+  Hash algo:    sha1
+  Hash value:   9687c36f67cb8e251831e68f09dc63252329d34d
+ Default Configuration: 'conf@1'
+ Configuration 0 (conf@1)
+  Description:  Boot Linux kernel with FDT blob
+  Kernel:       kernel@0
+  FDT:          fdt@0
+  Hash algo:    sha1
+  Hash value:   unavailable

@@ -1,0 +1,30 @@
+  LD [M]  drivers/usb/storage/ums-cypress.ko
+  LD [M]  drivers/usb/storage/ums-datafab.ko
+  LD [M]  drivers/usb/storage/ums-eneub6250.ko
+  LD [M]  drivers/usb/storage/ums-freecom.ko
+  LD [M]  drivers/usb/storage/ums-jumpshot.ko
+  LD [M]  drivers/usb/storage/ums-isd200.ko
+  LD [M]  drivers/usb/storage/ums-karma.ko
+  LD [M]  drivers/usb/storage/ums-onetouch.ko
+  LD [M]  drivers/usb/storage/ums-realtek.ko
+  LD [M]  drivers/usb/storage/ums-sddr09.ko
+  LD [M]  drivers/usb/storage/ums-sddr55.ko
+  LD [M]  drivers/usb/storage/ums-usbat.ko
+  LD [M]  drivers/video/backlight/lcd.ko
+  LD [M]  drivers/virtio/virtio.ko
+  LD [M]  drivers/virtio/virtio_ring.ko
+  LD [M]  lib/crc-itu-t.ko
+  LD [M]  lib/crc7.ko
+  LD [M]  net/8021q/8021q.ko
+  LD [M]  net/ipv4/ip_tunnel.ko
+  LD [M]  net/ipv4/ipip.ko
+  LD [M]  net/ipv4/tunnel4.ko
+  LD [M]  net/ipv6/ipv6.ko
+  LD [M]  net/ipv6/sit.ko
+  LD [M]  net/ipv6/xfrm6_mode_transport.ko
+  LD [M]  net/ipv6/xfrm6_mode_beet.ko
+  AS      arch/arm/boot/compressed/piggy.o
+  LD [M]  net/ipv6/xfrm6_mode_tunnel.ko
+  LD      arch/arm/boot/compressed/vmlinux
+  OBJCOPY arch/arm/boot/zImage
+  Kernel: arch/arm/boot/zImage is ready

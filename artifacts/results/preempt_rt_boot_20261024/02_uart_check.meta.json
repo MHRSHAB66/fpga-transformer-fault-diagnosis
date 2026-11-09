@@ -1,0 +1,20 @@
+﻿{
+    "port":  "COM6",
+    "baud":  115200,
+    "data_bits":  8,
+    "parity":  "none",
+    "stop_bits":  1,
+    "flow_control":  "none",
+    "out_file":  "artifacts\\results\\preempt_rt_boot_20261024\\02_uart_check.log",
+    "duration_seconds":  4,
+    "stop_pattern":  "",
+    "reboot_cmd":  "",
+    "opened_utc":  "2026-10-24T17:15:30.2248929Z",
+    "trigger_sent_utc":  null,
+    "trigger_exit_code":  null,
+    "first_byte_utc":  "2026-10-24T17:15:30.2551837Z",
+    "stop_match_utc":  null,
+    "closed_utc":  "2026-10-24T17:15:36.3502902Z",
+    "stopped_reason":  "timeout",
+    "total_bytes":  17
+}

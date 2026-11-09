@@ -1,0 +1,2 @@
+﻿Linux pynq 4.14.0-rt1-rt-xilinx+ #1 SMP PREEMPT RT Sat Oct 24 20:16:36 +0330 2026 armv7l armv7l armv7l GNU/Linux
+1

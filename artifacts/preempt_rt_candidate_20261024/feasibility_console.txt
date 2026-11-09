@@ -1,0 +1,31 @@
+workdir: /home/mine_pc/rt_feasibility_20261024
+Note: switching to '51445f9139af73c616f054a8fcc77ed2568b81b1'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+1025b5be6fd6a5f66c7bb27cf30976d0a5b49e075b8d3f5d5de171d255694ef6  patch-4.14-rt1.patch.xz
+source commit: 51445f9139af73c616f054a8fcc77ed2568b81b1 Thu Nov 15 10:23:38 2018 +0100
+# SPDX-License-Identifier: GPL-2.0
+VERSION = 4
+PATCHLEVEL = 14
+SUBLEVEL = 0
+EXTRAVERSION =
+patch exit status: 0
+files in patch: 430
+FAILED hunk lines: 0
+hunks applied with offset/fuzz: 2
+files with failed hunks:
+DONE

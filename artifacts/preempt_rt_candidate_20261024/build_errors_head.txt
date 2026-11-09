@@ -1,0 +1,2 @@
+  CC      lib/fdt_strerror.o
+  CC      drivers/scsi/scsi_error.o

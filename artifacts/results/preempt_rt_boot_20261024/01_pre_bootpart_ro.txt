@@ -1,0 +1,23 @@
++ mkdir -p /tmp/p1ro
++ mount -o ro /dev/mmcblk0p1 /tmp/p1ro
++ ls -la /tmp/p1ro
+total 8608
+drwxr-xr-x  3 root root   16384 Jan  1  1970 .
+drwxrwxrwt 11 root root    4096 Nov 13 04:25 ..
+-rwxr-xr-x  1 root root 4616592 Nov 19  2019 BOOT.BIN
+-rwxr-xr-x  1 root root 4173540 Nov 19  2019 image.ub
+drwxr-xr-x  2 root root    2048 Oct  8  2026 System Volume Information
++ cd /tmp/p1ro
++ sha256sum BOOT.BIN image.ub 'System Volume Information'
+19ef4427708fd6261103c29d6e5329eed727aa69e81ac5c59898113203a92589  BOOT.BIN
+e04eabda6723405e94648704e6c88855dbfd37b916c707515087377937195c6d  image.ub
+sha256sum: 'System Volume Information': Is a directory
++ df -h /tmp/p1ro
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/mmcblk0p1  100M  8.4M   92M   9% /tmp/p1ro
++ umount /tmp/p1ro
++ rmdir /tmp/p1ro
++ grep mmcblk0p1
++ mount
++ echo p1-not-mounted
+p1-not-mounted
