@@ -1,0 +1,329 @@
+{
+  "vectors_0_to_15": "verbatim copy of golden_ingress1024 (unchanged)",
+  "appended": [
+    {
+      "vector": 16,
+      "dataset_window": 0,
+      "reason": "non-tie predicted class 3",
+      "true_class": 3,
+      "expected_class": 3,
+      "expected_logits": [
+        -116,
+        -129,
+        -36,
+        112
+      ]
+    },
+    {
+      "vector": 17,
+      "dataset_window": 1,
+      "reason": "non-tie predicted class 3",
+      "true_class": 3,
+      "expected_class": 3,
+      "expected_logits": [
+        -14,
+        -105,
+        -90,
+        44
+      ]
+    },
+    {
+      "vector": 18,
+      "dataset_window": 139,
+      "reason": "non-tie predicted class 0",
+      "true_class": 3,
+      "expected_class": 0,
+      "expected_logits": [
+        43,
+        -64,
+        -95,
+        9
+      ]
+    },
+    {
+      "vector": 19,
+      "dataset_window": 244,
+      "reason": "non-tie predicted class 1",
+      "true_class": 1,
+      "expected_class": 1,
+      "expected_logits": [
+        -290,
+        118,
+        -225,
+        -59
+      ]
+    },
+    {
+      "vector": 20,
+      "dataset_window": 245,
+      "reason": "non-tie predicted class 1",
+      "true_class": 1,
+      "expected_class": 1,
+      "expected_logits": [
+        -341,
+        125,
+        -226,
+        -49
+      ]
+    },
+    {
+      "vector": 21,
+      "dataset_window": 509,
+      "reason": "non-tie predicted class 2",
+      "true_class": 3,
+      "expected_class": 2,
+      "expected_logits": [
+        -99,
+        -143,
+        72,
+        67
+      ]
+    },
+    {
+      "vector": 22,
+      "dataset_window": 568,
+      "reason": "non-tie predicted class 2",
+      "true_class": 3,
+      "expected_class": 2,
+      "expected_logits": [
+        -158,
+        -141,
+        73,
+        69
+      ]
+    },
+    {
+      "vector": 23,
+      "dataset_window": 606,
+      "reason": "tie classes [2, 3]",
+      "true_class": 3,
+      "expected_class": 2,
+      "expected_logits": [
+        -121,
+        -131,
+        47,
+        47
+      ]
+    },
+    {
+      "vector": 24,
+      "dataset_window": 775,
+      "reason": "tie classes [1, 3]",
+      "true_class": 3,
+      "expected_class": 1,
+      "expected_logits": [
+        -372,
+        73,
+        -201,
+        73
+      ]
+    },
+    {
+      "vector": 25,
+      "dataset_window": 786,
+      "reason": "tie classes [1, 3]",
+      "true_class": 3,
+      "expected_class": 1,
+      "expected_logits": [
+        -324,
+        68,
+        -199,
+        68
+      ]
+    },
+    {
+      "vector": 26,
+      "dataset_window": 835,
+      "reason": "tie classes [1, 3]",
+      "true_class": 3,
+      "expected_class": 1,
+      "expected_logits": [
+        -322,
+        69,
+        -212,
+        69
+      ]
+    },
+    {
+      "vector": 27,
+      "dataset_window": 3904,
+      "reason": "non-tie predicted class 0",
+      "true_class": 0,
+      "expected_class": 0,
+      "expected_logits": [
+        51,
+        -54,
+        -46,
+        -123
+      ]
+    },
+    {
+      "vector": 28,
+      "dataset_window": 4015,
+      "reason": "tie classes [0, 2]",
+      "true_class": 0,
+      "expected_class": 0,
+      "expected_logits": [
+        12,
+        -50,
+        12,
+        -141
+      ]
+    },
+    {
+      "vector": 29,
+      "dataset_window": 4135,
+      "reason": "tie classes [0, 1]",
+      "true_class": 0,
+      "expected_class": 0,
+      "expected_logits": [
+        19,
+        19,
+        -94,
+        -129
+      ]
+    },
+    {
+      "vector": 30,
+      "dataset_window": 7081,
+      "reason": "tie classes [2, 3]",
+      "true_class": 3,
+      "expected_class": 2,
+      "expected_logits": [
+        -86,
+        -118,
+        71,
+        71
+      ]
+    },
+    {
+      "vector": 31,
+      "dataset_window": 7162,
+      "reason": "tie classes [2, 3]",
+      "true_class": 3,
+      "expected_class": 2,
+      "expected_logits": [
+        -12,
+        -80,
+        13,
+        13
+      ]
+    },
+    {
+      "vector": 32,
+      "dataset_window": 7577,
+      "reason": "tie classes [0, 2]",
+      "true_class": 0,
+      "expected_class": 0,
+      "expected_logits": [
+        15,
+        -31,
+        15,
+        -48
+      ]
+    },
+    {
+      "vector": 33,
+      "dataset_window": 7608,
+      "reason": "tie classes [0, 1]",
+      "true_class": 0,
+      "expected_class": 0,
+      "expected_logits": [
+        5,
+        5,
+        -5,
+        -69
+      ]
+    },
+    {
+      "vector": 34,
+      "dataset_window": 7643,
+      "reason": "tie classes [0, 2]",
+      "true_class": 0,
+      "expected_class": 0,
+      "expected_logits": [
+        14,
+        -77,
+        14,
+        -38
+      ]
+    },
+    {
+      "vector": 35,
+      "dataset_window": 17580,
+      "reason": "tie classes [1, 2]",
+      "true_class": 0,
+      "expected_class": 1,
+      "expected_logits": [
+        -32,
+        12,
+        12,
+        -34
+      ]
+    },
+    {
+      "vector": 36,
+      "dataset_window": 32098,
+      "reason": "tie classes [1, 2]",
+      "true_class": 2,
+      "expected_class": 1,
+      "expected_logits": [
+        -91,
+        19,
+        19,
+        -35
+      ]
+    },
+    {
+      "vector": 37,
+      "dataset_window": 57977,
+      "reason": "tie classes [0, 3]",
+      "true_class": 0,
+      "expected_class": 0,
+      "expected_logits": [
+        17,
+        -118,
+        -5,
+        17
+      ]
+    },
+    {
+      "vector": 38,
+      "dataset_window": 62231,
+      "reason": "tie classes [0, 3]",
+      "true_class": 3,
+      "expected_class": 0,
+      "expected_logits": [
+        18,
+        -101,
+        -14,
+        18
+      ]
+    },
+    {
+      "vector": 39,
+      "dataset_window": 76003,
+      "reason": "tie classes [1, 2]",
+      "true_class": 2,
+      "expected_class": 1,
+      "expected_logits": [
+        -87,
+        33,
+        33,
+        -71
+      ]
+    }
+  ],
+  "input_source": "artifacts\\results\\fpga_fulltest_20261008_141335\\fpga_testset_in.i32.gz",
+  "expected_source": "artifacts\\results\\board_vs_reference_20261022\\numpy_reference\\numpy_export_logits.txt",
+  "expected_generator": "src.quantize.integer_model.IntegerTransformer.infer_int, scales artifacts/quantized/f_seq256_int10/integer_config.json",
+  "tie_policy": "lowest class index among equal maxima (numpy.argmax)",
+  "tie_patterns_in_full_test": {
+    "[0, 1]": 2,
+    "[0, 2]": 20,
+    "[0, 3]": 2,
+    "[1, 2]": 3,
+    "[1, 3]": 38,
+    "[2, 3]": 33
+  }
+}
