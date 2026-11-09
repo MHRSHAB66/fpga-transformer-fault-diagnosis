@@ -295,3 +295,33 @@ artifacts/results/hls_rt3a_kv2/
 artifacts/results/hls_rt5_splitbuf/
 artifacts/results/hls_z7010_opt_*/
 artifacts/results/hls_z7020_opt_*/
+
+# Root-level Vitis HLS project build dir for the argmax (on-FPGA class) variant.
+/seq256_ingress1024_dsp_margin_argmax/
+
+# Bulky raw per-window dumps (> 2.5 MB each) from the 2026-10-22..24 board runs.
+# Their summaries and verification JSON are committed; the raw files are recorded
+# by SHA-256 in artifacts/manifests/artifact_manifest.json and kept in the
+# off-repo backup.
+artifacts/results/fpga_argmax_fulltest_20261023/live_frames.*
+artifacts/results/fpga_timing_20261023/**/workload.out
+artifacts/results/fpga_timing_20261023/**/workload_stream.out
+artifacts/results/fpga_timing_20261023/**/pc_rx.tsv
+artifacts/results/e2e_demo_gui_20261024_231859/pc_evidence.json
+artifacts/results/e2e_demo_gui_20261024_231859/frames.tsv
+artifacts/results/e2e_demo_gui_20261024_233000/pc_evidence.json
+artifacts/results/e2e_demo_gui_20261024_233000/frames.tsv
+
+# Board firmware / kernel binaries (vendor boot images, QSPI dumps, the
+# PREEMPT_RT candidate build). Hashes and procedures are committed; the binaries
+# stay in the off-repo backup.
+artifacts/rollback/**/*.bin
+artifacts/rollback/**/*.BIN
+artifacts/rollback/**/*.ub
+artifacts/rollback/**/*.tar
+artifacts/preempt_rt_candidate_20261024/*.ub
+artifacts/preempt_rt_candidate_20261024/*.tar.gz
+
+# RAM demo input sets (binary, regenerate via tools/make_ram_demo_set.py; the
+# provenance.json pins the set's SHA-256).
+artifacts/ram_demo_sets/*/set.i32

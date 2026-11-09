@@ -11,3 +11,22 @@ hls/**/golden_ingress1024/** -text
 *.hwh -text
 # Integrity manifests themselves: keep LF so their own bytes are stable too.
 *.sha256 -text
+
+# 2026-10-22..24 evidence and inputs whose bytes are pinned by SHA-256 files,
+# provenance records or verifier scripts: store byte-identical (no EOL changes).
+hls/**/golden_ingress1024_argmax/** -text
+artifacts/calibration/** -text
+artifacts/ram_demo_sets/** -text
+artifacts/rollback/** -text
+artifacts/preempt_rt_candidate_20261024/** -text
+artifacts/results/board_vs_reference_20261022/** -text
+artifacts/results/fpga_realtime_bench_20261022/** -text
+artifacts/results/fpga_live_test_20261022_*/** -text
+artifacts/results/seq256_dma_argmax_z7020_20261022/** -text
+artifacts/results/fpga_argmax_fulltest_20261023/** -text
+artifacts/results/fpga_timing_20261023/** -text
+artifacts/results/demo_rehearsal_20261023/** -text
+artifacts/results/gui_live_validation_20261023*/** -text
+artifacts/results/*_20261024*/** -text
+artifacts/results/*_20261024*.console.txt -text
+docs/reports/*_criterion_20261024.md -text
