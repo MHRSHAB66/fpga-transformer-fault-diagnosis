@@ -1,0 +1,1 @@
+SUMMARY {"n_windows": 10000, "period_s": 0.02048, "class_source": "fpga_register", "tty": "/dev/ttyPS0", "baud": 115200, "infer_ms": {"mean": 16.089, "max": 32.909}, "uart_write_ms": {"mean": 0.484, "max": 11.492}, "releases_already_late": 4112, "temp_c": {"start": 54.14, "end": 54.01}, "confidence": "softmax(logits * 0.107799 / T), T = 1.42482; display only"}

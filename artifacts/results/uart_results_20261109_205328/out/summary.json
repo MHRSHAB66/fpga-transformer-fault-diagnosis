@@ -1,0 +1,21 @@
+{
+ "n_windows": 256,
+ "period_s": 0.02048,
+ "class_source": "fpga_register",
+ "tty": "/dev/ttyPS0",
+ "baud": 115200,
+ "infer_ms": {
+  "mean": 16.149,
+  "max": 26.096
+ },
+ "uart_write_ms": {
+  "mean": 0.473,
+  "max": 0.73
+ },
+ "releases_already_late": 13,
+ "temp_c": {
+  "start": 54.14,
+  "end": 54.14
+ },
+ "confidence": "softmax(logits * 0.107799 / T), T = 1.42482; display only"
+}

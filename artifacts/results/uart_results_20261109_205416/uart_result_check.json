@@ -1,0 +1,37 @@
+{
+ "frames_sent": 10000,
+ "lines_received": 10000,
+ "frames_parsed": 10000,
+ "malformed_lines": 0,
+ "malformed_examples": [],
+ "id_gaps": 0,
+ "duplicates": 0,
+ "received_equal_to_sent_text": 10000,
+ "class_and_logits_equal_reference": 10000,
+ "conf_equal_pc_calibrated": 10000,
+ "console_restored": true,
+ "board_summary": {
+  "n_windows": 10000,
+  "period_s": 0.02048,
+  "class_source": "fpga_register",
+  "tty": "/dev/ttyPS0",
+  "baud": 115200,
+  "infer_ms": {
+   "mean": 16.089,
+   "max": 32.909
+  },
+  "uart_write_ms": {
+   "mean": 0.484,
+   "max": 11.492
+  },
+  "releases_already_late": 4112,
+  "temp_c": {
+   "start": 54.14,
+   "end": 54.01
+  },
+  "confidence": "softmax(logits * 0.107799 / T), T = 1.42482; display only"
+ },
+ "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+ "port": "COM6",
+ "period_s": 0.02048
+}
