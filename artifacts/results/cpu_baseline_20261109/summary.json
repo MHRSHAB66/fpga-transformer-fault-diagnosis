@@ -1,0 +1,135 @@
+{
+ "model": "deployed SEQ=256 INT10 top, argmax variant, compiled as C++",
+ "windows": "artifacts/ram_demo_sets/class_balanced_256_v1 (256 windows, 64 per class)",
+ "fpga_reference": {
+  "board_stage_p50_ms_release_to_class_ready": 15.819,
+  "dma_plus_core_mean_ms_full_test": 16.092,
+  "note": "FPGA times include the 32 KB DMA transfer; CPU times are compute only"
+ },
+ "runs": {
+  "board/O2_dual0": {
+   "timing_us": {
+    "n": 256.0,
+    "mean_us": 229929.3,
+    "p50_us": 219591.5,
+    "p95_us": 274272.5,
+    "max_us": 363824.1,
+    "min_us": 215475.3
+   },
+   "windows": 256,
+   "logits_equal_board": 256,
+   "pred_equal_board_argmax": 256,
+   "speedup_fpga_vs_cpu_p50": 13.88
+  },
+  "board/O2_dual1": {
+   "timing_us": {
+    "n": 256.0,
+    "mean_us": 230370.1,
+    "p50_us": 219544.6,
+    "p95_us": 277253.1,
+    "max_us": 363023.7,
+    "min_us": 215818.1
+   },
+   "windows": 256,
+   "logits_equal_board": 256,
+   "pred_equal_board_argmax": 256,
+   "speedup_fpga_vs_cpu_p50": 13.88
+  },
+  "board/O2_single": {
+   "timing_us": {
+    "n": 256.0,
+    "mean_us": 221892.1,
+    "p50_us": 218562.3,
+    "p95_us": 234231.6,
+    "max_us": 279606.9,
+    "min_us": 215079.5
+   },
+   "windows": 256,
+   "logits_equal_board": 256,
+   "pred_equal_board_argmax": 256,
+   "speedup_fpga_vs_cpu_p50": 13.82
+  },
+  "board/O3neon_dual0": {
+   "timing_us": {
+    "n": 256.0,
+    "mean_us": 226554.9,
+    "p50_us": 216881.0,
+    "p95_us": 271901.9,
+    "max_us": 400137.0,
+    "min_us": 211968.1
+   },
+   "windows": 256,
+   "logits_equal_board": 256,
+   "pred_equal_board_argmax": 256,
+   "speedup_fpga_vs_cpu_p50": 13.71
+  },
+  "board/O3neon_dual1": {
+   "timing_us": {
+    "n": 256.0,
+    "mean_us": 227532.9,
+    "p50_us": 216852.2,
+    "p95_us": 271234.7,
+    "max_us": 381660.5,
+    "min_us": 212448.2
+   },
+   "windows": 256,
+   "logits_equal_board": 256,
+   "pred_equal_board_argmax": 256,
+   "speedup_fpga_vs_cpu_p50": 13.71
+  },
+  "board/O3neon_single": {
+   "timing_us": {
+    "n": 256.0,
+    "mean_us": 218797.1,
+    "p50_us": 216519.0,
+    "p95_us": 227620.0,
+    "max_us": 260241.3,
+    "min_us": 213073.1
+   },
+   "windows": 256,
+   "logits_equal_board": 256,
+   "pred_equal_board_argmax": 256,
+   "speedup_fpga_vs_cpu_p50": 13.69
+  },
+  "board/O2_dual_throughput": {
+   "inferences": 512,
+   "wall_s": 121.34,
+   "inferences_per_s_incl_warmup": 8.44,
+   "note": "two processes (CPU 0 and CPU 1); wall time includes each process's untimed warm-up pass, so the rate counts warm-up + timed passes"
+  },
+  "board/O3neon_dual_throughput": {
+   "inferences": 512,
+   "wall_s": 117.981,
+   "inferences_per_s_incl_warmup": 8.68,
+   "note": "two processes (CPU 0 and CPU 1); wall time includes each process's untimed warm-up pass, so the rate counts warm-up + timed passes"
+  },
+  "pc/O2_single": {
+   "timing_us": {
+    "n": 1024.0,
+    "mean_us": 7920.9,
+    "p50_us": 7982.0,
+    "p95_us": 8842.0,
+    "max_us": 9544.0,
+    "min_us": 6793.0
+   },
+   "windows": 256,
+   "logits_equal_board": 256,
+   "pred_equal_board_argmax": 256,
+   "speedup_fpga_vs_cpu_p50": 0.5
+  },
+  "pc/O3native_single": {
+   "timing_us": {
+    "n": 1024.0,
+    "mean_us": 6638.3,
+    "p50_us": 6639.0,
+    "p95_us": 7576.0,
+    "max_us": 8322.0,
+    "min_us": 5812.0
+   },
+   "windows": 256,
+   "logits_equal_board": 256,
+   "pred_equal_board_argmax": 256,
+   "speedup_fpga_vs_cpu_p50": 0.42
+  }
+ }
+}

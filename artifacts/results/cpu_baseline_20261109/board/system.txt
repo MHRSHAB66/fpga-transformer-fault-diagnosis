@@ -1,0 +1,6 @@
+Linux pynq 4.14.0-xilinx #1 SMP PREEMPT Wed Nov 13 03:44:45 UTC 2019 armv7l armv7l armv7l GNU/Linux
+g++ (Ubuntu/Linaro 7.3.0-16ubuntu3) 7.3.0
+model name	: ARMv7 Processor rev 0 (v7l)
+2
+build O2: g++ -O2
+build O3neon: g++ -O3 -mcpu=cortex-a9 -mfpu=neon -mfloat-abi=hard

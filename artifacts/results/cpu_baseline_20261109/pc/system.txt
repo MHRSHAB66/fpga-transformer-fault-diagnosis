@@ -1,0 +1,5 @@
+g++.EXE (GCC) 15.2.0
+13th Gen Intel(R) Core(TM) i7-13620H
+build O2: g++ -O2
+build O3native: g++ -O3 -march=native
+run pinned to logical CPU 2 (performance core), priority High
