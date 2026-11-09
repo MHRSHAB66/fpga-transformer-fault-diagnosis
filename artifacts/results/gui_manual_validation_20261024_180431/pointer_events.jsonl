@@ -1,0 +1,6 @@
+{"t_s": 108.339, "pc_time": "2026-10-24T18:06:31.263", "button": "Preflight", "event": "press", "x_root": 331, "y_root": 303, "send_event": false}
+{"t_s": 108.412, "pc_time": "2026-10-24T18:06:31.333", "button": "Preflight", "event": "release", "x_root": 331, "y_root": 303, "send_event": false}
+{"t_s": 130.504, "pc_time": "2026-10-24T18:06:53.427", "button": "Start", "event": "press", "x_root": 404, "y_root": 305, "send_event": false}
+{"t_s": 130.58, "pc_time": "2026-10-24T18:06:53.507", "button": "Start", "event": "release", "x_root": 404, "y_root": 305, "send_event": false}
+{"t_s": 245.432, "pc_time": "2026-10-24T18:08:48.353", "button": "Stop", "event": "press", "x_root": 679, "y_root": 305, "send_event": false}
+{"t_s": 245.522, "pc_time": "2026-10-24T18:08:48.449", "button": "Stop", "event": "release", "x_root": 679, "y_root": 304, "send_event": false}

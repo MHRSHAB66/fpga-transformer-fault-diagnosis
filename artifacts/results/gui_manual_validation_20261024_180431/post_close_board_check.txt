@@ -1,0 +1,4 @@
+BOARD_IDLE
+/home/xilinx/live_runs/cb328726e6c64ea9a524335ea4054890/
+2019-11-13T01:48:33Z temp_c=47.002
+# guard END 2019-11-13T01:48:34Z (workload exited)

@@ -1,0 +1,109 @@
+{
+  "tool": "tools/gui_ram_demo_validation.py",
+  "mode": "ram_realtime_demo",
+  "method": "Tk Button.invoke() on the real window (same bound command as a click)",
+  "scenarios": [
+    {
+      "scenario": "default_mode",
+      "result": "PASS",
+      "banner": "MODE: LIVE SD/gzip + SSH  --  AVERAGE-THROUGHPUT VERIFIED, HARD REAL-TIME NOT VERIFIED",
+      "screenshot": "artifacts\\results\\gui_ram_demo_validation_20261024b\\screenshots\\01_default_legacy_mode.png",
+      "procs_after": []
+    },
+    {
+      "scenario": "select_ram_mode",
+      "result": "PASS",
+      "banner": "MODE: RAM REAL-TIME DEMO (SCHED_FIFO 50, CPU 1)  --  hard-RT boundary = board response only; SSH + GUI measured, NOT hard real-time   [fixed preloaded input set; 'sampling' is ignored]",
+      "screenshot": "artifacts\\results\\gui_ram_demo_validation_20261024b\\screenshots\\02_ram_mode_selected.png",
+      "procs_after": []
+    },
+    {
+      "scenario": "preflight_ram",
+      "result": "PASS",
+      "note": [
+        "[status] preflight RESULT: PASS -- safe to Start",
+        "[status] preflight [OK] no_ram_demo_running -- clear",
+        "[status] preflight [OK] ram_n_total_valid -- n_total=1200 (must exceed warm-up 200)",
+        "[status] preflight [OK] ram_set_indices_identity -- indices.txt 27768865ed1b",
+        "[status] preflight [OK] ram_set_identity -- board 06ac41bdacdc, expected 06ac41bdacdc",
+        "[status] preflight [OK] no_prior_runner -- clear",
+        "[status] preflight [OK] no_other_workload_or_guard -- clear",
+        "[status] preflight [OK] temperature_below_stop -- 47.125 C (start only below 75 C)",
+        "[status] preflight [OK] xadc_temperature -- in_temp0_raw=2602",
+        "[status] preflight [OK] requested_n_valid -- n=1 (allowed 1..95404)",
+        "[status] preflight [OK] input_frame_32768B -- input_frame_bytes=32768 (expect 32768)",
+        "[status] preflight [OK] dma_contract_65536B -- dma_max_transfer_bytes=65536 (expect 65536)",
+        "[status] preflight [OK] driver_import -- import fault_classifier (no overlay load)",
+        "[status] preflight [OK] input_complete -- 1128562912 bytes (expect 1128562912)",
+        "[status] preflight [OK] input_present -- /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+        "[status] preflight [OK] hwh_identity -- board eabc0163be6a, expected eabc0163be6a",
+        "[status] preflight [OK] bit_identity -- board ce3c254b8679, expected ce3c254b8679",
+        "[status] preflight [OK] hwh_present -- design_1_wrapper.hwh",
+        "[status] preflight [OK] bitstream_present -- design_1_wrapper.bit",
+        "[status] preflight [OK] deployment_dir -- /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+        "[status] preflight [OK] python3.6 -- Python 3.6.5",
+        "[status] preflight [OK] ssh_connectivity -- reachable"
+      ],
+      "screenshot": "artifacts\\results\\gui_ram_demo_validation_20261024b\\screenshots\\03_ram_preflight.png",
+      "procs_after": []
+    },
+    {
+      "scenario": "run_complete",
+      "result": "PASS",
+      "results": 3200,
+      "mismatches": [],
+      "true_classes_shown": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "evidence": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\ram_rt_demo_gui_20261024_223218",
+      "summary": {
+        "type": "summary",
+        "executed": 3200,
+        "aborted": null,
+        "wall_s": 65.532,
+        "throughput": 48.8314,
+        "temp_start": "47.616778564308",
+        "temp_max": "47.616778564308",
+        "temp_end": "47.493737792824",
+        "deadline_misses": 0,
+        "acceptance_windows": 3000,
+        "display_dropped": 0,
+        "resp_max_ms": "16.465"
+      },
+      "procs_after": [],
+      "screenshot": "artifacts\\results\\gui_ram_demo_validation_20261024b\\screenshots\\04_run_complete_running.png",
+      "screenshot_end": "artifacts\\results\\gui_ram_demo_validation_20261024b\\screenshots\\05_run_complete_end.png"
+    },
+    {
+      "scenario": "stop_midrun",
+      "result": "PASS",
+      "results": 148,
+      "run_dir": "/home/xilinx/live_runs/ram_5cebae827e5d400993b9be1c60bd911e",
+      "guard_tail": [
+        "2019-11-13T06:11:40Z temp_c=47.617",
+        "# guard END 2019-11-13T06:11:41Z (workload exited)"
+      ],
+      "evidence": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\ram_rt_demo_gui_20261024_223253",
+      "procs_after": [],
+      "screenshot": "artifacts\\results\\gui_ram_demo_validation_20261024b\\screenshots\\06_stop_midrun_running.png",
+      "screenshot_end": "artifacts\\results\\gui_ram_demo_validation_20261024b\\screenshots\\07_stop_midrun_end.png"
+    },
+    {
+      "scenario": "close_midrun",
+      "result": "PASS",
+      "run_dir": "/home/xilinx/live_runs/ram_ccf79a3edd77496fa6edd48ab064bbe0",
+      "guard_tail": [
+        "2019-11-13T06:12:22Z temp_c=47.740",
+        "# guard END 2019-11-13T06:12:23Z (workload exited)"
+      ],
+      "procs_after": [],
+      "screenshot": "artifacts\\results\\gui_ram_demo_validation_20261024b\\screenshots\\09_close_midrun_running.png",
+      "legacy_reselect_ok": true,
+      "legacy_screenshot": "artifacts\\results\\gui_ram_demo_validation_20261024b\\screenshots\\08_back_to_legacy.png"
+    }
+  ],
+  "all_pass": true
+}

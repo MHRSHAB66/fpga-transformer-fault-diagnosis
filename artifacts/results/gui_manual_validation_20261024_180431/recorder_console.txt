@@ -1,0 +1,1 @@
+﻿GUI open; recording to G:\aut\project\fpga_fault_diagnosis\artifacts\results\gui_manual_validation_20261024_180431

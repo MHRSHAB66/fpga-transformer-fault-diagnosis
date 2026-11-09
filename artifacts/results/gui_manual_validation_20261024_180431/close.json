@@ -1,0 +1,7 @@
+{
+  "t_s": 277.455,
+  "pc_time": "2026-10-24T18:09:20.377",
+  "event": "WM_DELETE_WINDOW (window-manager close: X / Alt+F4 / taskbar)",
+  "run_active": false,
+  "close_handler_s": 0.036
+}

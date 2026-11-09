@@ -1,0 +1,1 @@
+aborted before any board action: PowerShell used .venv python without PIL (screenshot import failed at startup)

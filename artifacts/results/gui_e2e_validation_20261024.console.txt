@@ -1,0 +1,9 @@
+[PASS] full1 {}
+[PASS] full2 {}
+[PASS] stop {}
+[PASS] disconnect {}
+[PASS] stall {}
+[PASS] pause {}
+[PASS] close {}
+ALL_PASS True G:\aut\project\fpga_fault_diagnosis\artifacts\results\gui_e2e_validation_20261024
+EXIT=0

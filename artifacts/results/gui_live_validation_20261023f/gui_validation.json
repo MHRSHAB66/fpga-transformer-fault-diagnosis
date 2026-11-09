@@ -1,0 +1,36 @@
+{
+  "pc_start": "2026-10-23T23:18:15",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "procs_before": [],
+  "window_build_s": 0.381,
+  "pc_end": "2026-10-23T23:18:49",
+  "click_method": "Tk Button.invoke() on the real buttons of the real window (OS mouse input unavailable: SetCursorPos had no effect while another application held the foreground; checked 2026-10-23)",
+  "gui_render_ms_per_event": {
+    "n": 409,
+    "mean": 0.469,
+    "p99": 1.534,
+    "max": 1.672
+  },
+  "procs_final": [],
+  "scenarios": [
+    {
+      "scenario": "fault_guard_exit",
+      "result": "PASS",
+      "results": 401,
+      "messages": [
+        "ABORT independent guard exited",
+        "runner or independent guard failed (rc=1)"
+      ],
+      "guard_log_tail": [
+        "2019-11-13T00:39:29Z temp_c=49.216",
+        "FAULT_INJECTION guard exits early"
+      ],
+      "run_dir": "/home/xilinx/live_runs/3bf9f25ab87147daa84ac0bf994102d0",
+      "procs_after": [],
+      "shot": "artifacts\\results\\gui_live_validation_20261023f\\screenshots\\09_fault_guard_exit.png"
+    }
+  ],
+  "all_pass": true
+}

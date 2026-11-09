@@ -38,6 +38,43 @@ from host.replay_data import (
 COLORS = {"normal": "#2e7d32", "imbalance": "#f9a825",
           "misalignment": "#ef6c00", "bearing_fault": "#c62828"}
 
+# Shown in the Live tab next to the CONF field (wording mirrors host/confidence.py).
+LIVE_CONF_NOTE_UNCAL = (
+    "CONF = softmax score of the FPGA's own 4 INT10 logits (deployed logits scale), "
+    "UNCALIBRATED: NOT a guaranteed probability of being correct (measured ECE 0.7-0.8 %, "
+    "over-confident between 0.6 and 0.93). The class is decided on the FPGA; CONF=NA "
+    "whenever no logits were received.")
+LIVE_CONF_NOTE_CAL = (
+    "CONF = CALIBRATED softmax of the FPGA's own 4 INT10 logits (temperature T={T:.3f}, "
+    "fitted on the validation split only; test ECE 0.79 % -> 0.09 %). An estimate of how "
+    "often such predictions are right on MAFAULDA test data -- not a guarantee for one "
+    "window. The class is decided on the FPGA; CONF=NA whenever no logits were received.")
+
+
+def _live_conf_note():
+    from host.confidence import load_calibration
+    cal = load_calibration()
+    return LIVE_CONF_NOTE_CAL.format(T=cal["T"]) if cal else LIVE_CONF_NOTE_UNCAL
+
+
+LIVE_CONF_NOTE = _live_conf_note()
+
+# Live tab modes. The legacy SD/gzip mode is the default and behaves exactly as
+# before; ram_realtime_demo is an explicit, separate mode (host.ram_rt_demo).
+LIVE_MODE_LEGACY = "live_sd_gzip (legacy)"
+LIVE_MODE_RAM = "ram_realtime_demo"
+LIVE_MODE_E2E = "ram_tcp_e2e_demo"
+LIVE_MODE_BANNERS = {
+    LIVE_MODE_E2E: ("MODE: END-TO-END TCP DEMO (board RAM -> TCP -> this window, per-frame render)  --  "
+                    "end-to-end verdict: see docs/reports/e2e_hard_rt_verdict_20261024.md; "
+                    "drops/order errors shown below", "#0d47a1"),
+    LIVE_MODE_LEGACY: ("MODE: LIVE SD/gzip + SSH  --  AVERAGE-THROUGHPUT VERIFIED, "
+                       "HARD REAL-TIME NOT VERIFIED", "#37474f"),
+    LIVE_MODE_RAM: ("MODE: RAM REAL-TIME DEMO (SCHED_FIFO 50, CPU 1)  --  hard-RT boundary = "
+                    "board response only; SSH + GUI measured, NOT hard real-time", "#1b5e20"),
+}
+REPLAY_CONF_NOTE = "CONF=N/A: the recorded 2026-10-08 run stored classes only (no logits)."
+
 # replay speeds: label -> inter-frame delay (ms); "Max" renders as fast as Tk can
 SPEEDS = [("0.5x (1 s)", 1000), ("1x (0.5 s)", 500), ("2x (0.25 s)", 250),
           ("5x (0.1 s)", 100), ("20x (0.025 s)", 25), ("Max", 1)]
@@ -152,6 +189,8 @@ class ViewerApp:
         self.tree.tag_configure("correct", background="#e8f5e9")
         self.tree.tag_configure("wrong", background="#ffebee")
         self.tree.pack(fill="both", expand=True, padx=8, pady=6)
+        tk.Label(self.ui, text=REPLAY_CONF_NOTE, font=("Segoe UI", 8), fg="#6a1b9a",
+                 anchor="w").pack(fill="x", padx=8)
 
         self.status_var = tk.StringVar(value="ready")
         tk.Label(self.ui, textvariable=self.status_var, font=("Consolas", 9),
@@ -439,6 +478,7 @@ class LiveFrame:
         self.dropped = 0
         self.client = None
         self.thread = None
+        self._cancel = threading.Event()
         self.paused = False
         self.n_target = 150
         self._alive = True
@@ -452,7 +492,19 @@ class LiveFrame:
         self.temp_last = None
         self.temp_max = None
         self._t0 = None
+        self.ram_results = []          # ram mode only: result events + GUI display time
+        self.ram_events = []           # ram mode only: non-result events (evidence)
+        self.e2e_rendered = 0          # e2e mode: frames rendered by the 1 ms tick
+        self.e2e_tick_times = []       # e2e mode: tick call times (GUI refresh evidence)
+        self._e2e_after = None
+        self.e2e_evidence_dir = None
+        self.ram_summary = None
+        self.ram_evidence_dir = None
 
+        self.mode_var = tk.StringVar(value=LIVE_MODE_LEGACY)
+        self.mode_banner = tk.Label(self.ui, text="", fg="white", font=("Segoe UI", 10, "bold"),
+                                    anchor="w", justify="left", padx=8, pady=3, wraplength=900)
+        self.mode_banner.pack(fill="x")
         self.big_var = tk.StringVar(value="--")
         self.sub_var = tk.StringVar(value="idle -- press Start to run real FPGA inference")
         self.conn_var = tk.StringVar(value="connection: not started")
@@ -469,7 +521,18 @@ class LiveFrame:
                  anchor="w", justify="left").pack(fill="x", padx=10, pady=4)
         tk.Label(self.ui, textvariable=self.byclass_var, font=("Consolas", 10),
                  fg="#555", anchor="w").pack(fill="x", padx=10)
+        tk.Label(self.ui, text=LIVE_CONF_NOTE, font=("Segoe UI", 8), fg="#6a1b9a",
+                 anchor="w", justify="left", wraplength=900).pack(fill="x", padx=10)
 
+        # own row, so the existing control row (incl. Stop) keeps its width
+        mrow = tk.Frame(self.ui)
+        mrow.pack(fill="x", padx=8, pady=(6, 0))
+        tk.Label(mrow, text="live mode:").pack(side="left")
+        from tkinter import ttk as _ttkm
+        self.mode_menu = _ttkm.OptionMenu(mrow, self.mode_var, LIVE_MODE_LEGACY,
+                                          LIVE_MODE_LEGACY, LIVE_MODE_RAM, LIVE_MODE_E2E,
+                                          command=lambda *_: self._show_mode())
+        self.mode_menu.pack(side="left", padx=(2, 8))
         ctrl = tk.Frame(self.ui)
         ctrl.pack(fill="x", padx=8, pady=6)
         tk.Label(ctrl, text="windows:").pack(side="left")
@@ -493,8 +556,18 @@ class LiveFrame:
         self.log = tk.Text(self.ui, height=12, width=70, font=("Consolas", 9), state="disabled")
         self.log.pack(fill="both", expand=True, padx=8, pady=6)
 
+        self._show_mode()
         self._refresh()
         self._poll_after = self.root.after(80, self._poll)
+
+    def _show_mode(self):
+        text, bg = LIVE_MODE_BANNERS[self.mode_var.get()]
+        if self.mode_var.get() in (LIVE_MODE_RAM, LIVE_MODE_E2E):
+            text += "   [fixed preloaded input set; 'sampling' is ignored]"
+        self.mode_banner.configure(text=text, bg=bg)
+
+    def _ram_mode(self):
+        return self.mode_var.get() == LIVE_MODE_RAM
 
     # -- controls -----------------------------------------------------------
     def preflight(self):
@@ -509,10 +582,20 @@ class LiveFrame:
             self.n_target = 150
         self.conn_var.set("preflight: probing board (read-only)...")
 
+        ram = self._ram_mode()
+        mode = self.mode_var.get()
+
         def work():
             try:
                 from host.live_preflight import preflight as run_pf, all_ok
-                checks = run_pf(n=self.n_target)
+                if mode == LIVE_MODE_E2E:
+                    from host import ram_e2e_demo as ed
+                    checks = ed.E2EClient(n_total=self.n_target).preflight_checks()
+                elif ram:
+                    from host import ram_rt_demo as rd
+                    checks = rd.RamRealtimeDemoClient(n_total=self.n_target).preflight_checks()
+                else:
+                    checks = run_pf(n=self.n_target)
             except Exception as e:
                 self._put({"type": "status", "msg": "preflight error: %s" % e})
                 return
@@ -541,11 +624,21 @@ class LiveFrame:
         self.lat_sum = 0.0; self.lat_last = None
         self.temp_last = None; self.temp_max = None; self._t0 = None
         self.paused = False
+        self._cancel = threading.Event()
+        self.client = None
         self._logclear()
+        self.ram_results = []; self.ram_summary = None; self.ram_evidence_dir = None
+        self.ram_events = []
         try:
             from host import live_fpga as lf
         except Exception as e:
             self.conn_var.set("live client import failed: {}".format(e))
+            return
+        if self._ram_mode():
+            self._start_ram()
+            return
+        if self.mode_var.get() == LIVE_MODE_E2E:
+            self._start_e2e()
             return
         # Build an explicit index plan for non-sequential sampling (multiclass
         # demo). Classification still happens on the FPGA; this only chooses
@@ -564,18 +657,184 @@ class LiveFrame:
                 return
         self.conn_var.set("connection: pushing runner + connecting ({})...".format(mode))
 
+        cancel = self._cancel
+
         def work():
+            if cancel.is_set():
+                self._put({"type": "status", "msg": "stopped before launch; nothing started"})
+                return
             try:
-                lf.push_board_files(lf.BOARD_HOST, lf.BOARD_USER, lf.SSH_KEY, 22)
+                runner, guard = lf.push_board_files(lf.BOARD_HOST, lf.BOARD_USER, lf.SSH_KEY, 22)
             except Exception as e:
-                self._put({"type": "status", "msg": "push warning: %s" % e})
-            self.client = lf.LiveFpgaClient(n=self.n_target, indices=indices)
-            for ev in self.client.stream():
+                self._put({"type": "error", "msg": "deployment failed: %s" % e})
+                return
+            client = lf.LiveFpgaClient(n=self.n_target, indices=indices,
+                                       runner_remote=runner, monitor_remote=guard)
+            self.client = client
+            if cancel.is_set():   # Stop/Close arrived while pushing: never launch
+                client.stop()
+            for ev in client.stream():
                 self._put(ev)
             self._put({"type": "status", "msg": "stream ended"})
 
         self.thread = threading.Thread(target=work, daemon=True)
         self.thread.start()
+
+    def _start_ram(self):
+        """ram_realtime_demo: stage/verify the RAM set, push runner + guard into a
+        new run dir, stream. Classification stays on the FPGA."""
+        from host import ram_rt_demo as rd
+        self.conn_var.set("connection: [%s] staging RAM set + pushing runner..." % rd.MODE)
+        cancel = self._cancel
+
+        def work():
+            if cancel.is_set():
+                self._put({"type": "status", "msg": "stopped before launch; nothing started"})
+                return
+            try:
+                rd.stage_set()
+                runner, guard = rd.push_runner()
+            except Exception as e:
+                self._put({"type": "error", "msg": "deployment failed: %s" % e})
+                return
+            client = rd.RamRealtimeDemoClient(n_total=self.n_target, runner_remote=runner,
+                                              monitor_remote=guard, line_timeout=60.0)
+            self.client = client
+            if cancel.is_set():
+                client.stop()
+            for ev in client.stream():
+                if ev["type"] != "result":
+                    self.ram_events.append(ev)
+                self._put(ev)
+            self._put({"type": "ram_done"})
+            self._put({"type": "status", "msg": "stream ended"})
+
+        self.thread = threading.Thread(target=work, daemon=True)
+        self.thread.start()
+
+    def _start_e2e(self):
+        """ram_tcp_e2e_demo: SSH = control only; results over one TCP connection; every frame
+        rendered individually by a 1 ms Tk tick (no batching)."""
+        from host import ram_e2e_demo as ed
+        from host import ram_rt_demo as rd
+        self.e2e_rendered = 0
+        self.e2e_tick_times = []
+        self.e2e_evidence_dir = None
+        self.conn_var.set("connection: [%s] staging RAM set + pushing runner..." % ed.MODE)
+        cancel = self._cancel
+        hooks = getattr(self, "e2e_test_hooks", None) or {}
+
+        def work():
+            if cancel.is_set():
+                self._put({"type": "status", "msg": "stopped before launch; nothing started"})
+                return
+            try:
+                rd.stage_set()
+                runner, guard = ed.push_runner()
+            except Exception as e:
+                self._put({"type": "error", "msg": "deployment failed: %s" % e})
+                return
+            client = ed.E2EClient(n_total=self.n_target, runner_remote=runner, monitor_remote=guard,
+                                  line_timeout=90.0, **hooks)
+            self.client = client
+            if cancel.is_set():
+                client.stop()
+            for ev in client.stream():
+                if ev["type"] != "result":
+                    self.ram_events.append(ev)
+                self._put(ev)
+            self._put({"type": "e2e_done"})
+            self._put({"type": "status", "msg": "stream ended"})
+
+        ed._win_rt(True)
+        self.thread = threading.Thread(target=work, daemon=True)
+        self.thread.start()
+        if self._e2e_after is None:
+            self._e2e_after = self.root.after(1, self._e2e_tick)
+
+    def _e2e_tick(self):
+        """Render every received frame individually; stamp t_render after update_idletasks()."""
+        self._e2e_after = None
+        if not self._alive:
+            return
+        t = time.perf_counter()
+        self.e2e_tick_times.append(t)
+        client = self.client
+        sink = getattr(client, "sink", None)
+        if sink is not None and not self.paused:
+            frames = sink.pop_all()
+            for f in frames:
+                label = LABELS.get(f["cls"], "?")
+                self.big.configure(bg=COLORS.get(label, "#455a64"))
+                self.big_var.set(label.replace("_", " ").upper())
+                self.sub_var.set("FRAME=%d  SEQ=%d  CLASS=%d  LABEL=%s" % (f["idx"], f["seq"], f["cls"], label))
+                self.ui.update_idletasks()
+                f["t_render"] = time.perf_counter()
+            if frames:
+                self.e2e_rendered += len(frames)
+                self.executed = self.e2e_rendered
+                self.lat_last = frames[-1]["t_ready"] - frames[-1]["t_rel"]
+                self.lat_last *= 1e3
+                if self.e2e_rendered % 25 < len(frames):
+                    tr = client.tracker
+                    self.metric_var.set(
+                        "rendered={r}/{n}   board overflow={bo}   PC queue overflow={po}   missing={m}  "
+                        "duplicate={d}  out-of-order={o}\nboard response last={lat:.1f} ms   data error={de}".format(
+                            r=self.e2e_rendered, n=self.n_target, bo=frames[-1]["board_overflow_cum"],
+                            po=len(sink.overflow), m=len(tr.missing), d=len(tr.duplicate),
+                            o=len(tr.out_of_order), lat=self.lat_last, de=client.data_error or "none"))
+        th = self.thread
+        if (th is not None and th.is_alive()) or (sink is not None and sink.q):
+            self._e2e_after = self.root.after(1, self._e2e_tick)
+
+    def _save_e2e_evidence(self):
+        from host import ram_e2e_demo as ed
+        from datetime import datetime as _dt
+        ed._win_rt(False)
+        client = self.client
+        if client is None or not hasattr(client, "sink"):
+            return
+        out = os.path.join(ed.lf._REPO, "artifacts", "results",
+                           "e2e_demo_gui_" + _dt.now().strftime("%Y%m%d_%H%M%S"))
+        self.e2e_evidence_dir = out
+        extra = {"source": "GUI (host.fpga_result_viewer, Live tab, mode %s)" % ed.MODE,
+                 "stopped_by_user": bool(self._cancel.is_set()),
+                 "summary_event": self.ram_summary, "frames_rendered": self.e2e_rendered,
+                 "gui_tick_times": list(self.e2e_tick_times),
+                 "t_render": "perf_counter after update_idletasks() following the frame-ID widget update"}
+        events = list(self.ram_events)
+
+        def work():
+            try:
+                ed.write_evidence(out, client, events, extra)
+                self._put({"type": "status", "msg": "evidence saved: %s" % out})
+            except Exception as e:
+                self._put({"type": "error", "msg": "evidence save failed: %s" % e})
+
+        threading.Thread(target=work, daemon=True).start()
+
+    def _save_ram_evidence(self):
+        from host import ram_rt_demo as rd
+        from datetime import datetime as _dt
+        client, results = self.client, list(self.ram_results)
+        if client is None:
+            return
+        out = os.path.join(rd.lf._REPO, "artifacts", "results",
+                           "ram_rt_demo_gui_" + _dt.now().strftime("%Y%m%d_%H%M%S"))
+        self.ram_evidence_dir = out
+        extra = {"source": "GUI (host.fpga_result_viewer, Live tab, mode %s)" % rd.MODE,
+                 "stopped_by_user": bool(self._cancel.is_set()), "summary_event": self.ram_summary,
+                 "gui_display_time": "perf_counter right after the result widgets were updated "
+                                     "(Tk paints on its next idle cycle); includes the 80 ms poll"}
+
+        def work():
+            try:
+                rd.write_evidence(out, client, results, list(self.ram_events), extra)
+                self._put({"type": "status", "msg": "evidence saved: %s" % out})
+            except Exception as e:
+                self._put({"type": "error", "msg": "evidence save failed: %s" % e})
+
+        threading.Thread(target=work, daemon=True).start()
 
     def _put(self, ev):
         """Bounded enqueue: if the display is paused long enough to fill the
@@ -606,23 +865,34 @@ class LiveFrame:
         self.conn_var.set("connection: display resumed")
 
     def stop(self):
-        """Actually end on-board inference: signal the client, which pkills the
-        remote runner and terminates the SSH process."""
-        if self.client:
-            self.client.stop()
-        self.conn_var.set("connection: stopped by user (on-board runner terminated)")
+        """Actually end on-board inference: signal the client, which pkills this
+        run's remote runner (its guard then exits) and ends the SSH process.
+        Works before launch too (the pending Start is cancelled). Runs off the
+        Tk thread so the window stays responsive."""
+        self._cancel.set()
+        client = self.client
+        self.conn_var.set("connection: stop requested -- ending on-board runner...")
+        if client is not None:
+            threading.Thread(target=client.stop, daemon=True).start()
 
     def shutdown(self, join_timeout=5.0):
         """Tear down cleanly on window close: stop the board runner and wait
         briefly for the SSH worker thread to finish. Returns True if the worker
         is gone. Safe to call repeatedly and when nothing is running."""
         self._alive = False
+        if self._e2e_after is not None:
+            try:
+                self.root.after_cancel(self._e2e_after)
+            except Exception:
+                pass
+            self._e2e_after = None
         if self._poll_after is not None:
             try:
                 self.root.after_cancel(self._poll_after)
             except Exception:
                 pass
             self._poll_after = None
+        self._cancel.set()
         try:
             if self.client:
                 self.client.stop()
@@ -659,7 +929,8 @@ class LiveFrame:
         elif t == "temp_start":
             self._logline("[temp_start] %s" % ev["temp_c"])
         elif t == "meta":
-            self.conn_var.set("connection: running on board, N=%d" % ev["n"])
+            self.conn_var.set("connection: running on board, N=%d, class decided by: %s"
+                              % (ev["n"], ev.get("class_source") or "not reported"))
         elif t == "result":
             if self._t0 is None:
                 self._t0 = time.time()
@@ -673,11 +944,26 @@ class LiveFrame:
             self.big.configure(bg=COLORS.get(ev["label"], "#455a64"))
             self.big_var.set(ev["label"].replace("_", " ").upper())
             self.sub_var.set(ev["frame"])
-            self._logline(ev["frame"] + "  lat=%.1fms temp=%s" % (ev["lat_ms"], ev["temp_c"]))
+            kind = ev.get("conf_kind")
+            tag = "" if not kind else ("  [CONF calibrated]" if kind.startswith("calibrated")
+                                       else "  [CONF uncalibrated]")
+            self._logline(ev["frame"] + "  lat=%.1fms temp=%s%s" % (ev["lat_ms"], ev["temp_c"], tag))
+            if ev.get("mode") == LIVE_MODE_RAM:
+                ev["disp_pc"] = time.perf_counter()
+                self.ram_results.append(ev)
         elif t == "abort":
             self.conn_var.set("connection: ABORTED -- " + ev["msg"])
             self._logline("[ABORT] " + ev["msg"])
+        elif t == "ram_done":
+            self._save_ram_evidence()
+        elif t == "e2e_done":
+            self._save_e2e_evidence()
         elif t == "summary":
+            if "deadline_misses" in ev:
+                self.ram_summary = ev
+                self._logline("[board RT] accepted=%s deadline_misses=%s max_response=%s ms "
+                              "display_dropped=%s" % (ev.get("acceptance_windows"), ev["deadline_misses"],
+                                                      ev.get("resp_max_ms"), ev.get("display_dropped")))
             self._logline("[summary] executed=%d aborted=%s throughput=%.2f temp_max=%s"
                           % (ev["executed"], ev["aborted"], ev["throughput"], ev["temp_max"]))
         self._refresh()
@@ -727,7 +1013,20 @@ def main(argv=None):
     ap.add_argument("--auto", action="store_true", help="start replay automatically")
     ap.add_argument("--screenshot", help="render replay tab, save a PNG here, exit (smoke test)")
     args = ap.parse_args(argv)
+    root, app, live = build_app(args)
+    if args.screenshot and app is not None:
+        _screenshot_and_exit(root, app, args.screenshot)
+        return
+    if args.auto and app is not None:
+        root.after(300, app.start)
+    root.mainloop()
 
+
+def build_app(args):
+    """Create the real window (tabs, close handler). Returns (root, replay, live).
+
+    Separate from main() so a validation harness can drive the exact same
+    application window."""
     import tkinter as tk
     from tkinter import ttk
 
@@ -772,13 +1071,8 @@ def main(argv=None):
         root.destroy()
 
     root.protocol("WM_DELETE_WINDOW", on_close)
-
-    if args.screenshot and app is not None:
-        _screenshot_and_exit(root, app, args.screenshot)
-        return
-    if args.auto and app is not None:
-        root.after(300, app.start)
-    root.mainloop()
+    root.on_close = on_close        # same handler as the window's close button
+    return root, app, live
 
 
 def _screenshot_and_exit(root, app, path):

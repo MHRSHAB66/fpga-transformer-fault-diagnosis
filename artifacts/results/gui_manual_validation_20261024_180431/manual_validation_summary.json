@@ -1,0 +1,88 @@
+{
+  "timestamp_pc": "2026-10-24T18:04:42 (recorder start); close 2026-10-24T18:09:20",
+  "status": "CONFIRMED: physical manual GUI pass passed",
+  "gui": "python -m tools.gui_manual_recorder (same window as host.fpga_result_viewer --mode live; observe-only, clicks nothing)",
+  "preflight_cli": "PASS (preflight_cli.txt, 45.894 C)",
+  "pre_run_board_check": "BOARD_IDLE (pre_board_check.txt)",
+  "preflight_button": "PASS",
+  "settings": {
+    "windows": 300,
+    "sampling": "class_balanced"
+  },
+  "pointer_presses": [
+    {
+      "t_s": 108.339,
+      "button": "Preflight",
+      "x_root": 331,
+      "y_root": 303,
+      "send_event": false
+    },
+    {
+      "t_s": 130.504,
+      "button": "Start",
+      "x_root": 404,
+      "y_root": 305,
+      "send_event": false
+    },
+    {
+      "t_s": 245.432,
+      "button": "Stop",
+      "x_root": 679,
+      "y_root": 305,
+      "send_event": false
+    }
+  ],
+  "pointer_note": "Tk <ButtonPress-1>/<ButtonRelease-1> with screen coordinates, send_event=false; Button.invoke() never generates these",
+  "class_source": [
+    "fpga_register"
+  ],
+  "results_before_stop": 157,
+  "run_was_active_at_stop": true,
+  "stop_press_to_stream_ended_s": 2.883,
+  "stop_messages": [
+    "stop requested",
+    "runner exited rc=1",
+    "stream ended"
+  ],
+  "labels_seen": [
+    "bearing_fault",
+    "imbalance",
+    "misalignment",
+    "normal"
+  ],
+  "match_recorded_board_predictions": "157/157",
+  "correct_vs_labels": "153/157",
+  "conf_shown_all_frames": true,
+  "latency_ms": {
+    "min": 15.927,
+    "max": 17.979,
+    "mean": 16.042
+  },
+  "temperature_c": {
+    "start": 46.386,
+    "max": 47.248,
+    "end": 46.879
+  },
+  "close": {
+    "t_s": 277.455,
+    "pc_time": "2026-10-24T18:09:20.377",
+    "event": "WM_DELETE_WINDOW (window-manager close: X / Alt+F4 / taskbar)",
+    "run_active": false,
+    "close_handler_s": 0.036
+  },
+  "post_close_board_check": "BOARD_IDLE; guard log ends with 'guard END (workload exited)' (post_close_board_check.txt)",
+  "earlier_pass": "gui_manual_validation_20261024_180108: same flow, but its run had finished 0.1 s before the Stop press",
+  "operator_confirmation": {
+    "by": "Mehrdad Sheikh Abbasi",
+    "pc_date": "2026-10-24",
+    "statement": "اره خودم زدم (yes, I clicked them myself)",
+    "covers": "Preflight, Start and Stop clicked with his own mouse and the window closed with the X button, in this pass (180431)"
+  },
+  "physically_verified": [
+    "Preflight click -> PASS",
+    "Start click -> real FPGA results, class_source=fpga_register, temperature/latency/class/CONF visible",
+    "Stop click while the run was active -> stream ended in 2.9 s",
+    "window closed with X -> close handler, no active run",
+    "post-close SSH check: BOARD_IDLE, guard END"
+  ]
+}

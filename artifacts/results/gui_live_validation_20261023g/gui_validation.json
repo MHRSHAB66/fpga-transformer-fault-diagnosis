@@ -1,0 +1,64 @@
+{
+  "pc_start": "2026-10-23T23:19:55",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "procs_before": [],
+  "window_build_s": 0.333,
+  "pc_end": "2026-10-23T23:21:31",
+  "click_method": "Tk Button.invoke() on the real buttons of the real window (OS mouse input unavailable: SetCursorPos had no effect while another application held the foreground; checked 2026-10-23)",
+  "gui_render_ms_per_event": {
+    "n": 35,
+    "mean": 0.904,
+    "p99": 3.827,
+    "max": 4.104
+  },
+  "procs_final": [],
+  "scenarios": [
+    {
+      "scenario": "stop_midrun",
+      "result": "PASS",
+      "results": 6,
+      "stop_to_worker_end_s": 4.73,
+      "run_dir": "/home/xilinx/live_runs/68700d50144f4d928ca3f25375bf08ef",
+      "guard_log_tail": [
+        "2019-11-13T00:41:10Z temp_c=49.462",
+        "# guard END 2019-11-13T00:41:11Z (workload exited)"
+      ],
+      "procs_after": [],
+      "status": "connection: stream ended",
+      "shot": "artifacts\\results\\gui_live_validation_20261023g\\screenshots\\05_stop_midrun_before_stop.png",
+      "shot_after": "artifacts\\results\\gui_live_validation_20261023g\\screenshots\\06_stop_midrun_after_stop.png"
+    },
+    {
+      "scenario": "stop_restart",
+      "result": "PASS",
+      "results": 6,
+      "stop_to_worker_end_s": 4.59,
+      "run_dir": "/home/xilinx/live_runs/8bfbc14dcf45469d882d31357a9d441a",
+      "guard_log_tail": [
+        "2019-11-13T00:41:42Z temp_c=49.585",
+        "# guard END 2019-11-13T00:41:43Z (workload exited)"
+      ],
+      "procs_after": [],
+      "status": "connection: stream ended",
+      "shot": "artifacts\\results\\gui_live_validation_20261023g\\screenshots\\05_stop_restart_before_stop.png",
+      "shot_after": "artifacts\\results\\gui_live_validation_20261023g\\screenshots\\06_stop_restart_after_stop.png"
+    },
+    {
+      "scenario": "close_midrun",
+      "result": "PASS",
+      "results": 5,
+      "close_handler_s": 2.92,
+      "run_dir": "/home/xilinx/live_runs/3c7174eeb730433b9bd0ff81fcba7339",
+      "guard_log_tail": [
+        "2019-11-13T00:42:14Z temp_c=49.585",
+        "# guard END 2019-11-13T00:42:15Z (workload exited)"
+      ],
+      "procs_after": [],
+      "shot": "artifacts\\results\\gui_live_validation_20261023g\\screenshots\\10_close_midrun_before_close.png",
+      "note": "window closed via its WM_DELETE_WINDOW handler (root.on_close)"
+    }
+  ],
+  "all_pass": true
+}

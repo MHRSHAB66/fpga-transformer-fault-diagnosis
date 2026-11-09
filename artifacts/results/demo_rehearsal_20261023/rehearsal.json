@@ -1,0 +1,148 @@
+{
+  "pc_start": "2026-10-23T23:31:03",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "total_seconds": 515.7,
+  "steps": [
+    {
+      "step": "P1 ping",
+      "includes": "2 ICMP echoes to the board",
+      "seconds": 1.03,
+      "result": "PASS",
+      "out": [
+        "    Minimum = 0ms, Maximum = 0ms, Average = 0ms"
+      ]
+    },
+    {
+      "step": "P2 CLI preflight",
+      "includes": "read-only SSH probe: identity, input, DMA contract, temperature, no workload",
+      "seconds": 3.76,
+      "result": "PASS",
+      "out": [
+        "Live FPGA preflight (read-only; no overlay load, no inference):",
+        "  [OK ] ssh_connectivity       reachable",
+        "  [OK ] python3.6              Python 3.6.5",
+        "  [OK ] deployment_dir         /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+        "  [OK ] bitstream_present      design_1_wrapper.bit",
+        "  [OK ] hwh_present            design_1_wrapper.hwh",
+        "  [OK ] bit_identity           board ce3c254b8679, expected ce3c254b8679",
+        "  [OK ] hwh_identity           board eabc0163be6a, expected eabc0163be6a",
+        "  [OK ] input_present          /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+        "  [OK ] input_complete         1128562912 bytes (expect 1128562912)",
+        "  [OK ] driver_import          import fault_classifier (no overlay load)",
+        "  [OK ] dma_contract_65536B    dma_max_transfer_bytes=65536 (expect 65536)",
+        "  [OK ] input_frame_32768B     input_frame_bytes=32768 (expect 32768)",
+        "  [OK ] requested_n_valid      n=40 (allowed 1..95404)",
+        "  [OK ] xadc_temperature       in_temp0_raw=2615",
+        "  [OK ] temperature_below_stop 48.847 C (start only below 75 C)",
+        "  [OK ] no_other_workload_or_guard clear",
+        "  [OK ] no_prior_runner        clear",
+        "RESULT: PASS -- safe to Start"
+      ]
+    },
+    {
+      "step": "P3 GUI window up",
+      "includes": "python start of the viewer + replay data (95,404 records) + both tabs",
+      "seconds": 0.56,
+      "result": "PASS",
+      "window_build_s": 0.548
+    },
+    {
+      "step": "P4 Replay fast-eval",
+      "includes": "re-score recorded FPGA predictions, compare with fpga_fulltest_metrics.json",
+      "seconds": 0.06,
+      "result": "PASS",
+      "accuracy": 0.9776843738208042,
+      "macro_f1": 0.9565387808873411,
+      "discrepancies": [],
+      "shot": null
+    },
+    {
+      "step": "D1 Preflight button",
+      "includes": "Live tab read-only preflight",
+      "seconds": 5.06,
+      "result": "PASS",
+      "shot": "artifacts\\results\\demo_rehearsal_20261023\\screenshots\\D1_preflight.png"
+    },
+    {
+      "step": "D2 Start -> first result",
+      "includes": "push runner+guard (new run dir), preflight, SSH launch, overlay load, gzip skip to first window",
+      "seconds": 21.13,
+      "result": "PASS",
+      "class_source": "fpga_register"
+    },
+    {
+      "step": "D3 Start -> 40 results",
+      "includes": "whole class-balanced run incl. gzip skipping between far indices",
+      "seconds": 219.55,
+      "result": "PASS",
+      "results": 40,
+      "classes": [
+        "normal",
+        "imbalance",
+        "misalignment",
+        "bearing_fault"
+      ],
+      "correct_vs_labels": 39,
+      "match_recorded": 40,
+      "latency_ms_mean": 16.368,
+      "temp_c_max": 50.078,
+      "guard_log_tail": [
+        "2019-11-13T00:46:59Z temp_c=49.832",
+        "# guard END 2019-11-13T00:47:00Z (workload exited)"
+      ],
+      "run_dir": "/home/xilinx/live_runs/94cbbee7435f4a7ba029dcdeb6dc31df",
+      "procs_after": [],
+      "mismatches": [],
+      "shot_mid": "artifacts\\results\\demo_rehearsal_20261023\\screenshots\\D3_mid_run.png",
+      "shot_end": "artifacts\\results\\demo_rehearsal_20261023\\screenshots\\D3_end.png"
+    },
+    {
+      "step": "D4 Start -> Stop",
+      "includes": "second start, Stop after >= 5 results, remote process check",
+      "seconds": 34.35,
+      "result": "PASS",
+      "results": 5,
+      "stop_to_end_s": 4.16,
+      "guard_log_tail": [
+        "2019-11-13T00:47:33Z temp_c=49.708",
+        "# guard END 2019-11-13T00:47:34Z (workload exited)"
+      ],
+      "procs_after": [],
+      "shot": "artifacts\\results\\demo_rehearsal_20261023\\screenshots\\D4_after_stop.png"
+    },
+    {
+      "step": "D5 Close window",
+      "includes": "close handler + remote process check",
+      "seconds": 1.71,
+      "result": "PASS",
+      "procs_after": []
+    },
+    {
+      "step": "H1 headless 120",
+      "includes": "CLI evidence run, 120 class-balanced windows (30/class)",
+      "seconds": 249.66,
+      "result": "PASS",
+      "accuracy": 0.95,
+      "match_recorded": 120,
+      "class_source": "fpga_register",
+      "temp": {
+        "start": 49.832,
+        "min": 48.97,
+        "max": 50.078,
+        "end": "49.093"
+      },
+      "latency_ms": {
+        "min": 15.959,
+        "mean": 16.269,
+        "p50": 16.092,
+        "p95": 16.523,
+        "max": 26.373
+      },
+      "errors": [],
+      "procs_after": []
+    }
+  ],
+  "gui_render_ms_per_event_mean": 0.837,
+  "all_pass": true,
+  "click_method": "Tk Button.invoke() on the real window"
+}

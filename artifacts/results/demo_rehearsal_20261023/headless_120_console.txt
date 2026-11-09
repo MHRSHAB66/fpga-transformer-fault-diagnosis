@@ -1,0 +1,32 @@
+sample-mode=class_balanced -> 120 indices (e.g. [3904, 244, 1708, 0, 3985, 3473, 5197, 2969]...)
+pushing runner + monitor to board...
+[status] pushed 120 sampled indices to board
+[status] connected to 192.168.2.99; starting temperature monitor + live runner (N=120)
+[temp_start] 49.832
+[meta] {'type': 'meta', 'n': 120, 'seq': 1024, 'ch': 8, 'class_source': 'fpga_register'}
+  FRAME=0,CLASS=3,LABEL=bearing_fault,CONF=1.000  lat=16.0ms temp=49.339
+  FRAME=244,CLASS=1,LABEL=imbalance,CONF=1.000  lat=16.1ms temp=49.832
+  FRAME=1708,CLASS=2,LABEL=misalignment,CONF=1.000  lat=16.3ms temp=49.955
+  FRAME=2969,CLASS=3,LABEL=bearing_fault,CONF=1.000  lat=16.1ms temp=49.585
+  FRAME=3473,CLASS=1,LABEL=imbalance,CONF=1.000  lat=16.1ms temp=49.462
+  FRAME=17568,CLASS=0,LABEL=normal,CONF=0.551  lat=16.1ms temp=49.585
+  FRAME=32452,CLASS=2,LABEL=misalignment,CONF=1.000  lat=16.0ms temp=50.078
+  FRAME=55242,CLASS=2,LABEL=misalignment,CONF=1.000  lat=16.1ms temp=49.832
+  FRAME=9665,CLASS=2,LABEL=misalignment,CONF=1.000  lat=16.1ms temp=49.462
+[summary] {'type': 'summary', 'executed': 120, 'aborted': None, 'wall_s': 225.213, 'throughput': 0.533, 'temp_start': '49.832', 'temp_max': '50.078', 'temp_end': '49.093'}
+[status] GUARD_RC=0
+[status] runner exited rc=0
+
+==== LIVE FPGA EVIDENCE ====
+requested/executed  : 120 / 120
+aborted             : None
+true-class counts   : {'normal': 30, 'imbalance': 30, 'misalignment': 30, 'bearing_fault': 30}
+pred-class counts   : {'normal': 26, 'imbalance': 30, 'misalignment': 33, 'bearing_fault': 31}
+accuracy vs truth   : 0.95
+macro P/R/F1        : 0.9533 / 0.9500 / 0.9499
+match vs recorded   : 120/120 (1.0)
+latency ms          : {'min': 15.959, 'mean': 16.269, 'p50': 16.092, 'p95': 16.523, 'max': 26.373}
+throughput inf/s    : 0.533
+temp C start/min/max/end: {'start': 49.832, 'min': 48.97, 'max': 50.078, 'end': '49.093'}
+errors              : []
+evidence dir        : G:\aut\project\fpga_fault_diagnosis\artifacts\results\demo_rehearsal_20261023\headless_120

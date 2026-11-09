@@ -1,0 +1,64 @@
+{
+  "timestamp_pc": "2026-10-24T18:01:34 (recorder start)",
+  "status": "SUPERSEDED by gui_manual_validation_20261024_180431 (this pass: Stop pressed after the run had finished, so Stop of an active run was not exercised here)",
+  "gui": "python -m tools.gui_manual_recorder (same window as host.fpga_result_viewer --mode live; observe-only, clicks nothing)",
+  "preflight_cli": "PASS (preflight_cli.txt)",
+  "preflight_button": "PASS",
+  "settings_used": {
+    "windows": 150,
+    "sampling": "sequential (defaults; the requested change to 300/class_balanced was not made)"
+  },
+  "pointer_presses": [
+    {
+      "t_s": 3.903,
+      "button": "Preflight",
+      "x_root": 442,
+      "y_root": 406,
+      "send_event": false
+    },
+    {
+      "t_s": 11.238,
+      "button": "Start",
+      "x_root": 499,
+      "y_root": 410,
+      "send_event": false
+    },
+    {
+      "t_s": 32.406,
+      "button": "Stop",
+      "x_root": 801,
+      "y_root": 401,
+      "send_event": false
+    }
+  ],
+  "pointer_note": "Tk <ButtonPress-1>/<ButtonRelease-1> with screen coordinates and send_event=false; Button.invoke() never generates these",
+  "results_observed_total": 150,
+  "results_before_stop_press": 150,
+  "run_finished_before_stop": true,
+  "class_source": [
+    "fpga_register"
+  ],
+  "labels_seen": [
+    "bearing_fault",
+    "normal"
+  ],
+  "latency_ms": {
+    "min": 15.888,
+    "max": 18.733,
+    "mean": 15.975
+  },
+  "temperature_c": {
+    "start": "46.017",
+    "max": 47.74,
+    "end": 47.74
+  },
+  "stop_click_effect": "run had already completed (summary + GUARD_RC=0 before the Stop press); Stop of a RUNNING inference was not exercised manually",
+  "close": {
+    "t_s": 34.874,
+    "pc_time": "2026-10-24T18:02:09.803",
+    "event": "WM_DELETE_WINDOW (window-manager close: X / Alt+F4 / taskbar)",
+    "run_active": false,
+    "close_handler_s": 0.035
+  },
+  "post_close_board_check": "BOARD_IDLE; guard log of the run ends with 'guard END (workload exited)' (post_close_board_check.txt)"
+}

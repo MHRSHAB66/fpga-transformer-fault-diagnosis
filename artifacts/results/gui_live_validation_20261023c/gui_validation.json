@@ -1,0 +1,217 @@
+{
+  "pc_start": "2026-10-23T23:03:54",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "procs_before": [],
+  "window_build_s": 0.364,
+  "pc_end": "2026-10-23T23:13:20",
+  "click_method": "Tk Button.invoke() on the real buttons of the real window (OS mouse input unavailable: SetCursorPos had no effect while another application held the foreground; checked 2026-10-23)",
+  "gui_render_ms_per_event": {
+    "n": 102,
+    "mean": 0.625,
+    "p99": 2.212,
+    "max": 2.381
+  },
+  "procs_final": [],
+  "scenarios": [
+    {
+      "scenario": "startup",
+      "result": "PASS",
+      "window_build_s": 0.364,
+      "shot": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\01_startup_live_tab.png",
+      "note": "live and replay CONF notes present",
+      "procs_after": []
+    },
+    {
+      "scenario": "preflight",
+      "result": "PASS",
+      "seconds": 7.44,
+      "log": [
+        "[status] preflight RESULT: PASS -- safe to Start",
+        "[status] preflight [OK] no_prior_runner -- clear",
+        "[status] preflight [OK] no_other_workload_or_guard -- clear",
+        "[status] preflight [OK] temperature_below_stop -- 49.093 C (start only below 75 C)",
+        "[status] preflight [OK] xadc_temperature -- in_temp0_raw=2618",
+        "[status] preflight [OK] requested_n_valid -- n=40 (allowed 1..95404)",
+        "[status] preflight [OK] input_frame_32768B -- input_frame_bytes=32768 (expect 32768)",
+        "[status] preflight [OK] dma_contract_65536B -- dma_max_transfer_bytes=65536 (expect 65536)",
+        "[status] preflight [OK] driver_import -- import fault_classifier (no overlay load)",
+        "[status] preflight [OK] input_complete -- 1128562912 bytes (expect 1128562912)",
+        "[status] preflight [OK] input_present -- /home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+        "[status] preflight [OK] hwh_identity -- board eabc0163be6a, expected eabc0163be6a",
+        "[status] preflight [OK] bit_identity -- board ce3c254b8679, expected ce3c254b8679",
+        "[status] preflight [OK] hwh_present -- design_1_wrapper.hwh",
+        "[status] preflight [OK] bitstream_present -- design_1_wrapper.bit",
+        "[status] preflight [OK] deployment_dir -- /home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+        "[status] preflight [OK] python3.6 -- Python 3.6.5",
+        "[status] preflight [OK] ssh_connectivity -- reachable"
+      ],
+      "shot": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\02_preflight_pass.png",
+      "procs_after": []
+    },
+    {
+      "scenario": "run_balanced",
+      "result": "PASS",
+      "results": 40,
+      "classes": [
+        "normal",
+        "imbalance",
+        "misalignment",
+        "bearing_fault"
+      ],
+      "start_to_first_result_s": 20.68,
+      "total_s": 210.04,
+      "correct_vs_labels": 39,
+      "match_recorded": 40,
+      "indices": [
+        0,
+        244,
+        1708,
+        3904,
+        7564,
+        9492,
+        9638,
+        12371,
+        17519,
+        17568,
+        18544,
+        22204,
+        22936,
+        23278,
+        25376,
+        27987,
+        29158,
+        31256,
+        34599,
+        37722,
+        40016,
+        44774,
+        47824,
+        48190,
+        50630,
+        55242,
+        57828,
+        58072,
+        58609,
+        65953,
+        67222,
+        68296,
+        70272,
+        75201,
+        76860,
+        77982,
+        83960,
+        85961,
+        86864,
+        87230
+      ],
+      "mismatches": [],
+      "errors": [],
+      "frames": [
+        "FRAME=0,CLASS=3,LABEL=bearing_fault,CONF=1.000",
+        "FRAME=244,CLASS=1,LABEL=imbalance,CONF=1.000",
+        "FRAME=1708,CLASS=2,LABEL=misalignment,CONF=1.000",
+        "FRAME=3904,CLASS=0,LABEL=normal,CONF=1.000",
+        "FRAME=7564,CLASS=0,LABEL=normal,CONF=0.986",
+        "FRAME=9492,CLASS=2,LABEL=misalignment,CONF=1.000"
+      ],
+      "banner": "BEARING FAULT",
+      "guard_log_tail": [
+        "2019-11-13T00:28:18Z temp_c=49.708",
+        "# guard END 2019-11-13T00:28:19Z (workload exited)"
+      ],
+      "run_dir": "/home/xilinx/live_runs/a27e1e6b82f74339a18896ec8ed3873b",
+      "procs_after": [],
+      "shot_mid": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\03_run_balanced_mid.png",
+      "shot_end": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\04_run_balanced_end.png"
+    },
+    {
+      "scenario": "stop_midrun",
+      "result": "PASS",
+      "results": 6,
+      "stop_to_worker_end_s": 4.1,
+      "run_dir": "/home/xilinx/live_runs/d67ea42fde824b53a9e9b0897d1160ad",
+      "guard_log_tail": [
+        "2019-11-13T00:28:52Z temp_c=49.708",
+        "# guard END 2019-11-13T00:28:53Z (workload exited)"
+      ],
+      "procs_after": [],
+      "status": "connection: stop requested",
+      "shot": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\05_stop_midrun_before_stop.png",
+      "shot_after": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\06_stop_midrun_after_stop.png"
+    },
+    {
+      "scenario": "stop_restart",
+      "result": "PASS",
+      "results": 6,
+      "stop_to_worker_end_s": 3.46,
+      "run_dir": "/home/xilinx/live_runs/a61158de5e404981b5157440dd0cea48",
+      "guard_log_tail": [
+        "2019-11-13T00:29:22Z temp_c=49.708",
+        "# guard END 2019-11-13T00:29:23Z (workload exited)"
+      ],
+      "procs_after": [],
+      "status": "connection: stop requested",
+      "shot": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\05_stop_restart_before_stop.png",
+      "shot_after": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\06_stop_restart_after_stop.png"
+    },
+    {
+      "scenario": "stop_during_push",
+      "result": "PASS",
+      "results": 0,
+      "messages": [],
+      "run_dir": "/home/xilinx/live_runs/52b8957d96dd4970bf854ad7230ddae0",
+      "guard_log_written": false,
+      "procs_after": []
+    },
+    {
+      "scenario": "fault_preflight",
+      "result": "FAIL",
+      "decoy_seen": [
+        "21954 bash temp_guard.sh"
+      ],
+      "errors": [],
+      "results": 0,
+      "runners_during": [],
+      "procs_after": [
+        "21954 bash temp_guard.sh"
+      ],
+      "shot": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\07_fault_preflight_refused.png"
+    },
+    {
+      "scenario": "fault_no_guard",
+      "result": "FAIL",
+      "results": 0,
+      "messages": [],
+      "procs_after": [
+        "21954 bash temp_guard.sh"
+      ],
+      "shot": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\08_fault_no_guard.png"
+    },
+    {
+      "scenario": "fault_guard_exit",
+      "result": "FAIL",
+      "results": 0,
+      "messages": [],
+      "guard_log_tail": [],
+      "run_dir": "/home/xilinx/live_runs/7902a5bfcb9841fea1646637f97ffa24",
+      "procs_after": [
+        "21954 bash temp_guard.sh"
+      ],
+      "shot": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\09_fault_guard_exit.png"
+    },
+    {
+      "scenario": "close_midrun",
+      "result": "FAIL",
+      "results": 0,
+      "close_handler_s": 0.07,
+      "run_dir": "/home/xilinx/live_runs/1982c08125cd43f684ecf64d51fc3953",
+      "guard_log_tail": [],
+      "procs_after": [],
+      "shot": "artifacts\\results\\gui_live_validation_20261023c\\screenshots\\10_close_midrun_before_close.png",
+      "note": "window closed via its WM_DELETE_WINDOW handler (root.on_close)"
+    }
+  ],
+  "all_pass": false
+}

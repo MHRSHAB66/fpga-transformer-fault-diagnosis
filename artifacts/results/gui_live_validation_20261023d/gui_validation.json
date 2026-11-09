@@ -1,0 +1,99 @@
+{
+  "pc_start": "2026-10-23T23:15:06",
+  "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+  "bit": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+  "input": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+  "procs_before": [],
+  "window_build_s": 0.645,
+  "pc_end": "2026-10-23T23:16:50",
+  "click_method": "Tk Button.invoke() on the real buttons of the real window (OS mouse input unavailable: SetCursorPos had no effect while another application held the foreground; checked 2026-10-23)",
+  "gui_render_ms_per_event": {
+    "n": 26,
+    "mean": 0.575,
+    "p99": 1.244,
+    "max": 1.275
+  },
+  "procs_final": [],
+  "scenarios": [
+    {
+      "scenario": "startup",
+      "result": "PASS",
+      "window_build_s": 0.645,
+      "shot": "artifacts\\results\\gui_live_validation_20261023d\\screenshots\\01_startup_live_tab.png",
+      "note": "live and replay CONF notes present",
+      "procs_after": []
+    },
+    {
+      "scenario": "stop_during_push",
+      "result": "PASS",
+      "results": 0,
+      "messages": [
+        "stop requested before launch; nothing started",
+        "stream ended"
+      ],
+      "run_dir": "/home/xilinx/live_runs/c11b1fab9022485bbd226b498eecea2d",
+      "guard_log_written": false,
+      "procs_after": []
+    },
+    {
+      "scenario": "fault_preflight",
+      "result": "PASS",
+      "decoy_seen": [
+        "31585 bash /tmp/gui_decoy_20261023/temp_guard.sh"
+      ],
+      "errors": [
+        "preflight failed: no_other_workload_or_guard: pids 31585 (runner/bench/guard) still running"
+      ],
+      "results": 0,
+      "runners_during": [],
+      "procs_after": [],
+      "shot": "artifacts\\results\\gui_live_validation_20261023d\\screenshots\\07_fault_preflight_refused.png"
+    },
+    {
+      "scenario": "fault_no_guard",
+      "result": "PASS",
+      "results": 0,
+      "messages": [
+        "pushed 40 sampled indices to board",
+        "connected to 192.168.2.99; starting temperature monitor + live runner (N=40)",
+        "ABORT guard missing",
+        "runner or independent guard failed (rc=1)",
+        "runner exited rc=1",
+        "stream ended"
+      ],
+      "procs_after": [],
+      "shot": "artifacts\\results\\gui_live_validation_20261023d\\screenshots\\08_fault_no_guard.png"
+    },
+    {
+      "scenario": "fault_guard_exit",
+      "result": "FAIL",
+      "results": 0,
+      "messages": [
+        "ABORT independent guard exited",
+        "runner or independent guard failed (rc=1)"
+      ],
+      "guard_log_tail": [
+        "2019-11-13T00:36:59Z temp_c=49.216",
+        "FAULT_INJECTION guard exits early"
+      ],
+      "run_dir": "/home/xilinx/live_runs/6131f9bf99c5428aa3898421a5e8adb3",
+      "procs_after": [],
+      "shot": "artifacts\\results\\gui_live_validation_20261023d\\screenshots\\09_fault_guard_exit.png"
+    },
+    {
+      "scenario": "close_midrun",
+      "result": "PASS",
+      "results": 5,
+      "close_handler_s": 4.52,
+      "run_dir": "/home/xilinx/live_runs/38b2e6f04db5442980ffc4815e4531d5",
+      "guard_log_tail": [
+        "2019-11-13T00:37:32Z temp_c=49.462",
+        "# guard END 2019-11-13T00:37:33Z (workload exited)"
+      ],
+      "procs_after": [],
+      "shot": "artifacts\\results\\gui_live_validation_20261023d\\screenshots\\10_close_midrun_before_close.png",
+      "note": "window closed via its WM_DELETE_WINDOW handler (root.on_close)"
+    }
+  ],
+  "all_pass": false
+}

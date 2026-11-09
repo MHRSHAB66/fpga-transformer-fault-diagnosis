@@ -1,0 +1,1 @@
+aborted before any board action: relative --out path broke screenshot path handling (fixed: resolved to absolute)
