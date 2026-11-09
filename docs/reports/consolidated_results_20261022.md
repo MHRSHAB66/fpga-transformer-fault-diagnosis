@@ -362,3 +362,17 @@ Figures (PNG + PDF), all drawn from recorded evidence by
 | `docs/figures/final/e2e_latency_profile` | TCP end-to-end mode: board stage vs GUI render |
 | `docs/figures/final/throughput_vs_requirement` | measured windows/s vs 48.83 /s |
 | `docs/figures/final/fpga_resources` | post-route utilisation of the argmax build |
+
+---
+
+## 9. Results added 2026-11-09 (evening, physical board)
+
+| Item | Result | Kind | Evidence |
+|---|---|---|---|
+| Raw-input core (preprocessing in the FPGA), full test | 97.7705 % (93,277 / 95,404); logits = C-model on 95,404 / 95,404 | MEASURED-PHYSICAL | `docs/reports/onchip_preprocessing_20261109.md` |
+| Raw-input core, golden | 41 / 41 exact incl. 8 ties, 4 edge windows | MEASURED-PHYSICAL | same |
+| Raw-input core, hard real-time (R1 configuration) | 0 misses in 30,000, p50 15.96 ms, max 16.64 ms | MEASURED-PHYSICAL | same |
+| Raw-input core, post-route | WNS +0.167 ns; LUT 36,670, FF 36,163, BRAM 76.5, DSP 210 | MEASURED (post-route) | same |
+| UART result path | 10,000 / 10,000 frames byte-identical, 0 malformed / gaps / duplicates, 48.80 frames/s | MEASURED-PHYSICAL | `docs/reports/uart_result_path_20261109.md` |
+| Same INT10 model on the board ARM (one core) | p50 218.6 ms per window -> FPGA ~14x faster | MEASURED-PHYSICAL | `docs/reports/cpu_baseline_20261109.md` |
+| Same model on a laptop i7-13620H (reference) | p50 6.6-8.0 ms per window | MEASURED-SOFTWARE | same |

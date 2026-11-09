@@ -2,7 +2,7 @@
 
 **Project:** Real-Time Machinery Condition Monitoring Using a Transformer Neural Network on FPGA  
 **Student:** Mehrdad Sheikh Abbasi, B.Sc., Amirkabir University of Technology  
-**Last updated:** 2026-11-09 (final review: all 2026-10-22..24 work committed, off-repo backup, ROC/AUC + final figures, artifact manifest; remaining board work planned). Reports: `docs/reports/consolidated_results_20261022.md` (canonical numbers, §8 ROC/AUC), `docs/reports/hard_rt_calibration_power_20261024.md`, `docs/reports/gui_demo_timing_20261023.md`. Figures: `docs/figures/final/`. Demo runbook: `docs/demo_runbook.md`.
+**Last updated:** 2026-11-09 evening (UART path, preprocessing in the FPGA, CPU baseline, SD image; earlier the same day the final review: all 2026-10-22..24 work committed, off-repo backup, ROC/AUC + final figures, artifact manifest; remaining board work planned). Reports: `docs/reports/consolidated_results_20261022.md` (canonical numbers, §8 ROC/AUC), `docs/reports/hard_rt_calibration_power_20261024.md`, `docs/reports/gui_demo_timing_20261023.md`. Figures: `docs/figures/final/`. Demo runbook: `docs/demo_runbook.md`.
 
 ---
 
@@ -19,8 +19,8 @@
 | 6 | Quantization & fixed-point preparation | **COMPLETE** (int10 selected) |
 | 7 | Hardware specification & golden vectors | **COMPLETE** (F@int10 export, verify 16/16) |
 | 8 | FPGA inference core | **COMPLETE — physically validated** on real MYIR Z-Turn XC7Z020 (full-test 95,404 windows + live multiclass) |
-| 9 | Sensor / lab input path | TODO (optional) |
-| 10 | FPGA-to-PC communication | **COMPLETE** — real USB-UART boot capture (COM6) + live results over SSH/Ethernet on the board |
+| 9 | Sensor / lab input path | Preprocessing now inside the FPGA (raw 24-bit samples in, validated on the board 2026-11-09); a physical sensor stays optional |
+| 10 | FPGA-to-PC communication | **COMPLETE** — results over the board's USB-UART (10,000/10,000 frames, 2026-11-09) and over SSH/TCP Ethernet |
 | 11 | PC-side display UI | **COMPLETE** — Replay + Live FPGA viewer (`host/fpga_result_viewer.py`) |
 | 12 | Final integration, validation, demo | **COMPLETE (hardware-validated)** — physical full-test + live multiclass + UART boot; demo flow in `docs/demo_runbook.md` |
 
@@ -188,15 +188,25 @@ deployed-system numbers by the runbook.
 - ROC/AUC of the deployed model from the physical logits (macro AUC 0.9991,
   micro 0.9993) and seven final figures (`python -m tools.plot_final_figures`).
 
-**Planned while the board is available (until ≈ 2026-12-09):**
-1. Send the per-window result over the board's USB-UART to the PC and show it
-   (the proposal's block diagram names UART/USB; so far UART carried only the
-   boot console and results travelled over Ethernet).
-2. On-board preprocessing: the FPGA receives raw samples and performs the
-   per-window z-score and INT10 quantization itself (today done offline on the
-   PC; DECISION_LOG D016), so a sensor can later replace the file feed.
-3. UI refresh, then a recorded demo video (the defense will not use the board).
-4. Power/energy only if a meter becomes available (last, optional).
+**Done 2026-11-09 with the board (evening):**
+- UART result path (`docs/reports/uart_result_path_20261109.md`): FPGA class ->
+  PS UART -> CP2102 -> COM6, 10,000/10,000 frames byte-identical, 0 malformed/gaps/
+  duplicates, classes/logits/CONF correct, 48.80 frames/s.
+- Preprocessing inside the FPGA (`docs/reports/onchip_preprocessing_20261109.md`):
+  raw 24-bit samples in; integer z-score + INT10 in the IP; post-route timing met
+  (WNS +0.167 ns, +4.9 k LUT, +0 DSP); on the board 41/41 golden, 95,404/95,404
+  logits = C-model, accuracy 97.7705 %, hard RT 0 misses in 30,000 (max 16.64 ms).
+  Deployment `seq256_raw_argmax_z7020_20261109`; the INT10-input argmax overlay
+  stays as fallback.
+- CPU baseline (`docs/reports/cpu_baseline_20261109.md`): same INT10 model on the
+  board's ARM Cortex-A9 needs ~219 ms/window -> FPGA ~14x faster; the ARM alone
+  cannot meet 20.48 ms. Laptop i7 reference: ~6.6-8 ms.
+- Full SD-card image of the board (31.17 GB, verified) in the off-repo backup.
+- Board Ethernet pinned to 100 Mb/s (link flapped at 1 Gb/s); original setting in
+  `/root/ethtool_eth0_before_20261109.txt` on the board.
+
+**Remaining with the board (until ≈ 2026-12-09):** UI refresh (Mehrdad will
+describe it), then a recorded demo video; power/energy only if a meter is found.
 
 **Still pending / future work:**
 - Legacy live demo path (gzip from SD, SSH, GUI) remains AVERAGE-THROUGHPUT VERIFIED,
