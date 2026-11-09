@@ -1,0 +1,208 @@
+{
+  "input": "artifacts\\results\\fpga_fulltest_20261008_141335\\fpga_testset_in.i32.gz",
+  "n_windows": 95404,
+  "same_input_all_sources": true,
+  "metrics": {
+    "board_2026-10-08": {
+      "n": 95404,
+      "correct": 93275,
+      "accuracy": 0.977684,
+      "macro_f1": 0.956539,
+      "confusion_matrix": [
+        [
+          2127,
+          16,
+          285,
+          12
+        ],
+        [
+          7,
+          15984,
+          9,
+          348
+        ],
+        [
+          72,
+          106,
+          23939,
+          39
+        ],
+        [
+          106,
+          518,
+          611,
+          51225
+        ]
+      ]
+    },
+    "csim_deployed_top": {
+      "n": 95404,
+      "correct": 93275,
+      "accuracy": 0.977684,
+      "macro_f1": 0.956539,
+      "confusion_matrix": [
+        [
+          2127,
+          16,
+          285,
+          12
+        ],
+        [
+          7,
+          15984,
+          9,
+          348
+        ],
+        [
+          72,
+          106,
+          23939,
+          39
+        ],
+        [
+          106,
+          518,
+          611,
+          51225
+        ]
+      ]
+    },
+    "csim_argmax_register": {
+      "n": 95404,
+      "correct": 93275,
+      "accuracy": 0.977684,
+      "macro_f1": 0.956539,
+      "confusion_matrix": [
+        [
+          2127,
+          16,
+          285,
+          12
+        ],
+        [
+          7,
+          15984,
+          9,
+          348
+        ],
+        [
+          72,
+          106,
+          23939,
+          39
+        ],
+        [
+          106,
+          518,
+          611,
+          51225
+        ]
+      ]
+    },
+    "ref_export_scales": {
+      "n": 95404,
+      "correct": 93275,
+      "accuracy": 0.977684,
+      "macro_f1": 0.956539,
+      "confusion_matrix": [
+        [
+          2127,
+          16,
+          285,
+          12
+        ],
+        [
+          7,
+          15984,
+          9,
+          348
+        ],
+        [
+          72,
+          106,
+          23939,
+          39
+        ],
+        [
+          106,
+          518,
+          611,
+          51225
+        ]
+      ]
+    },
+    "ref_calib12_scales": {
+      "n": 95404,
+      "correct": 93244,
+      "accuracy": 0.977359,
+      "macro_f1": 0.956282,
+      "confusion_matrix": [
+        [
+          2120,
+          17,
+          292,
+          11
+        ],
+        [
+          6,
+          15994,
+          9,
+          339
+        ],
+        [
+          66,
+          103,
+          23951,
+          36
+        ],
+        [
+          104,
+          549,
+          628,
+          51179
+        ]
+      ]
+    }
+  },
+  "agreement": {
+    "board_class_vs_csim_class": 95404,
+    "board_class_vs_ref_export_class": 95404,
+    "csim_logits_vs_ref_export_logits_all4": 95404,
+    "argmax_top_logits_vs_deployed_top_logits_all4": 95404,
+    "argmax_register_vs_board_class": 95404,
+    "argmax_register_vs_numpy_argmax_of_logits": 95404,
+    "board_class_vs_ref_calib12_class": 95179
+  },
+  "tied_max_logit_windows_export": 98,
+  "calibration_difference": {
+    "scales_differing": [
+      "cls_ln",
+      "embed",
+      "l0.attn_out",
+      "l0.ctx",
+      "l0.ff_act",
+      "l0.k",
+      "l0.ln1",
+      "l0.q",
+      "l0.res1",
+      "l0.scores",
+      "l0.v",
+      "logits"
+    ],
+    "input_scale_equal": true
+  },
+  "board_logits_physical": {
+    "source": "artifacts\\results\\fpga_realtime_bench_20261022\\board_full_pipelined\\logits_i32.bin",
+    "n": 95404,
+    "vs_csim_logits_all4": 95404,
+    "vs_ref_export_logits_all4": 95404,
+    "class_vs_board_2026-10-08": 95404
+  },
+  "board_vs_calib12_disagreements": {
+    "count": 225,
+    "board_correct": 124,
+    "calib12_correct": 93,
+    "neither_correct": 8,
+    "net_correct_difference": 31
+  }
+}

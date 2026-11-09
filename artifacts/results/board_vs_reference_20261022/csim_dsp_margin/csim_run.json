@@ -1,0 +1,8 @@
+{
+  "kind": "desktop g++ functional C-model (NOT synthesis, NOT hardware)",
+  "exe": "tmp\\csim\\batch_dsp_margin.exe",
+  "input": "artifacts\\results\\fpga_fulltest_20261008_141335\\fpga_testset_in.i32.gz",
+  "n": 95404,
+  "shards": 12,
+  "wall_seconds": 116.0
+}

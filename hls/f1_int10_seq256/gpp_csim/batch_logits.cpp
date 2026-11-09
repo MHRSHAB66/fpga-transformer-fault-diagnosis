@@ -1,0 +1,84 @@
+// Batch desktop g++ C-simulation of a SEQ=256 INT10 ingress-1024 AXI top.
+//
+// Reads raw little-endian int32 windows (1024 x 8, row-major [sample, channel],
+// exactly the MM2S word order the board driver sends) from stdin and writes one
+// line per window to stdout:
+//
+//     <window_index> <logit0> <logit1> <logit2> <logit3>
+//
+// Usage:  batch_logits <first_index> <count>   < raw_int32_stream
+// The stream must start at window <first_index>; <count> windows are processed
+// (0 = until EOF). This is a functional C-model run (non-ap_int branch of
+// ap_types.h, wide native integers), NOT synthesis or hardware execution.
+// Build with -DWITH_PRED_CLASS for the argmax-variant top; a 6th column then
+// holds the value written to the `pred_class` register.
+#include <ap_axi_sdata.h>
+#include <hls_stream.h>
+
+#include <cstdint>
+#include <cstdio>
+#include <cstdlib>
+#include <vector>
+#ifdef _WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
+
+typedef ap_axis<32, 0, 0, 0> axis_t;
+#ifdef WITH_PRED_CLASS
+void transformer_top(hls::stream<axis_t>& in, hls::stream<axis_t>& out, int& pred_class);
+#else
+void transformer_top(hls::stream<axis_t>& in, hls::stream<axis_t>& out);
+#endif
+
+int main(int argc, char** argv) {
+    if (argc != 3) {
+        std::fprintf(stderr, "usage: batch_logits <first_index> <count>\n");
+        return 2;
+    }
+#ifdef _WIN32
+    _setmode(_fileno(stdin), _O_BINARY);  // raw int32 bytes, no CRLF translation
+#endif
+    const long first = std::atol(argv[1]);
+    const long count = std::atol(argv[2]);
+    const int words = 1024 * 8;
+    std::vector<int32_t> buf(words);
+    long done = 0;
+    while (count == 0 || done < count) {
+        size_t got = std::fread(buf.data(), sizeof(int32_t), words, stdin);
+        if (got == 0) break;
+        if (got != (size_t)words) {
+            std::fprintf(stderr, "short read at window %ld\n", first + done);
+            return 3;
+        }
+        hls::stream<axis_t> in, out;
+        for (int i = 0; i < words; ++i) {
+            axis_t w;
+            w.data = buf[i];
+            w.keep = -1; w.strb = -1; w.user = 0; w.id = 0; w.dest = 0;
+            w.last = (i == words - 1);
+            in.write(w);
+        }
+#ifdef WITH_PRED_CLASS
+        int pred_class = -1;
+        transformer_top(in, out, pred_class);
+#else
+        transformer_top(in, out);
+#endif
+        long long lg[4];
+        for (int c = 0; c < 4; ++c) {
+            if (out.empty()) { std::fprintf(stderr, "missing logit\n"); return 4; }
+            lg[c] = (int32_t)out.read().data;
+        }
+        if (!out.empty()) { std::fprintf(stderr, "extra output\n"); return 4; }
+#ifdef WITH_PRED_CLASS
+        std::printf("%ld %lld %lld %lld %lld %d\n", first + done, lg[0], lg[1], lg[2], lg[3],
+                    pred_class);
+#else
+        std::printf("%ld %lld %lld %lld %lld\n", first + done, lg[0], lg[1], lg[2], lg[3]);
+#endif
+        ++done;
+    }
+    std::fflush(stdout);
+    return 0;
+}

@@ -1,0 +1,248 @@
+{
+  "definition": "confidence = max softmax(s_logits * hardware_int_logits); uncalibrated model probability, nothing fitted",
+  "s_logits": 0.10779884107882078,
+  "scales_source": "artifacts\\deploy\\seq256_z7020_pynq_dma16_py36_20261008\\config\\integer_config_scales.json",
+  "validation": {
+    "n": 47580,
+    "accuracy": 0.980979,
+    "mean_confidence": 0.988077,
+    "ece_15bin": 0.007098,
+    "mce_15bin": 0.34508,
+    "brier": 0.029135,
+    "nll": 0.056331,
+    "tied_max_logit_windows": 38,
+    "accuracy_at_confidence_ge": {
+      "0.5": {
+        "coverage": 0.9989,
+        "accuracy": 0.9817
+      },
+      "0.8": {
+        "coverage": 0.9782,
+        "accuracy": 0.9898
+      },
+      "0.9": {
+        "coverage": 0.9635,
+        "accuracy": 0.9929
+      },
+      "0.99": {
+        "coverage": 0.9104,
+        "accuracy": 0.9979
+      }
+    },
+    "reliability": [
+      {
+        "bin": [
+          0.3333,
+          0.4
+        ],
+        "n": 1,
+        "mean_conf": 0.3451,
+        "accuracy": 0.0
+      },
+      {
+        "bin": [
+          0.4,
+          0.4667
+        ],
+        "n": 10,
+        "mean_conf": 0.4383,
+        "accuracy": 0.4
+      },
+      {
+        "bin": [
+          0.4667,
+          0.5333
+        ],
+        "n": 123,
+        "mean_conf": 0.514,
+        "accuracy": 0.4065
+      },
+      {
+        "bin": [
+          0.5333,
+          0.6
+        ],
+        "n": 184,
+        "mean_conf": 0.5689,
+        "accuracy": 0.5489
+      },
+      {
+        "bin": [
+          0.6,
+          0.6667
+        ],
+        "n": 219,
+        "mean_conf": 0.631,
+        "accuracy": 0.5799
+      },
+      {
+        "bin": [
+          0.6667,
+          0.7333
+        ],
+        "n": 229,
+        "mean_conf": 0.7006,
+        "accuracy": 0.5808
+      },
+      {
+        "bin": [
+          0.7333,
+          0.8
+        ],
+        "n": 271,
+        "mean_conf": 0.7679,
+        "accuracy": 0.7011
+      },
+      {
+        "bin": [
+          0.8,
+          0.8667
+        ],
+        "n": 409,
+        "mean_conf": 0.8334,
+        "accuracy": 0.7604
+      },
+      {
+        "bin": [
+          0.8667,
+          0.9333
+        ],
+        "n": 689,
+        "mean_conf": 0.9042,
+        "accuracy": 0.8331
+      },
+      {
+        "bin": [
+          0.9333,
+          1.0
+        ],
+        "n": 45445,
+        "mean_conf": 0.9983,
+        "accuracy": 0.9943
+      }
+    ],
+    "val_files": 195
+  },
+  "test": {
+    "n": 95404,
+    "accuracy": 0.977684,
+    "mean_confidence": 0.985462,
+    "ece_15bin": 0.007853,
+    "mce_15bin": 0.129656,
+    "brier": 0.033628,
+    "nll": 0.062789,
+    "tied_max_logit_windows": 98,
+    "accuracy_at_confidence_ge": {
+      "0.5": {
+        "coverage": 0.9984,
+        "accuracy": 0.9787
+      },
+      "0.8": {
+        "coverage": 0.973,
+        "accuracy": 0.9884
+      },
+      "0.9": {
+        "coverage": 0.955,
+        "accuracy": 0.9924
+      },
+      "0.99": {
+        "coverage": 0.8954,
+        "accuracy": 0.998
+      }
+    },
+    "reliability": [
+      {
+        "bin": [
+          0.3333,
+          0.4
+        ],
+        "n": 6,
+        "mean_conf": 0.3845,
+        "accuracy": 0.3333
+      },
+      {
+        "bin": [
+          0.4,
+          0.4667
+        ],
+        "n": 28,
+        "mean_conf": 0.4418,
+        "accuracy": 0.5714
+      },
+      {
+        "bin": [
+          0.4667,
+          0.5333
+        ],
+        "n": 305,
+        "mean_conf": 0.5126,
+        "accuracy": 0.4
+      },
+      {
+        "bin": [
+          0.5333,
+          0.6
+        ],
+        "n": 397,
+        "mean_conf": 0.5671,
+        "accuracy": 0.5441
+      },
+      {
+        "bin": [
+          0.6,
+          0.6667
+        ],
+        "n": 578,
+        "mean_conf": 0.6314,
+        "accuracy": 0.5727
+      },
+      {
+        "bin": [
+          0.6667,
+          0.7333
+        ],
+        "n": 636,
+        "mean_conf": 0.7013,
+        "accuracy": 0.6541
+      },
+      {
+        "bin": [
+          0.7333,
+          0.8
+        ],
+        "n": 629,
+        "mean_conf": 0.7668,
+        "accuracy": 0.6757
+      },
+      {
+        "bin": [
+          0.8,
+          0.8667
+        ],
+        "n": 1012,
+        "mean_conf": 0.835,
+        "accuracy": 0.7441
+      },
+      {
+        "bin": [
+          0.8667,
+          0.9333
+        ],
+        "n": 1661,
+        "mean_conf": 0.9036,
+        "accuracy": 0.8332
+      },
+      {
+        "bin": [
+          0.9333,
+          1.0
+        ],
+        "n": 90152,
+        "mean_conf": 0.9981,
+        "accuracy": 0.994
+      }
+    ]
+  },
+  "test_logits_source": "artifacts\\results\\board_vs_reference_20261022\\numpy_reference\\numpy_export_logits.txt",
+  "elapsed_s": 821.4
+}
