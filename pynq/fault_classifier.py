@@ -55,6 +55,9 @@ IP_CTRL_BASE = 0x40000000
 AP_CTRL_OFFSET = 0x00
 AP_START = 0x01            # bit0
 AP_AUTO_RESTART = 0x81     # bit0 ap_start | bit7 auto_restart
+# Argmax-variant IP only: AXI-Lite output register holding the FPGA class id
+# (lowest class id wins ties, == numpy.argmax). Absent on the deployed overlay.
+CLASS_REG = "pred_class"
 
 MODEL_CFG = {
     "input_dim": 8, "seq_len": 256, "num_classes": 4,
@@ -109,6 +112,15 @@ def quantize_window(window: np.ndarray, input_scale: float, qmax: int = ACT_QMAX
 # Physically-contiguous DMA buffer allocator, compatible across PYNQ versions.
 # ---------------------------------------------------------------------------
 _XLNK = None
+
+
+def _reg_offset(registers: dict, name: str) -> Optional[int]:
+    """Address offset of an HWH register by exact name, or None if absent."""
+    reg = registers.get(name)
+    if not reg:
+        return None
+    off = reg.get("address_offset")
+    return int(off) if off is not None else None
 
 
 def _dma_allocate(shape, dtype):
@@ -194,11 +206,37 @@ class HardwareBackend:
         if self.ip is None:
             raise RuntimeError(f"Transformer IP '{ip_name}' resolved to None")
 
+        # Optional on-FPGA class decision (argmax variant of the IP): an extra
+        # AXI-Lite output register `pred_class` (+ `pred_class_ctrl` ap_vld,
+        # clear-on-read). Offsets are taken from the HWH, never hard-coded. The
+        # deployed dma16 overlay has no such register -> legacy path (None).
+        regs = dict(ip_dict[ip_name].get("registers", {}) or {})
+        self.class_reg_offset = _reg_offset(regs, CLASS_REG)
+        self.class_vld_offset = _reg_offset(regs, CLASS_REG + "_ctrl")
+
         # Start the core (ap_ctrl_hs). auto_restart keeps it armed per window.
         self.ip.write(AP_CTRL_OFFSET, AP_AUTO_RESTART if auto_restart else AP_START)
 
         self._in = _dma_allocate(shape=(INPUT_WORDS,), dtype=np.int32)
         self._out = _dma_allocate(shape=(OUTPUT_WORDS,), dtype=np.int32)
+
+    @property
+    def has_hw_class(self) -> bool:
+        return self.class_reg_offset is not None
+
+    def read_hw_class(self) -> int:
+        """Class id computed by the FPGA logic for the window just collected.
+
+        Call only after `infer_codes` returned (S2MM done). If the HWH exposes
+        the ap_vld control register, a missing valid bit is an error rather
+        than a silently stale value.
+        """
+        if self.class_reg_offset is None:
+            raise RuntimeError("overlay has no pred_class register (legacy IP)")
+        if self.class_vld_offset is not None:
+            if not (int(self.ip.read(self.class_vld_offset)) & 0x1):
+                raise RuntimeError("pred_class ap_vld not set after S2MM completion")
+        return int(self.ip.read(self.class_reg_offset)) & 0xFFFFFFFF
 
     def _wait(self, channel) -> None:
         if self.wait_timeout is not None:
@@ -264,16 +302,41 @@ class FaultClassifier:
         else:
             self.backend = NumpyBackend()   # repository-only reference
 
+    @property
+    def class_source(self) -> str:
+        """Where the returned class id is decided.
+
+        "fpga_register"    argmax-variant IP: class computed in FPGA logic
+        "ps_argmax_legacy" deployed IP: np.argmax of the 4 FPGA logits on the PS
+        "numpy_reference"  repository-only software reference backend
+        """
+        if getattr(self.backend, "has_hw_class", False):
+            return "fpga_register"
+        if isinstance(self.backend, HardwareBackend):
+            return "ps_argmax_legacy"
+        return "numpy_reference"
+
+    def _decide(self, logits: np.ndarray) -> int:
+        ref = int(np.argmax(logits))       # lowest index wins ties
+        if getattr(self.backend, "has_hw_class", False):
+            hw = self.backend.read_hw_class()
+            if hw != ref:
+                raise RuntimeError(
+                    "FPGA pred_class=%d disagrees with argmax of FPGA logits %s (=%d)"
+                    % (hw, logits.tolist(), ref))
+            return hw
+        return ref
+
     def infer(self, window: np.ndarray):
         """Normalized float window (1024, 8) -> (class_id, logits[4])."""
         codes = quantize_window(window, self.input_scale)
         logits = np.asarray(self.backend.infer_codes(codes), dtype=np.int64)
-        return int(np.argmax(logits)), logits
+        return self._decide(logits), logits
 
     def infer_from_codes(self, in_codes: np.ndarray):
         """Pre-quantized INT10 window (1024, 8) -> (class_id, logits[4])."""
         logits = np.asarray(self.backend.infer_codes(in_codes), dtype=np.int64)
-        return int(np.argmax(logits)), logits
+        return self._decide(logits), logits
 
 
 # ===========================================================================

@@ -35,7 +35,13 @@ re-defines it.
   `TLAST` on word 8191. **The IP performs the 4:1 integer aggregation
   (1024 → 256 tokens) internally** — the host does not aggregate.
 - **DMA egress (S2MM, 32-bit)**: 4 INT32 logits, `TLAST` on logit 3.
-- **prediction**: `argmax` of the 4 logits, in hardware.
+- **prediction**: deployed dma16 bitstream — the core streams only the 4 logits;
+  the class is `np.argmax` of those FPGA logits on the Zynq PS (ARM), lowest
+  class id wins ties. Argmax-variant IP (`transformer_top_seq256_ingress1024_dsp_margin_argmax.cpp`,
+  C-model verified, **not yet synthesized or run on the board**) additionally
+  computes the class in FPGA logic and exposes it as AXI-Lite register
+  `pred_class`; `HardwareBackend` reads it when the HWH lists that register
+  and checks it against the logits (`FaultClassifier.class_source`).
 - **control**: `transformer_top` `ap_ctrl_hs`, ctrl AXI-Lite at `0x40000000`,
   register `0x00` (bit0 ap_start, bit7 auto_restart). DMA AXI-Lite at `0x41E00000`.
 - **confidence**: the integer core emits **no** confidence → reported as `NA`.

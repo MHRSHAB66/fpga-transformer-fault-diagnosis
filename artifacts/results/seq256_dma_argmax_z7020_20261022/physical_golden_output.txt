@@ -1,0 +1,47 @@
+TEMP_START=49.093
+VECTOR 0 class=0 logits=20,-89,4,-42 temp_c=49.093
+VECTOR 1 class=0 logits=21,-58,-4,-58 temp_c=49.093
+VECTOR 2 class=0 logits=34,-33,-37,-112 temp_c=49.093
+VECTOR 3 class=0 logits=34,-29,-23,-136 temp_c=49.093
+VECTOR 4 class=3 logits=-214,46,-163,54 temp_c=49.093
+VECTOR 5 class=1 logits=-275,106,-191,-46 temp_c=49.093
+VECTOR 6 class=1 logits=-284,94,-154,7 temp_c=49.093
+VECTOR 7 class=1 logits=-138,63,-46,-28 temp_c=49.093
+VECTOR 8 class=2 logits=-74,-98,74,-57 temp_c=49.093
+VECTOR 9 class=2 logits=-58,-68,73,-128 temp_c=49.093
+VECTOR 10 class=2 logits=-157,-42,94,-31 temp_c=49.093
+VECTOR 11 class=0 logits=11,-6,-4,-23 temp_c=49.093
+VECTOR 12 class=3 logits=-282,41,-111,71 temp_c=49.093
+VECTOR 13 class=3 logits=-319,-46,-156,162 temp_c=49.093
+VECTOR 14 class=3 logits=-312,24,-214,124 temp_c=49.093
+VECTOR 15 class=3 logits=-262,-128,-14,166 temp_c=49.093
+VECTOR 16 class=3 logits=-116,-129,-36,112 temp_c=49.093
+VECTOR 17 class=3 logits=-14,-105,-90,44 temp_c=49.093
+VECTOR 18 class=0 logits=43,-64,-95,9 temp_c=49.093
+VECTOR 19 class=1 logits=-290,118,-225,-59 temp_c=49.093
+VECTOR 20 class=1 logits=-341,125,-226,-49 temp_c=49.093
+VECTOR 21 class=2 logits=-99,-143,72,67 temp_c=49.093
+VECTOR 22 class=2 logits=-158,-141,73,69 temp_c=49.093
+VECTOR 23 class=2 logits=-121,-131,47,47 temp_c=49.093
+VECTOR 24 class=1 logits=-372,73,-201,73 temp_c=49.093
+VECTOR 25 class=1 logits=-324,68,-199,68 temp_c=49.093
+VECTOR 26 class=1 logits=-322,69,-212,69 temp_c=49.093
+VECTOR 27 class=0 logits=51,-54,-46,-123 temp_c=49.093
+VECTOR 28 class=0 logits=12,-50,12,-141 temp_c=49.093
+VECTOR 29 class=0 logits=19,19,-94,-129 temp_c=49.093
+VECTOR 30 class=2 logits=-86,-118,71,71 temp_c=49.093
+VECTOR 31 class=2 logits=-12,-80,13,13 temp_c=49.093
+VECTOR 32 class=0 logits=15,-31,15,-48 temp_c=49.093
+VECTOR 33 class=0 logits=5,5,-5,-69 temp_c=49.093
+VECTOR 34 class=0 logits=14,-77,14,-38 temp_c=49.093
+VECTOR 35 class=1 logits=-32,12,12,-34 temp_c=49.093
+VECTOR 36 class=1 logits=-91,19,19,-35 temp_c=49.093
+VECTOR 37 class=0 logits=17,-118,-5,17 temp_c=49.093
+VECTOR 38 class=0 logits=18,-101,-14,18 temp_c=49.093
+VECTOR 39 class=1 logits=-87,33,33,-71 temp_c=49.093
+PASS exact=40/40 ties=16 class_source=fpga_register
+RUNNER_RC=0 GUARD_RC=0
+
+STDERR:
+
+RETURN_CODE=0
