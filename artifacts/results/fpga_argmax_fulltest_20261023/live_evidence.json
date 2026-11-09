@@ -1,0 +1,107 @@
+{
+  "mode": "LIVE FPGA (real on-board AXI-DMA inference over SSH/Ethernet)",
+  "real_hardware": true,
+  "classification_on": "FPGA transformer_top core (PC performs no inference)",
+  "timestamp": "2026-10-23T19:00:27.823855",
+  "board": {
+    "host": "192.168.2.99",
+    "deployment": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f",
+    "bitstream_on_board": "/home/xilinx/deployments/seq256_argmax_review_d55cbdfe469f/overlay/design_1_wrapper.bit",
+    "input_on_board": "/home/xilinx/fpga_fulltest_20261008/fpga_testset_in.i32.gz",
+    "bit_sha256_local_bundle": "ce3c254b86797c58bb99e7200169db520ff39eddfd3e2a6c559b16b5846f166b",
+    "hwh_sha256_local_bundle": "eabc0163be6ae333f0d32fec391708fa8bd8a097854cf7b73cf9d8387ba9a19c"
+  },
+  "sample_mode": "sequential",
+  "sampling_indices": "sequential",
+  "requested_windows": 95404,
+  "executed_windows": 95404,
+  "aborted": null,
+  "true_class_counts": {
+    "normal": 2440,
+    "imbalance": 16348,
+    "misalignment": 24156,
+    "bearing_fault": 52460
+  },
+  "predicted_class_counts": {
+    "normal": 2312,
+    "imbalance": 16624,
+    "misalignment": 24844,
+    "bearing_fault": 51624
+  },
+  "correct_vs_ground_truth": 93275,
+  "accuracy_vs_ground_truth": 0.9776843738208042,
+  "macro_precision": 0.9593319682482544,
+  "macro_recall": 0.9542326423572476,
+  "macro_f1": 0.9565387808873411,
+  "per_class_precision": [
+    0.9199826989619377,
+    0.9615014436958614,
+    0.9635726936081146,
+    0.9922710367271037
+  ],
+  "per_class_recall": [
+    0.8717213114754099,
+    0.9777342794225593,
+    0.991016724623282,
+    0.9764582539077392
+  ],
+  "per_class_f1": [
+    0.8952020202020202,
+    0.9695499211452141,
+    0.9771020408163266,
+    0.9843011413858037
+  ],
+  "confusion_matrix": [
+    [
+      2127,
+      16,
+      285,
+      12
+    ],
+    [
+      7,
+      15984,
+      9,
+      348
+    ],
+    [
+      72,
+      106,
+      23939,
+      39
+    ],
+    [
+      106,
+      518,
+      611,
+      51225
+    ]
+  ],
+  "match_vs_recorded_fpga_pred": 95404,
+  "match_rate_vs_recorded": 1.0,
+  "latency_ms": {
+    "min": 15.882,
+    "mean": 16.092,
+    "p50": 15.947,
+    "p95": 16.197,
+    "max": 664.945
+  },
+  "throughput_inferences_per_second": 60.851,
+  "temperature_c": {
+    "start": 47.248,
+    "min": 47.125,
+    "max": 49.708,
+    "end": "49.093"
+  },
+  "errors": [],
+  "summary_line": {
+    "type": "summary",
+    "executed": 95404,
+    "aborted": null,
+    "wall_s": 1567.842,
+    "throughput": 60.851,
+    "temp_start": "47.248",
+    "temp_max": "49.708",
+    "temp_end": "49.093"
+  }
+}
