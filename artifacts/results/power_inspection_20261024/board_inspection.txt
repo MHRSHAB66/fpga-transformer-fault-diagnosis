@@ -1,0 +1,57 @@
+Wed Nov 13 02:02:46 UTC 2019
+Linux pynq 4.14.0-xilinx #1 SMP PREEMPT Wed Nov 13 03:44:45 UTC 2019 armv7l armv7l armv7l GNU/Linux
+== iio
+/sys/bus/iio/devices/iio:device0 xadc
+dev
+events
+in_temp0_offset
+in_temp0_raw
+in_temp0_scale
+in_voltage0_vccint_raw
+in_voltage0_vccint_scale
+in_voltage1_vccaux_raw
+in_voltage1_vccaux_scale
+in_voltage2_vccbram_raw
+in_voltage2_vccbram_scale
+in_voltage3_vccpint_raw
+in_voltage3_vccpint_scale
+in_voltage4_vccpaux_raw
+in_voltage4_vccpaux_scale
+in_voltage5_vccoddr_raw
+in_voltage5_vccoddr_scale
+in_voltage6_vrefp_raw
+in_voltage6_vrefp_scale
+in_voltage7_vrefn_raw
+in_voltage7_vrefn_scale
+name
+of_node
+power
+sampling_frequency
+subsystem
+uevent
+== xadc rails (raw*scale/1000 = V)
+vccint 1.0012 V
+vccaux 1.7988 V
+vccbram 1.0020 V
+vccpint 0.9983 V
+vccpaux 1.7974 V
+vccoddr 1.4788 V
+== search current/power/energy attributes
+/sys/devices/system/clockevents/clockevent0/current_device
+/sys/devices/system/clockevents/broadcast/current_device
+/sys/devices/system/clockevents/clockevent1/current_device
+/sys/devices/system/cpu/cpuidle/current_governor_ro
+/sys/devices/system/cpu/cpuidle/current_driver
+/sys/devices/system/clocksource/clocksource0/current_clocksource
+(end of search)
+== hwmon
+== power_supply
+== regulator
+ls: cannot access '/sys/class/regulator': No such file or directory
+== i2c
+/sys/bus/i2c/devices/0-003b sii902x
+/sys/bus/i2c/devices/i2c-0 Cadence I2C at e0004000
+== usb
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+== pmbus modules
+none
