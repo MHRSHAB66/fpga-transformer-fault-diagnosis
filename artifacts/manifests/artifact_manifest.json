@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-09T13:53:08.615478+00:00",
+  "generated_utc": "2026-11-09T20:29:54.046218+00:00",
   "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, multi-MB run dumps, board boot binaries) are gitignored and recorded here only (committed_in_git=false); copies live on disk, in the off-repo backup and on the board.",
   "repo_relative": true,
   "artifacts": [
@@ -512,6 +512,104 @@
       "present": true,
       "size_bytes": 6280,
       "sha256": "84a275b6a626ee74c867c07cb28f4174bf0536ab05c9e11ec219790a8c975e4c",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/preprocessing/raw_input_contract_v1.json",
+      "present": true,
+      "size_bytes": 921,
+      "sha256": "7b50064bec43a9e2ad95b875491685063844de3792b55ed10b061bb3019395fe",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/fpga_rawinput_testset_20261109/fpga_testset_raw.i32.gz",
+      "present": true,
+      "size_bytes": 2342586716,
+      "sha256": "b5077de80001f7efcd1285974b1786be185e5d1bb111c9bab9c397168cd59be4",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/seq256_dma_raw_argmax_z7020_20261109/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "57fff3aa92c49240938d0f6eef8f547882f26d1c0b5ba77bb087ad02d55bc310",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/seq256_dma_raw_argmax_z7020_20261109/bitstream/design_1.hwh",
+      "present": true,
+      "size_bytes": 340937,
+      "sha256": "e24091ddeacbabe2f8dd4879a423d56d9b44c16c94740005f87c323fe42202ec",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/seq256_dma_raw_argmax_z7020_20261109/bitstream/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1480808,
+      "sha256": "eae6572be642847b37e2cec852fe5765c4314e569870b643deaa7f4db24bb7ec",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/seq256_raw_argmax_z7020_20261109/overlay/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "57fff3aa92c49240938d0f6eef8f547882f26d1c0b5ba77bb087ad02d55bc310",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/seq256_raw_argmax_z7020_20261109/overlay/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1480808,
+      "sha256": "eae6572be642847b37e2cec852fe5765c4314e569870b643deaa7f4db24bb7ec",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/seq256_raw_argmax_z7020_20261109/MANIFEST.sha256",
+      "present": true,
+      "size_bytes": 1119,
+      "sha256": "c5956b8a394dd800d9cfbc7a0bc16a1968bb10b78316dbb795accefa601447aa",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/ram_demo_sets/class_balanced_256_raw_v1/set.i32",
+      "present": true,
+      "size_bytes": 8388608,
+      "sha256": "a9be489c9a9cc4e2134536a0336c343200d2b2d1642421828c5c8e8eb46ac50c",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_fulltest_20261109_231348/fulltest.out",
+      "present": true,
+      "size_bytes": 6623536,
+      "sha256": "e2c92930f7ff54aaa4441775b66c733a631cecb1d0699cdfad3d4c01d459d818",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_fulltest_20261109_231348/fulltest_check.json",
+      "present": true,
+      "size_bytes": 666,
+      "sha256": "b336036eef58af38d1f628354ae89df85e202a85da120d829ea526a01af93983",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/raw_core_board_rt_20261109_234531/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "cd82d6113ae3c7146adb271e9310653927ec04fa43826712a004d3e33ef2438f",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/uart_results_20261109_205416/uart_result_check.json",
+      "present": true,
+      "size_bytes": 848,
+      "sha256": "7a4aeef815097ca6d74f0bc459329fef081b2c2d6bc9cd0a4e6a43dcf3b2a1e3",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/cpu_baseline_20261109/summary.json",
+      "present": true,
+      "size_bytes": 3371,
+      "sha256": "408833591b86b8c87ed7d08a2f5104b5c7c7fce3ff42312a4e17548d6d9659a9",
       "committed_in_git": true
     }
   ]

@@ -111,6 +111,22 @@ TARGETS = [
     "artifacts/preempt_rt_candidate_20261024/modules_rt.tar.gz",
     # final evaluation figures (numbers behind docs/figures/final/)
     "artifacts/results/final_figures_20261109/figure_data.json",
+    # raw-input core: preprocessing inside the FPGA (2026-11-09)
+    "artifacts/preprocessing/raw_input_contract_v1.json",
+    "artifacts/results/fpga_rawinput_testset_20261109/fpga_testset_raw.i32.gz",
+    "artifacts/results/seq256_dma_raw_argmax_z7020_20261109/bitstream/design_1_wrapper.bit",
+    "artifacts/results/seq256_dma_raw_argmax_z7020_20261109/bitstream/design_1.hwh",
+    "artifacts/results/seq256_dma_raw_argmax_z7020_20261109/bitstream/seq256_dma_system.xsa",
+    "artifacts/deploy/seq256_raw_argmax_z7020_20261109/overlay/design_1_wrapper.bit",
+    "artifacts/deploy/seq256_raw_argmax_z7020_20261109/overlay/seq256_dma_system.xsa",
+    "artifacts/deploy/seq256_raw_argmax_z7020_20261109/MANIFEST.sha256",
+    "artifacts/ram_demo_sets/class_balanced_256_raw_v1/set.i32",
+    "artifacts/results/raw_core_board_fulltest_20261109_231348/fulltest.out",
+    "artifacts/results/raw_core_board_fulltest_20261109_231348/fulltest_check.json",
+    "artifacts/results/raw_core_board_rt_20261109_234531/out/rt_raw.npz",
+    # UART result path and CPU baseline (2026-11-09)
+    "artifacts/results/uart_results_20261109_205416/uart_result_check.json",
+    "artifacts/results/cpu_baseline_20261109/summary.json",
 ]
 
 
