@@ -1,0 +1,6 @@
+{"type": "status", "msg": "mode=ram_realtime_demo; preloading class_balanced_256_v1 into board RAM; N=30200 (warm-up 200)"}
+{"type": "temp_start", "temp_c": 48.108941650244}
+{"type": "status", "msg": "SYNC_REQ phase=start rounds=20"}
+{"type": "meta", "n": 30200, "seq": 1024, "ch": 8, "class_source": "fpga_register", "mode": "ram_realtime_demo"}
+{"type": "status", "msg": "stop requested"}
+{"type": "status", "msg": "runner exited rc=1"}

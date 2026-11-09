@@ -1,0 +1,7 @@
+927ce3e5e45f7244f8a385f616da5317865ffefe077b122a6892d659a2ddb900  check_ram_rt_demo_handoff.py
+71f3778ccfa8e04554ea57c1a0c34d0daccaf086dcc5d799b34206b91e6731d5  fpga_ram_rt_demo.py
+  File "check_ram_rt_demo_handoff.py", line 31
+    f.write("STALLED dropped=%d worst_write_us=%.1f
+                                                  ^
+SyntaxError: EOL while scanning string literal
+ 3021 bash -c cd /home/xilinx/ram_demo_checks_20261024 && sha256sum *.py && timeout 120 python3.6 check_ram_rt_demo_handoff.py /home/xilinx/ram_demo_checks_20261024; sleep 2; ps -eo pid,args | grep "[c]heck_ram_rt_demo" || echo NO_LEFTOVER

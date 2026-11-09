@@ -1,0 +1,28 @@
+{
+  "mode": "ram_realtime_demo",
+  "n_unique": 256,
+  "n_total": 3200,
+  "executed": 3200,
+  "warmup": 200,
+  "aborted": null,
+  "sched": "SCHED_FIFO prio 50, cpu [1]",
+  "class_source": "fpga_register",
+  "preload_s": 0.048,
+  "period_ms": 20.48,
+  "acceptance_windows": 3000,
+  "deadline_misses": 0,
+  "response_ms": {
+    "p50": 15.861,
+    "p99": 16.264,
+    "p99.9": 16.429,
+    "p99.99": 16.505
+  },
+  "response_ms_max": 16.523,
+  "display_dropped": 0,
+  "involuntary_ctx_switches": 0,
+  "temp_c": {
+    "start": 47.493737792824,
+    "max": 47.493737792824,
+    "end": 47.247656249856
+  }
+}

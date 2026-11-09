@@ -1,0 +1,7 @@
+e08e4f351a41a936d411c3b09fab0fc8ca66f2e9f0e0cdc8c4b1fa44844417f3  check_ram_rt_demo_handoff.py
+71f3778ccfa8e04554ea57c1a0c34d0daccaf086dcc5d799b34206b91e6731d5  fpga_ram_rt_demo.py
+test_stalled_publisher_never_blocks: PASS STALLED dropped=18263 worst_write_us=538.5
+test_publisher_relays_verbatim: FAIL 500 
+test_sync_without_pc_skips: PASS SYNC_REQ phase=start rounds=3 | SYNC_SKIPPED phase=start at=0
+RESULT FAIL
+ 3172 bash -c cd /home/xilinx/ram_demo_checks_20261024 && sha256sum *.py && timeout 120 python3.6 check_ram_rt_demo_handoff.py /home/xilinx/ram_demo_checks_20261024; sleep 2; ps -eo pid,args | grep "python3.6 [c]heck_ram_rt_demo" || echo NO_LEFTOVER

@@ -1,0 +1,58 @@
+{
+  "evidence_dir": "artifacts/results/ram_rt_demo_20261024_smoke600",
+  "mode": "ram_realtime_demo",
+  "board_sched": "SCHED_FIFO prio 50, cpu [1]",
+  "n_total_requested": 600,
+  "executed": 600,
+  "aborted": null,
+  "board_response": {
+    "acceptance_windows": 400,
+    "deadline_misses": 0,
+    "p50": 15.884,
+    "p99": 16.327,
+    "p99.9": 16.408,
+    "p99.99": 16.43,
+    "max": 16.432,
+    "warmup_misses": 0
+  },
+  "throughput_windows_per_s": 48.8465,
+  "class_eq_recorded": 600,
+  "logits_eq_reference_all4": 600,
+  "true_classes_seen": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "display_sent": 600,
+  "display_dropped": 0,
+  "temp_c": {
+    "start": 48.231982421728006,
+    "max": 50.077593993988,
+    "end": 49.585430908052004
+  },
+  "workload_rc": "0",
+  "guard_rc": "0",
+  "post_run_board_processes": "BOARD_IDLE",
+  "pc_results_received": 600,
+  "clock_map": {
+    "anchors": 2,
+    "rtt_start_ms": 1.3968999264761806,
+    "err_bound_ms": 0.6984499632380903,
+    "drift_ppm": 2.316681495972972,
+    "rtt_end_ms": 0.9993999265134335,
+    "a": -695148.9420839696,
+    "b": 1.000002316681496
+  },
+  "pc_receipt_latency_ms": {
+    "n": 400,
+    "p50": 17.352,
+    "p99": 25.788,
+    "p99.9": 44.224,
+    "max": 44.224,
+    "over_20.48ms": 43
+  },
+  "gui_display_latency_ms": null,
+  "board_hard_rt_pass": true,
+  "note": "board_hard_rt_pass covers ONLY board release -> FPGA class ready. PC receipt / GUI display latencies are measurements, not hard-RT claims."
+}

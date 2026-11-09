@@ -1,0 +1,168 @@
+{
+  "mode": "ram_realtime_demo",
+  "scope": "RAM real-time demo: board response (release -> FPGA class) is the hard-RT boundary (SCHED_FIFO 50, CPU 1, tested durations only). SSH transport and the Windows GUI update are measured separately and are NOT hard real-time.",
+  "set": "class_balanced_256_v1",
+  "n_total": 30200,
+  "warmup": 200,
+  "sched": "SCHED_FIFO 50, CPU 1 (board main thread only)",
+  "board_run_dir": "/home/xilinx/live_runs/ram_a28a234fd67c4e1e89337446cf1e8c69",
+  "results_received": 140,
+  "clock_map": {
+    "anchors": 1,
+    "rtt_start_ms": 1.2830999912694097,
+    "err_bound_ms": 0.6415499956347048,
+    "drift_ppm": null,
+    "a": -695147.3360913498,
+    "b": 1.0
+  },
+  "sync_rounds": [
+    {
+      "phase": "start",
+      "i": 0,
+      "ts": 697706.5944063,
+      "tr": 697706.595792,
+      "tb": 2559.2590416
+    },
+    {
+      "phase": "start",
+      "i": 1,
+      "ts": 697706.5958052,
+      "tr": 697706.5972869,
+      "tb": 2559.2604741
+    },
+    {
+      "phase": "start",
+      "i": 2,
+      "ts": 697706.5972971,
+      "tr": 697706.5987774,
+      "tb": 2559.2620061
+    },
+    {
+      "phase": "start",
+      "i": 3,
+      "ts": 697706.5987888,
+      "tr": 697706.6000719,
+      "tb": 2559.263339
+    },
+    {
+      "phase": "start",
+      "i": 4,
+      "ts": 697706.6000828,
+      "tr": 697706.6014502,
+      "tb": 2559.2647011
+    },
+    {
+      "phase": "start",
+      "i": 5,
+      "ts": 697706.6014608,
+      "tr": 697706.603874,
+      "tb": 2559.2660534
+    },
+    {
+      "phase": "start",
+      "i": 6,
+      "ts": 697706.6038855,
+      "tr": 697706.605331,
+      "tb": 2559.2684985
+    },
+    {
+      "phase": "start",
+      "i": 7,
+      "ts": 697706.6053503,
+      "tr": 697706.6068102,
+      "tb": 2559.2699671
+    },
+    {
+      "phase": "start",
+      "i": 8,
+      "ts": 697706.6068219,
+      "tr": 697706.6081559,
+      "tb": 2559.2714099
+    },
+    {
+      "phase": "start",
+      "i": 9,
+      "ts": 697706.6081674,
+      "tr": 697706.6095483,
+      "tb": 2559.2727704
+    },
+    {
+      "phase": "start",
+      "i": 10,
+      "ts": 697706.6095583,
+      "tr": 697706.6109805,
+      "tb": 2559.274186
+    },
+    {
+      "phase": "start",
+      "i": 11,
+      "ts": 697706.6109913,
+      "tr": 697706.61232,
+      "tb": 2559.2754852
+    },
+    {
+      "phase": "start",
+      "i": 12,
+      "ts": 697706.6123317,
+      "tr": 697706.6138015,
+      "tb": 2559.2769305
+    },
+    {
+      "phase": "start",
+      "i": 13,
+      "ts": 697706.6138126,
+      "tr": 697706.6166088,
+      "tb": 2559.278328
+    },
+    {
+      "phase": "start",
+      "i": 14,
+      "ts": 697706.6166212,
+      "tr": 697706.6183142,
+      "tb": 2559.2812606
+    },
+    {
+      "phase": "start",
+      "i": 15,
+      "ts": 697706.6183258,
+      "tr": 697706.6201253,
+      "tb": 2559.2830048
+    },
+    {
+      "phase": "start",
+      "i": 16,
+      "ts": 697706.6201377,
+      "tr": 697706.6214854,
+      "tb": 2559.2847657
+    },
+    {
+      "phase": "start",
+      "i": 17,
+      "ts": 697706.6214982,
+      "tr": 697706.6228143,
+      "tb": 2559.2860261
+    },
+    {
+      "phase": "start",
+      "i": 18,
+      "ts": 697706.6228257,
+      "tr": 697706.6241271,
+      "tb": 2559.2873647
+    },
+    {
+      "phase": "start",
+      "i": 19,
+      "ts": 697706.6241382,
+      "tr": 697706.6255802,
+      "tb": 2559.2888156
+    }
+  ],
+  "pc_receipt_latency_ms": null,
+  "gui_display_latency_ms": null,
+  "source": "GUI (host.fpga_result_viewer, Live tab, mode ram_realtime_demo)",
+  "stopped_by_user": true,
+  "summary_event": null,
+  "gui_display_time": "perf_counter right after the result widgets were updated (Tk paints on its next idle cycle); includes the 80 ms poll",
+  "remote_copy_rc": 0,
+  "post_run_board_processes": "BOARD_IDLE"
+}

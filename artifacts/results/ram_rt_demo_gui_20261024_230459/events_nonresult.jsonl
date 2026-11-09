@@ -1,0 +1,9 @@
+{"type": "status", "msg": "mode=ram_realtime_demo; preloading class_balanced_256_v1 into board RAM; N=30200 (warm-up 200)"}
+{"type": "temp_start", "temp_c": 49.708471679536}
+{"type": "status", "msg": "SYNC_REQ phase=start rounds=20"}
+{"type": "meta", "n": 30200, "seq": 1024, "ch": 8, "class_source": "fpga_register", "mode": "ram_realtime_demo"}
+{"type": "status", "msg": "SYNC_REQ phase=end rounds=20"}
+{"type": "summary", "executed": 30200, "aborted": null, "wall_s": 618.492, "throughput": 48.8285, "temp_start": "49.708471679536", "temp_max": "50.200634765472", "temp_end": "49.708471679536", "deadline_misses": 0, "acceptance_windows": 30000, "display_dropped": 0, "resp_max_ms": "16.53"}
+{"type": "status", "msg": "WORKLOAD_RC=0"}
+{"type": "status", "msg": "GUARD_RC=0"}
+{"type": "status", "msg": "runner exited rc=0"}
