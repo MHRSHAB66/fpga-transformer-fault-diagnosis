@@ -15,6 +15,10 @@ Two scale sets are supported (both read-only; neither changes any artifact):
                     does (12 train files, seed 42); this is the calibration
                     behind the reported 97.7359 % "software INT10 reference"
 
+--raw-input: the file holds raw 24-bit ADC codes (tools/export_fpga_testset_raw.py)
+instead of INT10 codes; each window is first z-scored and quantized with the
+on-FPGA preprocessing reference (src/quantize/onchip_preprocess.py).
+
 Writes (new dir, nothing overwritten):
     <out>/numpy_<scales>_logits.txt   "<idx> l0 l1 l2 l3"
     <out>/numpy_<scales>_scales.json  the scale set actually used
@@ -73,8 +77,9 @@ def calib12_scales() -> dict:
 
 
 def _shard(job):
-    gz, start, count, scales, chunk = job
+    gz, start, count, scales, chunk, raw_input = job
     from src.data.token_aggregation import aggregate_round_div
+    from src.quantize.onchip_preprocess import preprocess_windows
     m = _model(scales)
     s_in = float(scales["input"])
     out = []
@@ -90,6 +95,8 @@ def _shard(job):
             k = min(chunk, count - done)
             raw = f.read(k * REC * 4)
             codes = np.frombuffer(raw, dtype="<i4").astype(np.int64).reshape(k, 1024, 8)
+            if raw_input:
+                codes = preprocess_windows(codes, s_in)
             q256 = aggregate_round_div(codes, factor=4)
             lg = m.infer_int(q256.astype(np.float64) * s_in)
             for i in range(k):
@@ -105,6 +112,8 @@ def main() -> None:
     ap.add_argument("--scales", choices=["export", "calib12"], required=True)
     ap.add_argument("--workers", type=int, default=12)
     ap.add_argument("--chunk", type=int, default=32)
+    ap.add_argument("--raw-input", action="store_true",
+                    help="input holds raw 24-bit ADC codes (on-FPGA preprocessing path)")
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
@@ -118,7 +127,7 @@ def main() -> None:
 
     t0 = time.time()
     per = (args.n + args.workers - 1) // args.workers
-    jobs = [(args.input, s * per, min(per, args.n - s * per), scales, args.chunk)
+    jobs = [(args.input, s * per, min(per, args.n - s * per), scales, args.chunk, args.raw_input)
             for s in range(args.workers) if s * per < args.n]
     lines = []
     with ProcessPoolExecutor(max_workers=len(jobs)) as ex:

@@ -325,3 +325,8 @@ artifacts/preempt_rt_candidate_20261024/*.tar.gz
 # RAM demo input sets (binary, regenerate via tools/make_ram_demo_set.py; the
 # provenance.json pins the set's SHA-256).
 artifacts/ram_demo_sets/*/set.i32
+
+# Root-level Vitis HLS project build dir for the raw-input (on-FPGA preprocessing) variant.
+/seq256_raw1024_dsp_margin_argmax/
+# Multi-GB raw-sample test input for the on-FPGA preprocessing core (tools/export_fpga_testset_raw.py).
+artifacts/results/fpga_rawinput_testset_*/fpga_testset_raw.*

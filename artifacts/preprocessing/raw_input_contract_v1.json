@@ -1,0 +1,39 @@
+{
+ "name": "raw_input_contract_v1",
+ "adc_bits": 24,
+ "code": "clip(round(x / FS_c * 2^23), -2^23, 2^23 - 1), little-endian int32 words",
+ "layout": "8192 words per window, row-major [sample, channel], channel order of src/config.py",
+ "full_scale_per_channel": [
+  8.0,
+  128.0,
+  128.0,
+  128.0,
+  32.0,
+  16.0,
+  64.0,
+  256.0
+ ],
+ "lsb_per_channel": [
+  9.5367431640625e-07,
+  1.52587890625e-05,
+  1.52587890625e-05,
+  1.52587890625e-05,
+  3.814697265625e-06,
+  1.9073486328125e-06,
+  7.62939453125e-06,
+  3.0517578125e-05
+ ],
+ "train_peak_abs_per_channel": [
+  5.1149,
+  53.880001,
+  53.889999,
+  53.882999,
+  15.661,
+  12.477,
+  28.823999,
+  204.119995
+ ],
+ "rule": "FS_c = next power of two >= 1.25 x max|x| over the training split only",
+ "train_files_scanned": 1365,
+ "note": "The FPGA's per-window z-score is scale invariant, so FS_c only sets the resolution of the simulated ADC; the hardware never uses it."
+}

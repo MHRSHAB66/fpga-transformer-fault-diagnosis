@@ -1,0 +1,22 @@
+{
+ "native/edge_cases": {
+  "windows": 20,
+  "windows_with_any_token_mismatch": 0,
+  "tokens_compared": 40960
+ },
+ "native/real_windows": {
+  "windows": 2000,
+  "windows_with_any_token_mismatch": 0,
+  "tokens_compared": 4096000
+ },
+ "ap_int/edge_cases": {
+  "windows": 20,
+  "windows_with_any_token_mismatch": 0,
+  "tokens_compared": 40960
+ },
+ "ap_int/real_windows": {
+  "windows": 2000,
+  "windows_with_any_token_mismatch": 0,
+  "tokens_compared": 4096000
+ }
+}

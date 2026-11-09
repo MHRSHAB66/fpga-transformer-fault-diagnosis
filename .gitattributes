@@ -30,3 +30,4 @@ artifacts/results/gui_live_validation_20261023*/** -text
 artifacts/results/*_20261024*/** -text
 artifacts/results/*_20261024*.console.txt -text
 docs/reports/*_criterion_20261024.md -text
+hls/**/golden_raw1024_argmax/** -text
