@@ -1,0 +1,35 @@
+{
+  "tag": "before_head_runner",
+  "runner_remote": "/home/xilinx/fpga_live_runner.py",
+  "requested": 10000,
+  "received_results": 10000,
+  "ssh_rc": 0,
+  "contiguous_from_0": true,
+  "match_recorded_fpga_pred": 10000,
+  "pc_receive_throughput_inf_s": 51.065,
+  "wall_incl_ssh_setup_overlay_load_s": 209.565,
+  "pc_inter_arrival_ms": {
+    "mean": 19.583,
+    "p50": 18.857,
+    "p95": 20.828,
+    "p99": 27.281,
+    "max": 782.235
+  },
+  "board_lat_ms": {
+    "mean": 16.233,
+    "p50": 16.136,
+    "p95": 16.474
+  },
+  "pc_parse_us": {
+    "mean": 35.83,
+    "max": 872.3
+  },
+  "conf_present": 0,
+  "board_lines": [
+    "TEMP_START=48.847",
+    "META n=10000 seq=1024 ch=8",
+    "SUMMARY executed=10000 aborted=None wall_s=195.916 throughput=51.042 temp_start=48.847 temp_max=50.447 temp_end=50.324",
+    "RUNNER_RC=0 GUARD_RC=0"
+  ],
+  "excluded": "Tk GUI rendering is not part of this measurement"
+}

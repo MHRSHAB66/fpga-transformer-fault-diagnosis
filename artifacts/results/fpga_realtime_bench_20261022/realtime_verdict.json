@@ -1,0 +1,276 @@
+{
+  "requirement": {
+    "formula": "R_req = sample_rate / stride",
+    "sample_rate_hz": 50000,
+    "window_size": 1024,
+    "stride": 1024,
+    "overlap": 0,
+    "required_windows_per_s": 48.828,
+    "window_period_ms": 20.48,
+    "source": "src/config.py"
+  },
+  "measured_board_only_full_test": {
+    "what": "on-board loop: gzip read of prepared INT10 codes -> one 32,768-byte MM2S frame -> core -> 4 logits -> argmax on PS -> prediction file; no SSH per window",
+    "baseline_serial_loop": {
+      "windows": 95404,
+      "aborted": null,
+      "wall_s": 1772.461,
+      "throughput_inf_s": 53.826,
+      "stage_ms_mean": {
+        "input_read_parse": 2.398,
+        "blocked_on_dma_core": 16.082,
+        "loop_iteration": 18.545
+      },
+      "iterations_over_window_period": 1144,
+      "iterations_over_100ms": 59,
+      "max_iteration_ms": 906.3,
+      "decile_throughput_inf_s": [
+        54.1,
+        54.6,
+        53.6,
+        54.1,
+        54.0,
+        54.3,
+        54.1,
+        53.6,
+        53.4,
+        53.4
+      ],
+      "temp_c": {
+        "start": 49.954553222504,
+        "max": 51.67712402328,
+        "end": 49.585430908052004,
+        "stop_threshold": 75.0
+      }
+    },
+    "pipelined_loop": {
+      "windows": 95404,
+      "aborted": null,
+      "wall_s": 1565.588,
+      "throughput_inf_s": 60.938,
+      "stage_ms_mean": {
+        "input_read_parse": 2.96,
+        "blocked_on_dma_core": 13.418,
+        "loop_iteration": 16.388
+      },
+      "iterations_over_window_period": 723,
+      "iterations_over_100ms": 96,
+      "max_iteration_ms": 847.9,
+      "decile_throughput_inf_s": [
+        61.0,
+        62.4,
+        61.7,
+        61.5,
+        61.6,
+        61.1,
+        61.9,
+        60.8,
+        60.4,
+        58.1
+      ],
+      "temp_c": {
+        "start": 49.093267822116005,
+        "max": 50.44671630844,
+        "end": 50.323675536956,
+        "stop_threshold": 75.0
+      }
+    },
+    "predictions_identical_to_2026-10-08_run": true,
+    "logits_identical_between_modes": true
+  },
+  "measured_end_to_end": {
+    "what": "board runner -> SSH/Ethernet -> PC production parser (parse_line -> FRAME line); Tk GUI rendering excluded. Sequential runs use contiguous windows from 0; class_balanced runs use the validated 120-window demo plan (gzip skipping dominates their wall time, so their throughput is not an inference rate)",
+    "runs": {
+      "after_pipelined_class_balanced120": {
+        "sample_mode": "class_balanced",
+        "received_results": 120,
+        "pc_receive_throughput_inf_s": 0.511,
+        "pc_inter_arrival_ms": {
+          "mean": 1955.217,
+          "p50": 1409.007,
+          "p95": 5648.331,
+          "p99": 6934.749,
+          "max": 7470.755
+        },
+        "board_lat_ms": {
+          "mean": 1942.501,
+          "p50": 1393.487,
+          "p95": 5621.373
+        },
+        "pc_parse_us": {
+          "mean": 84.16,
+          "max": 676.0
+        },
+        "match_recorded_fpga_pred": 120,
+        "accuracy_vs_labels": 0.95,
+        "conf_present": 120,
+        "runner": "20261022a (overlap in all modes)"
+      },
+      "after_pipelined_runner": {
+        "sample_mode": null,
+        "received_results": 10000,
+        "pc_receive_throughput_inf_s": 60.298,
+        "pc_inter_arrival_ms": {
+          "mean": 16.584,
+          "p50": 16.465,
+          "p95": 18.094,
+          "p99": 22.167,
+          "max": 100.536
+        },
+        "board_lat_ms": {
+          "mean": 16.042,
+          "p50": 15.95,
+          "p95": 16.203
+        },
+        "pc_parse_us": {
+          "mean": 70.64,
+          "max": 2663.8
+        },
+        "match_recorded_fpga_pred": 10000,
+        "accuracy_vs_labels": null,
+        "conf_present": 10000,
+        "runner": "20261022a (overlap in all modes)"
+      },
+      "before_head_runner": {
+        "sample_mode": null,
+        "received_results": 10000,
+        "pc_receive_throughput_inf_s": 51.065,
+        "pc_inter_arrival_ms": {
+          "mean": 19.583,
+          "p50": 18.857,
+          "p95": 20.828,
+          "p99": 27.281,
+          "max": 782.235
+        },
+        "board_lat_ms": {
+          "mean": 16.233,
+          "p50": 16.136,
+          "p95": 16.474
+        },
+        "pc_parse_us": {
+          "mean": 35.83,
+          "max": 872.3
+        },
+        "match_recorded_fpga_pred": 10000,
+        "accuracy_vs_labels": null,
+        "conf_present": 0,
+        "runner": "HEAD e42ec4f (serial)"
+      },
+      "before_head_runner_repeat": {
+        "sample_mode": "sequential",
+        "received_results": 10000,
+        "pc_receive_throughput_inf_s": 52.568,
+        "pc_inter_arrival_ms": {
+          "mean": 19.023,
+          "p50": 18.874,
+          "p95": 20.735,
+          "p99": 24.543,
+          "max": 86.129
+        },
+        "board_lat_ms": {
+          "mean": 16.24,
+          "p50": 16.155,
+          "p95": 16.461
+        },
+        "pc_parse_us": {
+          "mean": 36.5,
+          "max": 534.9
+        },
+        "match_recorded_fpga_pred": 10000,
+        "accuracy_vs_labels": 0.9771,
+        "conf_present": 0,
+        "runner": "HEAD e42ec4f (serial)"
+      },
+      "final_runner_class_balanced120": {
+        "sample_mode": "class_balanced",
+        "received_results": 120,
+        "pc_receive_throughput_inf_s": 0.471,
+        "pc_inter_arrival_ms": {
+          "mean": 2123.92,
+          "p50": 1386.743,
+          "p95": 5759.189,
+          "p99": 7538.554,
+          "max": 8999.893
+        },
+        "board_lat_ms": {
+          "mean": 16.01,
+          "p50": 15.97,
+          "p95": 16.222
+        },
+        "pc_parse_us": {
+          "mean": 82.57,
+          "max": 455.9
+        },
+        "match_recorded_fpga_pred": 120,
+        "accuracy_vs_labels": 0.95,
+        "conf_present": 120,
+        "runner": "20261022b = repository version"
+      },
+      "final_runner_sequential10000": {
+        "sample_mode": "sequential",
+        "received_results": 10000,
+        "pc_receive_throughput_inf_s": 58.718,
+        "pc_inter_arrival_ms": {
+          "mean": 17.03,
+          "p50": 16.543,
+          "p95": 18.8,
+          "p99": 24.444,
+          "max": 807.419
+        },
+        "board_lat_ms": {
+          "mean": 16.451,
+          "p50": 15.975,
+          "p95": 16.276
+        },
+        "pc_parse_us": {
+          "mean": 67.23,
+          "max": 648.2
+        },
+        "match_recorded_fpga_pred": 10000,
+        "accuracy_vs_labels": 0.9771,
+        "conf_present": 10000,
+        "runner": "20261022b = repository version"
+      },
+      "final_runner_sequential3000": {
+        "sample_mode": "sequential",
+        "received_results": 3000,
+        "pc_receive_throughput_inf_s": 53.472,
+        "pc_inter_arrival_ms": {
+          "mean": 18.701,
+          "p50": 16.582,
+          "p95": 19.291,
+          "p99": 26.851,
+          "max": 780.835
+        },
+        "board_lat_ms": {
+          "mean": 18.082,
+          "p50": 15.989,
+          "p95": 17.078
+        },
+        "pc_parse_us": {
+          "mean": 65.19,
+          "max": 639.2
+        },
+        "match_recorded_fpga_pred": 3000,
+        "accuracy_vs_labels": 0.976333,
+        "conf_present": 3000,
+        "runner": "20261022b = repository version"
+      }
+    }
+  },
+  "estimates_not_measurements": {
+    "hls_csynth_interval_ms_at_100mhz": 14.90527,
+    "source": "artifacts/results/seq256_dma_system_dsp_margin_dma16_z7020_20261008/summary.json"
+  },
+  "not_covered": [
+    "sensor acquisition and on-board normalization/quantization (inputs are INT10 codes prepared offline by tools/export_fpga_testset.py)",
+    "Tk GUI rendering cost",
+    "hard per-window deadline: individual iterations exceed 20.48 ms (see counts); a live stream would need an input buffer to absorb them"
+  ],
+  "verdict": {
+    "sustained_average": "board-only pipelined 60.94 inf/s over 95,404 windows; end-to-end 60.30 and 58.72 inf/s over 10,000 windows (two runs); all exceed 48.828 windows/s (prepared-window replay, not a live sensor).",
+    "before_change": "board-only serial 53.83 inf/s (95,404) and end-to-end 51.06 / 52.57 inf/s (10,000, two runs) also exceeded the requirement today; the 2026-10-08 46.4 inf/s full-test average (slowdown after ~41k windows) did not reproduce.",
+    "short_run_variance": "a 3,000-window run of the final runner gave 53.47 inf/s (stalls weigh more in short runs)",
+    "hard_deadline": "not demonstrated (723 of 95404 pipelined iterations > period)"
+  }
+}

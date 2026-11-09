@@ -1,0 +1,32 @@
+{
+  "mode": "baseline",
+  "requested": 300,
+  "executed": 300,
+  "aborted": null,
+  "wall_s": 5.536,
+  "throughput_inf_s": 54.186,
+  "temp_c": {
+    "start": 49.954553222504,
+    "max": 51.92320556624801,
+    "end": 51.92320556624801,
+    "stop_threshold": 75.0
+  },
+  "t_read_ms": {
+    "mean": 2.242,
+    "p50": 2.108,
+    "p95": 2.94,
+    "max": 12.142
+  },
+  "t_core_ms": {
+    "mean": 16.134,
+    "p50": 16.084,
+    "p95": 16.44,
+    "max": 18.504
+  },
+  "t_iter_ms": {
+    "mean": 18.44,
+    "p50": 18.288,
+    "p95": 19.483,
+    "max": 28.436
+  }
+}

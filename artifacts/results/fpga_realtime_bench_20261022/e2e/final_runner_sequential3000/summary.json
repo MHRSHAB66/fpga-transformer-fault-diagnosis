@@ -1,0 +1,37 @@
+{
+  "tag": "final_runner_sequential3000",
+  "runner_remote": "/home/xilinx/bench_20261022/fpga_live_runner_20261022b.py",
+  "requested": 3000,
+  "received_results": 3000,
+  "ssh_rc": 0,
+  "sample_mode": "sequential",
+  "contiguous_from_0": true,
+  "accuracy_vs_labels": 0.976333,
+  "match_recorded_fpga_pred": 3000,
+  "pc_receive_throughput_inf_s": 53.472,
+  "wall_incl_ssh_setup_overlay_load_s": 70.688,
+  "pc_inter_arrival_ms": {
+    "mean": 18.701,
+    "p50": 16.582,
+    "p95": 19.291,
+    "p99": 26.851,
+    "max": 780.835
+  },
+  "board_lat_ms": {
+    "mean": 18.082,
+    "p50": 15.989,
+    "p95": 17.078
+  },
+  "pc_parse_us": {
+    "mean": 65.19,
+    "max": 639.2
+  },
+  "conf_present": 3000,
+  "board_lines": [
+    "TEMP_START=48.970",
+    "META n=3000 seq=1024 ch=8",
+    "SUMMARY executed=3000 aborted=None wall_s=56.161 throughput=53.418 temp_start=48.970 temp_max=50.078 temp_end=49.832",
+    "RUNNER_RC=0 GUARD_RC=0"
+  ],
+  "excluded": "Tk GUI rendering is not part of this measurement"
+}
