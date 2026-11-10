@@ -6,8 +6,8 @@
 #include "temporal_vote.h"
 
 int main() {
-    int hist[VOTE_MAX] = {0};
-    int seen = 0;
+    vote_cls_t hist[VOTE_MAX] = {0};
+    vote_cnt_t seen = 0;
     int k = 0, cls = 0;
     while (std::scanf("%d %d", &k, &cls) == 2) {
         int vc = -1, cnt = -1;

@@ -577,8 +577,8 @@ void transformer_top(hls::stream<axis_t>& in, hls::stream<axis_t>& out,
     const int window_class = argmax_first_max<act_t, NUM_CLASSES>(logits);
     pred_class = window_class;
     // Continuous temporal vote (state kept across windows, never reset).
-    static int vote_hist[VOTE_MAX];
-    static int vote_seen = 0;
+    static vote_cls_t vote_hist[VOTE_MAX];
+    static vote_cnt_t vote_seen = 0;
 #pragma HLS ARRAY_PARTITION variable=vote_hist complete
     temporal_vote_push(vote_hist, vote_seen, window_class, vote_k, vote_class, vote_count);
     for (int c = 0; c < NUM_CLASSES; ++c) {

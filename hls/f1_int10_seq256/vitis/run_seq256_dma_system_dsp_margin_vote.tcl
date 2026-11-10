@@ -1,7 +1,7 @@
 # RAW-INPUT + TEMPORAL VOTE variant (2026-11-10), from the raw-input system. Identical system to
 # run_seq256_dma_system_dsp_margin_argmax.tcl (dma16: one 32,768-byte MM2S frame,
 # no SG, transformer IP synthesized with MAX_DSP 210) except that it packages the
-# IP from seq256_raw1024_dsp_margin_argmax (preprocessing inside the IP) and
+# IP from seq256_rawvote1024 (preprocessing + temporal vote inside the IP) and
 # builds into its own directory.
 # MYIR Z-Turn XC7Z020 integration: Zynq PS + AXI DMA + SEQ=256 HLS IP.
 set script_dir [file dirname [file normalize [info script]]]
