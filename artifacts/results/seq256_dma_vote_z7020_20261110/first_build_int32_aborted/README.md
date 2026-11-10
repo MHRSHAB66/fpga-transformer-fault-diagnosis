@@ -17,5 +17,6 @@ results: C++ native and ap_int builds equal host/temporal_vote.py on 5,000
 random steps; HLS C-simulation on the golden vectors) and rebuilt.
 
 Files: HLS synthesis report, Vivado post-synthesis utilization/timing, and the
-implementation log up to the abort. Reference numbers of the raw-input core:
+implementation log up to the abort (`impl_runme_until_abort.log`, local only:
+`*.log` is gitignored). Reference numbers of the raw-input core:
 `../../seq256_dma_raw_argmax_z7020_20261109/vivado_reports/`.

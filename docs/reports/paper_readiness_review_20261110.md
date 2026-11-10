@@ -54,22 +54,93 @@ bit-exactness or hard real-time on the physical board.
 | Vivado vectorless power | transformer IP 0.52 W (INT10 input) / 0.63 W (raw input); PS7 1.54 W; on-chip total 2.24 / 2.35 W; confidence "Medium" | ESTIMATE | `paper_analysis_20261110/power_estimate_vivado/` |
 | Same model on the board ARM | 216–219 ms per window → FPGA ~14× faster | MEASURED-PHYSICAL | `docs/reports/cpu_baseline_20261109.md` |
 | Noise robustness (deployed model, no retraining; C-model = board) | clean 97.77 %; 30 dB 97.77; 20 dB 97.73; 10 dB 96.77; 5 dB 93.16; 0 dB 82.78; normal recall collapses below 10 dB | MEASURED-SOFTWARE (bit-exact) | `artifacts/results/robustness_20261110/summary.json` |
-| Dead sensor (channel reads 0) | tachometer 97.77 % (harmless); bearing-1 accelerometers 76–80 %; bearing-2 accelerometers ~90 %; microphone and tach + mic: see summary | MEASURED-SOFTWARE (bit-exact) | same |
+| Dead sensor (channel reads 0) | tachometer 97.77 % (harmless); bearing-1 accelerometers 76–80 %; bearing-2 accelerometers ~90 %; microphone 84.2 %; tachometer + microphone 78.1 % (figure `docs/figures/paper/dead_sensor`) | MEASURED-SOFTWARE (bit-exact) | same |
 
-## 4. Work in progress (this session)
+## 4. Generalization study: stricter file-level splits (float, retrained)
 
-- Stricter splits retrained with the deployed recipe on the local GPU
-  (`tools/generalization_study.py`): unseen middle severity, unseen highest
-  severity, unseen 37–47 Hz speed band, plus the project split as control.
-- Noise-augmented training, evaluated on the exact raw-domain noisy test windows.
-- Temporal vote implemented **in FPGA logic** (`temporal_vote.h`, AXI-Lite
-  `vote_k` / `vote_class` / `vote_count`; C-model 41/41 vs the Python reference);
-  bitstream build and board validation pending.
+Same architecture (F_1layer SEQ=256) and the deployed training recipe, retrained
+on the local GPU for every split (`tools/generalization_study.py`; evidence
+`artifacts/results/generalization_20261110/<split>/result.json`). Severity
+splits hold out one level of every fault family (test) and another one
+(validation); normal files have no severity, so a speed band of the normal class
+is held out instead.
 
-## 5. Still needed from the hardware side (board available until ~2026-12-09)
+| Split | Files train / val / test | Test windows | Accuracy % | Macro-F1 % | Macro AUROC | Recall % normal / imbalance / misalignment / bearing |
+|---|---|---|---|---|---|---|
+| random — project split (control) | 1365 / 195 / 391 | 95,404 | 97.47 | 95.01 | 0.9990 | 95.8 / 97.5 / 98.3 / 97.2 |
+| speed_mid — unseen 37–47 Hz band | 1339 / 212 / 400 | 97,600 | 97.88 | 95.28 | 0.9991 | 95.7 / 97.4 / 99.5 / 97.3 |
+| sev_mid — unseen middle severity | 1084 / 439 / 428 | 104,432 | 95.74 | 90.60 | 0.9967 | 79.2 / 99.7 / 91.4 / 97.2 |
+| sev_max — unseen highest severity, normal ≥ 52 Hz | 1158 / 420 / 373 | 91,012 | 74.26 | 55.10 | 0.9175 | 1.4 / 83.6 / 96.2 / 65.7 |
+| sev_max_nmid — unseen highest severity, normal middle band | 1157 / 421 / 373 | — | pending | | | |
 
-1. Measured power/energy: inline USB or DC power meter (idle, overlay loaded,
+Reading:
+
+1. The control reproduces the deployed float model (97.65 % / 95.46 %) within
+   0.2 pp accuracy and 0.5 pp macro-F1. Its normal recall (95.8 %) differs from the
+   deployed model's (87.2 %, CI 79.9–93.6): with 10 normal test files the normal
+   recall varies strongly between training runs.
+2. **Unseen speeds inside the trained range** cost nothing (97.9 %).
+3. **Unseen intermediate severities** (interpolation) keep 95.7 % accuracy; the
+   macro-F1 drop comes mostly from the normal class (79 %) and misalignment (91 %).
+4. **Unseen highest severities** (extrapolation) fall to 74 %. In this split the
+   normal test files are the fastest recordings, a speed range in which training
+   has fault files only; normal recall 1.4 % is that speed extrapolation, not a
+   severity effect. `sev_max_nmid` (pending) holds normal out as in sev_mid to
+   measure the severity effect alone.
+
+Claim for the paper: the classifier generalizes to new recordings, unseen speed
+bands and unseen intermediate severities of known fault types; it does not
+extrapolate to severities beyond the training range.
+
+## 5. Noise-augmented training
+
+Training windows get white noise at SNR ~ U(0, 30) dB in half of the batches
+(applied in the z-scored, 4:1-aggregated domain). Both float models are
+evaluated on the exact raw-domain noisy test windows of the robustness sweep
+(`generalization_20261110/noise_eval.json`; figure
+`docs/figures/paper/noise_robustness`).
+
+| SNR | control acc / normal recall % | noise-augmented acc / normal recall % | deployed INT10 (= board) acc / normal recall % |
+|---|---|---|---|
+| clean | 97.47 / 95.8 | 97.29 / 96.8 | 97.77 / 87.2 |
+| 20 dB | 97.44 / 95.3 | 97.28 / 96.7 | 97.73 / 85.9 |
+| 10 dB | 96.99 / 83.3 | 97.07 / 96.3 | 96.77 / 69.2 |
+| 5 dB | 93.41 / 32.3 | 95.99 / 93.8 | 93.16 / 25.7 |
+| 0 dB | 79.32 / 0.0 | 89.48 / 89.3 | 82.78 / 0.3 |
+| −5 dB | 52.34 / 0.0 | 61.05 / 94.1 | 62.63 / 0.0 |
+
+Noise augmentation removes the collapse of the normal class down to 0 dB at a
+cost of 0.2 pp clean accuracy. The augmented model is float only; quantizing it
+(same INT10 flow) and putting it on the board is a candidate next step, not done.
+At −5 dB its high normal recall comes with low accuracy (noisy fault windows are
+called normal), so −5 dB is outside the useful range of both models.
+
+## 6. Temporal vote in FPGA logic — status
+
+- Implemented in the raw-input core (`temporal_vote.h`; AXI-Lite `vote_k` in,
+  `vote_class` / `vote_count` out; continuous stream, ties to the newest window).
+  Driver, board runner and full-test checker read the registers
+  (`pynq/fault_classifier.py`, `tools/board/fpga_live_runner.py`,
+  `tools/raw_core_board_test.py fulltest --vote-k 5`).
+- First build (32-bit `int` vote logic): +7.3 k LUT after synthesis (85 % of the
+  device), routing congested (WNS −1.44 ns after the first router iteration);
+  stopped (`artifacts/results/seq256_dma_vote_z7020_20261110/first_build_int32_aborted/`).
+- Rewritten with 2-bit classes and 4-bit counts: C++ native and ap_int builds =
+  Python on 5,000 random steps; HLS C-simulation 41/41 logits + class and 41/41
+  votes; HLS estimate +2.4 k LUT / +0.2 k FF over the raw core (HLS estimates of
+  small operators are pessimistic). Vivado build of this version: pending.
+- Expected on the board (C-model classes, k = 5, whole test as one stream):
+  system accuracy 99.08 %, median 2 windows (41 ms) until the vote is correct
+  after a change of the true class, max 4.
+
+## 7. Still needed (board available until ~2026-12-09)
+
+1. Vivado build of the narrow vote core (`powershell -File
+   tools/build_raw_core.ps1 -Variant vote`), then package and board validation
+   (`python -m tools.raw_core_board_test deploy|golden|fulltest --vote-k 5`).
+2. `python -m tools.generalization_study train --split sev_max_nmid`.
+3. Measured power/energy: inline USB or DC power meter (idle, overlay loaded,
    sustained inference; energy per inference = ∫P dt / windows).
-2. Board validation of the vote overlay (full test as one stream, change-detection
-   delay at recording boundaries).
-3. An overnight endurance run of the raw-input core under the guard.
+4. An overnight endurance run of the raw-input core under the guard.
+5. Optional model work for the paper: INT10 + board run of the noise-augmented
+   model; per-channel amplitude (log σ) as a side input for the normal class.
