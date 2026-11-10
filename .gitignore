@@ -332,3 +332,5 @@ artifacts/ram_demo_sets/*/set.i32
 artifacts/results/fpga_rawinput_testset_*/fpga_testset_raw.*
 # Per-window board output of the raw-core full test (6 MB; pred.txt and the check JSON are committed)
 artifacts/results/raw_core_board_fulltest_*/fulltest.out
+# Root-level Vitis HLS project build dir for the raw-input + temporal vote variant.
+/seq256_rawvote1024/

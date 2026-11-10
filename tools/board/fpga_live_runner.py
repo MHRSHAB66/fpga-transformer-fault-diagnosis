@@ -75,6 +75,9 @@ READAHEAD_MB = int(os.environ.get("FPGA_RUNNER_READAHEAD_MB", "0"))
 # emulate a sensor (Hz), and append per-window timing fields to result lines.
 PACE_HZ = float(os.environ.get("FPGA_RUNNER_PACE_HZ", "0") or 0)
 TIMING = os.environ.get("FPGA_RUNNER_TIMING", "0") == "1"
+# Vote-variant overlays only: k for the FPGA temporal majority vote (vote=<class>,<count>
+# is then appended to every result line).
+VOTE_K = int(os.environ.get("FPGA_RUNNER_VOTE_K", "5"))
 
 
 def start_readahead(path, gz, ahead_mb, period_s=0.05):
@@ -368,7 +371,13 @@ def main():
 
     t_perf0 = time.perf_counter()
 
+    has_vote = getattr(be, "has_vote", False)
+    if has_vote:
+        be.set_vote_k(VOTE_K)
+
     def emit(src_idx, cls, logits, lat_ms, tc, extra=""):
+        if has_vote:   # registers of the window just collected
+            extra = " vote=%d,%d" % be.read_vote() + extra
         if TIMING:   # emission time since start: same meaning in both loops
             extra += " t_ms=%.3f" % ((time.perf_counter() - t_perf0) * 1000.0)
         # logits= : the 4 raw INT10 logits returned by the core (extra

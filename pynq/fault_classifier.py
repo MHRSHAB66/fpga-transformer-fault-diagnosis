@@ -58,6 +58,9 @@ AP_AUTO_RESTART = 0x81     # bit0 ap_start | bit7 auto_restart
 # Argmax-variant IP only: AXI-Lite output register holding the FPGA class id
 # (lowest class id wins ties, == numpy.argmax). Absent on the deployed overlay.
 CLASS_REG = "pred_class"
+# Vote-variant IP only: AXI-Lite input vote_k and outputs vote_class / vote_count
+# (temporal majority vote over the last k window classes, computed in FPGA logic).
+VOTE_K_REG, VOTE_CLASS_REG, VOTE_COUNT_REG = "vote_k", "vote_class", "vote_count"
 
 MODEL_CFG = {
     "input_dim": 8, "seq_len": 256, "num_classes": 4,
@@ -213,6 +216,11 @@ class HardwareBackend:
         regs = dict(ip_dict[ip_name].get("registers", {}) or {})
         self.class_reg_offset = _reg_offset(regs, CLASS_REG)
         self.class_vld_offset = _reg_offset(regs, CLASS_REG + "_ctrl")
+        self.vote_k_offset = _reg_offset(regs, VOTE_K_REG)
+        self.vote_class_offset = _reg_offset(regs, VOTE_CLASS_REG)
+        self.vote_class_vld_offset = _reg_offset(regs, VOTE_CLASS_REG + "_ctrl")
+        self.vote_count_offset = _reg_offset(regs, VOTE_COUNT_REG)
+        self.vote_count_vld_offset = _reg_offset(regs, VOTE_COUNT_REG + "_ctrl")
 
         # Start the core (ap_ctrl_hs). auto_restart keeps it armed per window.
         self.ip.write(AP_CTRL_OFFSET, AP_AUTO_RESTART if auto_restart else AP_START)
@@ -223,6 +231,26 @@ class HardwareBackend:
     @property
     def has_hw_class(self) -> bool:
         return self.class_reg_offset is not None
+
+    @property
+    def has_vote(self) -> bool:
+        return None not in (self.vote_k_offset, self.vote_class_offset, self.vote_count_offset)
+
+    def set_vote_k(self, k: int) -> None:
+        """Number of recent windows the FPGA votes over (the IP clamps to 1..15)."""
+        if not self.has_vote:
+            raise RuntimeError("overlay has no temporal vote registers")
+        self.ip.write(self.vote_k_offset, int(k))
+
+    def read_vote(self):
+        """(vote_class, vote_count) of the window just collected; ap_vld must be set."""
+        if not self.has_vote:
+            raise RuntimeError("overlay has no temporal vote registers")
+        for off in (self.vote_class_vld_offset, self.vote_count_vld_offset):
+            if off is not None and not (int(self.ip.read(off)) & 0x1):
+                raise RuntimeError("vote ap_vld not set after S2MM completion")
+        return (int(self.ip.read(self.vote_class_offset)) & 0xFFFFFFFF,
+                int(self.ip.read(self.vote_count_offset)) & 0xFFFFFFFF)
 
     def read_hw_class(self) -> int:
         """Class id computed by the FPGA logic for the window just collected.
