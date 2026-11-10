@@ -1,0 +1,88 @@
+{
+ "method": "causal sliding majority vote over the last k windows of the same recording (ties -> most recent window's class); decision delay = k x 20.48 ms window + FPGA latency; first k-1 windows of each file excluded so every decision has k windows",
+ "source": "raw-input core, physical board predictions",
+ "k=1": {
+  "decision_window_ms": 20.48,
+  "decisions": 95404,
+  "accuracy": 97.771,
+  "macro_f1": 95.669,
+  "recall_per_class": [
+   87.21,
+   97.78,
+   99.09,
+   97.65
+  ]
+ },
+ "k=3": {
+  "decision_window_ms": 61.44,
+  "decisions": 94622,
+  "accuracy": 99.209,
+  "macro_f1": 98.393,
+  "recall_per_class": [
+   93.8,
+   99.12,
+   99.87,
+   99.19
+  ]
+ },
+ "k=5": {
+  "decision_window_ms": 102.4,
+  "decisions": 93840,
+  "accuracy": 99.556,
+  "macro_f1": 99.092,
+  "recall_per_class": [
+   96.08,
+   99.51,
+   99.98,
+   99.53
+  ]
+ },
+ "k=9": {
+  "decision_window_ms": 184.32,
+  "decisions": 92276,
+  "accuracy": 99.78,
+  "macro_f1": 99.611,
+  "recall_per_class": [
+   98.39,
+   99.75,
+   100.0,
+   99.75
+  ]
+ },
+ "k=15": {
+  "decision_window_ms": 307.2,
+  "decisions": 89930,
+  "accuracy": 99.858,
+  "macro_f1": 99.758,
+  "recall_per_class": [
+   99.09,
+   99.81,
+   100.0,
+   99.84
+  ]
+ },
+ "k=25": {
+  "decision_window_ms": 512.0,
+  "decisions": 86020,
+  "accuracy": 99.905,
+  "macro_f1": 99.883,
+  "recall_per_class": [
+   99.82,
+   99.82,
+   100.0,
+   99.89
+  ]
+ },
+ "k=49": {
+  "decision_window_ms": 1003.52,
+  "decisions": 76636,
+  "accuracy": 99.996,
+  "macro_f1": 99.996,
+  "recall_per_class": [
+   100.0,
+   99.98,
+   100.0,
+   100.0
+  ]
+ }
+}

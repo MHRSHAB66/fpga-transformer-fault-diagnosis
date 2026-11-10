@@ -1,0 +1,170 @@
+{
+ "clean": {
+  "windows": 95404,
+  "accuracy": 0.977705,
+  "macro_f1": 0.956686,
+  "recall_per_class": [
+   0.8721,
+   0.9778,
+   0.9909,
+   0.9765
+  ],
+  "seconds": 384.6
+ },
+ "snr30": {
+  "windows": 95404,
+  "accuracy": 0.977663,
+  "macro_f1": 0.957048,
+  "recall_per_class": [
+   0.8758,
+   0.9773,
+   0.9911,
+   0.9763
+  ],
+  "seconds": 221.3
+ },
+ "snr20": {
+  "windows": 95404,
+  "accuracy": 0.977276,
+  "macro_f1": 0.955567,
+  "recall_per_class": [
+   0.859,
+   0.977,
+   0.9921,
+   0.976
+  ],
+  "seconds": 153.9
+ },
+ "snr10": {
+  "windows": 95404,
+  "accuracy": 0.967706,
+  "macro_f1": 0.92735,
+  "recall_per_class": [
+   0.6922,
+   0.9618,
+   0.9969,
+   0.9689
+  ],
+  "seconds": 117.8
+ },
+ "snr5": {
+  "windows": 95404,
+  "accuracy": 0.931617,
+  "macro_f1": 0.801233,
+  "recall_per_class": [
+   0.2574,
+   0.8982,
+   0.9978,
+   0.9429
+  ],
+  "seconds": 117.9
+ },
+ "snr0": {
+  "windows": 95404,
+  "accuracy": 0.827827,
+  "macro_f1": 0.620201,
+  "recall_per_class": [
+   0.0025,
+   0.7149,
+   0.9975,
+   0.8233
+  ],
+  "seconds": 126.9
+ },
+ "snr-5": {
+  "windows": 95404,
+  "accuracy": 0.626253,
+  "macro_f1": 0.450714,
+  "recall_per_class": [
+   0.0,
+   0.3495,
+   0.9978,
+   0.5705
+  ],
+  "seconds": 620.1
+ },
+ "dead0": {
+  "windows": 95404,
+  "accuracy": 0.977684,
+  "macro_f1": 0.955187,
+  "recall_per_class": [
+   0.8615,
+   0.9721,
+   0.9873,
+   0.9804
+  ],
+  "seconds": 461.0
+ },
+ "dead1": {
+  "windows": 95404,
+  "accuracy": 0.804138,
+  "macro_f1": 0.692882,
+  "recall_per_class": [
+   0.2861,
+   0.7064,
+   0.5457,
+   0.9777
+  ],
+  "seconds": 114.8
+ },
+ "dead2": {
+  "windows": 95404,
+  "accuracy": 0.764978,
+  "macro_f1": 0.671662,
+  "recall_per_class": [
+   0.6783,
+   0.9759,
+   0.8735,
+   0.6533
+  ],
+  "seconds": 113.7
+ },
+ "dead3": {
+  "windows": 95404,
+  "accuracy": 0.779359,
+  "macro_f1": 0.619699,
+  "recall_per_class": [
+   0.2279,
+   0.8841,
+   0.6473,
+   0.8332
+  ],
+  "seconds": 114.5
+ },
+ "dead4": {
+  "windows": 95404,
+  "accuracy": 0.896136,
+  "macro_f1": 0.861164,
+  "recall_per_class": [
+   0.7471,
+   0.8442,
+   0.9283,
+   0.9044
+  ],
+  "seconds": 114.0
+ },
+ "dead5": {
+  "windows": 95404,
+  "accuracy": 0.901482,
+  "macro_f1": 0.886691,
+  "recall_per_class": [
+   0.8385,
+   0.975,
+   0.9812,
+   0.8448
+  ],
+  "seconds": 144.4
+ },
+ "dead6": {
+  "windows": 95404,
+  "accuracy": 0.903652,
+  "macro_f1": 0.844664,
+  "recall_per_class": [
+   0.6311,
+   0.8768,
+   0.9809,
+   0.8891
+  ],
+  "seconds": 26937.7
+ }
+}

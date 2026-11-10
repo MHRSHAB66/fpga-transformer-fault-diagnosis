@@ -1,0 +1,97 @@
+{
+ "method": "file-level bootstrap: resample the 391 test files with replacement within each class (stratified), 2000 replicates, 95 % percentile interval",
+ "files_per_class": {
+  "0": 10,
+  "1": 67,
+  "2": 99,
+  "3": 215
+ },
+ "deployed_int10_input_board": {
+  "accuracy": {
+   "value": 97.77,
+   "ci95": [
+    97.29,
+    98.26
+   ]
+  },
+  "macro_f1": {
+   "value": 95.65,
+   "ci95": [
+    94.37,
+    96.88
+   ]
+  },
+  "recall_normal": {
+   "value": 87.17,
+   "ci95": [
+    80.0,
+    93.85
+   ]
+  },
+  "recall_imbalance": {
+   "value": 97.77,
+   "ci95": [
+    96.29,
+    98.97
+   ]
+  },
+  "recall_misalignment": {
+   "value": 99.1,
+   "ci95": [
+    98.59,
+    99.52
+   ]
+  },
+  "recall_bearing": {
+   "value": 97.65,
+   "ci95": [
+    96.94,
+    98.34
+   ]
+  }
+ },
+ "raw_input_onchip_preprocessing_board": {
+  "accuracy": {
+   "value": 97.77,
+   "ci95": [
+    97.28,
+    98.26
+   ]
+  },
+  "macro_f1": {
+   "value": 95.67,
+   "ci95": [
+    94.34,
+    96.88
+   ]
+  },
+  "recall_normal": {
+   "value": 87.21,
+   "ci95": [
+    79.88,
+    93.61
+   ]
+  },
+  "recall_imbalance": {
+   "value": 97.78,
+   "ci95": [
+    96.29,
+    98.98
+   ]
+  },
+  "recall_misalignment": {
+   "value": 99.09,
+   "ci95": [
+    98.58,
+    99.52
+   ]
+  },
+  "recall_bearing": {
+   "value": 97.65,
+   "ci95": [
+    96.92,
+    98.35
+   ]
+  }
+ }
+}
