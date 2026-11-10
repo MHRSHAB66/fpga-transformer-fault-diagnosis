@@ -166,5 +166,44 @@
    0.8891
   ],
   "seconds": 26937.7
+ },
+ "dead7": {
+  "windows": 95404,
+  "accuracy": 0.841663,
+  "macro_f1": 0.765027,
+  "recall_per_class": [
+   0.5799,
+   0.8162,
+   0.5616,
+   0.9907
+  ],
+  "seconds": 1132.9
+ },
+ "dead0+7": {
+  "windows": 95404,
+  "accuracy": 0.780523,
+  "macro_f1": 0.670381,
+  "recall_per_class": [
+   0.3947,
+   0.6658,
+   0.4329,
+   0.9943
+  ],
+  "seconds": 798.0
+ },
+ "_meta": {
+  "model": "raw-input HLS top, g++ C-model (bit-exact with the board)",
+  "exe": "tmp\\csim\\batch_raw_argmax.exe",
+  "channels": [
+   "tachometer",
+   "acc_axial_b1",
+   "acc_radial_b1",
+   "acc_tangential_b1",
+   "acc_axial_b2",
+   "acc_radial_b2",
+   "acc_tangential_b2",
+   "microphone"
+  ],
+  "noise": "AWGN per window/channel, SNR vs AC power, seed [20261110, window]"
  }
 }
