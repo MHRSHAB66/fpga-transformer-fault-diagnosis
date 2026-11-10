@@ -1,0 +1,188 @@
+{
+ "generated_by": "tools/plot_paper_figures.py",
+ "noise_robustness": {
+  "Deployed INT10 (= board)": {
+   "clean": {
+    "accuracy": 0.977705,
+    "normal_recall": 0.8721
+   },
+   "snr30": {
+    "accuracy": 0.977663,
+    "normal_recall": 0.8758
+   },
+   "snr20": {
+    "accuracy": 0.977276,
+    "normal_recall": 0.859
+   },
+   "snr10": {
+    "accuracy": 0.967706,
+    "normal_recall": 0.6922
+   },
+   "snr5": {
+    "accuracy": 0.931617,
+    "normal_recall": 0.2574
+   },
+   "snr0": {
+    "accuracy": 0.827827,
+    "normal_recall": 0.0025
+   },
+   "snr-5": {
+    "accuracy": 0.626253,
+    "normal_recall": 0.0
+   }
+  },
+  "Float, retrained (control)": {
+   "clean": {
+    "accuracy": 0.974687,
+    "normal_recall": 0.9582
+   },
+   "snr20": {
+    "accuracy": 0.974425,
+    "normal_recall": 0.9533
+   },
+   "snr10": {
+    "accuracy": 0.969865,
+    "normal_recall": 0.8328
+   },
+   "snr5": {
+    "accuracy": 0.934112,
+    "normal_recall": 0.3234
+   },
+   "snr0": {
+    "accuracy": 0.793185,
+    "normal_recall": 0.0004
+   },
+   "snr-5": {
+    "accuracy": 0.523364,
+    "normal_recall": 0.0
+   }
+  },
+  "Float, noise-augmented training": {
+   "clean": {
+    "accuracy": 0.972894,
+    "normal_recall": 0.968
+   },
+   "snr20": {
+    "accuracy": 0.972779,
+    "normal_recall": 0.9672
+   },
+   "snr10": {
+    "accuracy": 0.970704,
+    "normal_recall": 0.9627
+   },
+   "snr5": {
+    "accuracy": 0.959928,
+    "normal_recall": 0.9381
+   },
+   "snr0": {
+    "accuracy": 0.894826,
+    "normal_recall": 0.8926
+   },
+   "snr-5": {
+    "accuracy": 0.61053,
+    "normal_recall": 0.9414
+   }
+  }
+ },
+ "dead_sensor_accuracy_pct": {
+  "tachometer": 97.77,
+  "bearing 1 axial": 80.41,
+  "bearing 1 radial": 76.5,
+  "bearing 1 tangential": 77.94,
+  "bearing 2 axial": 89.61,
+  "bearing 2 radial": 90.15,
+  "bearing 2 tangential": 90.37,
+  "microphone": 84.17,
+  "tachometer + microphone": 78.05,
+  "all sensors": 97.77
+ },
+ "generalization_splits": {
+  "random": {
+   "label": "Project split (control)",
+   "files": {
+    "train": 1365,
+    "val": 195,
+    "test": 391
+   },
+   "best_epoch": 14,
+   "Accuracy": 0.974687,
+   "Macro-F1": 0.950066,
+   "Normal-class recall": 0.958197
+  },
+  "speed_mid": {
+   "label": "Unseen speed band 37-47 Hz",
+   "files": {
+    "train": 1339,
+    "val": 212,
+    "test": 400
+   },
+   "best_epoch": 12,
+   "Accuracy": 0.97877,
+   "Macro-F1": 0.952836,
+   "Normal-class recall": 0.956967
+  },
+  "sev_mid": {
+   "label": "Unseen middle severity",
+   "files": {
+    "train": 1084,
+    "val": 439,
+    "test": 428
+   },
+   "best_epoch": 9,
+   "Accuracy": 0.957389,
+   "Macro-F1": 0.906048,
+   "Normal-class recall": 0.792213
+  },
+  "sev_max": {
+   "label": "Unseen highest severity; normal at unseen speeds",
+   "files": {
+    "train": 1158,
+    "val": 420,
+    "test": 373
+   },
+   "best_epoch": 11,
+   "Accuracy": 0.742572,
+   "Macro-F1": 0.550954,
+   "Normal-class recall": 0.014344
+  }
+ },
+ "temporal_vote": {
+  "per_recording": {
+   "1": {
+    "accuracy": 97.771,
+    "normal_recall": 87.21,
+    "decision_window_ms": 20.48
+   },
+   "3": {
+    "accuracy": 99.209,
+    "normal_recall": 93.8,
+    "decision_window_ms": 61.44
+   },
+   "5": {
+    "accuracy": 99.556,
+    "normal_recall": 96.08,
+    "decision_window_ms": 102.4
+   },
+   "9": {
+    "accuracy": 99.78,
+    "normal_recall": 98.39,
+    "decision_window_ms": 184.32
+   },
+   "15": {
+    "accuracy": 99.858,
+    "normal_recall": 99.09,
+    "decision_window_ms": 307.2
+   },
+   "25": {
+    "accuracy": 99.905,
+    "normal_recall": 99.82,
+    "decision_window_ms": 512.0
+   },
+   "49": {
+    "accuracy": 99.996,
+    "normal_recall": 100.0,
+    "decision_window_ms": 1003.52
+   }
+  }
+ }
+}
