@@ -10,6 +10,7 @@ Every figure is drawn from recorded evidence; nothing is re-measured:
   e2e_latency_profile        TCP end-to-end mode: board stage vs GUI render
   throughput_vs_requirement  measured inferences/s vs the 48.83 /s requirement
   fpga_resources             post-route utilisation of the argmax build
+  cpu_vs_fpga_latency        same INT10 model: board ARM and laptop CPU vs FPGA
 
     python -m tools.plot_final_figures
     -> docs/figures/final/<name>.png + .pdf
@@ -53,6 +54,8 @@ REALTIME_VERDICT = RES / "fpga_realtime_bench_20261022" / "realtime_verdict.json
 HARD_RT = RES / "hard_rt_20261024"
 E2E_RUNS = {"run 1": RES / "e2e_demo_gui_20261024_231859" / "e2e_verification.json",
             "run 2": RES / "e2e_demo_gui_20261024_233000" / "e2e_verification.json"}
+CPU_BASELINE = RES / "cpu_baseline_20261109" / "summary.json"
+RAW_RT = RES / "raw_core_board_rt_20261109_234531" / "out" / "summary.json"
 UTILIZATION = (RES / "seq256_dma_argmax_z7020_20261022" / "vivado_reports"
                / "post_route_utilization.rpt")
 
@@ -445,6 +448,42 @@ def fig_resources(data):
                                                 "percent": round(r[3], 2)} for r in rows}
 
 
+def fig_cpu_vs_fpga(data):
+    cpu = json.loads(CPU_BASELINE.read_text())["runs"]
+    r1 = json.loads((HARD_RT / "R1_fifo50_cpu1" / "remote" / "out" / "summary.json").read_text())
+    raw = json.loads(RAW_RT.read_text())
+    rows = [  # (label, p50 ms, is_fpga)
+        ("Board ARM Cortex-A9, 1 core, -O2", cpu["board/O2_single"]["timing_us"]["p50_us"] / 1e3, False),
+        ("Board ARM Cortex-A9, 1 core, -O3 + NEON", cpu["board/O3neon_single"]["timing_us"]["p50_us"] / 1e3, False),
+        ("FPGA, INT10 input (incl. DMA)", r1["response_ms"]["p50"], True),
+        ("FPGA, raw input, preprocessing on chip (incl. DMA)", raw["response_ms"]["p50"], True),
+        ("Laptop i7-13620H, -O2 (reference)", cpu["pc/O2_single"]["timing_us"]["p50_us"] / 1e3, False),
+        ("Laptop i7-13620H, -O3 native (reference)", cpu["pc/O3native_single"]["timing_us"]["p50_us"] / 1e3, False),
+    ]
+    fig, ax = plt.subplots(figsize=(7.4, 3.6))
+    ax.set_xlim(0, 260)
+    ax.set_ylim(len(rows) - 0.4, -0.6)
+    ax.grid(axis="y", visible=False)
+    fig.canvas.draw()
+    for i, (label, ms, is_fpga) in enumerate(rows):
+        hbar(ax, i, ms, 0.42, SERIES[0] if is_fpga else SERIES[1])
+        ax.text(ms + 2, i, "%.1f ms" % ms, va="center", color=INK, fontsize=9, zorder=3,
+                bbox=dict(facecolor=SURFACE, edgecolor="none", pad=1.5))
+    ax.axvline(PERIOD_MS, color=INK_2, linewidth=1, zorder=1)
+    ax.text(PERIOD_MS + 2, -0.55, "deadline 20.48 ms", color=INK_2, fontsize=9, va="center")
+    ax.set_yticks(range(len(rows)), [r[0] for r in rows])
+    ax.tick_params(axis="y", length=0)
+    ax.spines["left"].set_visible(False)
+    ax.set_xlabel("Time per window, median (ms)")
+    ax.set_title("Same INT10 model: FPGA vs CPUs")
+    subtitle(ax, "Identical integer computation: logits equal on all 256 class-balanced windows")
+    ax.legend(handles=[Rectangle((0, 0), 1, 1, facecolor=SERIES[0]),
+                       Rectangle((0, 0), 1, 1, facecolor=SERIES[1])],
+              labels=["FPGA (board)", "CPU"], loc="lower right", handlelength=1.2)
+    save(fig, "cpu_vs_fpga_latency")
+    data["cpu_vs_fpga_latency_p50_ms"] = {r[0]: round(r[1], 3) for r in rows}
+
+
 def main():
     style()
     data = {"generated_by": "tools/plot_final_figures.py"}
@@ -459,6 +498,7 @@ def main():
     fig_e2e_profile(data)
     fig_throughput(data)
     fig_resources(data)
+    fig_cpu_vs_fpga(data)
     OUT_DATA.mkdir(parents=True, exist_ok=True)
     (OUT_DATA / "figure_data.json").write_text(json.dumps(data, indent=1), encoding="utf-8")
     print("wrote", (OUT_DATA / "figure_data.json").relative_to(REPO))

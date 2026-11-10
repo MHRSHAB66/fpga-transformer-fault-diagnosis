@@ -476,7 +476,7 @@ Feature-extraction-only or alternative preprocessing paths are experimental unle
 
 ### Stage 9 — Sensor or laboratory input path
 
-**Status:** TODO — on-board preprocessing (raw samples -> per-window z-score -> INT10 on the FPGA) planned for Nov 2026; a real sensor stays optional
+**Status:** PARTLY DONE — preprocessing runs inside the FPGA from raw 24-bit samples (board-validated 2026-11-09, `docs/reports/onchip_preprocessing_20261109.md`); a physical sensor stays optional
 
 **Goal:** Add a real or laboratory input source when hardware permits, while keeping the prepared-window path usable.
 
@@ -506,7 +506,7 @@ Feature-extraction-only or alternative preprocessing paths are experimental unle
 
 ### Stage 10 — FPGA-to-PC communication
 
-**Status:** COMPLETE over Ethernet (SSH/TCP); the UART result path on the board is planned for Nov 2026
+**Status:** COMPLETE — results over the board's USB-UART (10,000/10,000 frames, `docs/reports/uart_result_path_20261109.md`) and over Ethernet (SSH/TCP)
 
 **Goal:** Send classification results from the FPGA to the computer in a stable and debuggable format.
 

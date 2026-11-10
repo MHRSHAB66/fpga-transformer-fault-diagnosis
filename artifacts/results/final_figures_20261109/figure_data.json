@@ -325,5 +325,13 @@
    "available": 220.0,
    "percent": 95.45
   }
+ },
+ "cpu_vs_fpga_latency_p50_ms": {
+  "Board ARM Cortex-A9, 1 core, -O2": 218.562,
+  "Board ARM Cortex-A9, 1 core, -O3 + NEON": 216.519,
+  "FPGA, INT10 input (incl. DMA)": 15.819,
+  "FPGA, raw input, preprocessing on chip (incl. DMA)": 15.957,
+  "Laptop i7-13620H, -O2 (reference)": 7.982,
+  "Laptop i7-13620H, -O3 native (reference)": 6.639
  }
 }

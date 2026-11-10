@@ -362,6 +362,7 @@ Figures (PNG + PDF), all drawn from recorded evidence by
 | `docs/figures/final/e2e_latency_profile` | TCP end-to-end mode: board stage vs GUI render |
 | `docs/figures/final/throughput_vs_requirement` | measured windows/s vs 48.83 /s |
 | `docs/figures/final/fpga_resources` | post-route utilisation of the argmax build |
+| `docs/figures/final/cpu_vs_fpga_latency` | same INT10 model per window: board ARM, FPGA (both cores), laptop CPU (added 2026-11-10) |
 
 ---
 
