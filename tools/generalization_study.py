@@ -11,7 +11,11 @@ file-level splits, and tests noise-augmented training:
   random        the project split (control, same test files as the board results)
   sev_mid       hold out a middle severity / extra-load level of every fault family
                 (test) and another one (validation); normal: a middle speed band
-  sev_max       hold out the highest level of every family (extrapolation)
+  sev_max       hold out the highest level of every family (extrapolation); normal:
+                the fastest files (>= 52 Hz), so for the normal class this is a
+                speed extrapolation (training has faults but no normal file there)
+  sev_max_nmid  as sev_max for the faults, normal held out as in sev_mid (middle
+                speed band), so only the fault severity is extrapolated
   speed_mid     hold out the 37-47 Hz speed band of every condition (test) and the
                 22-27 Hz band (validation)
   random_noise  project split, training windows get Gaussian noise at a random SNR
@@ -133,7 +137,7 @@ def file_split(name, meta):
             assign[i] = "val"
     normal = np.where(cond == "normal")[0]
     s = speed[normal]
-    if name == "sev_mid":
+    if name in ("sev_mid", "sev_max_nmid"):
         assign[normal[(s >= 37) & (s < 47)]] = "test"
         assign[normal[(s >= 22) & (s < 27)]] = "val"
     else:
@@ -295,7 +299,8 @@ def main():
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("cache")
     t = sub.add_parser("train")
-    t.add_argument("--split", required=True, choices=["random", "sev_mid", "sev_max", "speed_mid", "random_noise"])
+    t.add_argument("--split", required=True, choices=["random", "sev_mid", "sev_max", "sev_max_nmid", "speed_mid",
+                                                            "random_noise"])
     n = sub.add_parser("noise-eval")
     n.add_argument("--models", nargs="+", required=True)
     n.add_argument("--conditions", nargs="+", default=["clean", "snr20", "snr10", "snr5", "snr0", "snr-5"])
