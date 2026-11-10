@@ -7,7 +7,9 @@ Steps (each its own subcommand, all under the independent temperature guard):
   golden    golden_raw1024_argmax on the real board: logits + class register,
             41 vectors incl. ties and edge windows
   fulltest  all 95,404 raw test windows through the board (fpga_live_runner.py);
-            compares every board logit with the C-model / Python reference
+            compares every board logit with the C-model / Python reference; on a
+            vote-variant overlay also checks vote_class / vote_count (--vote-k)
+            against host/temporal_vote.py over the board's own class stream
   rt        hard real-time acceptance run with the raw input (same configuration
             as R1 of 2026-10-24: 4,096 RAM windows, 30,000 + 200 warm-up,
             SCHED_FIFO 50 on CPU 1)
@@ -106,8 +108,8 @@ def cmd_fulltest(args):
         scp([RAW_GZ], BOARD_RAW_GZ)
     out, run = new_run("fulltest")
     n = args.n
-    pid = guarded(dep, run, "python3.6 -u {run}/fpga_live_runner.py {dep}/overlay/design_1_wrapper.bit {gz} "
-                  "1024 8 {n} {run}/pred.txt".format(run=run, dep=dep, gz=BOARD_RAW_GZ, n=n),
+    pid = guarded(dep, run, "FPGA_RUNNER_VOTE_K={k} python3.6 -u {run}/fpga_live_runner.py {dep}/overlay/design_1_wrapper.bit {gz} "
+                  "1024 8 {n} {run}/pred.txt".format(run=run, dep=dep, gz=BOARD_RAW_GZ, n=n, k=args.vote_k),
                   "fulltest", background=True)
     t0 = time.time()
     wait_pid(pid)
@@ -135,8 +137,48 @@ def cmd_fulltest(args):
                              "p95": round(float(np.percentile(lat, 95)), 3), "max": round(float(lat.max()), 3)},
               "board_summary": summary[-1] if summary else None,
               "wall_s_pc": round(time.time() - t0, 1), "deployment": dep, "input": BOARD_RAW_GZ}
+    votes = vote_rows(out / "fulltest.out")
+    if votes:
+        result["temporal_vote"] = check_votes(votes, rows, labels, int(args.vote_k))
     (out / "fulltest_check.json").write_text(json.dumps(result, indent=1))
     print(json.dumps(result, indent=1))
+
+
+def vote_rows(path):
+    """{dataset index: (vote_class, vote_count)} from runner lines with vote=."""
+    out = {}
+    for line in path.read_text().splitlines():
+        if line.startswith("R ") and " vote=" in line:
+            kv = dict(p.split("=", 1) for p in line.split()[1:])
+            c, n = kv["vote"].split(",")
+            out[int(kv["idx"])] = (int(c), int(n))
+    return out
+
+
+def check_votes(votes, rows, labels, k):
+    """Board votes vs host/temporal_vote.py over the board's own window classes
+    (one continuous stream in dataset order), system accuracy and the delay after
+    every change of the true class (recording boundary)."""
+    from host.temporal_vote import vote_sequence
+    idx = sorted(rows)
+    ref = vote_sequence([rows[i][0] for i in idx], k)
+    board = [votes[i] for i in idx]
+    vc = np.array([v[0] for v in board])
+    y = labels[idx]
+    delays = []
+    for j in range(1, len(idx)):
+        if y[j] != y[j - 1]:
+            d = 0
+            while j + d < len(idx) and vc[j + d] != y[j] and d < 244:
+                d += 1
+            delays.append(d)
+    return {"k": k, "windows": len(idx), "board_equal_python": int(sum(b == r for b, r in zip(board, ref))),
+            "system_accuracy": float((vc == y).mean()),
+            "class_changes": len(delays),
+            "windows_until_correct_after_change": {
+                "median": float(np.median(delays)) if delays else None,
+                "p95": float(np.percentile(delays, 95)) if delays else None,
+                "max": int(max(delays)) if delays else None}}
 
 
 def cmd_rt(args):
@@ -161,6 +203,7 @@ def main():
         p.add_argument("--name", required=True)
         if name == "fulltest":
             p.add_argument("--n", type=int, default=95404)
+            p.add_argument("--vote-k", type=int, default=5)
     args = ap.parse_args()
     {"deploy": cmd_deploy, "golden": cmd_golden, "fulltest": cmd_fulltest, "rt": cmd_rt}[args.cmd](args)
 
