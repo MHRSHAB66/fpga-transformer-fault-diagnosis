@@ -156,19 +156,25 @@ called normal), so −5 dB is outside the useful range of both models.
 - First build (32-bit `int` vote logic): +7.3 k LUT after synthesis (85 % of the
   device), routing congested (WNS −1.44 ns after the first router iteration);
   stopped (`artifacts/results/seq256_dma_vote_z7020_20261110/first_build_int32_aborted/`).
-- Rewritten with 2-bit classes and 4-bit counts: C++ native and ap_int builds =
-  Python on 5,000 random steps; HLS C-simulation 41/41 logits + class and 41/41
-  votes; HLS estimate +2.4 k LUT / +0.2 k FF over the raw core (HLS estimates of
-  small operators are pessimistic). Vivado build of this version: pending.
+- Second build (2-bit classes, 4-bit counts, but an early-exit `found` flag in
+  the pick loop): HLS emitted control flow (top FSM 10 → 26 states) and the IP
+  synthesized to 51 k LUT, all of the extra 16 k in the top module; stopped
+  (`…/second_build_flagpick_aborted/`).
+- Third build (pick as a select chain, oldest → newest): C++ native and ap_int
+  builds = Python on 5,000 random steps; HLS C-simulation 41/41 logits + class
+  and 41/41 votes; **post-route 36,911 LUT / 36,349 FF / 210 DSP, +241 LUT and
+  +186 FF over the raw core, WNS +0.135 ns** (`artifacts/results/seq256_dma_vote_z7020_20261110/`,
+  deployment `artifacts/deploy/seq256_vote_z7020_20261110/`). Lesson for the
+  paper: HLS coding style decided a 70× difference in the cost of the same vote.
 - Expected on the board (C-model classes, k = 5, whole test as one stream):
   system accuracy 99.08 %, median 2 windows (41 ms) until the vote is correct
   after a change of the true class, max 4.
 
 ## 7. Still needed (board available until ~2026-12-09)
 
-1. Vivado build of the narrow vote core (`powershell -File
-   tools/build_raw_core.ps1 -Variant vote`), then package and board validation
-   (`python -m tools.raw_core_board_test deploy|golden|fulltest --vote-k 5`).
+1. Board validation of the vote core (built and packaged 2026-11-11):
+   `python -m tools.raw_core_board_test deploy --bundle artifacts/deploy/seq256_vote_z7020_20261110`,
+   then `golden|fulltest|rt --name seq256_vote_z7020_20261110` (fulltest `--vote-k 5`).
 2. Measured power/energy: inline USB or DC power meter (idle, overlay loaded,
    sustained inference; energy per inference = ∫P dt / windows).
 3. An overnight endurance run of the raw-input core under the guard.
