@@ -192,6 +192,33 @@ called normal), so −5 dB is outside the useful range of both models.
   The per-recording analysis (99.56 % at k = 5) excludes the first k−1 windows
   of each file; the continuous-stream number includes the transitions.
 
+## 6b. Ten-class study (2026-11-11, Kaggle T4, float)
+
+Same architecture, recipe and file split as the deployed model (split asserted
+by SHA-256 of the file lists; test = the same 391 files / 95,404 windows), with
+10 file-level classes: normal, imbalance, horizontal / vertical misalignment,
+and ball / cage / outer-race faults on the underhang (U) and overhang (O)
+bearings (`kaggle/seq256_10class/`, evidence
+`artifacts/results/tenclass_kaggle_20261111/seq256_10class/summary.json`).
+
+| Scoring of the same predictions | accuracy % | macro-F1 % |
+|---|---|---|
+| 10 classes (macro AUROC 0.9993) | 96.92 | 96.60 |
+| collapsed to the 6 MAFAULDA groups | 97.65 | 96.41 |
+| collapsed to the project's 4 classes | **98.31** | **96.55** |
+| deployed 4-class float model, for reference | 97.65 | 95.46 |
+
+Recall per class: normal 95.9, imbalance 96.3, horizontal 95.7, vertical 96.5,
+U-ball 99.7, U-cage 96.9, U-outer 97.7, O-ball 99.5, O-cage 92.9, O-outer 99.0 %.
+Largest confusions: overhang cage → overhang outer race (442 windows), imbalance →
+underhang cage (357), vertical → horizontal misalignment (308).
+
+Reading: the finer labels cost nothing; scored as 4 classes they are even better
+than the 4-class training (single seed — the normal-class recall varies between
+runs, see §4). The hardware cost is the classifier's last layer (16×4 → 16×10)
+plus small interface changes (logit count, class width in the vote). A 10-class
+INT10 export and bitstream would be a further paper study.
+
 ## 7. Still needed (board available until ~2026-12-09)
 
 1. Measured power/energy (board adapter 5 V / 3 A): inline DC power meter (idle, overlay loaded,
