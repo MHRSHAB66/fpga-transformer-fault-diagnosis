@@ -336,3 +336,5 @@ artifacts/results/raw_core_board_fulltest_*/fulltest.out
 /seq256_rawvote1024/
 # Root-level Vitis HLS project build dir for the noise-augmented vote variant (paper study).
 /seq256_rawvote1024_na/
+# Perturbed copies of the raw test input for board runs (tools/make_noisy_testset.py; ~2.4 GB each).
+artifacts/results/noisy_testsets_*/*.i32.gz

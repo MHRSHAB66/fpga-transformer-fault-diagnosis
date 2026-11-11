@@ -1,0 +1,7 @@
+{
+ "source": "G:\\aut\\project\\fpga_fault_diagnosis\\artifacts\\results\\fpga_rawinput_testset_20261109\\fpga_testset_raw.i32.gz",
+ "condition": "snr0",
+ "windows": 95404,
+ "perturbation": "tools/robustness_cmodel.perturb (seed [20261110, window index])",
+ "sha256_uncompressed": "9e837e113daea8c9a1b50b7c7adfff79d21c4fa0f264af7585674de04374dd3f"
+}

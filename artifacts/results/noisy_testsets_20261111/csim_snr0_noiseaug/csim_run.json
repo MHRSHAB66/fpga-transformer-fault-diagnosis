@@ -1,0 +1,8 @@
+{
+  "kind": "desktop g++ functional C-model (NOT synthesis, NOT hardware)",
+  "exe": "tmp\\csim\\batch_raw_argmax_noiseaug.exe",
+  "input": "artifacts\\results\\noisy_testsets_20261111\\fpga_testset_raw_snr0.i32.gz",
+  "n": 95404,
+  "shards": 3,
+  "wall_seconds": 853.6
+}

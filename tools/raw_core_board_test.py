@@ -32,6 +32,7 @@ HOST, KEY = "root@192.168.2.99", str(Path.home() / ".ssh" / "id_zturn")
 DEPLOYMENTS = "/home/xilinx/deployments"
 RAW_GZ = REPO / "artifacts" / "results" / "fpga_rawinput_testset_20261109" / "fpga_testset_raw.i32.gz"
 BOARD_RAW_GZ = "/home/xilinx/raw_testset_20261109/fpga_testset_raw.i32.gz"
+BOARD_NOISY_DIR = "/home/xilinx/raw_testset_perturbed_20261111"
 CMODEL = REPO / "artifacts" / "results" / "onchip_preprocess_20261109" / "csim_raw_argmax" / "csim_logits.txt"
 LABELS = REPO / "artifacts" / "results" / "fpga_rawinput_testset_20261109" / "labels.txt"
 BOARD_TOOLS = ["verify_argmax_golden.py", "fpga_live_runner.py", "fpga_rt_acceptance.py", "temp_guard.sh"]
@@ -76,7 +77,16 @@ def guarded(dep, run, cmd, logname, background=False):
 
 
 def wait_pid(pid, poll=30):
-    while ssh("kill -0 %s 2>/dev/null && echo alive || echo done" % pid, check=False).stdout.strip() == "alive":
+    """Return when the board reports the process gone. A failed SSH check (empty
+    answer) is retried, not taken as the end of the run."""
+    while True:
+        try:
+            state = ssh("kill -0 %s 2>/dev/null && echo alive || echo done" % pid, check=False,
+                        timeout=60).stdout.strip()
+        except subprocess.TimeoutExpired:
+            state = ""
+        if state == "done":
+            return
         time.sleep(poll)
 
 
@@ -103,13 +113,15 @@ def cmd_golden(args):
 
 def cmd_fulltest(args):
     dep = "%s/%s" % (DEPLOYMENTS, args.name)
-    if ssh("test -f %s && echo ok || echo missing" % BOARD_RAW_GZ).stdout.strip() == "missing":
-        ssh("mkdir -p %s" % str(Path(BOARD_RAW_GZ).parent).replace("\\", "/"))
-        scp([RAW_GZ], BOARD_RAW_GZ)
+    local_gz = Path(args.input) if args.input else RAW_GZ
+    board_gz = BOARD_RAW_GZ if args.input is None else "%s/%s" % (BOARD_NOISY_DIR, local_gz.name)
+    if ssh("test -f %s && echo ok || echo missing" % board_gz).stdout.strip() == "missing":
+        ssh("mkdir -p %s" % board_gz.rsplit("/", 1)[0])
+        scp([local_gz], board_gz)
     out, run = new_run("fulltest")
     n = args.n
     pid = guarded(dep, run, "FPGA_RUNNER_VOTE_K={k} python3.6 -u {run}/fpga_live_runner.py {dep}/overlay/design_1_wrapper.bit {gz} "
-                  "1024 8 {n} {run}/pred.txt".format(run=run, dep=dep, gz=BOARD_RAW_GZ, n=n, k=args.vote_k),
+                  "1024 8 {n} {run}/pred.txt".format(run=run, dep=dep, gz=board_gz, n=n, k=args.vote_k),
                   "fulltest", background=True)
     t0 = time.time()
     wait_pid(pid)
@@ -136,7 +148,7 @@ def cmd_fulltest(args):
               "latency_ms": {"mean": round(float(lat.mean()), 3), "p50": round(float(np.median(lat)), 3),
                              "p95": round(float(np.percentile(lat, 95)), 3), "max": round(float(lat.max()), 3)},
               "board_summary": summary[-1] if summary else None,
-              "wall_s_pc": round(time.time() - t0, 1), "deployment": dep, "input": BOARD_RAW_GZ,
+              "wall_s_pc": round(time.time() - t0, 1), "deployment": dep, "input": board_gz,
               "cmodel_reference": str(Path(args.cmodel))}
     votes = vote_rows(out / "fulltest.out")
     if votes:
@@ -201,6 +213,21 @@ def cmd_rt(args):
     print(json.dumps(json.loads((out / "out" / "summary.json").read_text()), indent=1))
 
 
+def cmd_rt_fetch(args):
+    """Wait for (or just collect) an rt run started earlier: --run is the board
+    run directory printed by `rt`."""
+    # name only (raw_core_rt_<tag>): Git Bash rewrites a /home/... argument into a Windows path
+    run = "/home/xilinx/" + args.run.replace("\\", "/").rstrip("/").split("/")[-1]
+    pid = ssh("pgrep -f '[f]pga_rt_acceptance.py.*%s' | head -1" % run, check=False).stdout.strip()
+    if pid:
+        wait_pid(pid, poll=60)
+    out = REPO / "artifacts" / "results" / Path(run).name.replace("raw_core_rt_", "raw_core_board_rt_")
+    out.mkdir(parents=True, exist_ok=True)
+    for f in ("out", "rt.out", "rt_guard.log"):
+        fetch("%s/%s" % (run, f), out)
+    print(json.dumps(json.loads((out / "out" / "summary.json").read_text()), indent=1))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -212,13 +239,19 @@ def main():
         if name == "fulltest":
             p.add_argument("--n", type=int, default=95404)
             p.add_argument("--vote-k", type=int, default=5)
+            p.add_argument("--input", default=None,
+                           help="local perturbed raw test set (tools/make_noisy_testset.py); "
+                                "default: the clean raw test set already on the board")
             p.add_argument("--cmodel", type=Path, default=CMODEL,
                            help="C-model logits of the deployed model (default) or of a variant")
         if name == "rt":
             p.add_argument("--n-total", type=int, default=30200,
                            help="windows incl. 200 warm-up (30,200 = the 2026-10-24 criterion run)")
+    f = sub.add_parser("rt-fetch")
+    f.add_argument("--run", required=True, help="board run directory name printed by rt (raw_core_rt_<tag>)")
     args = ap.parse_args()
-    {"deploy": cmd_deploy, "golden": cmd_golden, "fulltest": cmd_fulltest, "rt": cmd_rt}[args.cmd](args)
+    {"deploy": cmd_deploy, "golden": cmd_golden, "fulltest": cmd_fulltest, "rt": cmd_rt,
+     "rt-fetch": cmd_rt_fetch}[args.cmd](args)
 
 
 if __name__ == "__main__":
