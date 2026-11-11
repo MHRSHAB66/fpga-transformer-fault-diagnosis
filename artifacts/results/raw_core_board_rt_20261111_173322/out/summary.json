@@ -1,0 +1,33 @@
+{
+  "n_unique": 4096,
+  "n_total": 1400200,
+  "executed": 1400200,
+  "warmup": 200,
+  "aborted": null,
+  "sched": "SCHED_FIFO prio 50, cpu [1]",
+  "class_source": "fpga_register",
+  "preload_s": 13.435,
+  "preload_maxrss_kb": [
+    17412,
+    148556
+  ],
+  "period_ms": 20.48,
+  "acceptance_windows": 1400000,
+  "deadline_misses": 0,
+  "response_ms": {
+    "p50": 15.966,
+    "p95": 16.252,
+    "p99": 16.412,
+    "p99.9": 16.553
+  },
+  "response_ms_max": 19.25,
+  "warmup_misses": 0,
+  "involuntary_ctx_switches": 45,
+  "voluntary_ctx_switches": 1537874,
+  "major_faults": 0,
+  "temp_c": {
+    "start": 55.98355102522,
+    "max": 62.258630370904,
+    "end": 51.92320556624801
+  }
+}

@@ -223,8 +223,10 @@ INT10 export and bitstream would be a further paper study.
 
 1. Measured power/energy (board adapter 5 V / 3 A): inline DC power meter (idle, overlay loaded,
    sustained inference; energy per inference = ∫P dt / windows).
-2. Endurance: run 1 done (300,000 windows, 0 misses, all outputs = C-model);
-   run 2 of 1,400,000 windows (~8 h) started 2026-11-11 17:33, results pending
-   (`python -m tools.raw_core_board_test rt-fetch --run raw_core_rt_20261111_173322`).
+2. Endurance — done (MEASURED-PHYSICAL, vote overlay, RAM windows every 20.48 ms,
+   SCHED_FIFO 50 on CPU 1): run 1 300,000 windows (1 h 42 min) and run 2
+   **1,400,000 windows (7 h 58 min): 0 deadline misses**, response p50 15.97 /
+   p99.9 16.55 / max 19.25 ms, die 56.0 → max 62.3 °C; class and all 4 logits =
+   C-model on all 1,400,200 windows (`artifacts/results/raw_core_board_rt_20261111_173322/`).
 3. Optional model work for the paper: per-channel amplitude (log σ) as a side
    input for the normal class.

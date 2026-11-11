@@ -1,0 +1,11 @@
+{
+ "run": "endurance 2 (vote overlay seq256_vote_z7020_20261110), 1,400,200 RAM windows (~8 h)",
+ "windows": 1400200,
+ "class_equal_cmodel": 1400200,
+ "logits_equal_cmodel": 1400200,
+ "reference": "artifacts/results/onchip_preprocess_20261109/csim_raw_argmax/csim_logits.txt",
+ "response_ms_recomputed": {
+  "max": 19.25,
+  "over_20.48": 0
+ }
+}
