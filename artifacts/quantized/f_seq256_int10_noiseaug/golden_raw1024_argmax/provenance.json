@@ -1,0 +1,9 @@
+{
+ "inputs": "copied from hls/f1_int10_seq256/golden_raw1024_argmax/golden_in.txt",
+ "checkpoint": "artifacts\\results\\generalization_20261110\\random_noise\\best.pt",
+ "scales": "artifacts\\quantized\\f_seq256_int10_noiseaug\\integer_config.json",
+ "reference": "onchip_preprocess.preprocess_window -> aggregate_round_div -> IntegerTransformer.infer_int",
+ "vectors": 41,
+ "ties": 0,
+ "correct_vs_true_label": 32
+}

@@ -334,3 +334,5 @@ artifacts/results/fpga_rawinput_testset_*/fpga_testset_raw.*
 artifacts/results/raw_core_board_fulltest_*/fulltest.out
 # Root-level Vitis HLS project build dir for the raw-input + temporal vote variant.
 /seq256_rawvote1024/
+# Root-level Vitis HLS project build dir for the noise-augmented vote variant (paper study).
+/seq256_rawvote1024_na/

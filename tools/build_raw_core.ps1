@@ -7,7 +7,8 @@
 # Usage (from the repository root):
 #   powershell -File tools/build_raw_core.ps1               # raw-input core (default)
 #   powershell -File tools/build_raw_core.ps1 -Variant vote # raw-input core + temporal vote
-param([ValidateSet("raw", "vote")][string]$Variant = "raw")
+#   powershell -File tools/build_raw_core.ps1 -Variant votena # same, noise-augmented weights (paper study)
+param([ValidateSet("raw", "vote", "votena")][string]$Variant = "raw")
 $ErrorActionPreference = "Stop"
 $repo = Split-Path -Parent $PSScriptRoot
 $hls = "G:\Xilinx\Vitis_HLS\2020.2\bin\vitis_hls.bat"
@@ -17,6 +18,9 @@ $cfg = @{
               sysTcl = "run_seq256_dma_system_dsp_margin_raw_argmax.tcl"; sysProj = "vraw"; logs = "raw_core_build" }
     vote = @{ hlsTcl = "run_seq256_rawvote1024_verify_and_synth.tcl"; hlsProj = "seq256_rawvote1024";
               sysTcl = "run_seq256_dma_system_dsp_margin_vote.tcl"; sysProj = "vvote"; logs = "vote_core_build" }
+    # paper study: noise-augmented weights on the vote core (deployed model untouched)
+    votena = @{ hlsTcl = "run_seq256_rawvote1024_noiseaug_verify_and_synth.tcl"; hlsProj = "seq256_rawvote1024_na";
+                sysTcl = "run_seq256_dma_system_dsp_margin_vote_noiseaug.tcl"; sysProj = "vna"; logs = "vote_na_core_build" }
 }[$Variant]
 $logs = Join-Path $repo ("tmp\" + $cfg.logs)
 New-Item -ItemType Directory -Force $logs | Out-Null
