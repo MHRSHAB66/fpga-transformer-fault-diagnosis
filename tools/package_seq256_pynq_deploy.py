@@ -47,7 +47,7 @@ PKG = BUNDLE = HWH_SOURCE = None
 OVERLAY = DRIVER = CONFIG = GOLDEN = ALL_COPIES = None
 
 
-def _configure(pkg, bundle, golden=None) -> None:
+def _configure(pkg, bundle, golden=None, model_dir=None) -> None:
     """Set the source->dest copy spec for a given build package + bundle dir.
 
     Overlay binaries come from the (tracked, stable) build package `pkg`, NOT a
@@ -71,11 +71,18 @@ def _configure(pkg, bundle, golden=None) -> None:
         (REPO_ROOT / "pynq" / "run_demo.py",         "driver/run_demo.py"),
         (REPO_ROOT / "host" / "frame_protocol.py",   "driver/frame_protocol.py"),
     ]
-    CONFIG = [
-        (REPO_ROOT / "hls" / "f1_int10_seq256" / "model_manifest.json", "config/model_manifest.json"),
-        (REPO_ROOT / "artifacts" / "quantized" / "f_seq256_int10" / "integer_config.json",
-         "config/integer_config_scales.json"),
-    ]
+    # model_dir: an exported model variant holding model_manifest.json and
+    # integer_config.json (default: the deployed model's canonical files).
+    if model_dir is None:
+        CONFIG = [
+            (REPO_ROOT / "hls" / "f1_int10_seq256" / "model_manifest.json", "config/model_manifest.json"),
+            (REPO_ROOT / "artifacts" / "quantized" / "f_seq256_int10" / "integer_config.json",
+             "config/integer_config_scales.json"),
+        ]
+    else:
+        md = Path(model_dir).resolve()
+        CONFIG = [(md / "model_manifest.json", "config/model_manifest.json"),
+                  (md / "integer_config.json", "config/integer_config_scales.json")]
     golden_dir = (Path(golden).resolve() if golden is not None
                   else REPO_ROOT / "hls" / "f1_int10_seq256" / "golden_ingress1024")
     GOLDEN = [
@@ -313,7 +320,10 @@ if __name__ == "__main__":
                     help="golden vector dir copied into golden/ (default: "
                          "hls/f1_int10_seq256/golden_ingress1024); e.g. the raw-input set "
                          "hls/f1_int10_seq256/golden_raw1024_argmax")
+    ap.add_argument("--model-dir", default=None,
+                    help="exported model variant (model_manifest.json + integer_config.json); "
+                         "default: the deployed model")
     args = ap.parse_args()
-    if args.pkg is not None or args.bundle is not None or args.golden is not None:
-        _configure(args.pkg or DEFAULT_PKG, args.bundle or DEFAULT_BUNDLE, args.golden)
+    if any(v is not None for v in (args.pkg, args.bundle, args.golden, args.model_dir)):
+        _configure(args.pkg or DEFAULT_PKG, args.bundle or DEFAULT_BUNDLE, args.golden, args.model_dir)
     sys.exit(build(check_only=args.check))
