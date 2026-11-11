@@ -225,6 +225,19 @@
     "normal_recall": 100.0,
     "decision_window_ms": 1003.52
    }
+  },
+  "fpga_continuous_stream": {
+   "k": 5,
+   "windows": 95404,
+   "board_equal_python": 95404,
+   "system_accuracy": 0.9908389585342333,
+   "class_changes": 232,
+   "windows_until_correct_after_change": {
+    "median": 2.0,
+    "p95": 2.0,
+    "max": 4
+   },
+   "evidence": "artifacts\\results\\raw_core_board_fulltest_20261111_130927\\fulltest_check.json"
   }
  }
 }

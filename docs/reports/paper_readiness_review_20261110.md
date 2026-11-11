@@ -166,17 +166,22 @@ called normal), so −5 dB is outside the useful range of both models.
   +186 FF over the raw core, WNS +0.135 ns** (`artifacts/results/seq256_dma_vote_z7020_20261110/`,
   deployment `artifacts/deploy/seq256_vote_z7020_20261110/`). Lesson for the
   paper: HLS coding style decided a 70× difference in the cost of the same vote.
-- Expected on the board (C-model classes, k = 5, whole test as one stream):
-  system accuracy 99.08 %, median 2 windows (41 ms) until the vote is correct
-  after a change of the true class, max 4.
+- **Board validation (2026-11-11, MEASURED-PHYSICAL):** golden 41/41; full test
+  of 95,404 raw windows as one stream: logits and class register = C-model on
+  every window (accuracy 97.7705 %), `vote_class`/`vote_count` at k = 5 = Python
+  on all 95,404 windows, **system accuracy 99.084 %**, vote correct after median 2
+  (41 ms) / max 4 windows after each of the 232 true-class changes; hard real time
+  0 misses in 30,000 (max 16.66 ms); die max 55.6 °C
+  (`artifacts/results/raw_core_board_{golden_20261111_130854,fulltest_20261111_130927,rt_20261111_133749}/`).
+  The per-recording analysis (99.56 % at k = 5) excludes the first k−1 windows
+  of each file; the continuous-stream number includes the transitions.
 
 ## 7. Still needed (board available until ~2026-12-09)
 
-1. Board validation of the vote core (built and packaged 2026-11-11):
-   `python -m tools.raw_core_board_test deploy --bundle artifacts/deploy/seq256_vote_z7020_20261110`,
-   then `golden|fulltest|rt --name seq256_vote_z7020_20261110` (fulltest `--vote-k 5`).
-2. Measured power/energy: inline USB or DC power meter (idle, overlay loaded,
+1. Board run of the noise-augmented INT10 model on the vote core (second
+   bitstream, paper study; `tools/build_raw_core.ps1 -Variant votena`).
+2. Measured power/energy (board adapter 5 V / 3 A): inline DC power meter (idle, overlay loaded,
    sustained inference; energy per inference = ∫P dt / windows).
 3. An overnight endurance run of the raw-input core under the guard.
-4. Optional model work for the paper: board run of the noise-augmented INT10
-   model; per-channel amplitude (log σ) as a side input for the normal class.
+4. Optional model work for the paper: per-channel amplitude (log σ) as a side
+   input for the normal class.
