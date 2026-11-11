@@ -33,6 +33,7 @@ OUT_FIG = REPO / "docs" / "figures" / "paper"
 OUT_DATA = RES / "paper_figures_20261110"
 
 ROBUSTNESS = RES / "robustness_20261110" / "summary.json"
+ROBUSTNESS_NOISEAUG = RES / "robustness_noiseaug_int10_20261111" / "summary.json"
 GENERALIZATION = RES / "generalization_20261110"
 VOTE = RES / "paper_analysis_20261110" / "temporal_vote.json"
 
@@ -66,6 +67,10 @@ def fig_noise(data):
             series.append(("Float, retrained (control)", ne["random"], SERIES[1], "s"))
         if "random_noise" in ne:
             series.append(("Float, noise-augmented training", ne["random_noise"], SERIES[2], "D"))
+    if ROBUSTNESS_NOISEAUG.exists():
+        na = json.loads(ROBUSTNESS_NOISEAUG.read_text())
+        series.append(("Noise-augmented INT10 (C-model, not on board)",
+                       {c: na[c] for c in SNR_ORDER if c in na}, SERIES[3], "^"))
     fig, axes = plt.subplots(1, 2, figsize=(8.6, 3.5), sharex=True)
     for ax, (title, get) in zip(axes, (("Accuracy", lambda r: r["accuracy"]),
                                        ("Recall of the normal class", lambda r: r["recall_per_class"][0]))):

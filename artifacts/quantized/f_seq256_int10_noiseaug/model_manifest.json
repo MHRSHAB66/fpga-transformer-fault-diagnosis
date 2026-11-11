@@ -1,0 +1,29 @@
+{
+  "stage": "7_hls_export_seq256_int10",
+  "model": "F_1layer_seq256_pool4",
+  "input_scale": 0.028626115354773118,
+  "act_bits": 10,
+  "weight_bits": 10,
+  "attn_bits": 10,
+  "exp_frac": 15,
+  "rsqrt_frac": 15,
+  "seq_len": 256,
+  "in_channels": 8,
+  "d_model": 32,
+  "nhead": 4,
+  "num_layers": 1,
+  "dim_feedforward": 64,
+  "num_classes": 4,
+  "golden": {
+    "count": 16,
+    "correct": 15
+  },
+  "ingress1024_golden": {
+    "count": 16,
+    "correct": 15,
+    "prediction_changes_vs_float_mean": 0
+  },
+  "aggregation": "post-zscore non-overlapping mean, factor=4",
+  "source_window_len": 1024,
+  "note": "Independent SEQ=256 export; SEQ=1024 artifacts are untouched."
+}

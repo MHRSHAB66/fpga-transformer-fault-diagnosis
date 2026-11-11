@@ -113,8 +113,36 @@ evaluated on the exact raw-domain noisy test windows of the robustness sweep
 | −5 dB | 52.34 / 0.0 | 61.05 / 94.1 | 62.63 / 0.0 |
 
 Noise augmentation removes the collapse of the normal class down to 0 dB at a
-cost of 0.2 pp clean accuracy. The augmented model is float only; quantizing it
-(same INT10 flow) and putting it on the board is a candidate next step, not done.
+cost of 0.2 pp clean accuracy.
+
+**INT10 version (2026-11-11, C-model, not on the board).** The augmented
+checkpoint was exported with the deployed flow (`python -m
+src.quantize.export_hls_seq256_int10 --ckpt …/random_noise/best.pt --hls-dir
+artifacts/quantized/f_seq256_int10_noiseaug --config-dir …`; same 20 training
+calibration files). Its input scale equals the deployed one, so the on-FPGA
+preprocessing constants are unchanged and the model would run on the raw-input
+core with new weights only. The g++ C-model of the raw-input top with these
+weights equals the Python INT10 reference on 300 clean and 300 0-dB windows
+(logits and class register; `tools/check_variant_cmodel.py`). Full test, same
+perturbed windows (`artifacts/results/robustness_noiseaug_int10_20261111/`):
+
+| Condition | deployed INT10 acc / normal recall % | noise-augmented INT10 acc / normal recall % |
+|---|---|---|
+| clean | 97.77 / 87.2 | 97.40 / 96.6 |
+| 20 dB | 97.73 / 85.9 | 97.40 / 96.5 |
+| 10 dB | 96.77 / 69.2 | 97.19 / 95.7 |
+| 5 dB | 93.16 / 25.7 | 96.19 / 93.8 |
+| 0 dB | 82.78 / 0.25 | 90.13 / 88.8 |
+| −5 dB | 62.63 / 0.0 | 62.75 / 93.1 |
+| dead bearing-1 sensors (ch 1 / 2 / 3) | 80.4 / 76.5 / 77.9 | 82.0 / 79.0 / 73.4 |
+| dead bearing-2 sensors (ch 4 / 5 / 6) | 89.6 / 90.2 / 90.4 | 90.9 / 89.8 / 92.5 |
+| dead microphone / tach + mic | 84.2 / 78.1 | 86.8 / 80.3 |
+
+The augmented INT10 model gives up 0.37 pp clean accuracy (macro-F1 95.67 →
+94.92 %) for a much more stable normal class (96.6 % clean, 88.8 % at 0 dB) and
++7.4 pp accuracy at 0 dB. It does not fix dead sensors (not trained for).
+Deploying it would replace the approved model: the user's decision; the hardware
+change is a new `weights_int10.h` and a rebuild.
 At −5 dB its high normal recall comes with low accuracy (noisy fault windows are
 called normal), so −5 dB is outside the useful range of both models.
 
@@ -144,5 +172,5 @@ called normal), so −5 dB is outside the useful range of both models.
 2. Measured power/energy: inline USB or DC power meter (idle, overlay loaded,
    sustained inference; energy per inference = ∫P dt / windows).
 3. An overnight endurance run of the raw-input core under the guard.
-4. Optional model work for the paper: INT10 + board run of the noise-augmented
+4. Optional model work for the paper: board run of the noise-augmented INT10
    model; per-channel amplitude (log σ) as a side input for the normal class.
