@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-10T06:13:47.965673+00:00",
+  "generated_utc": "2026-11-11T09:24:43.943066+00:00",
   "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, multi-MB run dumps, board boot binaries) are gitignored and recorded here only (committed_in_git=false); copies live on disk, in the off-repo backup and on the board.",
   "repo_relative": true,
   "artifacts": [
@@ -510,8 +510,8 @@
     {
       "path": "artifacts/results/final_figures_20261109/figure_data.json",
       "present": true,
-      "size_bytes": 6280,
-      "sha256": "84a275b6a626ee74c867c07cb28f4174bf0536ab05c9e11ec219790a8c975e4c",
+      "size_bytes": 6623,
+      "sha256": "c04ed927465cbcb7b15df6f57b0562bb724f771deb34d383885769e1544d0d97",
       "committed_in_git": true
     },
     {
@@ -611,6 +611,48 @@
       "size_bytes": 3371,
       "sha256": "408833591b86b8c87ed7d08a2f5104b5c7c7fce3ff42312a4e17548d6d9659a9",
       "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/seq256_dma_vote_z7020_20261110/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "d721ebf8780e0dc8f929bba74da2d50ca8fb73292a82f8bf90e3bec7f60cfa22",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/seq256_dma_vote_z7020_20261110/bitstream/design_1.hwh",
+      "present": true,
+      "size_bytes": 347389,
+      "sha256": "a7b16cc5af69d6a407c4c0ed9424b46717c96f90360e0984af340f24f268eec8",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/seq256_dma_vote_z7020_20261110/bitstream/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1486626,
+      "sha256": "014af286a0e2f85b2934e25e4b8870d1af14c9a24d2fbc58cb749b7ede461230",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/seq256_vote_z7020_20261110/overlay/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "d721ebf8780e0dc8f929bba74da2d50ca8fb73292a82f8bf90e3bec7f60cfa22",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/seq256_vote_z7020_20261110/overlay/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1486626,
+      "sha256": "014af286a0e2f85b2934e25e4b8870d1af14c9a24d2fbc58cb749b7ede461230",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/seq256_vote_z7020_20261110/MANIFEST.sha256",
+      "present": true,
+      "size_bytes": 1119,
+      "sha256": "b1f2de45a0beb27e2dd0878e8e26f3e75fae8b9ab0a89f269da3844ba8537112",
+      "committed_in_git": false
     }
   ]
 }

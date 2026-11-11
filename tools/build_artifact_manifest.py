@@ -127,6 +127,13 @@ TARGETS = [
     # UART result path and CPU baseline (2026-11-09)
     "artifacts/results/uart_results_20261109_205416/uart_result_check.json",
     "artifacts/results/cpu_baseline_20261109/summary.json",
+    # raw-input core + temporal vote in FPGA logic (2026-11-11 build)
+    "artifacts/results/seq256_dma_vote_z7020_20261110/bitstream/design_1_wrapper.bit",
+    "artifacts/results/seq256_dma_vote_z7020_20261110/bitstream/design_1.hwh",
+    "artifacts/results/seq256_dma_vote_z7020_20261110/bitstream/seq256_dma_system.xsa",
+    "artifacts/deploy/seq256_vote_z7020_20261110/overlay/design_1_wrapper.bit",
+    "artifacts/deploy/seq256_vote_z7020_20261110/overlay/seq256_dma_system.xsa",
+    "artifacts/deploy/seq256_vote_z7020_20261110/MANIFEST.sha256",
 ]
 
 
