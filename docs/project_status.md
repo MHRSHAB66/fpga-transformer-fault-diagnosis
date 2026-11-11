@@ -2,7 +2,7 @@
 
 **Project:** Real-Time Machinery Condition Monitoring Using a Transformer Neural Network on FPGA  
 **Student:** Mehrdad Sheikh Abbasi, B.Sc., Amirkabir University of Technology  
-**Last updated:** 2026-11-09 evening (UART path, preprocessing in the FPGA, CPU baseline, SD image; earlier the same day the final review: all 2026-10-22..24 work committed, off-repo backup, ROC/AUC + final figures, artifact manifest; remaining board work planned). Reports: `docs/reports/consolidated_results_20261022.md` (canonical numbers, §8 ROC/AUC), `docs/reports/hard_rt_calibration_power_20261024.md`, `docs/reports/gui_demo_timing_20261023.md`. Figures: `docs/figures/final/`. Demo runbook: `docs/demo_runbook.md`.
+**Last updated:** 2026-11-11 (paper study; temporal vote in FPGA logic validated on the board). Earlier: 2026-11-09 evening (UART path, preprocessing in the FPGA, CPU baseline, SD image; earlier the same day the final review: all 2026-10-22..24 work committed, off-repo backup, ROC/AUC + final figures, artifact manifest; remaining board work planned). Reports: `docs/reports/consolidated_results_20261022.md` (canonical numbers, §8 ROC/AUC), `docs/reports/hard_rt_calibration_power_20261024.md`, `docs/reports/gui_demo_timing_20261023.md`. Figures: `docs/figures/final/`. Demo runbook: `docs/demo_runbook.md`.
 
 ---
 
@@ -205,8 +205,28 @@ deployed-system numbers by the runbook.
 - Board Ethernet pinned to 100 Mb/s (link flapped at 1 Gb/s); original setting in
   `/root/ethtool_eth0_before_20261109.txt` on the board.
 
-**Remaining with the board (until ≈ 2026-12-09):** UI refresh (Mehrdad will
-describe it), then a recorded demo video; power/energy only if a meter is found.
+**Done 2026-11-10/11 (paper study, `docs/reports/paper_readiness_review_20261110.md`):**
+- Literature search and evaluation review: the project split tests new recordings
+  and speeds of known conditions, not unseen severities. File-level bootstrap CIs
+  (accuracy 97.77 % [97.29, 98.26]); noise and dead-sensor sweeps of the deployed
+  model on the bit-exact C-model; Vivado power ESTIMATE; latency breakdown.
+- Stricter splits, same architecture and recipe retrained (float): unseen speed band
+  97.9 %, unseen middle severity 95.7 %, unseen highest severity 74.1 %.
+- Noise-augmented training; its INT10 export (C-model = Python reference): clean
+  97.40 % (normal recall 96.6 %), 0 dB 90.1 % vs 82.8 % for the deployed model.
+  A second bitstream with these weights is a paper study; the deployed model is
+  unchanged.
+- Temporal majority vote in FPGA logic (AXI-Lite `vote_k`/`vote_class`/`vote_count`):
+  +241 LUT / +186 FF, timing met (WNS +0.135 ns). On the board (deployment
+  `seq256_vote_z7020_20261110`): golden 41/41, full test logits = C-model on all
+  95,404 windows (97.7705 %), votes = Python on all windows, system accuracy
+  99.084 % at k = 5, hard real time 0 misses in 30,000 (max 16.66 ms).
+  New figures in `docs/figures/paper/` (`python -m tools.plot_paper_figures`).
+
+**Remaining with the board (until ≈ 2026-12-09):** board run of the noise-augmented
+second bitstream; daytime endurance runs; UI refresh (Mehrdad will describe it),
+then a recorded demo video; power/energy if an inline DC meter is found (the board
+runs from a 5 V / 3 A adapter).
 
 **Still pending / future work:**
 - Legacy live demo path (gzip from SD, SSH, GUI) remains AVERAGE-THROUGHPUT VERIFIED,
@@ -215,13 +235,13 @@ describe it), then a recorded demo video; power/energy only if a meter is found.
 - Power/energy measurement once an inline meter or logging supply is available.
 - Optional: longer `ram_realtime_demo` run (100,000 windows); unexplained post-boot
   warm-up (≈59 °C) seen only after the RT boot.
-- On-board preprocessing; optional live sensor input path (Stage 9).
+- Optional live sensor input path (Stage 9; on-board preprocessing done 2026-11-09).
 
-Report the provisional post-route resource/timing numbers ONLY with the
-provisional-part caveat. Do not claim physical-board resource usage, on-board
-latency, or a live sensor/UART demo until those are produced. The int10 accuracy,
-bit-exact functional equivalence, and provisional post-route closure ARE
-established and may be reported.
+Claims: physical-board results (bit-exactness, latency, hard real time at the
+board boundary, UART delivery) are established on the MYIR Z-Turn XC7Z020. Not
+established: a live sensor input, end-to-end hard real time through the PC GUI,
+measured power/energy (only a Vivado estimate), generalization to unseen severities
+beyond the training range.
 
 ---
 
