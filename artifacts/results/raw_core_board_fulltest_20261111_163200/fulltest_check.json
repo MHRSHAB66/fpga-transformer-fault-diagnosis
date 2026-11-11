@@ -1,0 +1,31 @@
+{
+ "windows_received": 95404,
+ "requested": 95404,
+ "logits_equal_cmodel": 95404,
+ "class_equal_cmodel_register": 95404,
+ "accuracy": 0.9013039285564547,
+ "correct": 85988,
+ "latency_ms": {
+  "mean": 17.754,
+  "p50": 15.885,
+  "p95": 16.193,
+  "max": 1649.73
+ },
+ "board_summary": "SUMMARY executed=95404 aborted=None wall_s=1784.801 throughput=53.454 temp_start=56.845 temp_max=57.460 temp_end=54.630 prefetch=0 prefetch_kind=none underruns=0 qmin=None pace_hz=0 late_release=0 readahead_mb=0",
+ "wall_s_pc": 1812.4,
+ "deployment": "/home/xilinx/deployments/seq256_vote_noiseaug_z7020_20261111",
+ "input": "/home/xilinx/raw_testset_perturbed_20261111/fpga_testset_raw_snr0.i32.gz",
+ "cmodel_reference": "artifacts\\results\\noisy_testsets_20261111\\csim_snr0_noiseaug\\csim_logits.txt",
+ "temporal_vote": {
+  "k": 5,
+  "windows": 95404,
+  "board_equal_python": 95404,
+  "system_accuracy": 0.9383464005702067,
+  "class_changes": 232,
+  "windows_until_correct_after_change": {
+   "median": 2.0,
+   "p95": 3.4499999999999886,
+   "max": 29
+  }
+ }
+}

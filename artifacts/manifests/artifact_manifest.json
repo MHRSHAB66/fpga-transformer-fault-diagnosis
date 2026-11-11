@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-11T12:28:00.634556+00:00",
+  "generated_utc": "2026-11-11T14:04:09.953656+00:00",
   "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, multi-MB run dumps, board boot binaries) are gitignored and recorded here only (committed_in_git=false); copies live on disk, in the off-repo backup and on the board.",
   "repo_relative": true,
   "artifacts": [
@@ -715,6 +715,27 @@
       "present": true,
       "size_bytes": 13510262,
       "sha256": "d3f82a39932f517c4dba64fa86cc33db9d8ffe8d8e15289acf98ba6946e1528d",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_fulltest_20261111_155757/fulltest.out",
+      "present": true,
+      "size_bytes": 7534898,
+      "sha256": "b2502b2a33a8549addb0fb9d68f0b244ecaf779b4bc3d95d8e098bdd680022dd",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_fulltest_20261111_163200/fulltest.out",
+      "present": true,
+      "size_bytes": 7421647,
+      "sha256": "498c5dfb29e1743151548ef8798917b46cce2af4462ee22eedc3df33698ee8c3",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_fulltest_20261111_170226/fulltest.out",
+      "present": true,
+      "size_bytes": 7421099,
+      "sha256": "e4140a9338f4786538e5ad72554db186be1db682d051087af754aa430f7ad15e",
       "committed_in_git": false
     }
   ]

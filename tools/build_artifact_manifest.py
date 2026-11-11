@@ -144,6 +144,10 @@ TARGETS = [
     "artifacts/deploy/seq256_vote_noiseaug_z7020_20261111/MANIFEST.sha256",
     "artifacts/results/noisy_testsets_20261111/fpga_testset_raw_snr0.i32.gz",
     "artifacts/results/raw_core_board_rt_20261111_141343/out/rt_raw.npz",
+    # board runs of the noise-augmented second bitstream and of both models at 0 dB
+    "artifacts/results/raw_core_board_fulltest_20261111_155757/fulltest.out",
+    "artifacts/results/raw_core_board_fulltest_20261111_163200/fulltest.out",
+    "artifacts/results/raw_core_board_fulltest_20261111_170226/fulltest.out",
 ]
 
 
