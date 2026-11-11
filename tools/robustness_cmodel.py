@@ -100,6 +100,8 @@ def main():
     ap.add_argument("--n", type=int, default=95404)
     ap.add_argument("--shards", type=int, default=10)
     ap.add_argument("--out", type=Path, required=True)
+    ap.add_argument("--model-note", default="raw-input HLS top, g++ C-model (bit-exact with the board)",
+                    help="recorded in summary.json _meta (describe a non-deployed variant here)")
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
     labels = np.loadtxt(LABELS, dtype=np.int64)
@@ -127,7 +129,7 @@ def main():
         np.savetxt(args.out / ("pred_%s.txt" % cond), rows[:, [0, 5]], fmt="%d")
         summary_path.write_text(json.dumps(summary, indent=1))
         print(cond, json.dumps(result), flush=True)
-    summary["_meta"] = {"model": "raw-input HLS top, g++ C-model (bit-exact with the board)",
+    summary["_meta"] = {"model": args.model_note,
                         "exe": str(args.exe), "channels": CHANNELS,
                         "noise": "AWGN per window/channel, SNR vs AC power, seed [20261110, window]"}
     summary_path.write_text(json.dumps(summary, indent=1))

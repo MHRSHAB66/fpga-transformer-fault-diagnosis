@@ -22,6 +22,7 @@ Run
 """
 from __future__ import annotations
 
+import argparse
 import json
 import math
 from pathlib import Path
@@ -115,6 +116,19 @@ def _build_calibration_subset(num_files: int, seed: int):
 
 
 def main():
+    # Defaults export the deployed model into hls/f1_int10_seq256/. --ckpt with
+    # --hls-dir/--config-dir exports another checkpoint of the same architecture
+    # (e.g. a paper-study model) elsewhere and leaves the deployed export untouched.
+    global CKPT_PATH, HLS_DIR, DATA_DIR, GOLDEN_DIR, INGRESS_GOLDEN_DIR, CONFIG_DIR
+    ap = argparse.ArgumentParser(description="SEQ=256 INT10 HLS export")
+    ap.add_argument("--ckpt", type=Path, default=CKPT_PATH)
+    ap.add_argument("--hls-dir", type=Path, default=HLS_DIR)
+    ap.add_argument("--config-dir", type=Path, default=CONFIG_DIR)
+    args = ap.parse_args()
+    CKPT_PATH, HLS_DIR, CONFIG_DIR = args.ckpt, args.hls_dir, args.config_dir
+    DATA_DIR, GOLDEN_DIR = HLS_DIR / "data", HLS_DIR / "golden"
+    INGRESS_GOLDEN_DIR = HLS_DIR / "golden_ingress1024"
+
     ckpt = torch.load(CKPT_PATH, map_location="cpu")
     state_np = {k: v.cpu().numpy() for k, v in ckpt["model_state_dict"].items()}
 

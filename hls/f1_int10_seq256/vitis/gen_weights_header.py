@@ -108,9 +108,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--frac-bits", type=int, default=SCALE_FRAC_BITS)
     parser.add_argument("--output", type=Path, default=OUT)
+    parser.add_argument("--data", type=Path, default=DATA,
+                        help="exported data/ directory (default: the deployed model's)")
     args = parser.parse_args()
     if not 1 <= args.frac_bits <= 40:
         parser.error("--frac-bits must be between 1 and 40")
     SCALE_FRAC_BITS = args.frac_bits
     OUT = args.output
+    DATA = args.data
     main()
