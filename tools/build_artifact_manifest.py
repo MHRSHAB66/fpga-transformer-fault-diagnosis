@@ -143,6 +143,7 @@ TARGETS = [
     "artifacts/deploy/seq256_vote_noiseaug_z7020_20261111/overlay/design_1_wrapper.bit",
     "artifacts/deploy/seq256_vote_noiseaug_z7020_20261111/MANIFEST.sha256",
     "artifacts/results/noisy_testsets_20261111/fpga_testset_raw_snr0.i32.gz",
+    "artifacts/results/raw_core_board_rt_20261111_141343/out/rt_raw.npz",
 ]
 
 
