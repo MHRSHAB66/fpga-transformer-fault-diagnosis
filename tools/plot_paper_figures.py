@@ -38,6 +38,14 @@ GENERALIZATION = RES / "generalization_20261110"
 VOTE = RES / "paper_analysis_20261110" / "temporal_vote.json"
 
 SNR_ORDER = ["clean", "snr30", "snr20", "snr10", "snr5", "snr0", "snr-5"]
+NOISEAUG_LABEL = "Noise-augmented INT10 (second bitstream)"
+# board full tests of both bitstreams (fulltest_check.json) per noise condition
+BOARD_NOISE_RUNS = {
+    "Deployed INT10 (= board)": {"clean": "raw_core_board_fulltest_20261111_130927",
+                                 "snr0": "raw_core_board_fulltest_20261111_170226"},
+    NOISEAUG_LABEL: {"clean": "raw_core_board_fulltest_20261111_155757",
+                     "snr0": "raw_core_board_fulltest_20261111_163200"},
+}
 CHANNELS = ["tachometer", "bearing 1 axial", "bearing 1 radial", "bearing 1 tangential",
             "bearing 2 axial", "bearing 2 radial", "bearing 2 tangential", "microphone"]
 SPLITS = [("random", "Project split\n(control)"), ("speed_mid", "Unseen speed\nband 37-47 Hz"),
@@ -69,8 +77,7 @@ def fig_noise(data):
             series.append(("Float, noise-augmented training", ne["random_noise"], SERIES[2], "D"))
     if ROBUSTNESS_NOISEAUG.exists():
         na = json.loads(ROBUSTNESS_NOISEAUG.read_text())
-        series.append(("Noise-augmented INT10 (C-model, not on board)",
-                       {c: na[c] for c in SNR_ORDER if c in na}, SERIES[3], "^"))
+        series.append((NOISEAUG_LABEL, {c: na[c] for c in SNR_ORDER if c in na}, SERIES[3], "^"))
     fig, axes = plt.subplots(1, 2, figsize=(8.6, 3.5), sharex=True)
     for ax, (title, get) in zip(axes, (("Accuracy", lambda r: r["accuracy"]),
                                        ("Recall of the normal class", lambda r: r["recall_per_class"][0]))):
@@ -78,6 +85,19 @@ def fig_noise(data):
             xs = [i for i, c in enumerate(SNR_ORDER) if c in rows]
             ys = [100 * get(rows[c]) for c in SNR_ORDER if c in rows]
             ax.plot(xs, ys, color=color, marker=marker, markersize=4.5, label=label)
+        # Points also measured on the physical board (bit-exact with the C-model:
+        # the board accuracy must equal the plotted value).
+        bx, by = [], []
+        for label, rows, _, _ in series:
+            for cond, run in BOARD_NOISE_RUNS.get(label, {}).items():
+                chk = RES / run / "fulltest_check.json"
+                if cond in rows and chk.exists():
+                    assert abs(json.loads(chk.read_text())["accuracy"] - rows[cond]["accuracy"]) < 1e-5, run
+                    bx.append(SNR_ORDER.index(cond))
+                    by.append(100 * get(rows[cond]))
+        if bx:
+            ax.plot(bx, by, linestyle="none", marker="s", markersize=9, markerfacecolor="none",
+                    markeredgecolor=INK, markeredgewidth=1.2, label="Measured on the board")
         ax.set_xticks(range(len(SNR_ORDER)), [snr_label(c) for c in SNR_ORDER])
         ax.set_ylim(0, 102)
         ax.set_title(title)

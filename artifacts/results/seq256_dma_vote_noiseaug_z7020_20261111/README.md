@@ -17,3 +17,7 @@ Deployment bundle: `artifacts/deploy/seq256_vote_noiseaug_z7020_20261111/`
 (golden `artifacts/quantized/f_seq256_int10_noiseaug/golden_raw1024_argmax`,
 config from the variant export). Board reference logits:
 `artifacts/results/noiseaug_int10_20261111/csim_raw_argmax/csim_logits.txt`.
+
+Board validation (2026-11-11, MYIR Z-Turn): golden 41/41; clean full test 97.4016 %,
+0 dB full test 90.1304 %; both bit-exact with the variant C-model on all 95,404
+windows, votes = Python (`../raw_core_board_{golden_20261111_155737,fulltest_20261111_155757,fulltest_20261111_163200}/`).

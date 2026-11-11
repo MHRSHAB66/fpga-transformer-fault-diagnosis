@@ -115,7 +115,7 @@ evaluated on the exact raw-domain noisy test windows of the robustness sweep
 Noise augmentation removes the collapse of the normal class down to 0 dB at a
 cost of 0.2 pp clean accuracy.
 
-**INT10 version (2026-11-11, C-model, not on the board).** The augmented
+**INT10 version (2026-11-11; second bitstream on the board, see below).** The augmented
 checkpoint was exported with the deployed flow (`python -m
 src.quantize.export_hls_seq256_int10 --ckpt …/random_noise/best.pt --hls-dir
 artifacts/quantized/f_seq256_int10_noiseaug --config-dir …`; same 20 training
@@ -141,8 +141,24 @@ perturbed windows (`artifacts/results/robustness_noiseaug_int10_20261111/`):
 The augmented INT10 model gives up 0.37 pp clean accuracy (macro-F1 95.67 →
 94.92 %) for a much more stable normal class (96.6 % clean, 88.8 % at 0 dB) and
 +7.4 pp accuracy at 0 dB. It does not fix dead sensors (not trained for).
-Deploying it would replace the approved model: the user's decision; the hardware
-change is a new `weights_int10.h` and a rebuild.
+
+**On the board (2026-11-11, MEASURED-PHYSICAL).** Second bitstream = the same
+raw-input + vote core with these weights (`build_raw_core.ps1 -Variant votena`;
+WNS +0.035 ns, 36,788 LUT; deployment `seq256_vote_noiseaug_z7020_20261111`;
+the approved model stays the deployed one). Both bitstreams also ran a 0 dB copy
+of the raw test input (`tools/make_noisy_testset.py`, the sweep's exact noise):
+
+| Board run (95,404 windows) | per-window accuracy | system accuracy, FPGA vote k = 5 | bit-exact vs C-model |
+|---|---|---|---|
+| deployed model, clean | 97.7705 % | 99.084 % | 95,404 / 95,404 |
+| noise-augmented, clean | 97.4016 % | 98.767 % | 95,404 / 95,404 |
+| deployed model, 0 dB | 82.7827 % | 83.941 % | 95,404 / 95,404 |
+| noise-augmented, 0 dB | **90.1304 %** | **93.835 %** | 95,404 / 95,404 |
+
+Evidence: `artifacts/results/raw_core_board_fulltest_20261111_{130927,155757,170226,163200}/`.
+At 0 dB the vote cannot rescue the deployed model (its normal class is lost, so
+some recordings are never classified correctly), while it adds +3.7 pp to the
+noise-augmented model.
 At −5 dB its high normal recall comes with low accuracy (noisy fault windows are
 called normal), so −5 dB is outside the useful range of both models.
 
@@ -178,10 +194,10 @@ called normal), so −5 dB is outside the useful range of both models.
 
 ## 7. Still needed (board available until ~2026-12-09)
 
-1. Board run of the noise-augmented INT10 model on the vote core (second
-   bitstream, paper study; `tools/build_raw_core.ps1 -Variant votena`).
-2. Measured power/energy (board adapter 5 V / 3 A): inline DC power meter (idle, overlay loaded,
+1. Measured power/energy (board adapter 5 V / 3 A): inline DC power meter (idle, overlay loaded,
    sustained inference; energy per inference = ∫P dt / windows).
-3. An overnight endurance run of the raw-input core under the guard.
-4. Optional model work for the paper: per-channel amplitude (log σ) as a side
+2. Endurance: run 1 done (300,000 windows, 0 misses, all outputs = C-model);
+   run 2 of 1,400,000 windows (~8 h) started 2026-11-11 17:33, results pending
+   (`python -m tools.raw_core_board_test rt-fetch --run raw_core_rt_20261111_173322`).
+3. Optional model work for the paper: per-channel amplitude (log σ) as a side
    input for the normal class.

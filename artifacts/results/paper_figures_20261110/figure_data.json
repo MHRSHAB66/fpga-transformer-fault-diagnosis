@@ -83,7 +83,7 @@
     "normal_recall": 0.9414
    }
   },
-  "Noise-augmented INT10 (C-model, not on board)": {
+  "Noise-augmented INT10 (second bitstream)": {
    "clean": {
     "accuracy": 0.974016,
     "normal_recall": 0.9656
@@ -230,14 +230,14 @@
    "k": 5,
    "windows": 95404,
    "board_equal_python": 95404,
-   "system_accuracy": 0.9908389585342333,
+   "system_accuracy": 0.8394092490880886,
    "class_changes": 232,
    "windows_until_correct_after_change": {
     "median": 2.0,
-    "p95": 2.0,
-    "max": 4
+    "p95": 244.0,
+    "max": 244
    },
-   "evidence": "artifacts\\results\\raw_core_board_fulltest_20261111_130927\\fulltest_check.json"
+   "evidence": "artifacts\\results\\raw_core_board_fulltest_20261111_170226\\fulltest_check.json"
   }
  }
 }
