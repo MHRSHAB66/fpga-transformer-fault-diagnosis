@@ -148,6 +148,8 @@ TARGETS = [
     "artifacts/results/raw_core_board_fulltest_20261111_155757/fulltest.out",
     "artifacts/results/raw_core_board_fulltest_20261111_163200/fulltest.out",
     "artifacts/results/raw_core_board_fulltest_20261111_170226/fulltest.out",
+    # 10-class study (Kaggle): per-window test predictions and logits
+    "artifacts/results/tenclass_kaggle_20261111/seq256_10class/test_predictions.npz",
 ]
 
 

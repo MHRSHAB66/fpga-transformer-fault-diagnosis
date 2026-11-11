@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-11T14:04:09.953656+00:00",
+  "generated_utc": "2026-11-11T20:22:14.870019+00:00",
   "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, multi-MB run dumps, board boot binaries) are gitignored and recorded here only (committed_in_git=false); copies live on disk, in the off-repo backup and on the board.",
   "repo_relative": true,
   "artifacts": [
@@ -736,6 +736,13 @@
       "present": true,
       "size_bytes": 7421099,
       "sha256": "e4140a9338f4786538e5ad72554db186be1db682d051087af754aa430f7ad15e",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/tenclass_kaggle_20261111/seq256_10class/test_predictions.npz",
+      "present": true,
+      "size_bytes": 1723404,
+      "sha256": "05f7eb9ac97fd91f1730f1b544effec0c0e45841b447d76b03eca4de63d03a78",
       "committed_in_git": false
     }
   ]
