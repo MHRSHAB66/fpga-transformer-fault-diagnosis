@@ -1,0 +1,19 @@
+{
+  "id": "mehrdadsheikhabbasi/fpga-fault-seq256-10class",
+  "title": "FPGA Fault SEQ256 10class",
+  "code_file": "fpga-fault-seq256-10class.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": true,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": false,
+  "machine_shape": "NvidiaTeslaT4",
+  "dataset_sources": [
+    "mehrdadsheikhabbasi/fpga-fault-src",
+    "vuxuancu/mafaulda-full"
+  ],
+  "competition_sources": [],
+  "kernel_sources": [],
+  "model_sources": []
+}

@@ -26,12 +26,53 @@ import torch
 
 from src.config import (
     PROJECT_ROOT, DATA_RAW_DIR, NUM_CLASSES, LABEL_MAP, RANDOM_SEED,
-    NORMALIZATION_SCOPE, NORMALIZATION_METHOD,
 )
 from src.data.load_data import build_file_index
 from src.data.make_dataloaders import split_file_index, build_X_y_from_file_index
-from src.quantize.evaluate_quantized import DEFAULT_CHECKPOINT, load_model, build_test_subset
+from src.models.transformer_baseline import TransformerBaseline
 from src.quantize.integer_model import IntegerTransformer, CalibStats
+
+DEFAULT_CHECKPOINT = (
+    PROJECT_ROOT
+    / "artifacts"
+    / "runs"
+    / "20260615_223905_fpga_fault_final_t4"
+    / "checkpoints"
+    / "transformer_best.pt"
+)
+
+
+def load_model(checkpoint_path: Path, device):
+    ckpt = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+    if "model_config" not in ckpt:
+        raise ValueError("Checkpoint has no embedded model_config.")
+    cfg = ckpt["model_config"]
+    model = TransformerBaseline(
+        input_dim=cfg["input_dim"], seq_len=cfg["seq_len"],
+        num_classes=cfg["num_classes"], d_model=cfg["d_model"],
+        nhead=cfg["nhead"], num_layers=cfg["num_layers"],
+        dim_feedforward=cfg["dim_feedforward"], dropout=cfg["dropout"],
+    )
+    model.load_state_dict(ckpt["model_state_dict"])
+    model.to(device).eval()
+    float_state = {k: v.detach().clone() for k, v in model.state_dict().items()}
+    return model, float_state, cfg
+
+
+def build_test_subset(num_files, seed):
+    index_df = build_file_index(DATA_RAW_DIR)
+    index_df = index_df[index_df["label"].isin(LABEL_MAP.keys())].copy()
+    _, _, test_index_df = split_file_index(index_df)
+    total_test_files = len(test_index_df)
+    if num_files is not None and num_files < total_test_files:
+        test_index_df = test_index_df.sample(n=num_files, random_state=seed).reset_index(drop=True)
+    X, y, kept, dropped, _ = build_X_y_from_file_index(test_index_df)
+    return X, y, {
+        "total_test_files": int(total_test_files),
+        "test_files_used": int(kept),
+        "test_files_dropped": int(dropped),
+        "windows": int(len(y)),
+    }
 
 OUTPUT_DIR = PROJECT_ROOT / "artifacts" / "quantized"
 CONFIG_PATH = OUTPUT_DIR / "integer_config.json"
@@ -46,11 +87,7 @@ def build_train_subset(num_files, seed):
     train_index_df, _, _ = split_file_index(index_df)
     if num_files is not None and num_files < len(train_index_df):
         train_index_df = train_index_df.sample(n=num_files, random_state=seed).reset_index(drop=True)
-    X, y, kept, _, _ = build_X_y_from_file_index(
-        train_index_df,
-        normalization_scope=NORMALIZATION_SCOPE,
-        normalization_method=NORMALIZATION_METHOD,
-    )
+    X, y, kept, _, _ = build_X_y_from_file_index(train_index_df)
     return X, y, int(kept)
 
 

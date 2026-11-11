@@ -4,7 +4,7 @@ and loading individual CSV files as pandas DataFrames.
 
 This module is responsible for:
 1. Finding all CSV files under a given dataset directory.
-2. Inferring a coarse fault label from each file path.
+2. Inferring a grouped fault label from the top-level dataset directory.
 3. Building a file index as a pandas DataFrame with:
    - filepath: path relative to PROJECT_ROOT
    - label: inferred class label
@@ -26,7 +26,7 @@ import pandas as pd
 from src.config import DATA_RAW_DIR, PROJECT_ROOT
 
 
-def to_project_relative(path_like: Union[str, Path]) -> Path:
+def project_relative_or_absolute(path_like: Union[str, Path]) -> Path:
     """
     Convert an absolute or relative path to a path relative to PROJECT_ROOT
     when possible.
@@ -34,7 +34,7 @@ def to_project_relative(path_like: Union[str, Path]) -> Path:
     Parameters
     ----------
     path_like : str or Path
-        Input path.
+        Input path. Relative paths are resolved from the current working directory.
 
     Returns
     -------
@@ -56,30 +56,41 @@ def list_csv_files(directory: Path) -> List[Path]:
     Parameters
     ----------
     directory : Path
-        Root directory to search.
+        Root directory to search. Relative paths use the current working directory.
 
     Returns
     -------
     list[Path]
         Sorted list of CSV file paths. Returns an empty list if the directory
         does not exist.
+
+    Raises
+    ------
+    NotADirectoryError
+        If the search path exists but is not a directory.
     """
     directory = Path(directory).resolve()
 
     if not directory.exists():
-        print(f"[WARN] Directory does not exist: {to_project_relative(directory)}")
+        print(f"[WARN] Directory does not exist: {project_relative_or_absolute(directory)}")
         return []
 
-    files = sorted(directory.rglob("*.csv"))
-    print(f"[INFO] Found {len(files)} CSV files in {to_project_relative(directory)}")
+    if not directory.is_dir():
+        raise NotADirectoryError(f"CSV search path is not a directory: {directory}")
+
+    files = sorted(path for path in directory.rglob("*.csv") if path.is_file())
+    print(
+        f"[INFO] Found {len(files)} CSV files in "
+        f"{project_relative_or_absolute(directory)}"
+    )
     return files
 
 
 def infer_label_from_path(file_path: Union[str, Path]) -> str:
     """
-    Infer the coarse class label from a file path.
+    Infer the grouped class label from the dataset's top-level class directory.
 
-    The mapping is based on directory/file naming conventions in MAFAULDA:
+    Match the exact directory name directly below DATA_RAW_DIR (case-insensitive):
     - horizontal-misalignment / vertical-misalignment -> misalignment
     - overhang / underhang -> bearing_fault
     - imbalance -> imbalance
@@ -88,7 +99,7 @@ def infer_label_from_path(file_path: Union[str, Path]) -> str:
     Parameters
     ----------
     file_path : str or Path
-        Path to a CSV file.
+        Absolute CSV path or a path relative to PROJECT_ROOT, as stored in the index.
 
     Returns
     -------
@@ -99,19 +110,36 @@ def infer_label_from_path(file_path: Union[str, Path]) -> str:
         - "misalignment"
         - "bearing_fault"
         - "unknown" if no rule matches
+
+    Notes
+    -----
+    File names, deeper subdirectories, and partial matches such as "abnormal"
+    do not determine the label. A file directly in DATA_RAW_DIR has no class
+    directory and returns "unknown". Paths outside DATA_RAW_DIR raise ValueError,
+    including when called directly rather than through build_file_index.
     """
-    path_str = str(file_path).lower().replace("\\", "/")
+    try:
+        relative_path = (PROJECT_ROOT / file_path).resolve().relative_to(
+            DATA_RAW_DIR.resolve()
+        )
+    except ValueError as exc:
+        raise ValueError(
+            f"CSV path must be inside DATA_RAW_DIR ({DATA_RAW_DIR}); "
+            f"got: {file_path}"
+        ) from exc
+    if len(relative_path.parts) < 2:
+        return "unknown"
 
-    if "horizontal-misalignment" in path_str or "vertical-misalignment" in path_str:
-        return "misalignment"
-    if "overhang" in path_str or "underhang" in path_str:
-        return "bearing_fault"
-    if "imbalance" in path_str:
-        return "imbalance"
-    if "normal" in path_str:
-        return "normal"
-
-    return "unknown"
+    class_directory = relative_path.parts[0].lower()
+    directory_labels = {
+        "horizontal-misalignment": "misalignment",
+        "vertical-misalignment": "misalignment",
+        "overhang": "bearing_fault",
+        "underhang": "bearing_fault",
+        "imbalance": "imbalance",
+        "normal": "normal",
+    }
+    return directory_labels.get(class_directory, "unknown")
 
 
 def build_file_index(directory: Path = DATA_RAW_DIR) -> pd.DataFrame:
@@ -125,7 +153,8 @@ def build_file_index(directory: Path = DATA_RAW_DIR) -> pd.DataFrame:
     Parameters
     ----------
     directory : Path, default=DATA_RAW_DIR
-        Dataset root directory.
+        DATA_RAW_DIR or one of its subdirectories. Relative paths use the
+        current working directory.
 
     Returns
     -------
@@ -133,19 +162,35 @@ def build_file_index(directory: Path = DATA_RAW_DIR) -> pd.DataFrame:
         DataFrame with columns:
         - filepath
         - label
+
+    Raises
+    ------
+    ValueError
+        If the directory or a discovered file resolves outside DATA_RAW_DIR.
+    NotADirectoryError
+        If the search path exists but is not a directory.
     """
+    directory = Path(directory).resolve()
+    try:
+        directory.relative_to(DATA_RAW_DIR.resolve())
+    except ValueError as exc:
+        raise ValueError(
+            f"Dataset directory must be inside DATA_RAW_DIR ({DATA_RAW_DIR}); "
+            f"got: {directory}"
+        ) from exc
+
     files = list_csv_files(directory)
 
     rows = []
     for file_path in files:
         rows.append(
             {
-                "filepath": str(to_project_relative(file_path)),
+                "filepath": str(project_relative_or_absolute(file_path)),
                 "label": infer_label_from_path(file_path),
             }
         )
 
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, columns=["filepath", "label"])
 
 
 def load_one_csv(file_path: Union[str, Path]) -> pd.DataFrame:
@@ -155,15 +200,31 @@ def load_one_csv(file_path: Union[str, Path]) -> pd.DataFrame:
     Parameters
     ----------
     file_path : str or Path
-        File path relative to PROJECT_ROOT, or a Path compatible with PROJECT_ROOT.
+        Absolute CSV path or a path relative to PROJECT_ROOT. The resolved path
+        must be inside DATA_RAW_DIR.
 
     Returns
     -------
     pandas.DataFrame
         Raw CSV contents as a DataFrame with integer column indices because
         the source files do not include a header row.
+
+    Raises
+    ------
+    ValueError
+        If the resolved path is outside DATA_RAW_DIR.
+
+    File-access and CSV-parsing errors propagate to the caller. Data-quality
+    checks and preprocessing are performed by the downstream pipeline.
     """
-    return pd.read_csv(PROJECT_ROOT / file_path, header=None)
+    path = (PROJECT_ROOT / file_path).resolve()
+    try:
+        path.relative_to(DATA_RAW_DIR.resolve())
+    except ValueError as exc:
+        raise ValueError(
+            f"CSV path must be inside DATA_RAW_DIR ({DATA_RAW_DIR}); got: {path}"
+        ) from exc
+    return pd.read_csv(path, header=None)
 
 
 if __name__ == "__main__":

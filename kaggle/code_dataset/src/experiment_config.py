@@ -22,13 +22,10 @@ from typing import Optional
 
 from src.config import (
     BATCH_SIZE,
-    CHANNEL_SELECTION,
     EARLY_STOPPING_PATIENCE,
-    INCLUDE_TAIL_WINDOW,
     INPUT_CHANNELS,
     INPUT_LENGTH,
     LEARNING_RATE,
-    LOWPASS_FILTER_ENABLED,
     MISSING_FILL_METHOD,
     MISSING_RATIO_THRESHOLD,
     NORMALIZATION_METHOD,
@@ -37,15 +34,11 @@ from src.config import (
     NUM_EPOCHS,
     PROJECT_ROOT,
     RANDOM_SEED,
-    RESAMPLE_ENABLED,
-    TAIL_WINDOW_MODE,
     TRANSFORMER_D_MODEL,
     TRANSFORMER_DIM_FEEDFORWARD,
     TRANSFORMER_DROPOUT,
     TRANSFORMER_NHEAD,
     TRANSFORMER_NUM_LAYERS,
-    WIENER_FILTER_ENABLED,
-    LOW_ENERGY_FILTER_ENABLED,
     WINDOW_SIZE,
     WINDOW_STRIDE,
 )
@@ -107,12 +100,6 @@ def build_preprocessing_config(overrides: Optional[dict] = None) -> dict:
         "normalization_scope": NORMALIZATION_SCOPE,
         "missing_ratio_threshold": MISSING_RATIO_THRESHOLD,
         "fill_method": MISSING_FILL_METHOD,
-        "include_tail_window": INCLUDE_TAIL_WINDOW,
-        "tail_window_mode": TAIL_WINDOW_MODE if INCLUDE_TAIL_WINDOW else None,
-        "resample_enabled": RESAMPLE_ENABLED,
-        "lowpass_enabled": LOWPASS_FILTER_ENABLED,
-        "wiener_enabled": WIENER_FILTER_ENABLED,
-        "low_energy_filter_enabled": LOW_ENERGY_FILTER_ENABLED,
         "outlier_clipping_enabled": False,
         "silence_removal_enabled": False,
     }, overrides)
@@ -130,7 +117,6 @@ def build_experiment_config(
         "model_config": build_model_config(model_overrides),
         "training_config": build_training_config(loss=loss, overrides=training_overrides),
         "preprocessing_config": build_preprocessing_config(preprocessing_overrides),
-        "channel_selection": CHANNEL_SELECTION,
     }
     if runtime_info is not None:
         config["runtime_info"] = runtime_info

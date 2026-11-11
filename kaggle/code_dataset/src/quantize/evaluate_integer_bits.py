@@ -30,7 +30,7 @@ from src.quantize.integer_model import IntegerTransformer, CalibStats
 from src.quantize.evaluate_integer import (
     build_train_subset, int_logits, float_logits, accuracy, OUTPUT_DIR,
 )
-from src.quantize.evaluate_quantized import DEFAULT_CHECKPOINT, load_model, build_test_subset
+from src.quantize.evaluate_integer import DEFAULT_CHECKPOINT, load_model, build_test_subset
 from src.config import NUM_CLASSES, RANDOM_SEED
 
 REPORT_PATH = OUTPUT_DIR / "integer_bits_sweep.json"

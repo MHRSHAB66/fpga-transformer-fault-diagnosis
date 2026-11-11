@@ -29,7 +29,7 @@ from src.evaluation_metrics import (
     fault_vs_normal_summary,
     precision_recall_fbeta_from_confusion,
 )
-from src.train_transformer_baseline import build_loss_function, evaluate_with_details, set_seed
+from src.utils.training_utils import build_loss_function, evaluate_with_details, set_seed
 
 # Ordered label names matching LABEL_MAP integer keys
 _CLASS_NAMES = [name for name, _ in sorted(LABEL_MAP.items(), key=lambda x: x[1])]

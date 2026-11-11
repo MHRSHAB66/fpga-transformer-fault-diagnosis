@@ -686,7 +686,7 @@ def main() -> int:
             "src/tools/signal_preprocessing.py  (fixed librosa hard-import)",
             "src/config.py  (optional signal processing flags added)",
             "src/data/prepare_dataset.py  (lowpass/wiener/resample/low-energy helpers)",
-            "src/data/preprocessed_cache.py  (conditional cache key, optional steps)",
+            "src/data/preprocessed_cache.py  (removed 2026-09-01; no disk cache)",
             "src/data/make_dataloaders.py  (class window counts in stats)",
             "src/data/pipeline_validation.py  (NEW: validation utilities)",
             "src/tools/test_pipeline.py  (NEW: smoke test)",
