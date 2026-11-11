@@ -133,6 +133,18 @@
    "Macro-F1": 0.906048,
    "Normal-class recall": 0.792213
   },
+  "sev_max_nmid": {
+   "label": "Unseen highest severity",
+   "files": {
+    "train": 1157,
+    "val": 421,
+    "test": 373
+   },
+   "best_epoch": 1,
+   "Accuracy": 0.740891,
+   "Macro-F1": 0.724189,
+   "Normal-class recall": 0.790574
+  },
   "sev_max": {
    "label": "Unseen highest severity; normal at unseen speeds",
    "files": {

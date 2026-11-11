@@ -71,7 +71,7 @@ is held out instead.
 | speed_mid — unseen 37–47 Hz band | 1339 / 212 / 400 | 97,600 | 97.88 | 95.28 | 0.9991 | 95.7 / 97.4 / 99.5 / 97.3 |
 | sev_mid — unseen middle severity | 1084 / 439 / 428 | 104,432 | 95.74 | 90.60 | 0.9967 | 79.2 / 99.7 / 91.4 / 97.2 |
 | sev_max — unseen highest severity, normal ≥ 52 Hz | 1158 / 420 / 373 | 91,012 | 74.26 | 55.10 | 0.9175 | 1.4 / 83.6 / 96.2 / 65.7 |
-| sev_max_nmid — unseen highest severity, normal middle band | 1157 / 421 / 373 | — | pending | | | |
+| sev_max_nmid — unseen highest severity, normal middle band | 1157 / 421 / 373 | 91,012 | 74.09 | 72.42 | 0.9271 | 79.1 / 77.9 / 95.2 / 63.6 |
 
 Reading:
 
@@ -82,11 +82,14 @@ Reading:
 2. **Unseen speeds inside the trained range** cost nothing (97.9 %).
 3. **Unseen intermediate severities** (interpolation) keep 95.7 % accuracy; the
    macro-F1 drop comes mostly from the normal class (79 %) and misalignment (91 %).
-4. **Unseen highest severities** (extrapolation) fall to 74 %. In this split the
+4. **Unseen highest severities** (extrapolation) fall to 74 %. In `sev_max` the
    normal test files are the fastest recordings, a speed range in which training
    has fault files only; normal recall 1.4 % is that speed extrapolation, not a
-   severity effect. `sev_max_nmid` (pending) holds normal out as in sev_mid to
-   measure the severity effect alone.
+   severity effect. `sev_max_nmid` holds normal out as in sev_mid and isolates the
+   severity effect: accuracy 74.1 %, macro-F1 72.4 %, normal recall 79.1 % — about
+   22 pp below the middle-severity hold-out, lost mainly on bearing faults (63.6 %)
+   and imbalance (77.9 %). Its best validation macro-F1 came at epoch 1: longer
+   training fits the training severities more tightly and extrapolates worse.
 
 Claim for the paper: the classifier generalizes to new recordings, unseen speed
 bands and unseen intermediate severities of known fault types; it does not
@@ -138,9 +141,8 @@ called normal), so −5 dB is outside the useful range of both models.
 1. Vivado build of the narrow vote core (`powershell -File
    tools/build_raw_core.ps1 -Variant vote`), then package and board validation
    (`python -m tools.raw_core_board_test deploy|golden|fulltest --vote-k 5`).
-2. `python -m tools.generalization_study train --split sev_max_nmid`.
-3. Measured power/energy: inline USB or DC power meter (idle, overlay loaded,
+2. Measured power/energy: inline USB or DC power meter (idle, overlay loaded,
    sustained inference; energy per inference = ∫P dt / windows).
-4. An overnight endurance run of the raw-input core under the guard.
-5. Optional model work for the paper: INT10 + board run of the noise-augmented
+3. An overnight endurance run of the raw-input core under the guard.
+4. Optional model work for the paper: INT10 + board run of the noise-augmented
    model; per-channel amplitude (log σ) as a side input for the normal class.

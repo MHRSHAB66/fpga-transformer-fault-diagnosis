@@ -1,0 +1,133 @@
+{
+ "split": "sev_max_nmid",
+ "files": {
+  "train": 1157,
+  "val": 421,
+  "test": 373
+ },
+ "windows": {
+  "train": 282308,
+  "val": 102724,
+  "test": 91012
+ },
+ "best_epoch": 1,
+ "best_val_macro_f1": 0.7741805268648551,
+ "test": {
+  "windows": 91012,
+  "accuracy": 0.7408913110359073,
+  "macro_f1": 0.7241894842634922,
+  "recall_per_class": [
+   0.7905737704918033,
+   0.7788706739526412,
+   0.9515648286140089,
+   0.6355827532000898
+  ],
+  "macro_auroc": 0.9271007592662972
+ },
+ "seconds": 38254.8,
+ "history": [
+  {
+   "epoch": 1,
+   "val_windows": 102724,
+   "val_accuracy": 0.8858007865737315,
+   "val_macro_f1": 0.7741805268648551,
+   "val_recall_per_class": [
+    0.8344262295081967,
+    0.8986745727241019,
+    0.9394767345587017,
+    0.8648299939283546
+   ],
+   "val_macro_auroc": 0.985223313620526
+  },
+  {
+   "epoch": 2,
+   "val_windows": 102724,
+   "val_accuracy": 0.8248315875550017,
+   "val_macro_f1": 0.7018190335496395,
+   "val_recall_per_class": [
+    0.9795081967213115,
+    0.8926578304848274,
+    0.8949329359165424,
+    0.7844565877352763
+   ],
+   "val_macro_auroc": 0.9761220062201982
+  },
+  {
+   "epoch": 3,
+   "val_windows": 102724,
+   "val_accuracy": 0.7822125306646938,
+   "val_macro_f1": 0.7118747237042574,
+   "val_recall_per_class": [
+    0.9590163934426229,
+    0.937565399372166,
+    0.9426229508196722,
+    0.6930783242258652
+   ],
+   "val_macro_auroc": 0.9733943773200265
+  },
+  {
+   "epoch": 4,
+   "val_windows": 102724,
+   "val_accuracy": 0.8144834702698494,
+   "val_macro_f1": 0.702914909893988,
+   "val_recall_per_class": [
+    0.9926229508196721,
+    0.9475061039414021,
+    0.9031296572280179,
+    0.755525197328476
+   ],
+   "val_macro_auroc": 0.9822911702290181
+  },
+  {
+   "epoch": 5,
+   "val_windows": 102724,
+   "val_accuracy": 0.8082239788170242,
+   "val_macro_f1": 0.6836910501403642,
+   "val_recall_per_class": [
+    0.9901639344262295,
+    0.9516044645971399,
+    0.8395429706905116,
+    0.7684122647237401
+   ],
+   "val_macro_auroc": 0.9817285294113862
+  },
+  {
+   "epoch": 6,
+   "val_windows": 102724,
+   "val_accuracy": 0.8168198278883221,
+   "val_macro_f1": 0.6997882909571338,
+   "val_recall_per_class": [
+    0.9770491803278688,
+    0.9852633414719218,
+    0.8857012750455373,
+    0.7592744383727991
+   ],
+   "val_macro_auroc": 0.9840397100413724
+  },
+  {
+   "epoch": 7,
+   "val_windows": 102724,
+   "val_accuracy": 0.8633717534363927,
+   "val_macro_f1": 0.7718575217686836,
+   "val_recall_per_class": [
+    0.9524590163934427,
+    0.9683467038716428,
+    0.9331015068719987,
+    0.8178809957498482
+   ],
+   "val_macro_auroc": 0.9869633091145715
+  }
+ ],
+ "test_conditions": [
+  "horizontal-misalignment/2.0mm",
+  "imbalance/35g",
+  "normal",
+  "overhang/ball_fault/35g",
+  "overhang/cage_fault/35g",
+  "overhang/outer_race/35g",
+  "underhang/ball_fault/35g",
+  "underhang/cage_fault/35g",
+  "underhang/outer_race/35g",
+  "vertical-misalignment/1.90mm"
+ ]
+}
