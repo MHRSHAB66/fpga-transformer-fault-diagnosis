@@ -36,7 +36,7 @@ SHIFT:
         hist[i] = hist[i - 1];
     }
     hist[0] = (vote_cls_t)(cls & 3);
-    if (seen < VOTE_MAX) seen = seen + 1;
+    seen = seen < VOTE_MAX ? (vote_cnt_t)(seen + 1) : seen;
     const vote_cnt_t m = seen < k ? seen : k;
     bool valid[VOTE_MAX];
 #pragma HLS ARRAY_PARTITION variable=valid complete
@@ -60,7 +60,7 @@ COUNT:
     vote_cnt_t best = counts[0];
     for (int c = 1; c < 4; ++c) {
 #pragma HLS UNROLL
-        if (counts[c] > best) best = counts[c];
+        best = counts[c] > best ? counts[c] : best;
     }
     bool is_best[4];
 #pragma HLS ARRAY_PARTITION variable=is_best complete
@@ -68,16 +68,15 @@ COUNT:
 #pragma HLS UNROLL
         is_best[c] = counts[c] == best;
     }
-    // Newest valid entry whose class has the most votes (hist[0] is always valid).
+    // Newest valid entry whose class has the most votes. Scanning oldest -> newest
+    // makes the newest match the last one written: a plain select chain. (An
+    // early-exit flag scanning newest -> oldest made HLS emit control flow, a
+    // 26-state FSM and ~16 k LUT in the top level after Vivado synthesis.)
     vote_cls_t winner = hist[0];
-    bool found = false;
 PICK:
-    for (int i = 0; i < VOTE_MAX; ++i) {
+    for (int i = VOTE_MAX - 1; i >= 0; --i) {
 #pragma HLS UNROLL
-        if (!found && valid[i] && is_best[hist[i]]) {
-            winner = hist[i];
-            found = true;
-        }
+        winner = (valid[i] && is_best[hist[i]]) ? hist[i] : winner;
     }
     vote_class = (int)winner;
     vote_count = (int)best;

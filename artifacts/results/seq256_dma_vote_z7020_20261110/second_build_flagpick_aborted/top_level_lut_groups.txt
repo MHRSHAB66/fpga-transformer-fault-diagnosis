@@ -1,0 +1,12 @@
+TOP_LUT_CELLS 18053
+GROUP 7564 ap_CS_fsm
+GROUP 5242 winner
+GROUP 1896 winner_V_12_reg_
+GROUP 1455 winner_V_13_reg_
+GROUP 490 or_ln77_12_reg_
+GROUP 166 found_9_reg_
+GROUP 153 p_reg_tmp
+GROUP 68 or_ln77_9_reg_
+GROUP 59 finish_token_U0/grp_layernorm_1_fu_390/mul_mul_16ns_13s_29_4_1_U426/transformer_top_mul_mul_16ns_13s_29_4_1_DSP48_8_U/p_reg_tmp
+GROUP 59 finish_token_U0/grp_layernorm_fu_377/mul_mul_16ns_13s_29_4_1_U474/transformer_top_mul_mul_16ns_13s_29_4_1_DSP48_8_U/p_reg_tmp
+GROUP 59 grp_layernorm_fu_2777/mul_mul_16ns_13s_29_4_1_U474/transformer_top_mul_mul_16ns_13s_29_4_1_DSP48_8_U/p_reg_tmp
