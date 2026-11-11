@@ -19,4 +19,7 @@ AXI-Lite registers added to the raw core (`bitstream/design_1.hwh`): `vote_k`
 (input, clamped to 1..15), `vote_class` and `vote_count` (outputs with valid bits).
 Deployment bundle: `artifacts/deploy/seq256_vote_z7020_20261110/`. BIT and XSA
 are gitignored and recorded in `artifacts/manifests/artifact_manifest.json`.
-Board validation: pending at the time of this build.
+Board validation (2026-11-11, MYIR Z-Turn): golden 41/41 (class from the FPGA register);
+full test 95,404/95,404 logits = C-model, accuracy 97.7705 %, FPGA vote (k = 5)
+95,404/95,404 = Python, system accuracy 99.084 %; hard real time 0 misses in 30,000
+(max 16.66 ms). Evidence: `../raw_core_board_{golden_20261111_130854,fulltest_20261111_130927,rt_20261111_133749}/`.

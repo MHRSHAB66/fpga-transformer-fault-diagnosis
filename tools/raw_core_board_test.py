@@ -12,7 +12,7 @@ Steps (each its own subcommand, all under the independent temperature guard):
             against host/temporal_vote.py over the board's own class stream
   rt        hard real-time acceptance run with the raw input (same configuration
             as R1 of 2026-10-24: 4,096 RAM windows, 30,000 + 200 warm-up,
-            SCHED_FIFO 50 on CPU 1)
+            SCHED_FIFO 50 on CPU 1); --n-total for a long endurance run
 
     python -m tools.raw_core_board_test deploy --bundle artifacts/deploy/seq256_raw_argmax_z7020_20261109
     python -m tools.raw_core_board_test golden|fulltest|rt --name <deployment dir name>
@@ -121,7 +121,7 @@ def cmd_fulltest(args):
             kv = dict(p.split("=", 1) for p in line.split()[1:])
             rows[int(kv["idx"])] = (int(kv["cls"]), [int(v) for v in kv["logits"].split(",")],
                                     float(kv["lat_ms"]))
-    ref = np.loadtxt(CMODEL, dtype=np.int64)
+    ref = np.loadtxt(args.cmodel, dtype=np.int64)
     labels = np.loadtxt(LABELS, dtype=np.int64)
     idx = np.array(sorted(rows))
     board_cls = np.array([rows[i][0] for i in idx])
@@ -136,7 +136,8 @@ def cmd_fulltest(args):
               "latency_ms": {"mean": round(float(lat.mean()), 3), "p50": round(float(np.median(lat)), 3),
                              "p95": round(float(np.percentile(lat, 95)), 3), "max": round(float(lat.max()), 3)},
               "board_summary": summary[-1] if summary else None,
-              "wall_s_pc": round(time.time() - t0, 1), "deployment": dep, "input": BOARD_RAW_GZ}
+              "wall_s_pc": round(time.time() - t0, 1), "deployment": dep, "input": BOARD_RAW_GZ,
+              "cmodel_reference": str(Path(args.cmodel))}
     votes = vote_rows(out / "fulltest.out")
     if votes:
         result["temporal_vote"] = check_votes(votes, rows, labels, int(args.vote_k))
@@ -184,8 +185,15 @@ def check_votes(votes, rows, labels, k):
 def cmd_rt(args):
     dep = "%s/%s" % (DEPLOYMENTS, args.name)
     out, run = new_run("rt")
-    rc = guarded(dep, run, "python3.6 -u {run}/fpga_rt_acceptance.py {dep}/overlay/design_1_wrapper.bit {gz} "
-                 "4096 30200 200 1 1 50 {run}/out".format(run=run, dep=dep, gz=BOARD_RAW_GZ), "rt")
+    # Started in the background on the board and polled, so a long (endurance)
+    # run survives the SSH session and the PC sleeping; fetch the results later
+    # from the printed run directory if this process stops polling.
+    pid = guarded(dep, run, "python3.6 -u {run}/fpga_rt_acceptance.py {dep}/overlay/design_1_wrapper.bit {gz} "
+                  "4096 {n} 200 1 1 50 {run}/out".format(run=run, dep=dep, gz=BOARD_RAW_GZ, n=args.n_total),
+                  "rt", background=True)
+    print("board run directory:", run, "pid", pid, flush=True)
+    wait_pid(pid, poll=60)
+    rc = ssh("tail -1 %s/rt.out" % run, check=False).stdout.strip()
     fetch(run + "/out", out)
     fetch(run + "/rt.out", out)
     fetch(run + "/rt_guard.log", out)
@@ -204,6 +212,11 @@ def main():
         if name == "fulltest":
             p.add_argument("--n", type=int, default=95404)
             p.add_argument("--vote-k", type=int, default=5)
+            p.add_argument("--cmodel", type=Path, default=CMODEL,
+                           help="C-model logits of the deployed model (default) or of a variant")
+        if name == "rt":
+            p.add_argument("--n-total", type=int, default=30200,
+                           help="windows incl. 200 warm-up (30,200 = the 2026-10-24 criterion run)")
     args = ap.parse_args()
     {"deploy": cmd_deploy, "golden": cmd_golden, "fulltest": cmd_fulltest, "rt": cmd_rt}[args.cmd](args)
 

@@ -134,6 +134,9 @@ TARGETS = [
     "artifacts/deploy/seq256_vote_z7020_20261110/overlay/design_1_wrapper.bit",
     "artifacts/deploy/seq256_vote_z7020_20261110/overlay/seq256_dma_system.xsa",
     "artifacts/deploy/seq256_vote_z7020_20261110/MANIFEST.sha256",
+    "artifacts/results/raw_core_board_fulltest_20261111_130927/fulltest.out",
+    "artifacts/results/raw_core_board_fulltest_20261111_130927/fulltest_check.json",
+    "artifacts/results/raw_core_board_rt_20261111_133749/out/rt_raw.npz",
 ]
 
 
