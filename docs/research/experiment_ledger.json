@@ -119,7 +119,7 @@
   {
    "id": "A05",
    "hypothesis": "The exact divider saves >= 15 % of one post-route resource in the integrated design.",
-   "status": "post-route (board validation running)",
+   "status": "physically-measured",
    "depends_on": [
     "A04"
    ],
@@ -128,9 +128,9 @@
     "artifacts/research/A05_20261113/divq9_build/",
     "artifacts/deploy/research_divq9_z7020_20261113/"
    ],
-   "outcome": "HLS C-simulation 41/41 exact against the CANONICAL golden set. Post-route (XC7Z020, 100 MHz): LUT 36,670 -> 30,970 (-15.5 %), FF 36,163 -> 29,394 (-18.7 %), DSP 210 and BRAM 76.5 unchanged, WNS +0.132 ns (canonical +0.167), HLS latency equal (1,502,073 vs 1,502,098 cycles). Gate (>= 15 % of one post-route resource) passed for LUT and FF.",
+   "outcome": "HLS C-simulation 41/41 exact against the CANONICAL golden set. Post-route (XC7Z020, 100 MHz): LUT 36,670 -> 30,970 (-15.5 %), FF 36,163 -> 29,394 (-18.7 %), DSP 210 and BRAM 76.5 unchanged, WNS +0.132 ns (canonical +0.167), HLS latency equal (1,502,073 vs 1,502,098 cycles). Gate (>= 15 % of one post-route resource) passed for LUT and FF. Board (2026-11-13, deployment research_divq9_z7020_20261113): golden 41/41 incl. 8 ties; full test 95,404/95,404 logits and class register = canonical C-model, accuracy 97.7705 % (identical to canonical); hard real time 0 misses in 30,000 (p50 15.96 / max 16.63 ms), all 30,200 RAM-window outputs = canonical C-model. Evidence: artifacts/results/raw_core_board_{golden_20261113_144159,fulltest_20261113_144220,rt_20261113_151033}/.",
    "limitations": "LUT gain just above the frozen 15 % threshold.",
-   "next_action": "board: golden, 95,404-window logit equality, hard real time"
+   "next_action": "Exact-arithmetic finalist complete. Optional: combine with a precision finalist (W8A8+P8u) or with the vote core; archive (Z01)."
   }
  ]
 }

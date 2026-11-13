@@ -156,6 +156,8 @@ TARGETS = [
     "artifacts/research/A05_20261113/divq9_build/bitstream/seq256_dma_system.xsa",
     "artifacts/deploy/research_divq9_z7020_20261113/overlay/design_1_wrapper.bit",
     "artifacts/deploy/research_divq9_z7020_20261113/MANIFEST.sha256",
+    "artifacts/results/raw_core_board_fulltest_20261113_144220/fulltest.out",
+    "artifacts/results/raw_core_board_rt_20261113_151033/out/rt_raw.npz",
     # research A02: per-variant validation logits and attention diagnostics
     "artifacts/research/A02_20261113/int10/val_outputs.npz",
     "artifacts/research/A02_20261113/int8/val_outputs.npz",
