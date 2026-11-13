@@ -1,6 +1,6 @@
 {
  "schema": "ledger v1: one entry per experiment; status in {proposed, implemented, running, software-measured, simulated, synthesized, post-route, physically-measured, independently-confirmed, stopped, rejected}",
- "updated": "2026-11-13",
+ "updated": "2026-11-14",
  "protocol": "artifacts/research/F00_20261113/preregistered_protocol.json",
  "baseline_identity": "artifacts/research/F00_20261113/frozen_baseline_manifest.json",
  "entries": [
@@ -93,12 +93,12 @@
     "artifacts/research/Q01_20261113/run1_lag_padded_artifact/"
    ],
    "outcome": "2,048 raw windows per split, one non-tachometer channel perturbed per window, bit-exact C-model. Invariance controls hold (gain x2, +25 % offset: accuracy unchanged 97.90 % val). Accuracy under faults (val): clip30 97.75, bits8 97.31, hold 93.12, lag32 96.53 %. Gate on validation (>= 90 % clean coverage, >= 30 % fewer accepted wrong outputs over clip30/bits8/hold/lag32): margin 90.4 % / -78 %; flags 100 % / -73.5 %; flags+margin 90.4 % / -95.5 % (all pass; combined best). Flags catch value faults (hold, bits8 100 %, clip30 80 %) but, as expected, not the circular lag; the margin catches part of every fault. Test (reported once), flags+margin: clean coverage 89 % with 0 accepted wrong (45 without rejection), lag32 5 accepted wrong (74), accepted false-healthy 0 in every condition. First run had a padded lag that created a flat segment (artifact, caught by the run flag); kept in run1_lag_padded_artifact/.",
-   "limitations": "Modelled digital faults on recorded data (no real ADC); window-level, stateless (rejection lasts exactly while the fault is present); thresholds at clean-validation extremes give ~1 % flags on clean test windows.",
+   "limitations": "Modelled digital faults on recorded data (no real ADC); window-level, stateless (rejection lasts exactly while the fault is present); thresholds at clean-validation extremes give ~1 % flags on clean test windows. SUPERSEDED for the calibrated-confidence baseline and the gate assessment by Q01v2 (conf used logits/T instead of s_logits*logits/T; availability cost not reported).",
    "next_action": "Q02 (optional): quality counters + margin as research status in hardware; the flags are cheap comparators on the raw words in the ingress."
   },
   {
    "id": "T01",
-   "status": "software-measured",
+   "status": "superseded by T01v2 (short events and gate invalid: audit 2026-11-13 finding 1/4)",
    "depends_on": [
     "F00"
    ],
@@ -108,7 +108,7 @@
     "artifacts/research/T01_20261113/summary.json"
    ],
    "outcome": "Validation (selection; budget = vote_5 13.87 false switches/10k): vote_5 acc 99.58 %, p95 2; hyst_3 acc 99.68 %, 4.41 fsw/10k, p95 2; evid_64 acc 99.84 %, 11.77 fsw/10k, p95 1. Frozen gate formally passed (p95 -50 %, F1 not lower, unresolved not increased) but the gain is ONE window and hysteresis has 2.7x fewer false switches: no clear dominance. Board test logits (reported once): evid_64 acc 99.71 % / F1 99.47 % / 12.3 fsw/10k vs vote_5 99.08 % / 98.52 % / 18.3; hyst_3 99.22 % / 3.35 fsw/10k / p95 4. 0 dB stream: all policies 16-18 unresolved transitions. Synthetic 2-window events detected: evid 89 %, vote_5 17 %, hyst_3 10 %.",
-   "limitations": "Transitions are recording joins (synthetic), integer delay granularity, validation has few transitions; previously explored test.",
+   "limitations": "SUPERSEDED: short events were not guaranteed A->B->A inside recordings, each policy saw different random events, late detections counted as successes, the 4*T cap bounds memory not decision time, and the stream delay used only 4 true changes. Use artifacts/research/T01v2_20261114.",
    "next_action": "Hold FPGA implementation (conditional). If pursued: evid_64 needs 4 x ~9-bit counters + margin (top1-top2) in logic."
   },
   {
@@ -202,6 +202,62 @@
    "outcome": "Research overlay = B02 + three programmable injection points (AXI-Lite inj_site/inj_word/inj_bit, written while the core is idle, one ap_start per window): site 1 input-buffer 10-bit word, site 2 projection 32-bit accumulator before the range check, site 3 one logit of classifier tail copy A. Held-out manifest (seed 20261115): 256 test windows (64 per class) x 1 injection-off row + 3 sites x 3 bit bands x 128 events = 1,408 rows. Injection off: C-model full test 95,404/95,404 = canonical with integrity_status 0; board golden 41/41 incl. 8 ties; board injection-off rows 256/256 logits and class = canonical, 0 flags. Board run 1,408 rows in 24.6 s; board = bit-exact C-model on 1,405/1,408 rows and on 1,408/1,408 against a 64-bit-long C-model build: the 3 rows are bit-31 flips of the projection accumulator, where acc + b leaves 32 bits and the Windows (MinGW, 32-bit long) C-model wraps in requant(long) while the synthesized core (64-bit long) does not; all 3 were flagged on both. Physically measured (logical injection): 93 of 1,152 injected faults changed the class; 88 were flagged (94.6 %), 5 silent, all projection-accumulator bits 18-19 (value change 2^18-2^19 stays inside the proven bound 719,316). Site 1: 384/384 flagged by the input signature (30 class changes). Site 3: 384/384 flagged by the repeated tail evaluation (37 class changes; the site-3 flip corrupts one of the two time-multiplexed evaluations). Site 2: 143/384 flagged by the range check (high band 128/128, mid 15/128, low 0/128; low band changed no class). 816 flags on faults that did not change the class (availability cost under faults; 0 flags on clean data). Post-route (XC7Z020, 100 MHz): LUT 37,628 (+2.6 % vs canonical; +1.6 % vs B02 for the injection muxes and registers), FF 37,025 (B02 36,606), DSP 210, BRAM 76.5; default implementation failed timing (WNS -0.437 ns on an existing LayerNorm requant multiply path, kept in b03_build/first_impl_timing_fail/), re-implemented with Performance_ExplorePostRoutePhysOpt: WNS 0.000 ns (met, no margin). HLS latency 1,613,068 cycles (B02 1,613,066).",
    "limitations": "Logical injection at three chosen sites only (the sites B01 found vulnerable and B02 protects), one bit per window, transient; not radiation, configuration-memory upsets or timing faults. 128 events per site/band. The research overlay closes timing with zero slack. The Windows desktop C-model differs from the synthesized core only for values outside 32 bits (unreachable in clean operation, proven bound 719,316).",
    "next_action": "Thesis/paper: report B03 as physically measured logical-injection coverage with its scope. Optional: per-output projection bounds to catch the bit 18-19 flips."
+  },
+  {
+   "id": "A04",
+   "hypothesis": "The exact 9-bit softmax divider is a single expensive operator worth >= 15 % in an isolated HLS/OOC comparison and can replace the generic divider bit-exactly.",
+   "status": "post-route (out-of-context operator) + simulated (integrated C-model)",
+   "depends_on": [
+    "A03"
+   ],
+   "command": "g++ ... hls/research/a04_softmax_div/test_div_q9_exhaustive.cpp; vitis_hls -f hls/research/a04_softmax_div/run_a04_probe.tcl; vivado -mode batch -source hls/research/a04_softmax_div/ooc_impl.tcl; python -m tools.run_csim_fulltest --exe tmp/csim/batch_raw_divq9.exe ... --out artifacts/research/A04_20261113/csim_divq9_fulltest",
+   "outputs": [
+    "artifacts/research/A04_20261113/exhaustive_native.txt",
+    "artifacts/research/A04_20261113/exhaustive_apint.txt",
+    "artifacts/research/A04_20261113/ooc_orig/",
+    "artifacts/research/A04_20261113/ooc_divq9/",
+    "artifacts/research/A04_20261113/csim_divq9_vs_canonical.json"
+   ],
+   "outcome": "Exhaustive check of div_q9 over all 367,657,004 reachable (numerator, denominator) pairs: 0 mismatches (native and ap_int). Out-of-context operator implementation: -63 % LUT, -74 % FF versus the generic divider. Integrated C-model: 95,404/95,404 test rows identical to the canonical C-model (logits and class). Gate passed; promoted to the integrated build A05.",
+   "limitations": "Operator-level numbers are out of context; the integrated saving is reported by A05.",
+   "next_action": "None (see A05)."
+  },
+  {
+   "id": "T01v2",
+   "hypothesis": "Bounded-state integer evidence lowers the p95 decision delay by >= 20 % versus the best simple comparator (k-vote, hysteresis) at a matched false-switch budget and maximum horizon (frozen T01 gate).",
+   "status": "software-measured; gate NOT passed -> FPGA implementation stopped",
+   "depends_on": [
+    "F00",
+    "T01"
+   ],
+   "command": "python -m tools.research.temporal_policies_v2 selfcheck --out artifacts/research/T01v2_20261114; python -m tools.research.temporal_policies_v2 run --out artifacts/research/T01v2_20261114",
+   "outputs": [
+    "artifacts/research/T01v2_20261114/summary.json",
+    "artifacts/research/T01v2_20261114/selfcheck.json",
+    "artifacts/research/T01v2_20261114/event_manifest_validation.json",
+    "artifacts/research/T01v2_20261114/event_manifest_test_board_clean.json",
+    "artifacts/research/T01v2_20261114/event_manifest_test_board_0dB.json"
+   ],
+   "outcome": "Immutable manifests (validation seed 20261114: 400 step events + 5 x 300 short events, L = 1,2,4,8,16; segments inside one recording, every label asserted); 12/12 self-checks pass. Validation, matched false-switch budget (vote_5: 13.87 / 10k), H_MAX = 16 windows: best per family vote_5, hyst_3, leaky_0.8, evid_64, evidto_64_6. Step changes (400): p95 delay 2 windows for vote_5 and evid_64 (hyst_3 5, leaky 4), 0 unresolved for all -> p95 reduction 0 % < 20 %: frozen gate NOT passed. Non-gated observations: macro-F1 0.9984 (evid) vs 0.9945 (vote_5); 2-window events detected during the event 262/300 (evid) vs 25/300 (vote_5) and 3/300 (hyst_3); 1-window events 222/300 vs 0; false switches before the step 7 (evid) vs 44 (vote_5) vs 11 (hyst_3); evidto (timeout fallback) behaves like evid on real data and guarantees resolution on zero-margin streams. Test (previously explored, board clean): evid_64 p95 4 vs vote_5 3; L=2 during 266/300 vs 34/300 (+13 only after the event).",
+   "limitations": "Validation logits from the Python INT10 reference (= canonical numerics); synthetic splices of real windows, not measured fault onsets; the advantage of evidence is in short-event sensitivity and F1, which were not the preregistered criterion.",
+   "next_action": "Stop the FPGA implementation under the frozen gate. A new, separately preregistered question (short-event detection at a false-switch budget) would be needed to revisit."
+  },
+  {
+   "id": "Q01v2",
+   "hypothesis": "Pre-normalisation quality flags plus the integer top-two margin reduce accepted wrong outputs under acquisition faults at >= 90 % clean coverage.",
+   "status": "software-measured (bit-exact C-model, modelled faults); gate passed for flags, margin, flags+margin",
+   "depends_on": [
+    "Q01"
+   ],
+   "command": "python -m tools.research.q01_quality_v2 --out artifacts/research/Q01v2_20261114",
+   "outputs": [
+    "artifacts/research/Q01v2_20261114/summary.json",
+    "artifacts/research/Q01v2_20261114/sample_manifest.json",
+    "artifacts/research/Q01v2_20261114/burst_manifest.json"
+   ],
+   "outcome": "Same windows/channels as Q01 (seed 20261113). Calibrated confidence with the frozen contract (T=1.42482, s_logits=0.107799): clean validation coverage 0.8999 (just below 90 %), accepted wrong -80.2 % -> gate not passed; superseded formula: threshold had saturated at 0.99999999 (behaved like the margin). Margin: coverage 0.9043, -78.0 %. Flags: coverage 1.0000, -73.5 %, zero accepted under bits8, hold16. Flags+margin: coverage 0.9043, -95.5 %, zero accepted under bits8, hold16. Normal-class clean validation coverage: flags+margin 48.9 %, flags 100 %. White noise 20/10 dB: flags accept 100 %. Bursts (validation, 6 per fault, 20 windows): flags flag bits/hold bursts in the first faulty window and accept the first clean window after; clip50/clip30 caught in 5/6 and 6/6 bursts; lag8/lag32 never flagged. Test (previously explored): flags+margin 0 accepted false-healthy over clean and the 4 gate faults.",
+   "limitations": "Rejecting every window of a fault is refusing to classify, not better accuracy; the margin threshold costs about half of the clean normal-class windows; modelled digital faults on one channel, not a real acquisition chain.",
+   "next_action": "Q02 hardware status registers (flags per channel + margin)."
   }
  ]
 }
