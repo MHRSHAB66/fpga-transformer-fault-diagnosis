@@ -8,7 +8,8 @@
 #   powershell -File tools/build_raw_core.ps1               # raw-input core (default)
 #   powershell -File tools/build_raw_core.ps1 -Variant vote # raw-input core + temporal vote
 #   powershell -File tools/build_raw_core.ps1 -Variant votena # same, noise-augmented weights (paper study)
-param([ValidateSet("raw", "vote", "votena")][string]$Variant = "raw")
+#   powershell -File tools/build_raw_core.ps1 -Variant divq9  # research A05: exact 9-bit softmax divider
+param([ValidateSet("raw", "vote", "votena", "divq9")][string]$Variant = "raw")
 $ErrorActionPreference = "Stop"
 $repo = Split-Path -Parent $PSScriptRoot
 $hls = "G:\Xilinx\Vitis_HLS\2020.2\bin\vitis_hls.bat"
@@ -18,6 +19,9 @@ $cfg = @{
               sysTcl = "run_seq256_dma_system_dsp_margin_raw_argmax.tcl"; sysProj = "vraw"; logs = "raw_core_build" }
     vote = @{ hlsTcl = "run_seq256_rawvote1024_verify_and_synth.tcl"; hlsProj = "seq256_rawvote1024";
               sysTcl = "run_seq256_dma_system_dsp_margin_vote.tcl"; sysProj = "vvote"; logs = "vote_core_build" }
+    # research A05: exact 9-bit-quotient softmax divider (hls/research/a04_softmax_div)
+    divq9 = @{ hlsTcl = "..\..\research\a04_softmax_div\run_divq9_verify_and_synth.tcl"; hlsProj = "seq256_divq9";
+               sysTcl = "..\..\research\a04_softmax_div\run_dma_system_divq9.tcl"; sysProj = "vdq9"; logs = "divq9_core_build" }
     # paper study: noise-augmented weights on the vote core (deployed model untouched)
     votena = @{ hlsTcl = "run_seq256_rawvote1024_noiseaug_verify_and_synth.tcl"; hlsProj = "seq256_rawvote1024_na";
                 sysTcl = "run_seq256_dma_system_dsp_margin_vote_noiseaug.tcl"; sysProj = "vna"; logs = "vote_na_core_build" }
