@@ -183,7 +183,7 @@ def sample_windows(rng):
 def cmd_campaign(args):
     from tools.research.precision_ablation import CACHE, load_state, make_model
     import src.quantize.integer_model as im
-    rng = np.random.default_rng(SEED)
+    rng = np.random.default_rng(args.seed)
     canon = json.loads((Path(__file__).resolve().parents[2] / "artifacts/quantized/f_seq256_int10/integer_config.json").read_text())["scales"]
     state = load_state()
     model = make_model(state, 10, 10, 10, False, scales=canon, diag=True)
@@ -219,12 +219,14 @@ def cmd_campaign(args):
     args.out.mkdir(parents=True, exist_ok=True)
     (args.out / "injections.jsonl").write_text("\n".join(json.dumps(r) for r in records) + "\n")
     summary = summarize(records)
-    summary.update({"id": "B01", "seed": SEED, "windows": int(len(rows)), "events_per_group_band": EVENTS,
+    summary.update({"id": "B01", "seed": args.seed, "windows": int(len(rows)), "events_per_group_band": EVENTS,
                     "injection_disabled_equals_canonical": True, "clean_accuracy_on_sample": float((clean_cls == y).mean()),
                     "proven_bounds": inj.bounds, "seconds": round(time.time() - t0, 1),
                     "scope": "logical single-bit emulation on the INT10 reference; not radiation, upset rate or config-memory coverage"})
+    summary["modelled_protection"] = protection_effect(records)
     (args.out / "summary.json").write_text(json.dumps(summary, indent=1))
     print(json.dumps(summary["by_group"], indent=1))
+    print(json.dumps(summary["modelled_protection"], indent=1))
 
 
 def summarize(records):
@@ -249,6 +251,29 @@ def summarize(records):
                             "top2_groups": [k for k, _ in top2],
                             "top2_share": (sum(v["silent_class_corruption"] for _, v in top2) / total_silent) if total_silent else None}
     out["gate_B01_continue_to_B02"] = bool(out["concentration"]["top2_share"] is not None and out["concentration"]["top2_share"] >= 0.6)
+    return out
+
+
+def protection_effect(records):
+    """Modelled cheap protections (logical, single faults):
+       parity      one parity bit per input-buffer word -> any single-bit flip of an
+                   input token code (G1) is detected when the word is read
+       dup_tail    classifier tail (cls4 + argmax) computed twice and compared ->
+                   a flip of an output logit code in one copy (G8) is detected
+       range       proven-range comparators on the 32-bit accumulators (C2, measured)"""
+    out = {}
+    for name, rule in [("none", lambda r: False),
+                       ("range_only", lambda r: r["C2_acc_range"]),
+                       ("parity+dup_tail", lambda r: r["group"] in ("G1_input", "G8_logits")),
+                       ("parity+dup_tail+range", lambda r: r["C2_acc_range"] or r["group"] in ("G1_input", "G8_logits"))]:
+        silent = [r for r in records if r["class_changed"] and not rule(r)]
+        flagged_ok = [r for r in records if rule(r) and not r["class_changed"]]
+        out[name] = {"silent_class_corruptions": len(silent),
+                     "flags_without_class_change": len(flagged_ok),
+                     "silent_by_group": {g: sum(r["group"] == g for r in silent) for g in GROUPS}}
+    base = out["none"]["silent_class_corruptions"]
+    for k, v in out.items():
+        v["reduction_vs_none"] = (1 - v["silent_class_corruptions"] / base) if base else None
     return out
 
 
@@ -360,6 +385,7 @@ def main():
     for n in ("campaign", "weights", "vote"):
         c = sub.add_parser(n)
         c.add_argument("--out", type=Path, required=True)
+        c.add_argument("--seed", type=int, default=SEED, help="event seed (pilot 20261113; held-out confirmation uses another)")
     args = ap.parse_args()
     {"campaign": cmd_campaign, "weights": cmd_weights, "vote": cmd_vote}[args.cmd](args)
 

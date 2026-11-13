@@ -1,0 +1,474 @@
+{
+ "by_group": {
+  "G1_input": {
+   "requested": 384,
+   "perturbed": 384,
+   "logits_changed": 343,
+   "class_changed": 22,
+   "detected_any": 1,
+   "detected_C1": 1,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 21,
+   "detected_without_class_change": 0
+  },
+  "G2_proj_acc": {
+   "requested": 384,
+   "perturbed": 384,
+   "logits_changed": 266,
+   "class_changed": 14,
+   "detected_any": 128,
+   "detected_C1": 0,
+   "detected_C2": 128,
+   "detected_C3": 0,
+   "silent_class_corruption": 5,
+   "detected_without_class_change": 119
+  },
+  "G3_qkv": {
+   "requested": 384,
+   "perturbed": 384,
+   "logits_changed": 240,
+   "class_changed": 1,
+   "detected_any": 1,
+   "detected_C1": 1,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 1,
+   "detected_without_class_change": 1
+  },
+  "G4_scores": {
+   "requested": 384,
+   "perturbed": 384,
+   "logits_changed": 110,
+   "class_changed": 0,
+   "detected_any": 3,
+   "detected_C1": 3,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 3
+  },
+  "G5_prob": {
+   "requested": 384,
+   "perturbed": 384,
+   "logits_changed": 173,
+   "class_changed": 1,
+   "detected_any": 67,
+   "detected_C1": 12,
+   "detected_C2": 0,
+   "detected_C3": 67,
+   "silent_class_corruption": 1,
+   "detected_without_class_change": 67
+  },
+  "G6_ctx_acc": {
+   "requested": 384,
+   "perturbed": 384,
+   "logits_changed": 238,
+   "class_changed": 0,
+   "detected_any": 147,
+   "detected_C1": 0,
+   "detected_C2": 147,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 147
+  },
+  "G7_ffn_acc": {
+   "requested": 384,
+   "perturbed": 384,
+   "logits_changed": 51,
+   "class_changed": 0,
+   "detected_any": 110,
+   "detected_C1": 0,
+   "detected_C2": 110,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 110
+  },
+  "G8_logits": {
+   "requested": 384,
+   "perturbed": 384,
+   "logits_changed": 384,
+   "class_changed": 38,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 38,
+   "detected_without_class_change": 0
+  }
+ },
+ "by_group_band": {
+  "G1_input/low": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 94,
+   "class_changed": 0,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 0
+  },
+  "G1_input/mid": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 121,
+   "class_changed": 0,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 0
+  },
+  "G1_input/high": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 128,
+   "class_changed": 22,
+   "detected_any": 1,
+   "detected_C1": 1,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 21,
+   "detected_without_class_change": 0
+  },
+  "G2_proj_acc/low": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 27,
+   "class_changed": 0,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 0
+  },
+  "G2_proj_acc/mid": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 111,
+   "class_changed": 5,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 5,
+   "detected_without_class_change": 0
+  },
+  "G2_proj_acc/high": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 128,
+   "class_changed": 9,
+   "detected_any": 128,
+   "detected_C1": 0,
+   "detected_C2": 128,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 119
+  },
+  "G3_qkv/low": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 46,
+   "class_changed": 1,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 1,
+   "detected_without_class_change": 0
+  },
+  "G3_qkv/mid": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 77,
+   "class_changed": 0,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 0
+  },
+  "G3_qkv/high": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 117,
+   "class_changed": 0,
+   "detected_any": 1,
+   "detected_C1": 1,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 1
+  },
+  "G4_scores/low": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 10,
+   "class_changed": 0,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 0
+  },
+  "G4_scores/mid": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 36,
+   "class_changed": 0,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 0
+  },
+  "G4_scores/high": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 64,
+   "class_changed": 0,
+   "detected_any": 3,
+   "detected_C1": 3,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 3
+  },
+  "G5_prob/low": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 19,
+   "class_changed": 1,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 1,
+   "detected_without_class_change": 0
+  },
+  "G5_prob/mid": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 52,
+   "class_changed": 0,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 0
+  },
+  "G5_prob/high": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 102,
+   "class_changed": 0,
+   "detected_any": 67,
+   "detected_C1": 12,
+   "detected_C2": 0,
+   "detected_C3": 67,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 67
+  },
+  "G6_ctx_acc/low": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 12,
+   "class_changed": 0,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 0
+  },
+  "G6_ctx_acc/mid": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 102,
+   "class_changed": 0,
+   "detected_any": 19,
+   "detected_C1": 0,
+   "detected_C2": 19,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 19
+  },
+  "G6_ctx_acc/high": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 124,
+   "class_changed": 0,
+   "detected_any": 128,
+   "detected_C1": 0,
+   "detected_C2": 128,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 128
+  },
+  "G7_ffn_acc/low": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 0,
+   "class_changed": 0,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 0
+  },
+  "G7_ffn_acc/mid": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 18,
+   "class_changed": 0,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 0
+  },
+  "G7_ffn_acc/high": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 33,
+   "class_changed": 0,
+   "detected_any": 110,
+   "detected_C1": 0,
+   "detected_C2": 110,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 110
+  },
+  "G8_logits/low": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 128,
+   "class_changed": 0,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 0,
+   "detected_without_class_change": 0
+  },
+  "G8_logits/mid": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 128,
+   "class_changed": 5,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 5,
+   "detected_without_class_change": 0
+  },
+  "G8_logits/high": {
+   "requested": 128,
+   "perturbed": 128,
+   "logits_changed": 128,
+   "class_changed": 33,
+   "detected_any": 0,
+   "detected_C1": 0,
+   "detected_C2": 0,
+   "detected_C3": 0,
+   "silent_class_corruption": 33,
+   "detected_without_class_change": 0
+  }
+ },
+ "concentration": {
+  "total_silent_class_corruptions": 66,
+  "top2_groups": [
+   "G8_logits",
+   "G1_input"
+  ],
+  "top2_share": 0.8939393939393939
+ },
+ "gate_B01_continue_to_B02": true,
+ "id": "B01",
+ "seed": 20261114,
+ "windows": 256,
+ "events_per_group_band": 128,
+ "injection_disabled_equals_canonical": true,
+ "clean_accuracy_on_sample": 0.9609375,
+ "proven_bounds": {
+  "proj": 719316,
+  "l0.ff0": 2564229,
+  "ctx": 326529
+ },
+ "seconds": 102.1,
+ "scope": "logical single-bit emulation on the INT10 reference; not radiation, upset rate or config-memory coverage",
+ "modelled_protection": {
+  "none": {
+   "silent_class_corruptions": 76,
+   "flags_without_class_change": 0,
+   "silent_by_group": {
+    "G1_input": 22,
+    "G2_proj_acc": 14,
+    "G3_qkv": 1,
+    "G4_scores": 0,
+    "G5_prob": 1,
+    "G6_ctx_acc": 0,
+    "G7_ffn_acc": 0,
+    "G8_logits": 38
+   },
+   "reduction_vs_none": 0.0
+  },
+  "range_only": {
+   "silent_class_corruptions": 67,
+   "flags_without_class_change": 376,
+   "silent_by_group": {
+    "G1_input": 22,
+    "G2_proj_acc": 5,
+    "G3_qkv": 1,
+    "G4_scores": 0,
+    "G5_prob": 1,
+    "G6_ctx_acc": 0,
+    "G7_ffn_acc": 0,
+    "G8_logits": 38
+   },
+   "reduction_vs_none": 0.11842105263157898
+  },
+  "parity+dup_tail": {
+   "silent_class_corruptions": 16,
+   "flags_without_class_change": 708,
+   "silent_by_group": {
+    "G1_input": 0,
+    "G2_proj_acc": 14,
+    "G3_qkv": 1,
+    "G4_scores": 0,
+    "G5_prob": 1,
+    "G6_ctx_acc": 0,
+    "G7_ffn_acc": 0,
+    "G8_logits": 0
+   },
+   "reduction_vs_none": 0.7894736842105263
+  },
+  "parity+dup_tail+range": {
+   "silent_class_corruptions": 7,
+   "flags_without_class_change": 1084,
+   "silent_by_group": {
+    "G1_input": 0,
+    "G2_proj_acc": 5,
+    "G3_qkv": 1,
+    "G4_scores": 0,
+    "G5_prob": 1,
+    "G6_ctx_acc": 0,
+    "G7_ffn_acc": 0,
+    "G8_logits": 0
+   },
+   "reduction_vs_none": 0.9078947368421053
+  }
+ }
+}

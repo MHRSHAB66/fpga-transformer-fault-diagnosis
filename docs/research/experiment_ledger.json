@@ -131,6 +131,21 @@
    "outcome": "HLS C-simulation 41/41 exact against the CANONICAL golden set. Post-route (XC7Z020, 100 MHz): LUT 36,670 -> 30,970 (-15.5 %), FF 36,163 -> 29,394 (-18.7 %), DSP 210 and BRAM 76.5 unchanged, WNS +0.132 ns (canonical +0.167), HLS latency equal (1,502,073 vs 1,502,098 cycles). Gate (>= 15 % of one post-route resource) passed for LUT and FF. Board (2026-11-13, deployment research_divq9_z7020_20261113): golden 41/41 incl. 8 ties; full test 95,404/95,404 logits and class register = canonical C-model, accuracy 97.7705 % (identical to canonical); hard real time 0 misses in 30,000 (p50 15.96 / max 16.63 ms), all 30,200 RAM-window outputs = canonical C-model. Evidence: artifacts/results/raw_core_board_{golden_20261113_144159,fulltest_20261113_144220,rt_20261113_151033}/.",
    "limitations": "LUT gain just above the frozen 15 % threshold.",
    "next_action": "Exact-arithmetic finalist complete. Optional: combine with a precision finalist (W8A8+P8u) or with the vote core; archive (Z01)."
+  },
+  {
+   "id": "B02",
+   "hypothesis": "Cheap selective protection (input-buffer parity, duplicated classifier tail, proven-range comparators) removes >= 80 % of silent class corruption.",
+   "status": "software-measured (modelled protection); hardware build not started",
+   "depends_on": [
+    "B01"
+   ],
+   "command": "python -m tools.research.fault_injection campaign --seed 20261114 --out artifacts/research/B02_20261113/heldout_campaign",
+   "outputs": [
+    "artifacts/research/B02_20261113/heldout_campaign/summary.json"
+   ],
+   "outcome": "Protections chosen on the B01 pilot (94.4 % modelled reduction there) and confirmed on a held-out campaign (new seed: new windows and events; injection-off = canonical): silent class corruptions 76 -> 67 (range only), 16 (parity + duplicated tail), 7 (all three) = -90.8 %, above the frozen 80 % gate. Remaining: projection-accumulator mid bits 5, QKV 1, probability 1. Cost under faults: 1,084 flags on faults that did not change the class (availability, not false flags on clean data).",
+   "limitations": "Logical model of the protections (single faults, parity covers storage of the input buffer, duplication covers one copy of the tail). Hardware overhead, timing and clean false-flag rate not yet measured.",
+   "next_action": "HLS: parity bit on the input buffer words, duplicated cls4 + argmax compare, range comparators on proj/ctx/ff0 accumulators, status register (research ABI); build; board: 0 false flags on 95,404 clean windows, outputs = canonical, overhead <= 5 % LUT / <= 2 DSP"
   }
  ]
 }
