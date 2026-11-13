@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-13T18:45:22.710674+00:00",
+  "generated_utc": "2026-11-13T18:55:34.933001+00:00",
   "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, multi-MB run dumps, board boot binaries) are gitignored and recorded here only (committed_in_git=false); copies live on disk, in the off-repo backup and on the board.",
   "repo_relative": true,
   "artifacts": [
@@ -988,7 +988,7 @@
       "present": true,
       "size_bytes": 1119,
       "sha256": "f37300bc4a7b2e07909a1e2aa6f3d2b42b9969b680940584db2bb1e6b3929900",
-      "committed_in_git": false
+      "committed_in_git": true
     },
     {
       "path": "artifacts/results/raw_core_board_fulltest_20261113_213019/fulltest.out",
@@ -1002,6 +1002,41 @@
       "present": true,
       "size_bytes": 1360262,
       "sha256": "2139eedd020efa5d9919fb7fa9de590591a3ae1f889066d9db8f363917ed7adf",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/B03_20261113/b03_build/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "d0f4cea03f90a8672f9d5a2c280a5d16994ea4e61bd4ba63a32e33d98ff15c8b",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/B03_20261113/b03_build/bitstream/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1497070,
+      "sha256": "8e003eb19016f34cd98844f3f7bad8f747cb801328136025b86012bbc6e546a2",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/B03_20261113/b03_build/first_impl_timing_fail/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "0168d461c632e3ef23ae4b0d29e1e8cb044018bd4f13f211af788c1d08c03da4",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_b03_z7020_20261113/overlay/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "d0f4cea03f90a8672f9d5a2c280a5d16994ea4e61bd4ba63a32e33d98ff15c8b",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_b03_z7020_20261113/MANIFEST.sha256",
+      "present": true,
+      "size_bytes": 1119,
+      "sha256": "f6b1a0ccece6a4dcf1c74111396ea26cc1e38303ab5bb5975778f06ef0d2b564",
       "committed_in_git": false
     }
   ]

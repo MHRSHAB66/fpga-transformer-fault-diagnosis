@@ -3,7 +3,15 @@
  "seed": 20261115,
  "rows": 1408,
  "scope": "logical single-bit injection in the FPGA datapath (research overlay); not radiation or configuration-memory testing",
- "source": "cmodel",
+ "board_equals_cmodel_rows": 1405,
+ "board_rows": 1408,
+ "board_equals_cmodel_lp64_rows": 1408,
+ "cmodel_vs_lp64_differing_rows": [
+  945,
+  1002,
+  1010
+ ],
+ "source": "board",
  "injection_off": {
   "rows": 256,
   "class_equal_canonical": 256,
@@ -54,10 +62,10 @@
   "site2/high": {
    "events": 128,
    "logits_changed": 127,
-   "class_changed": 18,
+   "class_changed": 19,
    "detected": 128,
    "silent": 0,
-   "detected_without_class_change": 110
+   "detected_without_class_change": 109
   },
   "site3/low": {
    "events": 128,
@@ -86,7 +94,7 @@
  },
  "totals": {
   "events": 1152,
-  "class_changed": 92,
+  "class_changed": 93,
   "detected": 911,
   "silent": 5
  }

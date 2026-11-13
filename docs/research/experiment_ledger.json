@@ -152,7 +152,7 @@
   {
    "id": "B02",
    "hypothesis": "Cheap selective protection (input-buffer parity, duplicated classifier tail, proven-range comparators) removes >= 80 % of silent class corruption.",
-   "status": "physically-measured (clean behaviour); hardware fault injection not done",
+   "status": "physically-measured (clean behaviour); detection physically measured with logical injection in B03",
    "depends_on": [
     "B01"
    ],
@@ -161,8 +161,8 @@
     "artifacts/research/B02_20261113/heldout_campaign/summary.json"
    ],
    "outcome": "Protections chosen on the B01 pilot (94.4 % modelled reduction there) and confirmed on a held-out campaign (new seed: new windows and events; injection-off = canonical): silent class corruptions 76 -> 67 (range only), 16 (parity + duplicated tail), 7 (all three) = -90.8 %, above the frozen 80 % gate. Remaining: projection-accumulator mid bits 5, QKV 1, probability 1. Cost under faults: 1,084 flags on faults that did not change the class (availability, not false flags on clean data). Hardware variant B02 v1 (hls/research/b02_integrity/, generated from the canonical raw top): input-buffer XOR signature (write vs after projection read), duplicated cls4 + argmax, projection accumulator range check (bound 719,316 from weights_int10.h); research register integrity_status. Context/FFN range checks left out (0 class changes there in B01). C-model: goldens 41/41 identical + status 0 (incl. edge windows); 95,404 test windows: logits and class identical to canonical, integrity_status 0 on all (0 false flags). Post-route (XC7Z020, 100 MHz): LUT 36,670 -> 37,035 (+1.0 %), FF 36,163 -> 36,606 (+1.2 %), DSP 210 (+0), BRAM 76.5 (+0), WNS +0.202 ns; HLS C-simulation 41/41 exact with integrity_status 0. Overhead gate (<= 5 % LUT, <= 2 DSP, timing) passed. Board (deployment research_b02_z7020_20261113): golden 41/41 incl. 8 ties; full test 95,404/95,404 logits and class = canonical C-model, accuracy 97.7705 %, integrity_status 0 on all 95,404 clean windows (0 false flags); hard real time 0 misses in 30,000, but response p50 17.07 / max 17.71 ms vs 15.96 / 16.63 canonical: +1.1 ms from the range check placed after each projection output in the non-pipelined outer loop (HLS latency 1,613,066 vs 1,502,098 cycles).",
-   "limitations": "Detection on hardware not exercised (needs a programmable injection overlay, B03); latency cost of the range check could be removed by checking in a separate pipelined pass.",
-   "next_action": "Optional B03: programmable injection points (research overlay) to measure physical detection; or move the range check off the critical loop to remove the +1.1 ms."
+   "limitations": "Detection on hardware measured separately in B03 (logical injection overlay, 2026-11-13); latency cost of the range check could be removed by checking in a separate pipelined pass.",
+   "next_action": "Optional: move the range check off the critical loop to remove the +1.1 ms; a finer projection-accumulator bound (per-output) could catch the mid-bit flips B03 leaves silent."
   },
   {
    "id": "A06",
@@ -183,6 +183,25 @@
    "outcome": "Different numerical model with its own reference (research p8u) and own goldens. div_q8 exhaustive: 0 mismatches over 367,657,004 reachable pairs (native and ap_int). C-model = research p8u reference on 600 clean + 600 SNR 0 dB windows; HLS C-simulation 41/41 against its own goldens. Test split (previously explored, selection was on validation): accuracy 97.8848 % vs canonical 97.7705 %, macro-F1 95.857 vs 95.669 (+0.19 pp), recall normal 87.54/87.21, imbalance 97.89/97.78, misalignment 98.93/99.09 (-0.16 pp), bearing 97.88/97.65; class agreement with canonical 94,908/95,404. Precision gate (<= 0.3 pp macro-F1 drop, <= 1 pp recall drop) passed. Post-route (XC7Z020, 100 MHz): LUT 36,670 -> 30,216 (-17.6 %), FF 36,163 -> 28,466 (-21.3 %), DSP 210, BRAM 76.5 unchanged, WNS +0.100 ns, HLS latency 1,502,073 cycles (canonical 1,502,098). Versus A05 (divider only) the 8-bit probabilities add only -2.4 % LUT / -3.2 % FF: almost all of the saving comes from the exact divider. Board (research_a06_z7020_20261113): golden 41/41 incl. 3 ties; full test 95,404/95,404 logits and class register = A06 C-model, accuracy 97.8848 %; hard real time 0 misses in 30,000 (p50 15.98 / max 16.69 ms), 30,200/30,200 outputs = A06 C-model.",
    "limitations": "Changes the numerical model (not bit-identical to the canonical deployment: 496 test windows change class); the accuracy difference against canonical is within the bootstrap noise seen on validation; the incremental hardware gain over A05 is small.",
    "next_action": "None required. If a smaller core is wanted for the thesis, A05 (bit-identical) is the safer recommendation; A06 shows the probability width is not the bottleneck."
+  },
+  {
+   "id": "B03",
+   "hypothesis": "The B02 integrity checks detect class-changing single-bit faults when the faults are injected in the real FPGA datapath (logical injection), with board outputs equal to the bit-exact C-model row by row.",
+   "status": "physically-measured",
+   "depends_on": [
+    "B02"
+   ],
+   "command": "python hls/research/b03_inject/make_b03_top.py; powershell -File tools/build_raw_core.ps1 -Variant b03; vivado -mode batch -source hls/f1_int10_seq256/vitis/rerun_impl_strategy.tcl -tclargs tmp/vb03/vb03.xpr Performance_ExplorePostRoutePhysOpt; python tools/package_seq256_pynq_deploy.py --pkg artifacts/research/B03_20261113/b03_build --bundle artifacts/deploy/research_b03_z7020_20261113 --golden hls/f1_int10_seq256/golden_raw1024_argmax; python -m tools.raw_core_board_test deploy|golden; python -m tools.research.b03_campaign manifest|cmodel [--lp64]|board|analyze --out artifacts/research/B03_20261113",
+   "outputs": [
+    "artifacts/research/B03_20261113/summary.json",
+    "artifacts/research/B03_20261113/summary_cmodel_expectation.json",
+    "artifacts/research/B03_20261113/board_rows.txt",
+    "artifacts/research/B03_20261113/b03_build/",
+    "artifacts/results/raw_core_board_golden_20261113_221324/"
+   ],
+   "outcome": "Research overlay = B02 + three programmable injection points (AXI-Lite inj_site/inj_word/inj_bit, written while the core is idle, one ap_start per window): site 1 input-buffer 10-bit word, site 2 projection 32-bit accumulator before the range check, site 3 one logit of classifier tail copy A. Held-out manifest (seed 20261115): 256 test windows (64 per class) x 1 injection-off row + 3 sites x 3 bit bands x 128 events = 1,408 rows. Injection off: C-model full test 95,404/95,404 = canonical with integrity_status 0; board golden 41/41 incl. 8 ties; board injection-off rows 256/256 logits and class = canonical, 0 flags. Board run 1,408 rows in 24.6 s; board = bit-exact C-model on 1,405/1,408 rows and on 1,408/1,408 against a 64-bit-long C-model build: the 3 rows are bit-31 flips of the projection accumulator, where acc + b leaves 32 bits and the Windows (MinGW, 32-bit long) C-model wraps in requant(long) while the synthesized core (64-bit long) does not; all 3 were flagged on both. Physically measured (logical injection): 93 of 1,152 injected faults changed the class; 88 were flagged (94.6 %), 5 silent, all projection-accumulator bits 18-19 (value change 2^18-2^19 stays inside the proven bound 719,316). Site 1: 384/384 flagged by the input signature (30 class changes). Site 3: 384/384 flagged by the duplicated tail (37 class changes). Site 2: 143/384 flagged by the range check (high band 128/128, mid 15/128, low 0/128; low band changed no class). 816 flags on faults that did not change the class (availability cost under faults; 0 flags on clean data). Post-route (XC7Z020, 100 MHz): LUT 37,628 (+2.6 % vs canonical; +1.6 % vs B02 for the injection muxes and registers), FF 37,025 (B02 36,606), DSP 210, BRAM 76.5; default implementation failed timing (WNS -0.437 ns on an existing LayerNorm requant multiply path, kept in b03_build/first_impl_timing_fail/), re-implemented with Performance_ExplorePostRoutePhysOpt: WNS 0.000 ns (met, no margin). HLS latency 1,613,068 cycles (B02 1,613,066).",
+   "limitations": "Logical injection at three chosen sites only (the sites B01 found vulnerable and B02 protects), one bit per window, transient; not radiation, configuration-memory upsets or timing faults. 128 events per site/band. The research overlay closes timing with zero slack. The Windows desktop C-model differs from the synthesized core only for values outside 32 bits (unreachable in clean operation, proven bound 719,316).",
+   "next_action": "Thesis/paper: report B03 as physically measured logical-injection coverage with its scope. Optional: per-output projection bounds to catch the bit 18-19 flips."
   }
  ]
 }

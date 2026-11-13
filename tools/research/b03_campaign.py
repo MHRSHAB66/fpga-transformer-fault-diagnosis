@@ -12,7 +12,7 @@ canonical clean class of the window.
 Logical emulation only (no radiation / configuration-memory claims).
 
     python -m tools.research.b03_campaign manifest --out artifacts/research/B03_20261113
-    python -m tools.research.b03_campaign cmodel   --out artifacts/research/B03_20261113
+    python -m tools.research.b03_campaign cmodel   --out artifacts/research/B03_20261113 [--lp64]
     python -m tools.research.b03_campaign board    --out artifacts/research/B03_20261113 --name research_b03_z7020_20261113
     python -m tools.research.b03_campaign analyze  --out artifacts/research/B03_20261113
 """
@@ -31,6 +31,8 @@ RAW = REPO / "artifacts/results/fpga_rawinput_testset_20261109/fpga_testset_raw.
 LABELS = REPO / "artifacts/results/fpga_rawinput_testset_20261109/labels.txt"
 CANON = REPO / "artifacts/results/onchip_preprocess_20261109/csim_raw_argmax/csim_logits.txt"
 EXE = (REPO / "tmp/csim/batch_raw_b03.exe").resolve()
+# 64-bit-long build (hls/research/b03_inject/make_lp64_cmodel.py): MinGW long is 32 bit, the synthesized long 64 bit
+EXE_LP64 = (REPO / "tmp/csim/batch_raw_b03_lp64.exe").resolve()
 SEED, EVENTS = 20261115, 128
 SITES = {1: (2048, [(0, 3), (3, 6), (6, 10)]), 2: (256 * 32, [(0, 10), (10, 21), (21, 32)]),
          3: (4, [(0, 3), (3, 6), (6, 10)])}
@@ -74,9 +76,10 @@ def cmd_cmodel(args):
     stream = np.stack([win[r[0]] for r in rows])
     inj = args.out / "cmodel_injections.txt"
     inj.write_text("".join("%d %d %d\n" % r[1:] for r in rows))
-    res = subprocess.run([str(EXE), "0", str(len(rows)), str(inj.resolve())], input=stream.astype("<i4").tobytes(),
+    exe, name = (EXE_LP64, "cmodel_rows_lp64.txt") if args.lp64 else (EXE, "cmodel_rows.txt")
+    res = subprocess.run([str(exe), "0", str(len(rows)), str(inj.resolve())], input=stream.astype("<i4").tobytes(),
                          capture_output=True, check=True).stdout.decode()
-    (args.out / "cmodel_rows.txt").write_text(res)
+    (args.out / name).write_text(res)
     print("C-model rows", len([l for l in res.splitlines() if l.strip()]))
 
 
@@ -116,6 +119,12 @@ def cmd_analyze(args):
         eq = sum(b[0] == c[5] and b[1] == c[1:5] and b[2] == c[6] for b, c in zip(board, cm))
         res["board_equals_cmodel_rows"] = int(eq)
         res["board_rows"] = len(board)
+        lp = args.out / "cmodel_rows_lp64.txt"
+        if lp.exists():
+            cl = [[int(v) for v in l.split()] for l in lp.read_text().splitlines() if l.strip()]
+            res["board_equals_cmodel_lp64_rows"] = int(sum(b[0] == c[5] and b[1] == c[1:5] and b[2] == c[6]
+                                                           for b, c in zip(board, cl)))
+            res["cmodel_vs_lp64_differing_rows"] = [k for k, (a, c) in enumerate(zip(cm, cl)) if a != c]
     src = board if board is not None else [(c[5], c[1:5], c[6]) for c in cm]
     res["source"] = "board" if board is not None else "cmodel"
     off = [(r, s) for r, s in zip(rows, src) if r[1] == 0]
@@ -155,6 +164,8 @@ def main():
         p.add_argument("--out", type=Path, required=True)
         if n == "board":
             p.add_argument("--name", required=True)
+        if n == "cmodel":
+            p.add_argument("--lp64", action="store_true", help="use the 64-bit-long C-model build")
     args = ap.parse_args()
     {"manifest": cmd_manifest, "cmodel": cmd_cmodel, "board": cmd_board, "analyze": cmd_analyze}[args.cmd](args)
 

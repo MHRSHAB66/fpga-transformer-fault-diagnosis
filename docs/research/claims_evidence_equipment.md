@@ -20,11 +20,13 @@ confirmation set.
 | 5 | Silent class corruption from single-bit faults is concentrated (93 %) in the output logits and the input token codes; attention, weights and vote state almost never change the class | software-measured (logical emulation, 3,072 + 384 + 256 events) | `artifacts/research/B01_20261113/` |
 | 6 | Input-buffer signature + duplicated classifier tail + proven-range check remove 90.8 % of silent class corruptions on a held-out campaign | software-measured (modelled protection) | `artifacts/research/B02_20261113/heldout_campaign/` |
 | 7 | These checks cost +1.0 % LUT, +1.2 % FF, 0 DSP, +1.1 ms latency, with bit-identical outputs and 0 false flags on 95,404 clean windows | post-route + physically measured | `artifacts/research/B02_20261113/b02_build/`, `artifacts/results/raw_core_board_*_20261113_18*`, `_191441` |
+| 7b | With faults injected in the real FPGA datapath (logical single-bit injection at the input buffer, projection accumulator and one classifier-tail logit; held-out 1,152 events), the checks flag 88 of 93 class-changing faults (94.6 %); the 5 silent ones are projection-accumulator bits 18–19 inside the proven bound; board = bit-exact C-model on 1,408/1,408 rows (64-bit-long build) | physically measured (logical injection, research overlay, timing met with 0 ns slack) | `artifacts/research/B03_20261113/summary.json`, `board_rows.txt` |
 | 8 | The board-side deadline holds under bounded CPU, memory, cache, SD and network load (0 misses in 7 × 30,000 windows, max 16.91 ms) | physically measured (finite envelope, not WCET) | `artifacts/research/S01_20261113/` |
 | 9 | Margin-weighted integer evidence beats k=5 voting at a matched false-switch budget, but does not dominate hysteresis | software-measured | `artifacts/research/T01_20261113/summary.json` |
 | 10 | Raw-input quality flags + integer top-two margin cut accepted wrong outputs by 95.5 % under modelled acquisition faults at 90 % clean coverage (validation); 0 accepted false-healthy on the test report | software-measured (bit-exact C-model, modelled faults) | `artifacts/research/Q01_20261113/summary.json` |
 
-Not claimed: physical fault coverage (no hardware injection yet), radiation tolerance or
+Not claimed: fault coverage beyond the three logically injected sites (B03 is logical
+injection, not radiation or configuration-memory testing), radiation tolerance or
 upset rates, analog front-end behaviour, power/energy (no logging instrument), universal
 WCET, generalization to other machines.
 

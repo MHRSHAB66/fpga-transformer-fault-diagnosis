@@ -192,6 +192,12 @@ TARGETS = [
     "artifacts/deploy/research_a06_z7020_20261113/MANIFEST.sha256",
     "artifacts/results/raw_core_board_fulltest_20261113_213019/fulltest.out",
     "artifacts/results/raw_core_board_rt_20261113_220122/out/rt_raw.npz",
+    # research B03: logical fault-injection overlay (timing-clean re-implementation + first failing one)
+    "artifacts/research/B03_20261113/b03_build/bitstream/design_1_wrapper.bit",
+    "artifacts/research/B03_20261113/b03_build/bitstream/seq256_dma_system.xsa",
+    "artifacts/research/B03_20261113/b03_build/first_impl_timing_fail/bitstream/design_1_wrapper.bit",
+    "artifacts/deploy/research_b03_z7020_20261113/overlay/design_1_wrapper.bit",
+    "artifacts/deploy/research_b03_z7020_20261113/MANIFEST.sha256",
 ]
 
 

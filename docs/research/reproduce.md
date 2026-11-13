@@ -53,6 +53,10 @@ Needs the window cache `D:/fpga_cache/seq256_all` (`python -m tools.generalizati
     python hls/research/b03_inject/make_b03_top.py  && powershell -File tools/build_raw_core.ps1 -Variant b03
     python -m tools.research.b03_campaign manifest|cmodel|analyze --out artifacts/research/B03_20261113
     python -m tools.research.b03_campaign board --out artifacts/research/B03_20261113 --name research_b03_z7020_20261113
+    # default implementation missed timing (-0.437 ns); re-implemented with:
+    vivado -mode batch -source hls/f1_int10_seq256/vitis/rerun_impl_strategy.tcl -tclargs tmp/vb03/vb03.xpr Performance_ExplorePostRoutePhysOpt
+    # 64-bit-long C-model (MinGW long is 32 bit): see hls/research/b03_inject/make_lp64_cmodel.py, then
+    python -m tools.research.b03_campaign cmodel --out artifacts/research/B03_20261113 --lp64
 
 ## T01 — temporal policies (offline)
     python -m tools.research.temporal_policies --out artifacts/research/T01_20261113
