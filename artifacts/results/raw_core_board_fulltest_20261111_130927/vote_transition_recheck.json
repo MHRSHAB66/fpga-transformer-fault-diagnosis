@@ -1,0 +1,33 @@
+{
+ "source": "artifacts\\results\\raw_core_board_fulltest_20261111_130927\\fulltest.out",
+ "original_check": "fulltest_check.json (unchanged)",
+ "deployment": "/home/xilinx/deployments/seq256_vote_z7020_20261110",
+ "input": "/home/xilinx/raw_testset_20261109/fpga_testset_raw.i32.gz",
+ "original_temporal_vote": {
+  "k": 5,
+  "windows": 95404,
+  "board_equal_python": 95404,
+  "system_accuracy": 0.9908389585342333,
+  "class_changes": 232,
+  "windows_until_correct_after_change": {
+   "median": 2.0,
+   "p95": 2.0,
+   "max": 4
+  }
+ },
+ "temporal_vote": {
+  "k": 5,
+  "windows": 95404,
+  "board_equal_python": 95404,
+  "system_accuracy": 0.9908389585342333,
+  "class_changes": 232,
+  "resolved": 232,
+  "unresolved": 0,
+  "windows_until_correct_resolved_only": {
+   "median": 2.0,
+   "p95": 2.0,
+   "max": 4
+  },
+  "method": "search within the segment up to the next true-class change; unresolved counted separately; recording joins with the same class are not transitions"
+ }
+}

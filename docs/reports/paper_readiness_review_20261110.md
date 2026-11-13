@@ -156,9 +156,12 @@ of the raw test input (`tools/make_noisy_testset.py`, the sweep's exact noise):
 | noise-augmented, 0 dB | **90.1304 %** | **93.835 %** | 95,404 / 95,404 |
 
 Evidence: `artifacts/results/raw_core_board_fulltest_20261111_{130927,155757,170226,163200}/`.
-At 0 dB the vote cannot rescue the deployed model (its normal class is lost, so
-some recordings are never classified correctly), while it adds +3.7 pp to the
-noise-augmented model.
+At 0 dB the vote cannot rescue the deployed model (its normal class is lost:
+16 of 232 true-class changes are never resolved inside their segment; the
+resolved ones take p95 9.25 / max 246 windows), while it adds +3.7 pp to the
+noise-augmented model (all 232 changes resolved, max 29 windows). Delays from
+`vote_transition_recheck.json` in each run directory (2026-11-13 recheck: the
+first check capped the search at 244 windows and counted unresolved events as 244).
 At −5 dB its high normal recall comes with low accuracy (noisy fault windows are
 called normal), so −5 dB is outside the useful range of both models.
 

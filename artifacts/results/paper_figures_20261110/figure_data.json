@@ -230,14 +230,17 @@
    "k": 5,
    "windows": 95404,
    "board_equal_python": 95404,
-   "system_accuracy": 0.8394092490880886,
+   "system_accuracy": 0.9908389585342333,
    "class_changes": 232,
-   "windows_until_correct_after_change": {
+   "resolved": 232,
+   "unresolved": 0,
+   "windows_until_correct_resolved_only": {
     "median": 2.0,
-    "p95": 244.0,
-    "max": 244
+    "p95": 2.0,
+    "max": 4
    },
-   "evidence": "artifacts\\results\\raw_core_board_fulltest_20261111_170226\\fulltest_check.json"
+   "method": "search within the segment up to the next true-class change; unresolved counted separately; recording joins with the same class are not transitions",
+   "evidence": "artifacts\\results\\raw_core_board_fulltest_20261111_130927\\vote_transition_recheck.json"
   }
  }
 }

@@ -172,11 +172,23 @@ def fig_generalization(data):
                                      for k, label, r in have}
 
 
+# The continuous-stream FPGA vote point must come from the deployed vote overlay
+# on the CLEAN raw test input. (The first version took the newest full test with
+# vote registers, which after 2026-11-11 was the 0 dB run of the deployed model.)
+VOTE_BOARD_DEPLOYMENT = "seq256_vote_z7020_20261110"
+VOTE_BOARD_INPUT = "fpga_testset_raw.i32.gz"
+
+
 def board_vote():
-    """Newest board full test that read the FPGA vote registers."""
+    """Newest clean-input full test of the deployed vote overlay; transition
+    delays from vote_transition_recheck.json (unresolved events separate) when present."""
     for p in sorted(RES.glob("raw_core_board_fulltest_*/fulltest_check.json"), reverse=True):
         r = json.loads(p.read_text())
-        if "temporal_vote" in r:
+        if ("temporal_vote" in r and str(r.get("deployment", "")).endswith(VOTE_BOARD_DEPLOYMENT)
+                and str(r.get("input", "")).endswith("/" + VOTE_BOARD_INPUT)):
+            recheck = p.parent / "vote_transition_recheck.json"
+            if recheck.exists():
+                return recheck, json.loads(recheck.read_text())["temporal_vote"]
             return p, r["temporal_vote"]
     return None, None
 

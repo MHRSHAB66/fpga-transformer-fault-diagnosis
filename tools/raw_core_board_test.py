@@ -168,6 +168,29 @@ def vote_rows(path):
     return out
 
 
+def transition_delays(vote_cls, y):
+    """Windows from each change of the true class until the vote first equals the
+    new class, searched only inside that segment (until the next true-class
+    change or the end). Events never resolved inside their segment are counted
+    separately instead of being folded in as a capped delay (the first version
+    capped the search at 244 windows and counted unresolved events as 244)."""
+    changes = [j for j in range(1, len(y)) if y[j] != y[j - 1]]
+    bounds = changes + [len(y)]
+    resolved, unresolved = [], 0
+    for j, end in zip(changes, bounds[1:]):
+        hit = np.flatnonzero(vote_cls[j:end] == y[j])
+        if len(hit):
+            resolved.append(int(hit[0]))
+        else:
+            unresolved += 1
+    stats = (lambda d: {"median": float(np.median(d)), "p95": float(np.percentile(d, 95)), "max": int(max(d))}
+             if d else None)
+    return {"class_changes": len(changes), "resolved": len(resolved), "unresolved": unresolved,
+            "windows_until_correct_resolved_only": stats(resolved),
+            "method": "search within the segment up to the next true-class change; unresolved counted separately; "
+                      "recording joins with the same class are not transitions"}
+
+
 def check_votes(votes, rows, labels, k):
     """Board votes vs host/temporal_vote.py over the board's own window classes
     (one continuous stream in dataset order), system accuracy and the delay after
@@ -178,20 +201,29 @@ def check_votes(votes, rows, labels, k):
     board = [votes[i] for i in idx]
     vc = np.array([v[0] for v in board])
     y = labels[idx]
-    delays = []
-    for j in range(1, len(idx)):
-        if y[j] != y[j - 1]:
-            d = 0
-            while j + d < len(idx) and vc[j + d] != y[j] and d < 244:
-                d += 1
-            delays.append(d)
     return {"k": k, "windows": len(idx), "board_equal_python": int(sum(b == r for b, r in zip(board, ref))),
-            "system_accuracy": float((vc == y).mean()),
-            "class_changes": len(delays),
-            "windows_until_correct_after_change": {
-                "median": float(np.median(delays)) if delays else None,
-                "p95": float(np.percentile(delays, 95)) if delays else None,
-                "max": int(max(delays)) if delays else None}}
+            "system_accuracy": float((vc == y).mean()), **transition_delays(vc, y)}
+
+
+def cmd_recheck_votes(args):
+    """Recompute the vote checks of an earlier fulltest from its fulltest.out
+    (evidence hygiene: the first check capped transition delays at 244 windows).
+    Writes vote_transition_recheck.json next to the original fulltest_check.json,
+    which is left unchanged."""
+    out = Path(args.run)
+    rows = {}
+    for line in (out / "fulltest.out").read_text().splitlines():
+        if line.startswith("R "):
+            kv = dict(p.split("=", 1) for p in line.split()[1:])
+            rows[int(kv["idx"])] = (int(kv["cls"]), None, None)
+    labels = np.loadtxt(LABELS, dtype=np.int64)
+    original = json.loads((out / "fulltest_check.json").read_text())
+    result = {"source": str(out / "fulltest.out"), "original_check": "fulltest_check.json (unchanged)",
+              "deployment": original.get("deployment"), "input": original.get("input"),
+              "original_temporal_vote": original.get("temporal_vote"),
+              "temporal_vote": check_votes(vote_rows(out / "fulltest.out"), rows, labels, int(args.k))}
+    (out / "vote_transition_recheck.json").write_text(json.dumps(result, indent=1))
+    print(json.dumps(result["temporal_vote"], indent=1))
 
 
 def cmd_rt(args):
@@ -247,11 +279,14 @@ def main():
         if name == "rt":
             p.add_argument("--n-total", type=int, default=30200,
                            help="windows incl. 200 warm-up (30,200 = the 2026-10-24 criterion run)")
+    v = sub.add_parser("recheck-votes")
+    v.add_argument("--run", required=True, help="local results directory of an earlier fulltest")
+    v.add_argument("--k", type=int, default=5)
     f = sub.add_parser("rt-fetch")
     f.add_argument("--run", required=True, help="board run directory name printed by rt (raw_core_rt_<tag>)")
     args = ap.parse_args()
     {"deploy": cmd_deploy, "golden": cmd_golden, "fulltest": cmd_fulltest, "rt": cmd_rt,
-     "rt-fetch": cmd_rt_fetch}[args.cmd](args)
+     "rt-fetch": cmd_rt_fetch, "recheck-votes": cmd_recheck_votes}[args.cmd](args)
 
 
 if __name__ == "__main__":
