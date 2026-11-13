@@ -1,0 +1,28 @@
+{
+ "condition": "cache_thrash",
+ "board_run": "/home/xilinx/s01_cache_thrash_20261113_175754",
+ "stress": [
+  "taskset -c 0 python3.6 -c 'import numpy as np\na=np.ones(16<<20,np.int32); i=np.random.randint(0,len(a),1<<20)\nwhile True: a[i]+=1'"
+ ],
+ "net_bytes_sent": 0,
+ "wall_s": 656.0,
+ "executed": 30200,
+ "aborted": null,
+ "deadline_misses": 0,
+ "response_ms": {
+  "p50": 16.301,
+  "p95": 16.583,
+  "p99": 16.633,
+  "p99.9": 16.678
+ },
+ "response_ms_max": 16.801,
+ "copy_mm2s_ms_p99": 1.373,
+ "core_s2mm_ms_p99": 15.33,
+ "start_jitter_ms_p99": 0.014,
+ "involuntary_ctx_switches": 1,
+ "class_equal_cmodel": 30200,
+ "logits_equal_cmodel": 30200,
+ "windows": 30200,
+ "temp_max_c": 61.274,
+ "response_recomputed_max_ms": 16.801
+}

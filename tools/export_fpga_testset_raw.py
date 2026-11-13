@@ -90,21 +90,31 @@ def cmd_fullscale(_args):
 def cmd_export(args):
     contract = json.loads(CONTRACT.read_text(encoding="utf-8"))
     fs = contract["full_scale_per_channel"]
-    _, _, test_df = splits()
+    _, val_df, test_df = splits()
+    src_df = test_df if args.split == "test" else val_df
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=False)
-    labels, clipped, n = [], np.zeros(len(fs), dtype=np.int64), 0
-    with gzip.open(out / "fpga_testset_raw.i32.gz", "wb", compresslevel=6) as gz:
-        for label, w in file_windows(test_df):
+    labels, files, clipped, n = [], [], np.zeros(len(fs), dtype=np.int64), 0
+    name = "fpga_testset_raw.i32.gz" if args.split == "test" else "fpga_valset_raw.i32.gz"
+    with gzip.open(out / name, "wb", compresslevel=6) as gz:
+        for k, (label, w) in enumerate(file_windows(src_df)):
             codes = to_adc_codes(w, fs)
             clipped += ((codes == CODE_MIN) | (codes == CODE_MAX)).sum(axis=(0, 1))
             gz.write(codes.astype("<i4").tobytes())
             labels.extend([label] * len(w))
+            files.extend([k] * len(w))
             n += len(w)
     labels = np.asarray(labels, dtype=np.int64)
+    np.savetxt(out / "labels.txt", labels, fmt="%d")
+    if args.split == "val":   # research use (Q01): selection data in the raw domain
+        np.savetxt(out / "file_ids.txt", np.asarray(files), fmt="%d")
+        (out / "meta.json").write_text(json.dumps({"split": "val", "n_windows": n, "files": len(set(files)),
+            "contract": str(CONTRACT.relative_to(REPO)).replace("\\", "/"), "full_scale_per_channel": fs,
+            "clipped_samples_per_channel": clipped.tolist()}, indent=1), encoding="utf-8")
+        print("validation windows", n)
+        return
     old = np.loadtxt(OLD_BOARD_INPUT / "labels.txt", dtype=np.int64)
     same = bool(len(old) == n and (old == labels).all())
-    np.savetxt(out / "labels.txt", labels, fmt="%d")
     meta = {"n_windows": n, "words_per_window": WINDOW * EXPECTED_NUM_COLUMNS,
             "contract": str(CONTRACT.relative_to(REPO)).replace("\\", "/"),
             "full_scale_per_channel": fs,
@@ -123,6 +133,8 @@ def main():
     sub.add_parser("fullscale")
     e = sub.add_parser("export")
     e.add_argument("--out", required=True)
+    e.add_argument("--split", choices=["test", "val"], default="test",
+                   help="test (default, the board input) or val (research selection data)")
     args = ap.parse_args()
     {"fullscale": cmd_fullscale, "export": cmd_export}[args.cmd](args)
 

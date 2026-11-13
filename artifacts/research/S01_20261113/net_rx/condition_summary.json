@@ -1,0 +1,28 @@
+{
+ "condition": "net_rx",
+ "board_run": "/home/xilinx/s01_net_rx_20261113_182108",
+ "stress": [
+  "PC->board SSH stream"
+ ],
+ "net_bytes_sent": 2747269120,
+ "wall_s": 657.4,
+ "executed": 30200,
+ "aborted": null,
+ "deadline_misses": 0,
+ "response_ms": {
+  "p50": 16.14,
+  "p95": 16.326,
+  "p99": 16.44,
+  "p99.9": 16.549
+ },
+ "response_ms_max": 16.906,
+ "copy_mm2s_ms_p99": 1.226,
+ "core_s2mm_ms_p99": 15.281,
+ "start_jitter_ms_p99": 0.014,
+ "involuntary_ctx_switches": 14,
+ "class_equal_cmodel": 30200,
+ "logits_equal_cmodel": 30200,
+ "windows": 30200,
+ "temp_max_c": 57.46,
+ "response_recomputed_max_ms": 16.906
+}

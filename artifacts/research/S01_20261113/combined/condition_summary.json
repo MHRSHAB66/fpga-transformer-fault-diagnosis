@@ -1,0 +1,30 @@
+{
+ "condition": "combined",
+ "board_run": "/home/xilinx/s01_combined_20261113_183216",
+ "stress": [
+  "taskset -c 0 python3.6 -c 'import numpy as np\na=np.ones(8<<20,np.float32); b=np.empty_like(a)\nwhile True: np.copyto(b,a)'",
+  "taskset -c 0 sh -c 'while :; do dd if=/dev/zero of=/home/xilinx/s01_io.bin bs=1M count=256 conv=fsync 2>/dev/null; dd if=/home/xilinx/s01_io.bin of=/dev/null bs=1M 2>/dev/null; done'",
+  "PC->board SSH stream"
+ ],
+ "net_bytes_sent": 2000093184,
+ "wall_s": 665.2,
+ "executed": 30200,
+ "aborted": null,
+ "deadline_misses": 0,
+ "response_ms": {
+  "p50": 16.469,
+  "p95": 16.591,
+  "p99": 16.662,
+  "p99.9": 16.746
+ },
+ "response_ms_max": 16.833,
+ "copy_mm2s_ms_p99": 1.415,
+ "core_s2mm_ms_p99": 15.364,
+ "start_jitter_ms_p99": 0.016,
+ "involuntary_ctx_switches": 14,
+ "class_equal_cmodel": 30200,
+ "logits_equal_cmodel": 30200,
+ "windows": 30200,
+ "temp_max_c": 61.89,
+ "response_recomputed_max_ms": 16.833
+}

@@ -1,0 +1,28 @@
+{
+ "condition": "sd_io",
+ "board_run": "/home/xilinx/s01_sd_io_20261113_180904",
+ "stress": [
+  "taskset -c 0 sh -c 'while :; do dd if=/dev/zero of=/home/xilinx/s01_io.bin bs=1M count=256 conv=fsync 2>/dev/null; dd if=/home/xilinx/s01_io.bin of=/dev/null bs=1M 2>/dev/null; done'"
+ ],
+ "net_bytes_sent": 0,
+ "wall_s": 709.7,
+ "executed": 30200,
+ "aborted": null,
+ "deadline_misses": 0,
+ "response_ms": {
+  "p50": 16.055,
+  "p95": 16.412,
+  "p99": 16.666,
+  "p99.9": 16.75
+ },
+ "response_ms_max": 16.852,
+ "copy_mm2s_ms_p99": 1.403,
+ "core_s2mm_ms_p99": 15.328,
+ "start_jitter_ms_p99": 0.013,
+ "involuntary_ctx_switches": 11,
+ "class_equal_cmodel": 30200,
+ "logits_equal_cmodel": 30200,
+ "windows": 30200,
+ "temp_max_c": 58.937,
+ "response_recomputed_max_ms": 16.852
+}
