@@ -1,0 +1,591 @@
+{
+ "id": "Q01",
+ "corruptions": [
+  "clean",
+  "gain2",
+  "offset",
+  "clip30",
+  "bits8",
+  "hold",
+  "lag32"
+ ],
+ "per_split_windows": 2048,
+ "thresholds": {
+  "margin": 45.0,
+  "conf": 0.9999999999999807,
+  "clipped": [
+   1e-09,
+   1e-09,
+   1e-09,
+   1e-09,
+   1e-09,
+   1e-09,
+   1e-09,
+   1e-09
+  ],
+  "longest": [
+   2,
+   1,
+   1,
+   3,
+   1,
+   1,
+   1,
+   1
+  ],
+  "lowbits": [
+   0.9951171865,
+   0.998046874,
+   0.998046874,
+   0.9970703115,
+   0.9970703115,
+   0.9951171865,
+   0.998046874,
+   0.998046874
+  ]
+ },
+ "report": {
+  "val": {
+   "none": {
+    "clean": {
+     "coverage": 1.0,
+     "risk_accepted": 0.02099609375,
+     "accepted_wrong": 43,
+     "accepted_false_healthy": 1,
+     "flagged": 0
+    },
+    "gain2": {
+     "coverage": 1.0,
+     "risk_accepted": 0.02099609375,
+     "accepted_wrong": 43,
+     "accepted_false_healthy": 1,
+     "flagged": 0
+    },
+    "offset": {
+     "coverage": 1.0,
+     "risk_accepted": 0.02099609375,
+     "accepted_wrong": 43,
+     "accepted_false_healthy": 1,
+     "flagged": 0
+    },
+    "clip30": {
+     "coverage": 1.0,
+     "risk_accepted": 0.0224609375,
+     "accepted_wrong": 46,
+     "accepted_false_healthy": 2,
+     "flagged": 0
+    },
+    "bits8": {
+     "coverage": 1.0,
+     "risk_accepted": 0.02685546875,
+     "accepted_wrong": 55,
+     "accepted_false_healthy": 4,
+     "flagged": 0
+    },
+    "hold": {
+     "coverage": 1.0,
+     "risk_accepted": 0.06884765625,
+     "accepted_wrong": 141,
+     "accepted_false_healthy": 9,
+     "flagged": 0
+    },
+    "lag32": {
+     "coverage": 1.0,
+     "risk_accepted": 0.03515625,
+     "accepted_wrong": 72,
+     "accepted_false_healthy": 8,
+     "flagged": 0
+    }
+   },
+   "conf": {
+    "clean": {
+     "coverage": 0.904296875,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_wrong": 8,
+     "accepted_false_healthy": 0,
+     "flagged": 196
+    },
+    "gain2": {
+     "coverage": 0.90380859375,
+     "risk_accepted": 0.004321988114532685,
+     "accepted_wrong": 8,
+     "accepted_false_healthy": 0,
+     "flagged": 197
+    },
+    "offset": {
+     "coverage": 0.904296875,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_wrong": 8,
+     "accepted_false_healthy": 0,
+     "flagged": 196
+    },
+    "clip30": {
+     "coverage": 0.90185546875,
+     "risk_accepted": 0.004331348132106118,
+     "accepted_wrong": 8,
+     "accepted_false_healthy": 0,
+     "flagged": 201
+    },
+    "bits8": {
+     "coverage": 0.89306640625,
+     "risk_accepted": 0.005467468562055768,
+     "accepted_wrong": 10,
+     "accepted_false_healthy": 0,
+     "flagged": 219
+    },
+    "hold": {
+     "coverage": 0.84716796875,
+     "risk_accepted": 0.02132564841498559,
+     "accepted_wrong": 37,
+     "accepted_false_healthy": 2,
+     "flagged": 313
+    },
+    "lag32": {
+     "coverage": 0.8837890625,
+     "risk_accepted": 0.008287292817679558,
+     "accepted_wrong": 15,
+     "accepted_false_healthy": 1,
+     "flagged": 238
+    }
+   },
+   "margin": {
+    "clean": {
+     "coverage": 0.904296875,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_wrong": 8,
+     "accepted_false_healthy": 0,
+     "flagged": 196
+    },
+    "gain2": {
+     "coverage": 0.90380859375,
+     "risk_accepted": 0.004321988114532685,
+     "accepted_wrong": 8,
+     "accepted_false_healthy": 0,
+     "flagged": 197
+    },
+    "offset": {
+     "coverage": 0.904296875,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_wrong": 8,
+     "accepted_false_healthy": 0,
+     "flagged": 196
+    },
+    "clip30": {
+     "coverage": 0.90185546875,
+     "risk_accepted": 0.004331348132106118,
+     "accepted_wrong": 8,
+     "accepted_false_healthy": 0,
+     "flagged": 201
+    },
+    "bits8": {
+     "coverage": 0.89306640625,
+     "risk_accepted": 0.005467468562055768,
+     "accepted_wrong": 10,
+     "accepted_false_healthy": 0,
+     "flagged": 219
+    },
+    "hold": {
+     "coverage": 0.84765625,
+     "risk_accepted": 0.02131336405529954,
+     "accepted_wrong": 37,
+     "accepted_false_healthy": 2,
+     "flagged": 312
+    },
+    "lag32": {
+     "coverage": 0.8837890625,
+     "risk_accepted": 0.008287292817679558,
+     "accepted_wrong": 15,
+     "accepted_false_healthy": 1,
+     "flagged": 238
+    }
+   },
+   "flags": {
+    "clean": {
+     "coverage": 1.0,
+     "risk_accepted": 0.02099609375,
+     "accepted_wrong": 43,
+     "accepted_false_healthy": 1,
+     "flagged": 0
+    },
+    "gain2": {
+     "coverage": 0.9970703125,
+     "risk_accepted": 0.021057786483839373,
+     "accepted_wrong": 43,
+     "accepted_false_healthy": 1,
+     "flagged": 6
+    },
+    "offset": {
+     "coverage": 1.0,
+     "risk_accepted": 0.02099609375,
+     "accepted_wrong": 43,
+     "accepted_false_healthy": 1,
+     "flagged": 0
+    },
+    "clip30": {
+     "coverage": 0.19775390625,
+     "risk_accepted": 0.02962962962962963,
+     "accepted_wrong": 12,
+     "accepted_false_healthy": 0,
+     "flagged": 1643
+    },
+    "bits8": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    },
+    "hold": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    },
+    "lag32": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    }
+   },
+   "flags+margin": {
+    "clean": {
+     "coverage": 0.904296875,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_wrong": 8,
+     "accepted_false_healthy": 0,
+     "flagged": 196
+    },
+    "gain2": {
+     "coverage": 0.90087890625,
+     "risk_accepted": 0.004336043360433604,
+     "accepted_wrong": 8,
+     "accepted_false_healthy": 0,
+     "flagged": 203
+    },
+    "offset": {
+     "coverage": 0.904296875,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_wrong": 8,
+     "accepted_false_healthy": 0,
+     "flagged": 196
+    },
+    "clip30": {
+     "coverage": 0.1689453125,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 1702
+    },
+    "bits8": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    },
+    "hold": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    },
+    "lag32": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    }
+   }
+  },
+  "test": {
+   "none": {
+    "clean": {
+     "coverage": 1.0,
+     "risk_accepted": 0.02197265625,
+     "accepted_wrong": 45,
+     "accepted_false_healthy": 4,
+     "flagged": 0
+    },
+    "gain2": {
+     "coverage": 1.0,
+     "risk_accepted": 0.0224609375,
+     "accepted_wrong": 46,
+     "accepted_false_healthy": 4,
+     "flagged": 0
+    },
+    "offset": {
+     "coverage": 1.0,
+     "risk_accepted": 0.02197265625,
+     "accepted_wrong": 45,
+     "accepted_false_healthy": 4,
+     "flagged": 0
+    },
+    "clip30": {
+     "coverage": 1.0,
+     "risk_accepted": 0.02392578125,
+     "accepted_wrong": 49,
+     "accepted_false_healthy": 4,
+     "flagged": 0
+    },
+    "bits8": {
+     "coverage": 1.0,
+     "risk_accepted": 0.02978515625,
+     "accepted_wrong": 61,
+     "accepted_false_healthy": 2,
+     "flagged": 0
+    },
+    "hold": {
+     "coverage": 1.0,
+     "risk_accepted": 0.07861328125,
+     "accepted_wrong": 161,
+     "accepted_false_healthy": 6,
+     "flagged": 0
+    },
+    "lag32": {
+     "coverage": 1.0,
+     "risk_accepted": 0.03515625,
+     "accepted_wrong": 72,
+     "accepted_false_healthy": 5,
+     "flagged": 0
+    }
+   },
+   "conf": {
+    "clean": {
+     "coverage": 0.89501953125,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 215
+    },
+    "gain2": {
+     "coverage": 0.8955078125,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 214
+    },
+    "offset": {
+     "coverage": 0.89501953125,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 215
+    },
+    "clip30": {
+     "coverage": 0.88330078125,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 239
+    },
+    "bits8": {
+     "coverage": 0.87646484375,
+     "risk_accepted": 0.0011142061281337048,
+     "accepted_wrong": 2,
+     "accepted_false_healthy": 0,
+     "flagged": 253
+    },
+    "hold": {
+     "coverage": 0.8251953125,
+     "risk_accepted": 0.027810650887573965,
+     "accepted_wrong": 47,
+     "accepted_false_healthy": 1,
+     "flagged": 358
+    },
+    "lag32": {
+     "coverage": 0.85595703125,
+     "risk_accepted": 0.0034227039361095267,
+     "accepted_wrong": 6,
+     "accepted_false_healthy": 0,
+     "flagged": 295
+    }
+   },
+   "margin": {
+    "clean": {
+     "coverage": 0.89501953125,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 215
+    },
+    "gain2": {
+     "coverage": 0.8955078125,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 214
+    },
+    "offset": {
+     "coverage": 0.89501953125,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 215
+    },
+    "clip30": {
+     "coverage": 0.88330078125,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 239
+    },
+    "bits8": {
+     "coverage": 0.87744140625,
+     "risk_accepted": 0.0011129660545353367,
+     "accepted_wrong": 2,
+     "accepted_false_healthy": 0,
+     "flagged": 251
+    },
+    "hold": {
+     "coverage": 0.8251953125,
+     "risk_accepted": 0.027810650887573965,
+     "accepted_wrong": 47,
+     "accepted_false_healthy": 1,
+     "flagged": 358
+    },
+    "lag32": {
+     "coverage": 0.85595703125,
+     "risk_accepted": 0.0034227039361095267,
+     "accepted_wrong": 6,
+     "accepted_false_healthy": 0,
+     "flagged": 295
+    }
+   },
+   "flags": {
+    "clean": {
+     "coverage": 0.99462890625,
+     "risk_accepted": 0.022091310751104567,
+     "accepted_wrong": 45,
+     "accepted_false_healthy": 4,
+     "flagged": 11
+    },
+    "gain2": {
+     "coverage": 0.99365234375,
+     "risk_accepted": 0.022604422604422605,
+     "accepted_wrong": 46,
+     "accepted_false_healthy": 4,
+     "flagged": 13
+    },
+    "offset": {
+     "coverage": 0.99462890625,
+     "risk_accepted": 0.022091310751104567,
+     "accepted_wrong": 45,
+     "accepted_false_healthy": 4,
+     "flagged": 11
+    },
+    "clip30": {
+     "coverage": 0.208984375,
+     "risk_accepted": 0.037383177570093455,
+     "accepted_wrong": 16,
+     "accepted_false_healthy": 1,
+     "flagged": 1620
+    },
+    "bits8": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    },
+    "hold": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    },
+    "lag32": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    }
+   },
+   "flags+margin": {
+    "clean": {
+     "coverage": 0.8896484375,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 226
+    },
+    "gain2": {
+     "coverage": 0.8896484375,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 226
+    },
+    "offset": {
+     "coverage": 0.8896484375,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 226
+    },
+    "clip30": {
+     "coverage": 0.166015625,
+     "risk_accepted": 0.0,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 1708
+    },
+    "bits8": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    },
+    "hold": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    },
+    "lag32": {
+     "coverage": 0.0,
+     "risk_accepted": null,
+     "accepted_wrong": 0,
+     "accepted_false_healthy": 0,
+     "flagged": 2048
+    }
+   }
+  }
+ },
+ "gate_Q01_on_validation": {
+  "none": {
+   "clean_val_coverage": 1.0,
+   "accepted_wrong_reduction_vs_none": 0.0,
+   "passes": false
+  },
+  "conf": {
+   "clean_val_coverage": 0.904296875,
+   "accepted_wrong_reduction_vs_none": 0.7770700636942676,
+   "passes": true
+  },
+  "margin": {
+   "clean_val_coverage": 0.904296875,
+   "accepted_wrong_reduction_vs_none": 0.7770700636942676,
+   "passes": true
+  },
+  "flags": {
+   "clean_val_coverage": 1.0,
+   "accepted_wrong_reduction_vs_none": 0.9617834394904459,
+   "passes": true
+  },
+  "flags+margin": {
+   "clean_val_coverage": 0.904296875,
+   "accepted_wrong_reduction_vs_none": 1.0,
+   "passes": true
+  }
+ },
+ "notes": "thresholds from clean validation only; test reported once; flags are metadata, not a class"
+}

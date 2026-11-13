@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-13T14:56:55.748761+00:00",
+  "generated_utc": "2026-11-13T15:57:26.711550+00:00",
   "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, multi-MB run dumps, board boot binaries) are gitignored and recorded here only (committed_in_git=false); copies live on disk, in the off-repo backup and on the board.",
   "repo_relative": true,
   "artifacts": [
@@ -820,6 +820,69 @@
       "present": true,
       "size_bytes": 1119,
       "sha256": "e13516514513d2f131e04ea5eb78c53a7678602803d513ca0c5451b3e1c2677a",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/raw_core_board_fulltest_20261113_184417/fulltest.out",
+      "present": true,
+      "size_bytes": 7768135,
+      "sha256": "f13ce603f590564b9250b8d8c35a73d4fc8725397432e62377d45c757216561f",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_rt_20261113_191441/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "cb1742271bbdb9fc4f725dfcc1eb02f82f5cb6a678c44fb655df66b92bafe9af",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/S01_20261113/quiet/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "50292af0dbc7128eda4ebc54668cc29b557dbd025adee454ef08c09e89c6072f",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/S01_20261113/cpu0_busy/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "95ea50d7cfd914e59aea7641e3d12773dfda679f78390af12faa9976e38a931e",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/S01_20261113/mem_copy/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "cf3048037d01ed99fe658d5239388fc3dfd84bc6624c95dda6cc6f1e30f60d1c",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/S01_20261113/cache_thrash/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "a42f864baffaf6f108c1c1799e0f762d6876454b3877ebf7de951feec4ba0b13",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/S01_20261113/sd_io/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "0e0b323590027b800114503ec1454fd11d776ef9579a02219f60e8f02c3d44d5",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/S01_20261113/net_rx/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "c2be849473df567c04891bf936cdec9d32f435f7fcce6219f7871390f6e28721",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/S01_20261113/combined/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "a2a60784a0deb8b07f30a6fcf43b1c02a887eedf2f4619fc6d655dddd29592e2",
       "committed_in_git": false
     },
     {

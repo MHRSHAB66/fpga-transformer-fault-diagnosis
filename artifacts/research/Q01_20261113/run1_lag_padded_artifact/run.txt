@@ -1,0 +1,51 @@
+val clean acc 0.9790
+val gain2 acc 0.9790
+val offset acc 0.9790
+val clip30 acc 0.9775
+val bits8 acc 0.9731
+val hold acc 0.9312
+val lag32 acc 0.9648
+test clean acc 0.9780
+test gain2 acc 0.9775
+test offset acc 0.9780
+test clip30 acc 0.9761
+test bits8 acc 0.9702
+test hold acc 0.9214
+test lag32 acc 0.9648
+val none          clean:cov1.00/wrong43 gain2:cov1.00/wrong43 offset:cov1.00/wrong43 clip30:cov1.00/wrong46 bits8:cov1.00/wrong55 hold:cov1.00/wrong141 lag32:cov1.00/wrong72
+val conf          clean:cov0.90/wrong8 gain2:cov0.90/wrong8 offset:cov0.90/wrong8 clip30:cov0.90/wrong8 bits8:cov0.89/wrong10 hold:cov0.85/wrong37 lag32:cov0.88/wrong15
+val margin        clean:cov0.90/wrong8 gain2:cov0.90/wrong8 offset:cov0.90/wrong8 clip30:cov0.90/wrong8 bits8:cov0.89/wrong10 hold:cov0.85/wrong37 lag32:cov0.88/wrong15
+val flags         clean:cov1.00/wrong43 gain2:cov1.00/wrong43 offset:cov1.00/wrong43 clip30:cov0.20/wrong12 bits8:cov0.00/wrong0 hold:cov0.00/wrong0 lag32:cov0.00/wrong0
+val flags+margin  clean:cov0.90/wrong8 gain2:cov0.90/wrong8 offset:cov0.90/wrong8 clip30:cov0.17/wrong0 bits8:cov0.00/wrong0 hold:cov0.00/wrong0 lag32:cov0.00/wrong0
+test none          clean:cov1.00/wrong45 gain2:cov1.00/wrong46 offset:cov1.00/wrong45 clip30:cov1.00/wrong49 bits8:cov1.00/wrong61 hold:cov1.00/wrong161 lag32:cov1.00/wrong72
+test conf          clean:cov0.90/wrong0 gain2:cov0.90/wrong0 offset:cov0.90/wrong0 clip30:cov0.88/wrong0 bits8:cov0.88/wrong2 hold:cov0.83/wrong47 lag32:cov0.86/wrong6
+test margin        clean:cov0.90/wrong0 gain2:cov0.90/wrong0 offset:cov0.90/wrong0 clip30:cov0.88/wrong0 bits8:cov0.88/wrong2 hold:cov0.83/wrong47 lag32:cov0.86/wrong6
+test flags         clean:cov0.99/wrong45 gain2:cov0.99/wrong46 offset:cov0.99/wrong45 clip30:cov0.21/wrong16 bits8:cov0.00/wrong0 hold:cov0.00/wrong0 lag32:cov0.00/wrong0
+test flags+margin  clean:cov0.89/wrong0 gain2:cov0.89/wrong0 offset:cov0.89/wrong0 clip30:cov0.17/wrong0 bits8:cov0.00/wrong0 hold:cov0.00/wrong0 lag32:cov0.00/wrong0
+{
+ "none": {
+  "clean_val_coverage": 1.0,
+  "accepted_wrong_reduction_vs_none": 0.0,
+  "passes": false
+ },
+ "conf": {
+  "clean_val_coverage": 0.904296875,
+  "accepted_wrong_reduction_vs_none": 0.7770700636942676,
+  "passes": true
+ },
+ "margin": {
+  "clean_val_coverage": 0.904296875,
+  "accepted_wrong_reduction_vs_none": 0.7770700636942676,
+  "passes": true
+ },
+ "flags": {
+  "clean_val_coverage": 1.0,
+  "accepted_wrong_reduction_vs_none": 0.9617834394904459,
+  "passes": true
+ },
+ "flags+margin": {
+  "clean_val_coverage": 0.904296875,
+  "accepted_wrong_reduction_vs_none": 1.0,
+  "passes": true
+ }
+}

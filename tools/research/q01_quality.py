@@ -78,7 +78,7 @@ def perturb(w, cond, ch, fs):
         for s in range(0, 1024, 32):
             c[s + 1:s + 16] = c[s]
     elif cond == "lag32":
-        c[:] = np.concatenate([np.full(32, c[0]), c[:-32]])
+        c[:] = np.roll(c, 32)   # circular: no artificial flat segment (a padded shift is caught by the run flag)
     x[:, ch] = np.clip(c, CODE_MIN, CODE_MAX)
     return x
 
