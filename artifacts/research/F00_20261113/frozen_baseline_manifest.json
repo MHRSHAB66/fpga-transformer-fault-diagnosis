@@ -1,0 +1,540 @@
+{
+ "id": "F00",
+ "created_utc": "2026-11-13T08:13:19+00:00",
+ "purpose": "Identity of the canonical baseline that every research variant is compared against. Canonical artifacts are read-only for research work.",
+ "canonical_contract": {
+  "classes": [
+   "normal",
+   "imbalance",
+   "misalignment",
+   "bearing_fault"
+  ],
+  "channels": 8,
+  "raw_window_samples": 1024,
+  "sample_rate_hz": 50000,
+  "window_period_ms": 20.48,
+  "tokens_after_on_chip_aggregation": 256,
+  "aggregation": "exact 4:1 integer mean (aggregate_round_div)",
+  "numeric": "INT10 weights/activations/attention probabilities (signed, qmax 511), Q40 requant",
+  "raw_input": "signed 24-bit ADC codes, per-window integer z-score inside the IP (onchip_preprocess.h)",
+  "decision": "argmax in FPGA logic (pred_class register); optional temporal vote k in 1..15 (vote overlay)"
+ },
+ "timing_boundary": "prepared RAM window released every 20.48 ms on CPU1 (SCHED_FIFO 50) -> copy to DMA buffer -> MM2S -> core -> S2MM + class register read; response = done - release; acquisition, SSH/TCP transport and GUI are separate boundaries",
+ "sources": [
+  {
+   "path": "src/config.py",
+   "present": true,
+   "sha256": "4469ce10a62e065e840d7fa75d017c13d32310034b90e3ca75ca3fef00093cdf",
+   "size_bytes": 5726
+  },
+  {
+   "path": "src/data/load_data.py",
+   "present": true,
+   "sha256": "e4e4559d0b60c850860e78effe49d8d1208a6f73a2878f3e3650712c8ec1cade",
+   "size_bytes": 7386
+  },
+  {
+   "path": "src/data/prepare_dataset.py",
+   "present": true,
+   "sha256": "7800f1cf36bb0b5904a7fce5995cc7df7edc66ae06c30288937947319ab10cf2",
+   "size_bytes": 9891
+  },
+  {
+   "path": "src/data/make_dataloaders.py",
+   "present": true,
+   "sha256": "2be3100b79f4243ba68c07777b4b7fc7471544002b5f371e292ee43153e6e9e4",
+   "size_bytes": 23683
+  },
+  {
+   "path": "src/data/token_aggregation.py",
+   "present": true,
+   "sha256": "80c144d80ca3f757407c3e50bb70d300972899e211420eca0b84e11725cb6905",
+   "size_bytes": 4112
+  },
+  {
+   "path": "src/models/transformer_baseline.py",
+   "present": true,
+   "sha256": "282c4b8ecc11ad2a4f403d7c926ba84eadeac78236ba1648ae7934661b4b4c21",
+   "size_bytes": 19648
+  },
+  {
+   "path": "src/quantize/integer_model.py",
+   "present": true,
+   "sha256": "991c3cc4acf1ad2c0418761220afe9dd92742de52aaa906f7a1d93a551888b97",
+   "size_bytes": 18951
+  },
+  {
+   "path": "src/quantize/integer_ops.py",
+   "present": true,
+   "sha256": "eb646ab8d4a7655029f12743a35bd3255708f957cc7aa14c5ab0821dc1889c20",
+   "size_bytes": 11195
+  },
+  {
+   "path": "src/quantize/evaluate_integer_bits.py",
+   "present": true,
+   "sha256": "bba57237fc80f77fee4bc5c7a133c9f054d6efa80596562bba0480ce572d22e9",
+   "size_bytes": 4880
+  },
+  {
+   "path": "src/quantize/export_hls_seq256_int10.py",
+   "present": true,
+   "sha256": "6ae1727d33a43b20e6f5ae1e0fe4c945ac08b9a0503518623ee7b6c80b138501",
+   "size_bytes": 13336
+  },
+  {
+   "path": "src/quantize/onchip_preprocess.py",
+   "present": true,
+   "sha256": "e91feb5df923db88289c2ae2505f187eb488c6cab5bbf22fffd13c70ced4fce5",
+   "size_bytes": 3747
+  },
+  {
+   "path": "host/temporal_vote.py",
+   "present": true,
+   "sha256": "65094a5dbfe437190e8b2f4ce7ac13f2e9045351cd1b9f132ccdcfadddf69e21",
+   "size_bytes": 1521
+  },
+  {
+   "path": "host/confidence.py",
+   "present": true,
+   "sha256": "9c957a5aa49831d34456a35669895c22a5d3df6597429482ca922f374bf9be82",
+   "size_bytes": 4134
+  },
+  {
+   "path": "pynq/fault_classifier.py",
+   "present": true,
+   "sha256": "cc612758b07b6ddc7d8877861f2788451c2790d45232d870401fd4218b4b43b7",
+   "size_bytes": 20132
+  },
+  {
+   "path": "tools/board/fpga_live_runner.py",
+   "present": true,
+   "sha256": "871249ddc7bec16c1a0ab8c30a70612d8a3c31117d57ff36ba9fb3c53f0fbfb8",
+   "size_bytes": 24628
+  },
+  {
+   "path": "tools/board/fpga_rt_acceptance.py",
+   "present": true,
+   "sha256": "a473a225dcc00e96518f1529f9aaba72a157c2d05dea75ba5e445839b7eda3c6",
+   "size_bytes": 8378
+  },
+  {
+   "path": "tools/board/temp_guard.sh",
+   "present": true,
+   "sha256": "602432ae5ed1c0e5663c7ccd03014b98ff0a63f9877c5b52d73bfd80dca40848",
+   "size_bytes": 1459
+  },
+  {
+   "path": "tools/robustness_cmodel.py",
+   "present": true,
+   "sha256": "8b0585afcbdc283530cd343edf56f5be278c1e98bb23a23a9ea48cc50c77a6f3",
+   "size_bytes": 6021
+  }
+ ],
+ "model_and_export": [
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/kaggle_v3/seq256_pool4/scratch/best.pt",
+   "present": true,
+   "sha256": "49c5f6019fb692b290f2f6db6e388bdf68ce7a80109a07a2d10d919d4165459e",
+   "size_bytes": 77779
+  },
+  {
+   "path": "artifacts/experiments/transformer_f1_seq256_pool4/kaggle_v3/seq256_pool4/summary.json",
+   "present": true,
+   "sha256": "869c9fde0ac2a2858346a11b957a2d7e0f8dd4cc50e5a8630626607035d529dd",
+   "size_bytes": 3648
+  },
+  {
+   "path": "artifacts/quantized/f_seq256_int10/integer_config.json",
+   "present": true,
+   "sha256": "76381cbfb1e54a325043ea078a525ccdb789d621dc5740eed5a0ba1a057874bf",
+   "size_bytes": 978
+  },
+  {
+   "path": "hls/f1_int10_seq256/model_manifest.json",
+   "present": true,
+   "sha256": "68d88ff2e3b2bb62822e0ec32eb9461d53430e0f72e3a07add8024a2094988d3",
+   "size_bytes": 704
+  },
+  {
+   "path": "artifacts/preprocessing/raw_input_contract_v1.json",
+   "present": true,
+   "sha256": "1bf78ebf859f97735cc4d463404136afe8f8c967cff5818c3338b868c0dee388",
+   "size_bytes": 959
+  }
+ ],
+ "hls_sources": [
+  {
+   "path": "hls/f1_int10_seq256/gpp_csim/batch_logits.cpp",
+   "present": true,
+   "sha256": "e2fb78a206893c0bcf4dea17c051a15ca765d3d2df9317312a563391988dbba3",
+   "size_bytes": 2932
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/ap_types.h",
+   "present": true,
+   "sha256": "2075a8f1c152438c13512c541cb64ae7b67628b2dfcfe26b2a4af71a0aef58a1",
+   "size_bytes": 1423
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/argmax_first_max.h",
+   "present": true,
+   "sha256": "9797de899b7aa4d74105118c5e391e803a9e9f77e70ab0b74ada603db75e0fff",
+   "size_bytes": 919
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/onchip_preprocess.h",
+   "present": true,
+   "sha256": "ff88e360bfae88469329399aab4e953d62d7922667f631bbaab5fdfbbfe032d0",
+   "size_bytes": 8368
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/temporal_vote.h",
+   "present": true,
+   "sha256": "c29b14572f3a3eaa6c28475d63abd0eac0aecd0fe54a15595b87eea43c312ac0",
+   "size_bytes": 3188
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/transformer_top_seq256_raw1024_dsp_margin_argmax.cpp",
+   "present": true,
+   "sha256": "7d1b191a827e788777f7dd32905145508987ca83b7cdd5cd4cc7d97d11db6db4",
+   "size_bytes": 26787
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/transformer_top_seq256_raw1024_dsp_margin_vote.cpp",
+   "present": true,
+   "sha256": "965f0370ee54a4e5858a94ec0b4f32443930b1efd8d0de51e8d9791da1a13219",
+   "size_bytes": 28201
+  },
+  {
+   "path": "hls/f1_int10_seq256/vitis/weights_int10.h",
+   "present": true,
+   "sha256": "fae860741774b0b6048768357dd21a4de61a3abcac576a780b6a9f9c142ef4ac",
+   "size_bytes": 77881
+  }
+ ],
+ "golden": [
+  {
+   "path": "hls/f1_int10_seq256/golden_raw1024_argmax/golden_in.txt",
+   "present": true,
+   "sha256": "177de104f8844579a47b9f8d75885e7d8aa743be8089992179de80316eb62aa7",
+   "size_bytes": 2165471
+  },
+  {
+   "path": "hls/f1_int10_seq256/golden_raw1024_argmax/golden_expected.txt",
+   "present": true,
+   "sha256": "a24b7af7656c2e62058d027123d6cd2fe7f8d12a454dcdf9c13a1885fe7151fa",
+   "size_bytes": 962
+  },
+  {
+   "path": "hls/f1_int10_seq256/golden_ingress1024/golden_in.txt",
+   "present": true,
+   "sha256": "434aa072d491a650a9d5524ac412a7d770c22fff1a7bb93190ffed970f4fc5aa",
+   "size_bytes": 437024
+  },
+  {
+   "path": "hls/f1_int10_seq256/golden_ingress1024/golden_expected.txt",
+   "present": true,
+   "sha256": "7cb776b89d2c5d9b686bb05599f97e32f77e5a4519985ba030125326a18d8468",
+   "size_bytes": 399
+  }
+ ],
+ "reference_outputs": [
+  {
+   "path": "artifacts/results/onchip_preprocess_20261109/csim_raw_argmax/csim_logits.txt",
+   "present": true,
+   "sha256": "70f68c7c327144cc82e7042bb9770331273703e589b363c3bb2fb08c6d3dd834",
+   "size_bytes": 2424963
+  },
+  {
+   "path": "artifacts/results/fpga_rawinput_testset_20261109/labels.txt",
+   "present": true,
+   "sha256": "91a14dc25f120a8b9a1e8e3350ac252a48a49a2d09ab90f47b141ac785102264",
+   "size_bytes": 286212
+  }
+ ],
+ "large_binaries_from_artifact_manifest": [
+  {
+   "path": "artifacts/results/fpga_rawinput_testset_20261109/fpga_testset_raw.i32.gz",
+   "present": true,
+   "size_bytes": 2342586716,
+   "sha256": "b5077de80001f7efcd1285974b1786be185e5d1bb111c9bab9c397168cd59be4",
+   "committed_in_git": false
+  },
+  {
+   "path": "artifacts/deploy/seq256_raw_argmax_z7020_20261109/overlay/design_1_wrapper.bit",
+   "present": true,
+   "size_bytes": 4045676,
+   "sha256": "57fff3aa92c49240938d0f6eef8f547882f26d1c0b5ba77bb087ad02d55bc310",
+   "committed_in_git": false
+  },
+  {
+   "path": "artifacts/deploy/seq256_vote_z7020_20261110/overlay/design_1_wrapper.bit",
+   "present": true,
+   "size_bytes": 4045676,
+   "sha256": "d721ebf8780e0dc8f929bba74da2d50ca8fb73292a82f8bf90e3bec7f60cfa22",
+   "committed_in_git": false
+  },
+  {
+   "path": "artifacts/results/seq256_dma_raw_argmax_z7020_20261109/bitstream/design_1.hwh",
+   "present": true,
+   "size_bytes": 340937,
+   "sha256": "e24091ddeacbabe2f8dd4879a423d56d9b44c16c94740005f87c323fe42202ec",
+   "committed_in_git": true
+  },
+  {
+   "path": "artifacts/results/seq256_dma_vote_z7020_20261110/bitstream/design_1.hwh",
+   "present": true,
+   "size_bytes": 347389,
+   "sha256": "a7b16cc5af69d6a407c4c0ed9424b46717c96f90360e0984af340f24f268eec8",
+   "committed_in_git": true
+  }
+ ],
+ "split": {
+  "train": {
+   "files": 1365,
+   "sha256_sorted_relpaths": "743560d8b18ce945610a60938b77171ec0bceb518999ada304c776dad5f1c9a0"
+  },
+  "val": {
+   "files": 195,
+   "sha256_sorted_relpaths": "8cc36038fc7b968787452624b3ac513811019cf0fb017dc1dd75a0da5c659a85"
+  },
+  "test": {
+   "files": 391,
+   "sha256_sorted_relpaths": "3db5cc4652a5995196bdf4a6359275e52ead906e82e6c3cec01b30ba52161246"
+  },
+  "calibration_int10_export": {
+   "files": 20,
+   "relpaths_in_sample_order": [
+    "overhang/ball_fault/6g/26.4192.csv",
+    "overhang/outer_race/35g/20.2752.csv",
+    "overhang/cage_fault/35g/15.5648.csv",
+    "underhang/ball_fault/20g/38.5024.csv",
+    "horizontal-misalignment/2.0mm/31.5392.csv",
+    "overhang/outer_race/20g/27.648.csv",
+    "overhang/cage_fault/0g/24.9856.csv",
+    "underhang/outer_race/0g/38.7072.csv",
+    "vertical-misalignment/0.51mm/28.4672.csv",
+    "overhang/outer_race/20g/55.296.csv",
+    "vertical-misalignment/1.40mm/47.7184.csv",
+    "imbalance/6g/51.8144.csv",
+    "underhang/outer_race/0g/44.6464.csv",
+    "underhang/ball_fault/6g/60.2112.csv",
+    "horizontal-misalignment/2.0mm/44.032.csv",
+    "overhang/ball_fault/6g/33.792.csv",
+    "vertical-misalignment/1.40mm/25.8048.csv",
+    "overhang/cage_fault/35g/43.008.csv",
+    "underhang/cage_fault/35g/42.3936.csv",
+    "imbalance/25g/34.6112.csv"
+   ],
+   "rule": "train split, DataFrame.sample(n=20, random_state=42)"
+  },
+  "validation_files_relpaths": [
+   "horizontal-misalignment/0.5mm/16.384.csv",
+   "horizontal-misalignment/0.5mm/18.8416.csv",
+   "horizontal-misalignment/0.5mm/37.888.csv",
+   "horizontal-misalignment/0.5mm/44.8512.csv",
+   "horizontal-misalignment/0.5mm/50.176.csv",
+   "horizontal-misalignment/1.0mm/13.7216.csv",
+   "horizontal-misalignment/1.0mm/23.7568.csv",
+   "horizontal-misalignment/1.0mm/34.6112.csv",
+   "horizontal-misalignment/1.0mm/42.3936.csv",
+   "horizontal-misalignment/1.0mm/43.4176.csv",
+   "horizontal-misalignment/1.0mm/50.176.csv",
+   "horizontal-misalignment/1.5mm/20.6848.csv",
+   "horizontal-misalignment/1.5mm/30.5152.csv",
+   "horizontal-misalignment/1.5mm/50.5856.csv",
+   "horizontal-misalignment/1.5mm/53.8624.csv",
+   "horizontal-misalignment/2.0mm/24.1664.csv",
+   "horizontal-misalignment/2.0mm/33.5872.csv",
+   "horizontal-misalignment/2.0mm/34.2016.csv",
+   "horizontal-misalignment/2.0mm/56.32.csv",
+   "imbalance/10g/13.9264.csv",
+   "imbalance/10g/22.9376.csv",
+   "imbalance/10g/27.648.csv",
+   "imbalance/10g/29.4912.csv",
+   "imbalance/15g/19.6608.csv",
+   "imbalance/15g/27.8528.csv",
+   "imbalance/15g/34.816.csv",
+   "imbalance/15g/40.1408.csv",
+   "imbalance/15g/46.4896.csv",
+   "imbalance/15g/49.5616.csv",
+   "imbalance/15g/51.4048.csv",
+   "imbalance/15g/53.8624.csv",
+   "imbalance/15g/58.1632.csv",
+   "imbalance/15g/60.2112.csv",
+   "imbalance/20g/20.6848.csv",
+   "imbalance/20g/21.504.csv",
+   "imbalance/20g/22.7328.csv",
+   "imbalance/25g/15.1552.csv",
+   "imbalance/25g/20.6848.csv",
+   "imbalance/25g/27.2384.csv",
+   "imbalance/25g/37.6832.csv",
+   "imbalance/25g/39.5264.csv",
+   "imbalance/25g/45.8752.csv",
+   "imbalance/30g/18.2272.csv",
+   "imbalance/30g/54.0672.csv",
+   "imbalance/35g/39.1168.csv",
+   "imbalance/35g/42.5984.csv",
+   "imbalance/35g/55.0912.csv",
+   "imbalance/6g/17.408.csv",
+   "imbalance/6g/21.7088.csv",
+   "imbalance/6g/30.5152.csv",
+   "imbalance/6g/31.5392.csv",
+   "imbalance/6g/32.9728.csv",
+   "normal/14.336.csv",
+   "normal/23.552.csv",
+   "normal/32.9728.csv",
+   "normal/57.9584.csv",
+   "normal/59.5968.csv",
+   "overhang/ball_fault/0g/27.4432.csv",
+   "overhang/ball_fault/0g/40.3456.csv",
+   "overhang/ball_fault/0g/45.2608.csv",
+   "overhang/ball_fault/0g/47.5136.csv",
+   "overhang/ball_fault/0g/60.416.csv",
+   "overhang/ball_fault/35g/19.456.csv",
+   "overhang/ball_fault/35g/26.4192.csv",
+   "overhang/ball_fault/6g/16.9984.csv",
+   "overhang/ball_fault/6g/41.5744.csv",
+   "overhang/ball_fault/6g/42.3936.csv",
+   "overhang/ball_fault/6g/48.5376.csv",
+   "overhang/cage_fault/0g/14.1312.csv",
+   "overhang/cage_fault/0g/22.3232.csv",
+   "overhang/cage_fault/0g/23.1424.csv",
+   "overhang/cage_fault/0g/35.2256.csv",
+   "overhang/cage_fault/0g/59.392.csv",
+   "overhang/cage_fault/20g/14.5408.csv",
+   "overhang/cage_fault/20g/16.384.csv",
+   "overhang/cage_fault/20g/29.696.csv",
+   "overhang/cage_fault/20g/57.5488.csv",
+   "overhang/cage_fault/35g/18.2272.csv",
+   "overhang/cage_fault/35g/36.4544.csv",
+   "overhang/cage_fault/35g/40.96.csv",
+   "overhang/cage_fault/35g/48.7424.csv",
+   "overhang/cage_fault/6g/40.5504.csv",
+   "overhang/outer_race/0g/31.744.csv",
+   "overhang/outer_race/0g/33.1776.csv",
+   "overhang/outer_race/0g/46.2848.csv",
+   "overhang/outer_race/20g/18.2272.csv",
+   "overhang/outer_race/20g/23.552.csv",
+   "overhang/outer_race/20g/31.1296.csv",
+   "overhang/outer_race/20g/36.864.csv",
+   "overhang/outer_race/20g/49.3568.csv",
+   "overhang/outer_race/20g/53.4528.csv",
+   "overhang/outer_race/20g/58.1632.csv",
+   "overhang/outer_race/35g/31.1296.csv",
+   "overhang/outer_race/35g/49.5616.csv",
+   "overhang/outer_race/35g/50.5856.csv",
+   "overhang/outer_race/6g/21.2992.csv",
+   "overhang/outer_race/6g/33.3824.csv",
+   "overhang/outer_race/6g/37.6832.csv",
+   "overhang/outer_race/6g/51.2.csv",
+   "overhang/outer_race/6g/57.5488.csv",
+   "overhang/outer_race/6g/58.1632.csv",
+   "underhang/ball_fault/0g/23.9616.csv",
+   "underhang/ball_fault/0g/45.6704.csv",
+   "underhang/ball_fault/0g/52.8384.csv",
+   "underhang/ball_fault/0g/55.0912.csv",
+   "underhang/ball_fault/20g/14.1312.csv",
+   "underhang/ball_fault/20g/21.7088.csv",
+   "underhang/ball_fault/20g/50.5856.csv",
+   "underhang/ball_fault/20g/57.344.csv",
+   "underhang/ball_fault/35g/32.9728.csv",
+   "underhang/ball_fault/35g/42.1888.csv",
+   "underhang/ball_fault/6g/17.2032.csv",
+   "underhang/ball_fault/6g/26.8288.csv",
+   "underhang/ball_fault/6g/37.2736.csv",
+   "underhang/ball_fault/6g/46.4896.csv",
+   "underhang/cage_fault/0g/15.5648.csv",
+   "underhang/cage_fault/0g/38.2976.csv",
+   "underhang/cage_fault/0g/39.5264.csv",
+   "underhang/cage_fault/0g/56.5248.csv",
+   "underhang/cage_fault/0g/58.5728.csv",
+   "underhang/cage_fault/20g/13.312.csv",
+   "underhang/cage_fault/20g/16.384.csv",
+   "underhang/cage_fault/20g/31.9488.csv",
+   "underhang/cage_fault/20g/37.0688.csv",
+   "underhang/cage_fault/20g/43.4176.csv",
+   "underhang/cage_fault/20g/44.4416.csv",
+   "underhang/cage_fault/20g/57.9584.csv",
+   "underhang/cage_fault/20g/60.6208.csv",
+   "underhang/cage_fault/35g/20.2752.csv",
+   "underhang/cage_fault/35g/35.2256.csv",
+   "underhang/cage_fault/35g/43.4176.csv",
+   "underhang/cage_fault/35g/46.4896.csv",
+   "underhang/cage_fault/35g/50.5856.csv",
+   "underhang/cage_fault/35g/56.5248.csv",
+   "underhang/cage_fault/6g/14.336.csv",
+   "underhang/cage_fault/6g/30.72.csv",
+   "underhang/cage_fault/6g/32.768.csv",
+   "underhang/cage_fault/6g/42.3936.csv",
+   "underhang/cage_fault/6g/45.4656.csv",
+   "underhang/cage_fault/6g/53.6576.csv",
+   "underhang/cage_fault/6g/54.6816.csv",
+   "underhang/outer_race/0g/24.576.csv",
+   "underhang/outer_race/0g/33.792.csv",
+   "underhang/outer_race/0g/47.9232.csv",
+   "underhang/outer_race/0g/55.296.csv",
+   "underhang/outer_race/20g/12.9024.csv",
+   "underhang/outer_race/20g/16.9984.csv",
+   "underhang/outer_race/20g/24.3712.csv",
+   "underhang/outer_race/20g/30.72.csv",
+   "underhang/outer_race/20g/32.3584.csv",
+   "underhang/outer_race/20g/51.2.csv",
+   "underhang/outer_race/20g/57.5488.csv",
+   "underhang/outer_race/20g/61.44.csv",
+   "underhang/outer_race/35g/28.672.csv",
+   "underhang/outer_race/35g/48.9472.csv",
+   "underhang/outer_race/6g/14.336.csv",
+   "underhang/outer_race/6g/29.0816.csv",
+   "underhang/outer_race/6g/35.6352.csv",
+   "underhang/outer_race/6g/38.2976.csv",
+   "underhang/outer_race/6g/49.9712.csv",
+   "underhang/outer_race/6g/50.5856.csv",
+   "underhang/outer_race/6g/54.4768.csv",
+   "underhang/outer_race/6g/55.7056.csv",
+   "underhang/outer_race/6g/60.6208.csv",
+   "vertical-misalignment/0.51mm/32.3584.csv",
+   "vertical-misalignment/0.51mm/37.6832.csv",
+   "vertical-misalignment/0.51mm/55.5008.csv",
+   "vertical-misalignment/0.51mm/61.2352.csv",
+   "vertical-misalignment/0.63mm/13.312.csv",
+   "vertical-misalignment/0.63mm/25.6.csv",
+   "vertical-misalignment/0.63mm/31.1296.csv",
+   "vertical-misalignment/0.63mm/33.5872.csv",
+   "vertical-misalignment/0.63mm/36.6592.csv",
+   "vertical-misalignment/0.63mm/37.2736.csv",
+   "vertical-misalignment/0.63mm/45.2608.csv",
+   "vertical-misalignment/1.27mm/15.36.csv",
+   "vertical-misalignment/1.27mm/28.672.csv",
+   "vertical-misalignment/1.27mm/43.4176.csv",
+   "vertical-misalignment/1.40mm/36.0448.csv",
+   "vertical-misalignment/1.40mm/37.888.csv",
+   "vertical-misalignment/1.40mm/40.7552.csv",
+   "vertical-misalignment/1.40mm/42.3936.csv",
+   "vertical-misalignment/1.40mm/44.6464.csv",
+   "vertical-misalignment/1.40mm/52.0192.csv",
+   "vertical-misalignment/1.40mm/54.272.csv",
+   "vertical-misalignment/1.78mm/15.1552.csv",
+   "vertical-misalignment/1.78mm/15.9744.csv",
+   "vertical-misalignment/1.78mm/20.48.csv",
+   "vertical-misalignment/1.78mm/23.9616.csv",
+   "vertical-misalignment/1.78mm/38.0928.csv",
+   "vertical-misalignment/1.78mm/48.128.csv",
+   "vertical-misalignment/1.78mm/50.3808.csv",
+   "vertical-misalignment/1.78mm/56.5248.csv",
+   "vertical-misalignment/1.78mm/57.344.csv",
+   "vertical-misalignment/1.90mm/49.3568.csv"
+  ]
+ },
+ "versions": {
+  "python": "3.12.2",
+  "numpy": "2.2.3",
+  "torch": "2.7.1+cu118",
+  "sklearn": "1.9.0",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "gpp": "g++ (GCC) 15.2.0",
+  "vivado_vitis_hls": "2020.2 (G:/Xilinx/Vivado/2020.2, G:/Xilinx/Vitis_HLS/2020.2)",
+  "board": "MYIR Z-Turn XC7Z020 (xc7z020clg400-1), PYNQ 2.4 image, Linux 4.14.0-xilinx SMP PREEMPT, Python 3.6",
+  "git_head": "cef5ca4862834bbdfce8e8390cd19b5338330242"
+ }
+}

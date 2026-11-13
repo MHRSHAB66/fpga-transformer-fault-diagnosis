@@ -1,0 +1,43 @@
+{
+ "id": "F00",
+ "frozen": "2026-11-13, before any A02/A03/B01/Q01/T01 result was computed",
+ "source_of_gates": "research_notes/مسیرهای پژوهشی تازه برای برد/experiment_manifest.json and the accompanying report (2026-11-11); thresholds copied unchanged unless a rationale is given here",
+ "data_roles": {
+  "calibration": "the INT10 export's 20 training files (frozen_baseline_manifest.json: split.calibration_int10_export); every precision variant recalibrates on exactly these files",
+  "selection": "canonical validation split: 195 files (frozen hash 8cc36038...), SEQ=256 windows from the canonical pipeline",
+  "test": "canonical test split (391 files, 95,404 windows) was explored many times; any test number is reported as 'previously explored test', never as independent confirmation",
+  "statistical_unit": "file (recording). Paired file-level bootstrap, 2,000 replicates, seed 20261113, for differences against the baseline; window counts are reported but are not independent samples"
+ },
+ "reference_rules": {
+  "exact_specialization": "must reproduce the ORIGINAL canonical reference (C-model/goldens/board) logit for logit",
+  "different_numerics": "a precision variant is checked against its OWN versioned Python reference; it is never compared to the canonical goldens for exactness",
+  "instrumentation_off": "an instrumented model with injection/status disabled must reproduce the canonical logits exactly"
+ },
+ "gates": {
+  "A02_flat_row_mechanism": {
+   "supported_iff_all": [
+    "signed-probability-8 produces all-zero attention rows in >= 1 % of (window, head, query) rows on validation",
+    "windows whose prediction changes from INT10 to P8-signed have a higher zero-row rate than unchanged windows",
+    "removing zero rows (P8-unsigned or P9-signed) recovers >= 50 % of the P8-signed accuracy loss versus INT10"
+   ],
+   "otherwise": "reject flat rows as the cause of the precision loss on real data; keep the synthetic observation and the negative result"
+  },
+  "A02_precision_finalist": {
+   "accuracy_gate": "validation macro-F1 drop <= 0.3 pp and no per-class recall drop > 1 pp versus INT10 (paired file bootstrap reported)",
+   "hardware_gate_for_A05": ">= 15 % improvement of one post-route resource/time target (LUT, DSP, BRAM or latency) of the integrated design"
+  },
+  "A03_A04_exact_specialization": {
+   "correctness": "100 % logit equality on all goldens, on the 95,404 raw test windows (C-model) and on constructed boundary cases (+-511, -512 bit pattern policy stated, rounding ties, saturation)",
+   "continue_to_build": ">= 10 % DSP or >= 15 % LUT/latency saving on the single operator in HLS synthesis; otherwise stop the branch and record why",
+   "integrated": "post-route improvement of the full design with timing closure"
+  },
+  "B01_vulnerability": {
+   "continue_to_B02": "silent class corruptions are concentrated: the two most vulnerable stage groups account for >= 60 % of silent class corruptions (rationale: selective protection only pays off if vulnerability is concentrated; 2 of 8 groups = 25 %)",
+   "B02_B03_gates": "-80 % silent class corruption on a held-out confirmation injection manifest; 0 false integrity flags on the 95,404 clean windows; exact match with instrumentation off; <= +5 % LUT and <= 2 extra DSP; timing closure"
+  },
+  "Q01_quality": "at >= 90 % coverage of clean validation windows, >= 30 % fewer accepted wrong outputs under the corruption set, false-healthy and rejection duration reported, no hiding by long rejection periods",
+  "T01_temporal": ">= 20 % lower p95 decision delay than the best simple comparator at a matched false-switch budget and maximum horizon, no increase in unresolved events, steady-state macro-F1 drop <= 0.5 pp; stop if simple hysteresis is equal",
+  "S01_streaming": "per operating point: 0 logit differences, 0 gaps/overflows, 0 deadline misses in 30,000 windows, bounded queue; an improvement claim needs a wider envelope or >= 25 % lower worst-case response under matched load"
+ },
+ "claim_levels": ["proposed", "implemented", "software-measured", "simulated (C-model/HLS csim)", "synthesized", "post-route", "physically measured", "independently confirmed"]
+}
