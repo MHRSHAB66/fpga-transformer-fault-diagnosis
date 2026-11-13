@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-13T11:15:09.762818+00:00",
+  "generated_utc": "2026-11-13T11:15:29.123357+00:00",
   "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, multi-MB run dumps, board boot binaries) are gitignored and recorded here only (committed_in_git=false); copies live on disk, in the off-repo backup and on the board.",
   "repo_relative": true,
   "artifacts": [
@@ -778,6 +778,76 @@
       "present": true,
       "size_bytes": 1119,
       "sha256": "7bc4d7126605ba59e07d9c5d6ef744a7992144d598e91172b3631e6c4c70237b",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/research/A02_20261113/int10/val_outputs.npz",
+      "present": true,
+      "size_bytes": 1364147,
+      "sha256": "7d61726e3740546848d4c568cc1a73a828831d28fb807532fa1ee678d4e059af",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/A02_20261113/int8/val_outputs.npz",
+      "present": true,
+      "size_bytes": 1275750,
+      "sha256": "2758c713746a91be2f663605244713a26fd478a647cbe22b7d1f4a6ae2f6d220",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/A02_20261113/w8/val_outputs.npz",
+      "present": true,
+      "size_bytes": 1363863,
+      "sha256": "f05203a381c2192d7ae6c076f03943b311c2c9b4df65d15d6028716d042e1946",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/A02_20261113/a8/val_outputs.npz",
+      "present": true,
+      "size_bytes": 1347241,
+      "sha256": "4791734e5a7c280806f3acbff75aee35cf0098280a8e8c3dde76ca1212bd708d",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/A02_20261113/p8s/val_outputs.npz",
+      "present": true,
+      "size_bytes": 1305102,
+      "sha256": "bc63224f828126ef7941616b5b1bcc6ad2661ff00cc70a943198c61314feaeee",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/A02_20261113/p9s/val_outputs.npz",
+      "present": true,
+      "size_bytes": 1384787,
+      "sha256": "b8b203cc83173aaf42f8ef20ee521d2872aea6c321ec8ac724c5612e1d645635",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/A02_20261113/p8u/val_outputs.npz",
+      "present": true,
+      "size_bytes": 1384787,
+      "sha256": "b8b203cc83173aaf42f8ef20ee521d2872aea6c321ec8ac724c5612e1d645635",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/A02_20261113/w8a8_p9s/val_outputs.npz",
+      "present": true,
+      "size_bytes": 1353864,
+      "sha256": "97640bea15a8c4a548e3462c09ffa0e259f8c3d9facece37a15217eb70110152",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/A02_20261113/w8a8_p10s/val_outputs.npz",
+      "present": true,
+      "size_bytes": 1347809,
+      "sha256": "53d10a5ca85d2975c66a054a2d9eac1f7ad6a3b91b69ce03bdb733bc961ce766",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/A02_20261113/w8a8_p8u/val_outputs.npz",
+      "present": true,
+      "size_bytes": 1353864,
+      "sha256": "97640bea15a8c4a548e3462c09ffa0e259f8c3d9facece37a15217eb70110152",
       "committed_in_git": false
     }
   ]
