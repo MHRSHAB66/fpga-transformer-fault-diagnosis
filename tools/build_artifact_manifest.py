@@ -183,6 +183,15 @@ TARGETS = [
     "artifacts/research/A02_20261113/w8a8_p9s/val_outputs.npz",
     "artifacts/research/A02_20261113/w8a8_p10s/val_outputs.npz",
     "artifacts/research/A02_20261113/w8a8_p8u/val_outputs.npz",
+    # research Q01: raw validation windows for the bit-exact C-model
+    "artifacts/results/fpga_rawinput_valset_20261113/fpga_valset_raw.i32.gz",
+    # research A06: unsigned 8-bit probabilities + exact 8-bit divider
+    "artifacts/research/A06_20261113/a06_build/bitstream/design_1_wrapper.bit",
+    "artifacts/research/A06_20261113/a06_build/bitstream/seq256_dma_system.xsa",
+    "artifacts/deploy/research_a06_z7020_20261113/overlay/design_1_wrapper.bit",
+    "artifacts/deploy/research_a06_z7020_20261113/MANIFEST.sha256",
+    "artifacts/results/raw_core_board_fulltest_20261113_213019/fulltest.out",
+    "artifacts/results/raw_core_board_rt_20261113_220122/out/rt_raw.npz",
 ]
 
 

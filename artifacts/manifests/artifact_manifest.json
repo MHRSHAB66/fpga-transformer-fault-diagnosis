@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-13T15:57:26.711550+00:00",
+  "generated_utc": "2026-11-13T18:45:22.710674+00:00",
   "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, multi-MB run dumps, board boot binaries) are gitignored and recorded here only (committed_in_git=false); copies live on disk, in the off-repo backup and on the board.",
   "repo_relative": true,
   "artifacts": [
@@ -953,6 +953,55 @@
       "present": true,
       "size_bytes": 1353864,
       "sha256": "97640bea15a8c4a548e3462c09ffa0e259f8c3d9facece37a15217eb70110152",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/fpga_rawinput_valset_20261113/fpga_valset_raw.i32.gz",
+      "present": true,
+      "size_bytes": 1168450533,
+      "sha256": "b5515215966df74bf850fae152fa96cc96a79873b497f21c1b61485981c56d3c",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/A06_20261113/a06_build/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "83e9cee84524675cd8db52a118a57ed4c8688092b635674274a09c05df900029",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/A06_20261113/a06_build/bitstream/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1349896,
+      "sha256": "0cd658985f8342aedd82978c9949f49c347ef81372f914046d4b3280724bf7b2",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_a06_z7020_20261113/overlay/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "83e9cee84524675cd8db52a118a57ed4c8688092b635674274a09c05df900029",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_a06_z7020_20261113/MANIFEST.sha256",
+      "present": true,
+      "size_bytes": 1119,
+      "sha256": "f37300bc4a7b2e07909a1e2aa6f3d2b42b9969b680940584db2bb1e6b3929900",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_fulltest_20261113_213019/fulltest.out",
+      "present": true,
+      "size_bytes": 6625062,
+      "sha256": "b5831319feab9eedb66a876629ed326ce051fd922fdf2837aa25aebd518085bf",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_rt_20261113_220122/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "2139eedd020efa5d9919fb7fa9de590591a3ae1f889066d9db8f363917ed7adf",
       "committed_in_git": false
     }
   ]

@@ -163,6 +163,26 @@
    "outcome": "Protections chosen on the B01 pilot (94.4 % modelled reduction there) and confirmed on a held-out campaign (new seed: new windows and events; injection-off = canonical): silent class corruptions 76 -> 67 (range only), 16 (parity + duplicated tail), 7 (all three) = -90.8 %, above the frozen 80 % gate. Remaining: projection-accumulator mid bits 5, QKV 1, probability 1. Cost under faults: 1,084 flags on faults that did not change the class (availability, not false flags on clean data). Hardware variant B02 v1 (hls/research/b02_integrity/, generated from the canonical raw top): input-buffer XOR signature (write vs after projection read), duplicated cls4 + argmax, projection accumulator range check (bound 719,316 from weights_int10.h); research register integrity_status. Context/FFN range checks left out (0 class changes there in B01). C-model: goldens 41/41 identical + status 0 (incl. edge windows); 95,404 test windows: logits and class identical to canonical, integrity_status 0 on all (0 false flags). Post-route (XC7Z020, 100 MHz): LUT 36,670 -> 37,035 (+1.0 %), FF 36,163 -> 36,606 (+1.2 %), DSP 210 (+0), BRAM 76.5 (+0), WNS +0.202 ns; HLS C-simulation 41/41 exact with integrity_status 0. Overhead gate (<= 5 % LUT, <= 2 DSP, timing) passed. Board (deployment research_b02_z7020_20261113): golden 41/41 incl. 8 ties; full test 95,404/95,404 logits and class = canonical C-model, accuracy 97.7705 %, integrity_status 0 on all 95,404 clean windows (0 false flags); hard real time 0 misses in 30,000, but response p50 17.07 / max 17.71 ms vs 15.96 / 16.63 canonical: +1.1 ms from the range check placed after each projection output in the non-pipelined outer loop (HLS latency 1,613,066 vs 1,502,098 cycles).",
    "limitations": "Detection on hardware not exercised (needs a programmable injection overlay, B03); latency cost of the range check could be removed by checking in a separate pipelined pass.",
    "next_action": "Optional B03: programmable injection points (research overlay) to measure physical detection; or move the range check off the critical loop to remove the +1.1 ms."
+  },
+  {
+   "id": "A06",
+   "hypothesis": "Path-A combined finalist: unsigned 8-bit attention probabilities (A02 p8u) on top of an exact 8-bit divider keep accuracy within the frozen precision gate and save >= 15 % of one post-route resource versus the canonical core.",
+   "status": "physically-measured",
+   "depends_on": [
+    "A02",
+    "A05"
+   ],
+   "command": "python hls/research/a06_p8u/make_a06_top.py; g++ exhaustive test hls/research/a06_p8u/test_div_q8_exhaustive.cpp; python -m tools.check_variant_cmodel --research-bits 10,10,8,1 ...; python -m tools.make_variant_golden --research-bits 10,10,8,1 --dst artifacts/research/A06_20261113/golden_raw1024_p8u; python -m tools.run_csim_fulltest --exe tmp/csim/batch_raw_p8u.exe ... --out artifacts/research/A06_20261113/csim_p8u_fulltest; powershell -File tools/build_raw_core.ps1 -Variant a06; python tools/package_seq256_pynq_deploy.py --pkg artifacts/research/A06_20261113/a06_build --bundle artifacts/deploy/research_a06_z7020_20261113 --golden artifacts/research/A06_20261113/golden_raw1024_p8u; python -m tools.raw_core_board_test deploy|golden|fulltest --cmodel artifacts/research/A06_20261113/csim_p8u_fulltest/csim_logits.txt|rt",
+   "outputs": [
+    "artifacts/research/A06_20261113/summary.json",
+    "artifacts/research/A06_20261113/a06_build/",
+    "artifacts/results/raw_core_board_golden_20261113_212942/",
+    "artifacts/results/raw_core_board_fulltest_20261113_213019/",
+    "artifacts/results/raw_core_board_rt_20261113_220122/"
+   ],
+   "outcome": "Different numerical model with its own reference (research p8u) and own goldens. div_q8 exhaustive: 0 mismatches over 367,657,004 reachable pairs (native and ap_int). C-model = research p8u reference on 600 clean + 600 SNR 0 dB windows; HLS C-simulation 41/41 against its own goldens. Test split (previously explored, selection was on validation): accuracy 97.8848 % vs canonical 97.7705 %, macro-F1 95.857 vs 95.669 (+0.19 pp), recall normal 87.54/87.21, imbalance 97.89/97.78, misalignment 98.93/99.09 (-0.16 pp), bearing 97.88/97.65; class agreement with canonical 94,908/95,404. Precision gate (<= 0.3 pp macro-F1 drop, <= 1 pp recall drop) passed. Post-route (XC7Z020, 100 MHz): LUT 36,670 -> 30,216 (-17.6 %), FF 36,163 -> 28,466 (-21.3 %), DSP 210, BRAM 76.5 unchanged, WNS +0.100 ns, HLS latency 1,502,073 cycles (canonical 1,502,098). Versus A05 (divider only) the 8-bit probabilities add only -2.4 % LUT / -3.2 % FF: almost all of the saving comes from the exact divider. Board (research_a06_z7020_20261113): golden 41/41 incl. 3 ties; full test 95,404/95,404 logits and class register = A06 C-model, accuracy 97.8848 %; hard real time 0 misses in 30,000 (p50 15.98 / max 16.69 ms), 30,200/30,200 outputs = A06 C-model.",
+   "limitations": "Changes the numerical model (not bit-identical to the canonical deployment: 496 test windows change class); the accuracy difference against canonical is within the bootstrap noise seen on validation; the incremental hardware gain over A05 is small.",
+   "next_action": "None required. If a smaller core is wanted for the thesis, A05 (bit-identical) is the safer recommendation; A06 shows the probability width is not the bottleneck."
   }
  ]
 }

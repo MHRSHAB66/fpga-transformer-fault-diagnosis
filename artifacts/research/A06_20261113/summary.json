@@ -1,0 +1,83 @@
+{
+ "id": "A06",
+ "date": "2026-11-13",
+ "variant": "unsigned 8-bit attention probabilities (qmax 255) + exact 8-bit-quotient softmax divider; all other numerics canonical INT10",
+ "reference": "research p8u model, tools/research/precision_ablation.py make_model(state,10,10,8,True); own goldens artifacts/research/A06_20261113/golden_raw1024_p8u (41 vectors, 3 ties)",
+ "divider_exhaustive": {
+  "pairs": 367657004,
+  "mismatches": 0,
+  "files": [
+   "exhaustive_native.txt",
+   "exhaustive_apint.txt"
+  ]
+ },
+ "cmodel_equivalence": "g++ C-model = research p8u reference on 600 clean + 600 SNR 0 dB windows (logits and class)",
+ "test_split_note": "test split was explored before (not an independent confirmation set); selection was made on validation (A02: p8u +0.49 pp macro-F1, CI [-0.18, 1.21])",
+ "cmodel_fulltest": {
+  "windows": 95404,
+  "a06": {
+   "accuracy_pct": 97.8848,
+   "macro_f1_pct": 95.8574,
+   "recall_pct": [
+    87.541,
+    97.89,
+    98.932,
+    97.882
+   ]
+  },
+  "canonical": {
+   "accuracy_pct": 97.7705,
+   "macro_f1_pct": 95.6686,
+   "recall_pct": [
+    87.213,
+    97.78,
+    99.089,
+    97.652
+   ]
+  },
+  "class_agreement_with_canonical": 94908
+ },
+ "post_route": {
+  "part": "XC7Z020 100 MHz",
+  "canonical": {
+   "LUT": 36670,
+   "FF": 36163,
+   "DSP": 210,
+   "BRAM": 76.5,
+   "WNS_ns": 0.167
+  },
+  "A05_divq9": {
+   "LUT": 30970,
+   "FF": 29394,
+   "DSP": 210,
+   "BRAM": 76.5,
+   "WNS_ns": 0.132
+  },
+  "A06": {
+   "LUT": 30216,
+   "FF": 28466,
+   "DSP": 210,
+   "BRAM": 76.5,
+   "WNS_ns": 0.1
+  },
+  "A06_vs_canonical_pct": {
+   "LUT": -17.6,
+   "FF": -21.3
+  },
+  "A06_vs_A05_pct": {
+   "LUT": -2.4,
+   "FF": -3.2
+  },
+  "hls_latency_cycles": {
+   "A06": 1502073,
+   "canonical": 1502098
+  }
+ },
+ "board": {
+  "deployment": "research_a06_z7020_20261113",
+  "golden": "41/41 exact incl. 3 ties, class from the FPGA register (artifacts/results/raw_core_board_golden_20261113_212942)",
+  "fulltest": "95,404/95,404 logits and class register = A06 C-model, accuracy 97.8848 % (artifacts/results/raw_core_board_fulltest_20261113_213019)",
+  "hard_real_time": "0 misses in 30,000 (p50 15.98, p99.9 16.58, max 16.69 ms); 30,200/30,200 outputs = A06 C-model (artifacts/results/raw_core_board_rt_20261113_220122)",
+  "fulltest_note": "streaming full test reads the gz from SD in Python: 806 windows > 20 ms (max 1,598 ms) as in the A05/B02 streaming runs; deadline evidence is the RAM-window real-time run"
+ }
+}

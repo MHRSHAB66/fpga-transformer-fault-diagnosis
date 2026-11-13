@@ -1,0 +1,8 @@
+{
+ "run": "A06 research_a06_z7020_20261113 hard real time, 30,200 RAM windows",
+ "windows": 30200,
+ "class_equal_a06_cmodel": 30200,
+ "logits_equal_a06_cmodel": 30200,
+ "class_equal_canonical_cmodel": 30001,
+ "cmodel_reference": "artifacts/research/A06_20261113/csim_p8u_fulltest/csim_logits.txt"
+}

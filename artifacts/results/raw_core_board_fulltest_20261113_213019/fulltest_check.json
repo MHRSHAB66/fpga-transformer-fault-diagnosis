@@ -1,0 +1,19 @@
+{
+ "windows_received": 95404,
+ "requested": 95404,
+ "logits_equal_cmodel": 95404,
+ "class_equal_cmodel_register": 95404,
+ "accuracy": 0.9788478470504381,
+ "correct": 93386,
+ "latency_ms": {
+  "mean": 17.699,
+  "p50": 16.033,
+  "p95": 16.337,
+  "max": 1597.766
+ },
+ "board_summary": "SUMMARY executed=95404 aborted=None wall_s=1794.024 throughput=53.179 temp_start=54.999 temp_max=56.230 temp_end=55.245 prefetch=0 prefetch_kind=none underruns=0 qmin=None pace_hz=0 late_release=0 readahead_mb=0",
+ "wall_s_pc": 1811.6,
+ "deployment": "/home/xilinx/deployments/research_a06_z7020_20261113",
+ "input": "/home/xilinx/raw_testset_20261109/fpga_testset_raw.i32.gz",
+ "cmodel_reference": "artifacts\\research\\A06_20261113\\csim_p8u_fulltest\\csim_logits.txt"
+}
