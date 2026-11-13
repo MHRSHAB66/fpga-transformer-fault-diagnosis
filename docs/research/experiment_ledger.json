@@ -89,10 +89,18 @@
   },
   {
    "id": "T01",
-   "status": "proposed",
+   "status": "software-measured",
    "depends_on": [
     "F00"
-   ]
+   ],
+   "hypothesis": "Finite-horizon integer evidence lowers decision delay versus k-vote at a matched false-switch budget.",
+   "command": "python -m tools.research.temporal_policies --out artifacts/research/T01_20261113",
+   "outputs": [
+    "artifacts/research/T01_20261113/summary.json"
+   ],
+   "outcome": "Validation (selection; budget = vote_5 13.87 false switches/10k): vote_5 acc 99.58 %, p95 2; hyst_3 acc 99.68 %, 4.41 fsw/10k, p95 2; evid_64 acc 99.84 %, 11.77 fsw/10k, p95 1. Frozen gate formally passed (p95 -50 %, F1 not lower, unresolved not increased) but the gain is ONE window and hysteresis has 2.7x fewer false switches: no clear dominance. Board test logits (reported once): evid_64 acc 99.71 % / F1 99.47 % / 12.3 fsw/10k vs vote_5 99.08 % / 98.52 % / 18.3; hyst_3 99.22 % / 3.35 fsw/10k / p95 4. 0 dB stream: all policies 16-18 unresolved transitions. Synthetic 2-window events detected: evid 89 %, vote_5 17 %, hyst_3 10 %.",
+   "limitations": "Transitions are recording joins (synthetic), integer delay granularity, validation has few transitions; previously explored test.",
+   "next_action": "Hold FPGA implementation (conditional). If pursued: evid_64 needs 4 x ~9-bit counters + margin (top1-top2) in logic."
   },
   {
    "id": "S01",
