@@ -1,0 +1,852 @@
+{
+ "id": "A02",
+ "data": "canonical validation split, 47580 windows, 195 files",
+ "baseline": "int10 (research INT10 = canonical model, selfcheck.json)",
+ "variants": {
+  "a8": {
+   "spec": {
+    "id": "a8",
+    "weight_bits": 10,
+    "activation_bits": 8,
+    "prob_bits": 10,
+    "prob_unsigned": false,
+    "prob_qmax": 511,
+    "exp_frac": 15,
+    "calibration": "20 export calibration files (F00), max-abs per position, recalibrated for this variant",
+    "validation_windows": 47580,
+    "seconds": 775.2
+   },
+   "accuracy": 0.9788146279949559,
+   "macro_f1": 0.9570511203773392,
+   "recall": [
+    0.910655737704918,
+    0.9898161947342276,
+    0.9936885245901639,
+    0.9716561973341504
+   ],
+   "delta_vs_int10_pp": {
+    "accuracy": -0.124,
+    "macro_f1": -0.618,
+    "recall": [
+     0.984,
+     -0.571,
+     -0.221,
+     0.008
+    ]
+   },
+   "prediction_changes_vs_int10": 483,
+   "attention": {
+    "zero_row_rate": 0.0,
+    "zero_row_rate_per_head": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "windows_with_any_zero_row": 0,
+    "zero_row_rate_changed_windows": 0.0,
+    "zero_row_rate_unchanged_windows": 0.0,
+    "files_with_highest_zero_row_rate": [
+     [
+      4,
+      0.0
+     ],
+     [
+      6,
+      0.0
+     ],
+     [
+      25,
+      0.0
+     ],
+     [
+      33,
+      0.0
+     ],
+     [
+      38,
+      0.0
+     ]
+    ],
+    "mean_row_mass": 0.9783424139022827,
+    "min_row_mass": 0.9307959079742432,
+    "mean_nonzero_per_row": 178.04470825195312,
+    "mean_prob_abs_err_subset": 0.0005023397388868034,
+    "mean_ctx_rel_err_subset": 0.23755617439746857,
+    "error_subset_windows": 6144
+   },
+   "paired_file_bootstrap": {
+    "delta_accuracy_pp_ci95": [
+     -0.366,
+     0.124
+    ],
+    "delta_macro_f1_pp_ci95": [
+     -2.099,
+     0.014
+    ]
+   }
+  },
+  "int10": {
+   "spec": {
+    "id": "int10",
+    "weight_bits": 10,
+    "activation_bits": 10,
+    "prob_bits": 10,
+    "prob_unsigned": false,
+    "prob_qmax": 511,
+    "exp_frac": 15,
+    "calibration": "20 export calibration files (F00), max-abs per position, recalibrated for this variant",
+    "validation_windows": 47580,
+    "seconds": 1191.7
+   },
+   "accuracy": 0.9800546448087432,
+   "macro_f1": 0.9632297609150803,
+   "recall": [
+    0.9008196721311476,
+    0.9955290611028316,
+    0.9959016393442623,
+    0.9715795924620806
+   ],
+   "delta_vs_int10_pp": {
+    "accuracy": 0.0,
+    "macro_f1": 0.0,
+    "recall": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   },
+   "prediction_changes_vs_int10": 0,
+   "attention": {
+    "zero_row_rate": 0.0,
+    "zero_row_rate_per_head": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "windows_with_any_zero_row": 0,
+    "zero_row_rate_changed_windows": null,
+    "zero_row_rate_unchanged_windows": 0.0,
+    "files_with_highest_zero_row_rate": [
+     [
+      4,
+      0.0
+     ],
+     [
+      6,
+      0.0
+     ],
+     [
+      25,
+      0.0
+     ],
+     [
+      33,
+      0.0
+     ],
+     [
+      38,
+      0.0
+     ]
+    ],
+    "mean_row_mass": 0.9857174158096313,
+    "min_row_mass": 0.962397575378418,
+    "mean_nonzero_per_row": 184.76217651367188,
+    "mean_prob_abs_err_subset": 0.0004861622292082757,
+    "mean_ctx_rel_err_subset": 0.0736793801188469,
+    "error_subset_windows": 6144
+   }
+  },
+  "int8": {
+   "spec": {
+    "id": "int8",
+    "weight_bits": 8,
+    "activation_bits": 8,
+    "prob_bits": 8,
+    "prob_unsigned": false,
+    "prob_qmax": 127,
+    "exp_frac": 15,
+    "calibration": "20 export calibration files (F00), max-abs per position, recalibrated for this variant",
+    "validation_windows": 47580,
+    "seconds": 1124.6
+   },
+   "accuracy": 0.9729087852038671,
+   "macro_f1": 0.9450401054867814,
+   "recall": [
+    0.85,
+    0.9692001987083955,
+    0.9763934426229508,
+    0.9781676114600889
+   ],
+   "delta_vs_int10_pp": {
+    "accuracy": -0.715,
+    "macro_f1": -1.819,
+    "recall": [
+     -5.082,
+     -2.633,
+     -1.951,
+     0.659
+    ]
+   },
+   "prediction_changes_vs_int10": 1215,
+   "attention": {
+    "zero_row_rate": 3.6533864018495166e-06,
+    "zero_row_rate_per_head": [
+     0.0,
+     6.075294241277848e-06,
+     8.538251366120219e-06,
+     0.0
+    ],
+    "windows_with_any_zero_row": 170,
+    "zero_row_rate_changed_windows": 8.037551440329219e-06,
+    "zero_row_rate_unchanged_windows": 3.538498867680362e-06,
+    "files_with_highest_zero_row_rate": [
+     [
+      300,
+      0.0
+     ],
+     [
+      197,
+      0.0
+     ],
+     [
+      532,
+      0.0
+     ],
+     [
+      251,
+      0.0
+     ],
+     [
+      301,
+      0.0
+     ]
+    ],
+    "mean_row_mass": 0.8187529444694519,
+    "min_row_mass": 0.4987389147281647,
+    "mean_nonzero_per_row": 74.47111511230469,
+    "mean_prob_abs_err_subset": 0.0016396665014326572,
+    "mean_ctx_rel_err_subset": 0.34252798557281494,
+    "error_subset_windows": 6144
+   },
+   "paired_file_bootstrap": {
+    "delta_accuracy_pp_ci95": [
+     -1.723,
+     0.118
+    ],
+    "delta_macro_f1_pp_ci95": [
+     -7.146,
+     0.784
+    ]
+   }
+  },
+  "p8s": {
+   "spec": {
+    "id": "p8s",
+    "weight_bits": 10,
+    "activation_bits": 10,
+    "prob_bits": 8,
+    "prob_unsigned": false,
+    "prob_qmax": 127,
+    "exp_frac": 15,
+    "calibration": "20 export calibration files (F00), max-abs per position, recalibrated for this variant",
+    "validation_windows": 47580,
+    "seconds": 843.1
+   },
+   "accuracy": 0.976733921815889,
+   "macro_f1": 0.9505677092225018,
+   "recall": [
+    0.8426229508196721,
+    0.9828614008941878,
+    0.9778688524590164,
+    0.9805806649302896
+   ],
+   "delta_vs_int10_pp": {
+    "accuracy": -0.332,
+    "macro_f1": -1.266,
+    "recall": [
+     -5.82,
+     -1.267,
+     -1.803,
+     0.9
+    ]
+   },
+   "prediction_changes_vs_int10": 1045,
+   "attention": {
+    "zero_row_rate": 0.0,
+    "zero_row_rate_per_head": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "windows_with_any_zero_row": 0,
+    "zero_row_rate_changed_windows": 0.0,
+    "zero_row_rate_unchanged_windows": 0.0,
+    "files_with_highest_zero_row_rate": [
+     [
+      4,
+      0.0
+     ],
+     [
+      6,
+      0.0
+     ],
+     [
+      25,
+      0.0
+     ],
+     [
+      33,
+      0.0
+     ],
+     [
+      38,
+      0.0
+     ]
+    ],
+    "mean_row_mass": 0.8289185762405396,
+    "min_row_mass": 0.7325602769851685,
+    "mean_nonzero_per_row": 78.77315521240234,
+    "mean_prob_abs_err_subset": 0.0017035420751199126,
+    "mean_ctx_rel_err_subset": 0.22472470998764038,
+    "error_subset_windows": 6144
+   },
+   "paired_file_bootstrap": {
+    "delta_accuracy_pp_ci95": [
+     -1.144,
+     0.366
+    ],
+    "delta_macro_f1_pp_ci95": [
+     -6.687,
+     1.451
+    ]
+   }
+  },
+  "p8u": {
+   "spec": {
+    "id": "p8u",
+    "weight_bits": 10,
+    "activation_bits": 10,
+    "prob_bits": 8,
+    "prob_unsigned": true,
+    "prob_qmax": 255,
+    "exp_frac": 15,
+    "calibration": "20 export calibration files (F00), max-abs per position, recalibrated for this variant",
+    "validation_windows": 47580,
+    "seconds": 704.4
+   },
+   "accuracy": 0.9817360235393022,
+   "macro_f1": 0.96814652035385,
+   "recall": [
+    0.9188524590163935,
+    0.9951564828614009,
+    0.9949180327868853,
+    0.9743756702926306
+   ],
+   "delta_vs_int10_pp": {
+    "accuracy": 0.168,
+    "macro_f1": 0.492,
+    "recall": [
+     1.803,
+     -0.037,
+     -0.098,
+     0.28
+    ]
+   },
+   "prediction_changes_vs_int10": 261,
+   "attention": {
+    "zero_row_rate": 0.0,
+    "zero_row_rate_per_head": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "windows_with_any_zero_row": 0,
+    "zero_row_rate_changed_windows": 0.0,
+    "zero_row_rate_unchanged_windows": 0.0,
+    "files_with_highest_zero_row_rate": [
+     [
+      4,
+      0.0
+     ],
+     [
+      6,
+      0.0
+     ],
+     [
+      25,
+      0.0
+     ],
+     [
+      33,
+      0.0
+     ],
+     [
+      38,
+      0.0
+     ]
+    ],
+    "mean_row_mass": 0.9478136897087097,
+    "min_row_mass": 0.8958026766777039,
+    "mean_nonzero_per_row": 136.67001342773438,
+    "mean_prob_abs_err_subset": 0.0009381687850691378,
+    "mean_ctx_rel_err_subset": 0.11534304171800613,
+    "error_subset_windows": 6144
+   },
+   "paired_file_bootstrap": {
+    "delta_accuracy_pp_ci95": [
+     0.013,
+     0.319
+    ],
+    "delta_macro_f1_pp_ci95": [
+     -0.181,
+     1.211
+    ]
+   }
+  },
+  "p9s": {
+   "spec": {
+    "id": "p9s",
+    "weight_bits": 10,
+    "activation_bits": 10,
+    "prob_bits": 9,
+    "prob_unsigned": false,
+    "prob_qmax": 255,
+    "exp_frac": 15,
+    "calibration": "20 export calibration files (F00), max-abs per position, recalibrated for this variant",
+    "validation_windows": 47580,
+    "seconds": 794.9
+   },
+   "accuracy": 0.9817360235393022,
+   "macro_f1": 0.96814652035385,
+   "recall": [
+    0.9188524590163935,
+    0.9951564828614009,
+    0.9949180327868853,
+    0.9743756702926306
+   ],
+   "delta_vs_int10_pp": {
+    "accuracy": 0.168,
+    "macro_f1": 0.492,
+    "recall": [
+     1.803,
+     -0.037,
+     -0.098,
+     0.28
+    ]
+   },
+   "prediction_changes_vs_int10": 261,
+   "attention": {
+    "zero_row_rate": 0.0,
+    "zero_row_rate_per_head": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "windows_with_any_zero_row": 0,
+    "zero_row_rate_changed_windows": 0.0,
+    "zero_row_rate_unchanged_windows": 0.0,
+    "files_with_highest_zero_row_rate": [
+     [
+      4,
+      0.0
+     ],
+     [
+      6,
+      0.0
+     ],
+     [
+      25,
+      0.0
+     ],
+     [
+      33,
+      0.0
+     ],
+     [
+      38,
+      0.0
+     ]
+    ],
+    "mean_row_mass": 0.9478136897087097,
+    "min_row_mass": 0.8958026766777039,
+    "mean_nonzero_per_row": 136.67001342773438,
+    "mean_prob_abs_err_subset": 0.0009381687850691378,
+    "mean_ctx_rel_err_subset": 0.11534304171800613,
+    "error_subset_windows": 6144
+   },
+   "paired_file_bootstrap": {
+    "delta_accuracy_pp_ci95": [
+     0.013,
+     0.319
+    ],
+    "delta_macro_f1_pp_ci95": [
+     -0.181,
+     1.211
+    ]
+   }
+  },
+  "w8": {
+   "spec": {
+    "id": "w8",
+    "weight_bits": 8,
+    "activation_bits": 10,
+    "prob_bits": 10,
+    "prob_unsigned": false,
+    "prob_qmax": 511,
+    "exp_frac": 15,
+    "calibration": "20 export calibration files (F00), max-abs per position, recalibrated for this variant",
+    "validation_windows": 47580,
+    "seconds": 832.4
+   },
+   "accuracy": 0.9797183690626313,
+   "macro_f1": 0.9631565541279385,
+   "recall": [
+    0.9,
+    0.9956532538499752,
+    0.9954918032786885,
+    0.9711582656656963
+   ],
+   "delta_vs_int10_pp": {
+    "accuracy": -0.034,
+    "macro_f1": -0.007,
+    "recall": [
+     -0.082,
+     0.012,
+     -0.041,
+     -0.042
+    ]
+   },
+   "prediction_changes_vs_int10": 105,
+   "attention": {
+    "zero_row_rate": 0.0,
+    "zero_row_rate_per_head": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "windows_with_any_zero_row": 0,
+    "zero_row_rate_changed_windows": 0.0,
+    "zero_row_rate_unchanged_windows": 0.0,
+    "files_with_highest_zero_row_rate": [
+     [
+      4,
+      0.0
+     ],
+     [
+      6,
+      0.0
+     ],
+     [
+      25,
+      0.0
+     ],
+     [
+      33,
+      0.0
+     ],
+     [
+      38,
+      0.0
+     ]
+    ],
+    "mean_row_mass": 0.985717236995697,
+    "min_row_mass": 0.9628103375434875,
+    "mean_nonzero_per_row": 184.766357421875,
+    "mean_prob_abs_err_subset": 0.000486116943648085,
+    "mean_ctx_rel_err_subset": 0.07819833606481552,
+    "error_subset_windows": 6144
+   },
+   "paired_file_bootstrap": {
+    "delta_accuracy_pp_ci95": [
+     -0.103,
+     0.023
+    ],
+    "delta_macro_f1_pp_ci95": [
+     -0.12,
+     0.135
+    ]
+   }
+  },
+  "w8a8_p10s": {
+   "spec": {
+    "id": "w8a8_p10s",
+    "weight_bits": 8,
+    "activation_bits": 8,
+    "prob_bits": 10,
+    "prob_unsigned": false,
+    "prob_qmax": 511,
+    "exp_frac": 15,
+    "calibration": "20 export calibration files (F00), max-abs per position, recalibrated for this variant",
+    "validation_windows": 47580,
+    "seconds": 870.2
+   },
+   "accuracy": 0.97854140395124,
+   "macro_f1": 0.9567153424178463,
+   "recall": [
+    0.909016393442623,
+    0.989692001987084,
+    0.9941803278688525,
+    0.9710433583575916
+   ],
+   "delta_vs_int10_pp": {
+    "accuracy": -0.151,
+    "macro_f1": -0.651,
+    "recall": [
+     0.82,
+     -0.584,
+     -0.172,
+     -0.054
+    ]
+   },
+   "prediction_changes_vs_int10": 494,
+   "attention": {
+    "zero_row_rate": 0.0,
+    "zero_row_rate_per_head": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "windows_with_any_zero_row": 0,
+    "zero_row_rate_changed_windows": 0.0,
+    "zero_row_rate_unchanged_windows": 0.0,
+    "files_with_highest_zero_row_rate": [
+     [
+      4,
+      0.0
+     ],
+     [
+      6,
+      0.0
+     ],
+     [
+      25,
+      0.0
+     ],
+     [
+      33,
+      0.0
+     ],
+     [
+      38,
+      0.0
+     ]
+    ],
+    "mean_row_mass": 0.9784840941429138,
+    "min_row_mass": 0.9294581413269043,
+    "mean_nonzero_per_row": 178.05422973632812,
+    "mean_prob_abs_err_subset": 0.0005021719844080508,
+    "mean_ctx_rel_err_subset": 0.2391849011182785,
+    "error_subset_windows": 6144
+   },
+   "paired_file_bootstrap": {
+    "delta_accuracy_pp_ci95": [
+     -0.389,
+     0.074
+    ],
+    "delta_macro_f1_pp_ci95": [
+     -2.124,
+     -0.057
+    ]
+   }
+  },
+  "w8a8_p8u": {
+   "spec": {
+    "id": "w8a8_p8u",
+    "weight_bits": 8,
+    "activation_bits": 8,
+    "prob_bits": 8,
+    "prob_unsigned": true,
+    "prob_qmax": 255,
+    "exp_frac": 15,
+    "calibration": "20 export calibration files (F00), max-abs per position, recalibrated for this variant",
+    "validation_windows": 47580,
+    "seconds": 763.0
+   },
+   "accuracy": 0.9795292139554435,
+   "macro_f1": 0.9608848615186604,
+   "recall": [
+    0.9131147540983606,
+    0.987953303527074,
+    0.994344262295082,
+    0.9731116899034779
+   ],
+   "delta_vs_int10_pp": {
+    "accuracy": -0.053,
+    "macro_f1": -0.234,
+    "recall": [
+     1.23,
+     -0.758,
+     -0.156,
+     0.153
+    ]
+   },
+   "prediction_changes_vs_int10": 529,
+   "attention": {
+    "zero_row_rate": 0.0,
+    "zero_row_rate_per_head": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "windows_with_any_zero_row": 0,
+    "zero_row_rate_changed_windows": 0.0,
+    "zero_row_rate_unchanged_windows": 0.0,
+    "files_with_highest_zero_row_rate": [
+     [
+      4,
+      0.0
+     ],
+     [
+      6,
+      0.0
+     ],
+     [
+      25,
+      0.0
+     ],
+     [
+      33,
+      0.0
+     ],
+     [
+      38,
+      0.0
+     ]
+    ],
+    "mean_row_mass": 0.9698095917701721,
+    "min_row_mass": 0.8682291507720947,
+    "mean_nonzero_per_row": 136.832763671875,
+    "mean_prob_abs_err_subset": 0.0009418657864443958,
+    "mean_ctx_rel_err_subset": 0.2600803077220917,
+    "error_subset_windows": 6144
+   },
+   "paired_file_bootstrap": {
+    "delta_accuracy_pp_ci95": [
+     -0.34,
+     0.214
+    ],
+    "delta_macro_f1_pp_ci95": [
+     -1.358,
+     0.381
+    ]
+   }
+  },
+  "w8a8_p9s": {
+   "spec": {
+    "id": "w8a8_p9s",
+    "weight_bits": 8,
+    "activation_bits": 8,
+    "prob_bits": 9,
+    "prob_unsigned": false,
+    "prob_qmax": 255,
+    "exp_frac": 15,
+    "calibration": "20 export calibration files (F00), max-abs per position, recalibrated for this variant",
+    "validation_windows": 47580,
+    "seconds": 903.6
+   },
+   "accuracy": 0.9795292139554435,
+   "macro_f1": 0.9608848615186604,
+   "recall": [
+    0.9131147540983606,
+    0.987953303527074,
+    0.994344262295082,
+    0.9731116899034779
+   ],
+   "delta_vs_int10_pp": {
+    "accuracy": -0.053,
+    "macro_f1": -0.234,
+    "recall": [
+     1.23,
+     -0.758,
+     -0.156,
+     0.153
+    ]
+   },
+   "prediction_changes_vs_int10": 529,
+   "attention": {
+    "zero_row_rate": 0.0,
+    "zero_row_rate_per_head": [
+     0.0,
+     0.0,
+     0.0,
+     0.0
+    ],
+    "windows_with_any_zero_row": 0,
+    "zero_row_rate_changed_windows": 0.0,
+    "zero_row_rate_unchanged_windows": 0.0,
+    "files_with_highest_zero_row_rate": [
+     [
+      4,
+      0.0
+     ],
+     [
+      6,
+      0.0
+     ],
+     [
+      25,
+      0.0
+     ],
+     [
+      33,
+      0.0
+     ],
+     [
+      38,
+      0.0
+     ]
+    ],
+    "mean_row_mass": 0.9698095917701721,
+    "min_row_mass": 0.8682291507720947,
+    "mean_nonzero_per_row": 136.832763671875,
+    "mean_prob_abs_err_subset": 0.0009418657864443958,
+    "mean_ctx_rel_err_subset": 0.2600803077220917,
+    "error_subset_windows": 6144
+   },
+   "paired_file_bootstrap": {
+    "delta_accuracy_pp_ci95": [
+     -0.34,
+     0.214
+    ],
+    "delta_macro_f1_pp_ci95": [
+     -1.358,
+     0.381
+    ]
+   }
+  }
+ },
+ "gates": {
+  "A02_flat_row_mechanism": {
+   "zero_row_rate_p8s": 0.0,
+   "criterion_1_rate_ge_1pct": false,
+   "criterion_2_changed_gt_unchanged": false,
+   "p8s_accuracy_loss_pp": 0.332,
+   "recovered_fraction": {
+    "p8u": 1.506024096385542,
+    "p9s": 1.506024096385542
+   },
+   "criterion_3_recovery_ge_50pct": true,
+   "supported": false
+  },
+  "A02_precision_finalist_accuracy_gate": {
+   "a8": false,
+   "int8": false,
+   "p8s": false,
+   "p8u": true,
+   "p9s": true,
+   "w8": true,
+   "w8a8_p10s": false,
+   "w8a8_p8u": true,
+   "w8a8_p9s": true
+  }
+ }
+}

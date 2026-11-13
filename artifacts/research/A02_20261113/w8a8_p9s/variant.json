@@ -1,0 +1,12 @@
+{
+ "id": "w8a8_p9s",
+ "weight_bits": 8,
+ "activation_bits": 8,
+ "prob_bits": 9,
+ "prob_unsigned": false,
+ "prob_qmax": 255,
+ "exp_frac": 15,
+ "calibration": "20 export calibration files (F00), max-abs per position, recalibrated for this variant",
+ "validation_windows": 47580,
+ "seconds": 903.6
+}

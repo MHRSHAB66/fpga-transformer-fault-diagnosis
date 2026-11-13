@@ -340,3 +340,5 @@ artifacts/results/raw_core_board_fulltest_*/fulltest.out
 artifacts/results/noisy_testsets_*/*.i32.gz
 # Root-level Vitis HLS project of the research A05 divq9 core.
 /seq256_divq9/
+artifacts/research/*/*/bitstream/*.bit
+artifacts/research/*/*/bitstream/*.xsa

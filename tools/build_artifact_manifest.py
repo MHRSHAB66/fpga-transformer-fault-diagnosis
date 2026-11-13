@@ -151,6 +151,11 @@ TARGETS = [
     # 10-class study (Kaggle): per-window test predictions and logits
     "artifacts/results/tenclass_kaggle_20261111/seq256_10class/test_predictions.npz",
     "artifacts/results/raw_core_board_rt_20261111_173322/out/rt_raw.npz",
+    # research A05: raw-input core with the exact 9-bit softmax divider
+    "artifacts/research/A05_20261113/divq9_build/bitstream/design_1_wrapper.bit",
+    "artifacts/research/A05_20261113/divq9_build/bitstream/seq256_dma_system.xsa",
+    "artifacts/deploy/research_divq9_z7020_20261113/overlay/design_1_wrapper.bit",
+    "artifacts/deploy/research_divq9_z7020_20261113/MANIFEST.sha256",
 ]
 
 

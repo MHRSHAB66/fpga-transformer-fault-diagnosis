@@ -44,15 +44,15 @@
   {
    "id": "A02",
    "hypothesis": "The INT8 loss comes from attention-probability precision (flat rows), not from weights or linear activations.",
-   "status": "running",
+   "status": "software-measured",
    "depends_on": [
     "F00",
     "A01"
    ],
    "command": "python -m tools.research.precision_ablation selfcheck|run|summarize --out artifacts/research/A02_20261113",
-   "outcome": "selfcheck: research INT10 calibration reproduces the canonical export scales exactly and the canonical logits on 256 validation windows.",
-   "limitations": "Float-input path (quantize at the input scale); the deployed raw-input chain differs in 46/95,404 test windows from it.",
-   "next_action": "summarize; evaluate the frozen flat-row gate"
+   "outcome": "10 variants on the canonical validation split (47,580 windows / 195 files; paired file bootstrap). Flat-row hypothesis REJECTED by the frozen gate: 0 all-zero attention rows in every variant (criteria 1 and 2 fail). Mechanism found instead: probability-mass truncation (row mass 0.986 INT10 / 0.829 P8-signed / 0.948 P8-unsigned; nonzero entries per row 185 / 79 / 137; context error 0.074 / 0.225 / 0.115). Macro-F1 change vs INT10 (pp): W8 -0.01 [-0.12,0.14]; A8 -0.62; P8 signed -1.27; P8 unsigned +0.49 [-0.18,1.21]; uniform INT8 -1.82; W8A8+P10 -0.65; W8A8+P8u -0.23 [-1.36,0.38]. P9-signed and P8-unsigned are the same quantizer (qmax 255) and give identical outputs (consistency check). Accuracy gate passed by: W8, P8u(=P9s), W8A8+P8u(=P9s).",
+   "limitations": "Float-input path (input quantized at the variant's own input scale); a W8A8 hardware variant would also need an 8-bit on-chip preprocessing constant. Validation only; per-class CIs are wide (normal class has 5 validation files).",
+   "next_action": "Precision finalists for A05: W8A8+P8u (largest expected saving) and/or P8u alone; requires a versioned export, HLS types, own goldens and an integrated build to test the >= 15 % post-route gate."
   },
   {
    "id": "A03",
@@ -107,6 +107,22 @@
    "depends_on": [
     "F00"
    ]
+  },
+  {
+   "id": "A05",
+   "hypothesis": "The exact divider saves >= 15 % of one post-route resource in the integrated design.",
+   "status": "post-route (board validation running)",
+   "depends_on": [
+    "A04"
+   ],
+   "command": "powershell -File tools/build_raw_core.ps1 -Variant divq9; python -m tools.raw_core_board_test deploy|golden|fulltest|rt (deployment research_divq9_z7020_20261113)",
+   "outputs": [
+    "artifacts/research/A05_20261113/divq9_build/",
+    "artifacts/deploy/research_divq9_z7020_20261113/"
+   ],
+   "outcome": "HLS C-simulation 41/41 exact against the CANONICAL golden set. Post-route (XC7Z020, 100 MHz): LUT 36,670 -> 30,970 (-15.5 %), FF 36,163 -> 29,394 (-18.7 %), DSP 210 and BRAM 76.5 unchanged, WNS +0.132 ns (canonical +0.167), HLS latency equal (1,502,073 vs 1,502,098 cycles). Gate (>= 15 % of one post-route resource) passed for LUT and FF.",
+   "limitations": "LUT gain just above the frozen 15 % threshold.",
+   "next_action": "board: golden, 95,404-window logit equality, hard real time"
   }
  ]
 }
