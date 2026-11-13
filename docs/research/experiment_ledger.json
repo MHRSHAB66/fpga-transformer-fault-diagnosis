@@ -135,7 +135,7 @@
   {
    "id": "B02",
    "hypothesis": "Cheap selective protection (input-buffer parity, duplicated classifier tail, proven-range comparators) removes >= 80 % of silent class corruption.",
-   "status": "simulated (C-model) ; hardware build running",
+   "status": "post-route ; board validation queued",
    "depends_on": [
     "B01"
    ],
@@ -143,7 +143,7 @@
    "outputs": [
     "artifacts/research/B02_20261113/heldout_campaign/summary.json"
    ],
-   "outcome": "Protections chosen on the B01 pilot (94.4 % modelled reduction there) and confirmed on a held-out campaign (new seed: new windows and events; injection-off = canonical): silent class corruptions 76 -> 67 (range only), 16 (parity + duplicated tail), 7 (all three) = -90.8 %, above the frozen 80 % gate. Remaining: projection-accumulator mid bits 5, QKV 1, probability 1. Cost under faults: 1,084 flags on faults that did not change the class (availability, not false flags on clean data). Hardware variant B02 v1 (hls/research/b02_integrity/, generated from the canonical raw top): input-buffer XOR signature (write vs after projection read), duplicated cls4 + argmax, projection accumulator range check (bound 719,316 from weights_int10.h); research register integrity_status. Context/FFN range checks left out (0 class changes there in B01). C-model: goldens 41/41 identical + status 0 (incl. edge windows); 95,404 test windows: logits and class identical to canonical, integrity_status 0 on all (0 false flags).",
+   "outcome": "Protections chosen on the B01 pilot (94.4 % modelled reduction there) and confirmed on a held-out campaign (new seed: new windows and events; injection-off = canonical): silent class corruptions 76 -> 67 (range only), 16 (parity + duplicated tail), 7 (all three) = -90.8 %, above the frozen 80 % gate. Remaining: projection-accumulator mid bits 5, QKV 1, probability 1. Cost under faults: 1,084 flags on faults that did not change the class (availability, not false flags on clean data). Hardware variant B02 v1 (hls/research/b02_integrity/, generated from the canonical raw top): input-buffer XOR signature (write vs after projection read), duplicated cls4 + argmax, projection accumulator range check (bound 719,316 from weights_int10.h); research register integrity_status. Context/FFN range checks left out (0 class changes there in B01). C-model: goldens 41/41 identical + status 0 (incl. edge windows); 95,404 test windows: logits and class identical to canonical, integrity_status 0 on all (0 false flags). Post-route (XC7Z020, 100 MHz): LUT 36,670 -> 37,035 (+1.0 %), FF 36,163 -> 36,606 (+1.2 %), DSP 210 (+0), BRAM 76.5 (+0), WNS +0.202 ns; HLS C-simulation 41/41 exact with integrity_status 0. Overhead gate (<= 5 % LUT, <= 2 DSP, timing) passed.",
    "limitations": "Logical model of the protections (single faults, parity covers storage of the input buffer, duplication covers one copy of the tail). Hardware overhead, timing and clean false-flag rate not yet measured.",
    "next_action": "HLS: parity bit on the input buffer words, duplicated cls4 + argmax compare, range comparators on proj/ctx/ff0 accumulators, status register (research ABI); build; board: 0 false flags on 95,404 clean windows, outputs = canonical, overhead <= 5 % LUT / <= 2 DSP"
   }

@@ -1,0 +1,26 @@
+{
+  "source_hwh": "artifacts\\research\\B02_20261113\\b02_build\\bitstream\\design_1.hwh",
+  "source_hwh_sha256": "08275f7c49c88ccec2131ec60023e870ba48e4a9ec3b42c68a0a73a0462990dd",
+  "dma_instance": "axi_dma_0",
+  "dma_axilite_base": "0x41E00000",
+  "transformer_ip_instance": "transformer_top_0",
+  "transformer_ctrl_base": "0x40000000",
+  "mm2s_tdata_bits": 32,
+  "s2mm_tdata_bits": 32,
+  "input_words": 8192,
+  "output_words": 4,
+  "dma_sg_length_width": 16,
+  "dma_max_transfer_bytes": 65536,
+  "input_frame_bytes": 32768,
+  "dma_single_frame_ok": true,
+  "ap_ctrl": "ap_ctrl_hs; ctrl s_axilite bundle; ap_start=reg0 bit0, auto_restart=reg0 bit7",
+  "verified_present": {
+    "axi_dma_0": true,
+    "transformer_top_0": true,
+    "ctrl_base_0x40000000": true,
+    "dma_base_0x41E00000": true,
+    "mm2s_width_32": true,
+    "s2mm_width_32": true,
+    "dma_fits_32768B_single_transfer": true
+  }
+}

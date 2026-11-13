@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-13T11:52:44.409650+00:00",
+  "generated_utc": "2026-11-13T14:56:55.748761+00:00",
   "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, multi-MB run dumps, board boot binaries) are gitignored and recorded here only (committed_in_git=false); copies live on disk, in the off-repo backup and on the board.",
   "repo_relative": true,
   "artifacts": [
@@ -792,6 +792,34 @@
       "present": true,
       "size_bytes": 1360262,
       "sha256": "351de797f79c27ba8f886402600161e8f858d35baefe28ef6b7e2a9f063a92cb",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/B02_20261113/b02_build/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "5ba869768d87dc3134c9b8078d01f4b2fb82710daa9318e041c9d83a3c5e8f05",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/B02_20261113/b02_build/bitstream/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1484678,
+      "sha256": "0d490b682b29d81df2068a1742a27daeafdbafc2acdbac43c6201f4cd4bf78b5",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_b02_z7020_20261113/overlay/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "5ba869768d87dc3134c9b8078d01f4b2fb82710daa9318e041c9d83a3c5e8f05",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_b02_z7020_20261113/MANIFEST.sha256",
+      "present": true,
+      "size_bytes": 1119,
+      "sha256": "e13516514513d2f131e04ea5eb78c53a7678602803d513ca0c5451b3e1c2677a",
       "committed_in_git": false
     },
     {
