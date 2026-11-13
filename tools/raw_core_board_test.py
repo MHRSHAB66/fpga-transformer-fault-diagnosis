@@ -150,6 +150,11 @@ def cmd_fulltest(args):
               "board_summary": summary[-1] if summary else None,
               "wall_s_pc": round(time.time() - t0, 1), "deployment": dep, "input": board_gz,
               "cmodel_reference": str(Path(args.cmodel))}
+    integ = [int(l.split(" integrity=")[1].split()[0]) for l in (out / "fulltest.out").read_text().splitlines()
+             if l.startswith("R ") and " integrity=" in l]
+    if integ:   # research B02 overlay: clean input must never raise a flag
+        result["integrity_status"] = {"windows": len(integ), "nonzero": int(sum(v != 0 for v in integ)),
+                                      "values": sorted(set(integ))}
     votes = vote_rows(out / "fulltest.out")
     if votes:
         result["temporal_vote"] = check_votes(votes, rows, labels, int(args.vote_k))

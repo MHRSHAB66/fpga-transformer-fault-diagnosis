@@ -342,3 +342,5 @@ artifacts/results/noisy_testsets_*/*.i32.gz
 /seq256_divq9/
 artifacts/research/*/*/bitstream/*.bit
 artifacts/research/*/*/bitstream/*.xsa
+# Root-level Vitis HLS project of the research B02 integrity core.
+/seq256_b02/
