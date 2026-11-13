@@ -44,10 +44,17 @@ def main():
     ap.add_argument("--exe", type=Path, required=True)
     ap.add_argument("--n", type=int, default=400)
     ap.add_argument("--conditions", nargs="+", default=["clean"])
+    ap.add_argument("--research-bits", default=None,
+                    help="research numerics 'W,A,P,unsigned' (tools/research/precision_ablation.py), e.g. 10,10,8,1")
     args = ap.parse_args()
     scales = json.loads(args.scales.read_text())["scales"]
     s_in = float(scales["input"])
-    model = reference_model(args.ckpt, scales)
+    if args.research_bits:
+        from tools.research.precision_ablation import load_state, make_model
+        w, a, pb, u = (int(v) for v in args.research_bits.split(","))
+        model = make_model(load_state(), w, a, pb, bool(u), scales=scales)
+    else:
+        model = reference_model(args.ckpt, scales)
     with gzip.open(RAW, "rb") as f:
         raw = np.frombuffer(f.read(args.n * 8192 * 4), dtype="<i4").reshape(-1, 1024, 8).astype(np.int64)
     result = {}

@@ -11,7 +11,8 @@
 #   powershell -File tools/build_raw_core.ps1 -Variant divq9  # research A05: exact 9-bit softmax divider
 #   powershell -File tools/build_raw_core.ps1 -Variant b02    # research B02: selective integrity checks
 #   powershell -File tools/build_raw_core.ps1 -Variant b03    # research B03: B02 + programmable fault injection
-param([ValidateSet("raw", "vote", "votena", "divq9", "b02", "b03")][string]$Variant = "raw")
+#   powershell -File tools/build_raw_core.ps1 -Variant a06    # research A06: 8-bit unsigned probabilities + exact divider
+param([ValidateSet("raw", "vote", "votena", "divq9", "b02", "b03", "a06")][string]$Variant = "raw")
 $ErrorActionPreference = "Stop"
 $repo = Split-Path -Parent $PSScriptRoot
 $hls = "G:\Xilinx\Vitis_HLS\2020.2\bin\vitis_hls.bat"
@@ -30,6 +31,9 @@ $cfg = @{
     # research B03: B02 + programmable logical fault injection (hls/research/b03_inject)
     b03 = @{ hlsTcl = "..\..\research\b03_inject\run_b03_verify_and_synth.tcl"; hlsProj = "seq256_b03";
              sysTcl = "..\..\research\b03_inject\run_dma_system_b03.tcl"; sysProj = "vb03"; logs = "b03_core_build" }
+    # research A06: unsigned 8-bit attention probabilities + exact 8-bit divider (hls/research/a06_p8u)
+    a06 = @{ hlsTcl = "..\..\research\a06_p8u\run_a06_verify_and_synth.tcl"; hlsProj = "seq256_p8u";
+             sysTcl = "..\..\research\a06_p8u\run_dma_system_a06.tcl"; sysProj = "vp8u"; logs = "a06_core_build" }
     # paper study: noise-augmented weights on the vote core (deployed model untouched)
     votena = @{ hlsTcl = "run_seq256_rawvote1024_noiseaug_verify_and_synth.tcl"; hlsProj = "seq256_rawvote1024_na";
                 sysTcl = "run_seq256_dma_system_dsp_margin_vote_noiseaug.tcl"; sysProj = "vna"; logs = "vote_na_core_build" }

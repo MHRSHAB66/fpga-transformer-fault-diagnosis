@@ -1,0 +1,10 @@
+{
+ "inputs": "copied from hls/f1_int10_seq256/golden_raw1024_argmax/golden_in.txt",
+ "checkpoint": "artifacts\\experiments\\transformer_f1_seq256_pool4\\kaggle_v3\\seq256_pool4\\scratch\\best.pt",
+ "scales": "artifacts\\quantized\\f_seq256_int10\\integer_config.json",
+ "research_bits": "10,10,8,1",
+ "reference": "onchip_preprocess.preprocess_window -> aggregate_round_div -> IntegerTransformer.infer_int",
+ "vectors": 41,
+ "ties": 3,
+ "correct_vs_true_label": 28
+}

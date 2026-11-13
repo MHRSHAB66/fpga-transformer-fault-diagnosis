@@ -1,0 +1,1 @@
+distinct_num=44 checked=367657004 mismatches=0 max_quotient=255 min(256*denom-numer)=16384 stride=1

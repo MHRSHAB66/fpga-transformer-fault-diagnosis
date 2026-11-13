@@ -30,6 +30,7 @@ def main():
     ap.add_argument("--ckpt", type=Path, required=True)
     ap.add_argument("--scales", type=Path, required=True)
     ap.add_argument("--dst", type=Path, required=True)
+    ap.add_argument("--research-bits", default=None, help="research numerics 'W,A,P,unsigned', e.g. 10,10,8,1")
     args = ap.parse_args()
     lines = (SRC / "golden_in.txt").read_text().splitlines()
     n = int(lines[0].split()[0])
@@ -37,7 +38,12 @@ def main():
     true = [int(l.split()[1]) for l in (SRC / "golden_expected.txt").read_text().splitlines()[1:] if l.strip()]
     scales = json.loads(args.scales.read_text())["scales"]
     s_in = float(scales["input"])
-    model = reference_model(args.ckpt, scales)
+    if args.research_bits:
+        from tools.research.precision_ablation import load_state, make_model
+        w_, a_, p_, u_ = (int(v) for v in args.research_bits.split(","))
+        model = make_model(load_state(), w_, a_, p_, bool(u_), scales=scales)
+    else:
+        model = reference_model(args.ckpt, scales)
     q = np.stack([aggregate_round_div(preprocess_window(w, s_in)[None], 4)[0] for w in windows])
     logits = model.infer_int(q.astype(np.float64) * s_in).astype(np.int64)
     pred = logits.argmax(axis=1)
@@ -50,7 +56,7 @@ def main():
     ties = int(((logits == logits.max(1, keepdims=True)).sum(1) > 1).sum())
     (args.dst / "provenance.json").write_text(json.dumps({
         "inputs": "copied from hls/f1_int10_seq256/golden_raw1024_argmax/golden_in.txt",
-        "checkpoint": str(args.ckpt), "scales": str(args.scales),
+        "checkpoint": str(args.ckpt), "scales": str(args.scales), "research_bits": args.research_bits,
         "reference": "onchip_preprocess.preprocess_window -> aggregate_round_div -> IntegerTransformer.infer_int",
         "vectors": n, "ties": ties,
         "correct_vs_true_label": int(sum(int(p) == t for p, t in zip(pred, true) if t >= 0))}, indent=1))

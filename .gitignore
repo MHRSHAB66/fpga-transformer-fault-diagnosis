@@ -348,3 +348,5 @@ artifacts/research/*/*/bitstream/*.xsa
 artifacts/results/fpga_rawinput_valset_*/fpga_valset_raw.*
 # Root-level Vitis HLS project of the research B03 injection core.
 /seq256_b03/
+# Root-level Vitis HLS project of the research A06 core.
+/seq256_p8u/
