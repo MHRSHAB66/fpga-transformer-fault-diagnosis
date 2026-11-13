@@ -1,0 +1,112 @@
+{
+ "schema": "ledger v1: one entry per experiment; status in {proposed, implemented, running, software-measured, simulated, synthesized, post-route, physically-measured, independently-confirmed, stopped, rejected}",
+ "updated": "2026-11-13",
+ "protocol": "artifacts/research/F00_20261113/preregistered_protocol.json",
+ "baseline_identity": "artifacts/research/F00_20261113/frozen_baseline_manifest.json",
+ "entries": [
+  {
+   "id": "F00",
+   "hypothesis": "-",
+   "status": "implemented",
+   "depends_on": [],
+   "command": "python -m tools.research.freeze_baseline --out artifacts/research/F00_20261113",
+   "source_version": "031442d",
+   "outputs": [
+    "artifacts/research/F00_20261113/frozen_baseline_manifest.json",
+    "artifacts/research/F00_20261113/preregistered_protocol.json"
+   ],
+   "outcome": "Baseline identity, split/calibration/validation file lists and gates frozen before any research result. Board idle at audit (47 C, no workload). Endurance 1.4 M target verified complete earlier: 1,400,200 executed, 0 misses, all outputs = C-model (artifacts/results/raw_core_board_rt_20261111_173322/reference_check.json).",
+   "limitations": "Test split previously explored; not an independent confirmation set.",
+   "next_action": "-"
+  },
+  {
+   "id": "H01",
+   "hypothesis": "Reporting hygiene (not research)",
+   "status": "implemented",
+   "command": "python -m tools.raw_core_board_test recheck-votes --run artifacts/results/raw_core_board_fulltest_20261111_<run>; python -m tools.plot_paper_figures",
+   "source_version": "c781f85",
+   "outcome": "Confirmed and fixed: (1) vote figure used the deployed model's 0 dB run as clean evidence (83.94 % instead of 99.08 %); (2) transition delays capped at 244 windows counted unresolved events as 244. Deployed model at 0 dB: 16/232 transitions unresolved, resolved p95 9.25, max 246.",
+   "limitations": "Originals kept unchanged next to vote_transition_recheck.json.",
+   "next_action": "-"
+  },
+  {
+   "id": "A01",
+   "hypothesis": "With 256 equal scores, signed 8-bit probabilities round every element to zero.",
+   "status": "software-measured",
+   "command": "python -m tools.research.precision_ablation toy --out artifacts/research/A01_20261113",
+   "outputs": [
+    "artifacts/research/A01_20261113/softmax_equal_scores.json"
+   ],
+   "outcome": "Reproduced the 2026-11-11 pilot exactly. 256 tokens: P8 signed code 0 (zero row), P9 signed 1, P10 signed 2, P8 unsigned (qmax 255) 1. At 1024 tokens all are zero.",
+   "limitations": "Synthetic; says nothing about real data.",
+   "next_action": "A02"
+  },
+  {
+   "id": "A02",
+   "hypothesis": "The INT8 loss comes from attention-probability precision (flat rows), not from weights or linear activations.",
+   "status": "running",
+   "depends_on": [
+    "F00",
+    "A01"
+   ],
+   "command": "python -m tools.research.precision_ablation selfcheck|run|summarize --out artifacts/research/A02_20261113",
+   "outcome": "selfcheck: research INT10 calibration reproduces the canonical export scales exactly and the canonical logits on 256 validation windows.",
+   "limitations": "Float-input path (quantize at the input scale); the deployed raw-input chain differs in 46/95,404 test windows from it.",
+   "next_action": "summarize; evaluate the frozen flat-row gate"
+  },
+  {
+   "id": "A03",
+   "hypothesis": "Some HLS widths exceed proven legal ranges; narrowing them is exact and cheaper.",
+   "status": "implemented (proof + exhaustive check for the softmax divider)",
+   "depends_on": [
+    "F00"
+   ],
+   "outcome": "Survey of the canonical HLS report: HLS already narrows most requant multipliers (23-24 bit x 32 bit). Candidate not inferred by HLS: attention context requant (df_head_*: mul_33s_33ns_64). Proof sketch: row sum of probability codes <= 511 + 256/2 = 639, |v| <= 511 -> |context accumulator| <= 326,529 < 2^19 (20-bit signed). Second candidate found and taken to A04: the softmax divider (quotient <= 511).",
+   "next_action": "single-operator HLS + Vivado OOC probe (A04) of the context requant: original vs proven-width"
+  },
+  {
+   "id": "B01",
+   "hypothesis": "Silent class corruption is concentrated in a few stage groups.",
+   "status": "software-measured",
+   "depends_on": [
+    "F00"
+   ],
+   "command": "python -m tools.research.fault_injection campaign --out artifacts/research/B01_20261113",
+   "outputs": [
+    "artifacts/research/B01_20261113/summary.json",
+    "artifacts/research/B01_20261113/injections.jsonl"
+   ],
+   "outcome": "3,072 transient single-bit flips (8 groups x 3 bit bands x 128) on 256 validation windows (64/class); injection disabled = canonical logits on all 256. Silent class corruptions 75: G8 logits high bits 42, G1 input codes high bits 28, G2 projection accumulator mid bits 4, G3 QKV high 1. Attention scores/probabilities/context: 0 class changes in 3 x 384 injections. Proven-range check C2 flags 100 % of high-band flips in the 32-bit accumulators (G2/G6/G7), incl. all 14 class changes in G2-high; row-sum check C3 flags 65/384 probability flips. Gate (top-2 groups >= 60 % of silent corruptions): PASSED (93 %).",
+   "limitations": "Python INT10 reference with hardware widths; one window per event (no vote state); persistent weight-read and vote-state campaigns not yet run; logical emulation only.",
+   "next_action": "Add W (persistent weight) and V (vote state) campaigns; design minimal protection: parity on the input buffer, duplicated classifier tail/argmax, proven-range comparators; then B02 overlay decision"
+  },
+  {
+   "id": "Q01",
+   "status": "proposed",
+   "depends_on": [
+    "F00"
+   ]
+  },
+  {
+   "id": "T01",
+   "status": "proposed",
+   "depends_on": [
+    "F00"
+   ]
+  },
+  {
+   "id": "S01",
+   "status": "proposed",
+   "depends_on": [
+    "F00"
+   ]
+  },
+  {
+   "id": "Z01",
+   "status": "proposed",
+   "depends_on": [
+    "F00"
+   ]
+  }
+ ]
+}

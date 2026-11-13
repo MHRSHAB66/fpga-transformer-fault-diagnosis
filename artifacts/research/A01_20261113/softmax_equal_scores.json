@@ -1,0 +1,135 @@
+{
+ "id": "A01",
+ "kind": "synthetic numerical observation (not a cause of any accuracy loss)",
+ "rows": [
+  {
+   "tokens": 128,
+   "prob_bits": 8,
+   "unsigned": false,
+   "code": 1,
+   "row_sum": 128,
+   "zero_rows": 0
+  },
+  {
+   "tokens": 128,
+   "prob_bits": 9,
+   "unsigned": false,
+   "code": 2,
+   "row_sum": 256,
+   "zero_rows": 0
+  },
+  {
+   "tokens": 128,
+   "prob_bits": 10,
+   "unsigned": false,
+   "code": 4,
+   "row_sum": 512,
+   "zero_rows": 0
+  },
+  {
+   "tokens": 128,
+   "prob_bits": 8,
+   "unsigned": true,
+   "code": 2,
+   "row_sum": 256,
+   "zero_rows": 0
+  },
+  {
+   "tokens": 256,
+   "prob_bits": 8,
+   "unsigned": false,
+   "code": 0,
+   "row_sum": 0,
+   "zero_rows": 256
+  },
+  {
+   "tokens": 256,
+   "prob_bits": 9,
+   "unsigned": false,
+   "code": 1,
+   "row_sum": 256,
+   "zero_rows": 0
+  },
+  {
+   "tokens": 256,
+   "prob_bits": 10,
+   "unsigned": false,
+   "code": 2,
+   "row_sum": 512,
+   "zero_rows": 0
+  },
+  {
+   "tokens": 256,
+   "prob_bits": 8,
+   "unsigned": true,
+   "code": 1,
+   "row_sum": 256,
+   "zero_rows": 0
+  },
+  {
+   "tokens": 512,
+   "prob_bits": 8,
+   "unsigned": false,
+   "code": 0,
+   "row_sum": 0,
+   "zero_rows": 512
+  },
+  {
+   "tokens": 512,
+   "prob_bits": 9,
+   "unsigned": false,
+   "code": 0,
+   "row_sum": 0,
+   "zero_rows": 512
+  },
+  {
+   "tokens": 512,
+   "prob_bits": 10,
+   "unsigned": false,
+   "code": 1,
+   "row_sum": 512,
+   "zero_rows": 0
+  },
+  {
+   "tokens": 512,
+   "prob_bits": 8,
+   "unsigned": true,
+   "code": 0,
+   "row_sum": 0,
+   "zero_rows": 512
+  },
+  {
+   "tokens": 1024,
+   "prob_bits": 8,
+   "unsigned": false,
+   "code": 0,
+   "row_sum": 0,
+   "zero_rows": 1024
+  },
+  {
+   "tokens": 1024,
+   "prob_bits": 9,
+   "unsigned": false,
+   "code": 0,
+   "row_sum": 0,
+   "zero_rows": 1024
+  },
+  {
+   "tokens": 1024,
+   "prob_bits": 10,
+   "unsigned": false,
+   "code": 0,
+   "row_sum": 0,
+   "zero_rows": 1024
+  },
+  {
+   "tokens": 1024,
+   "prob_bits": 8,
+   "unsigned": true,
+   "code": 0,
+   "row_sum": 0,
+   "zero_rows": 1024
+  }
+ ],
+ "matches_2026_11_11_pilot": true
+}

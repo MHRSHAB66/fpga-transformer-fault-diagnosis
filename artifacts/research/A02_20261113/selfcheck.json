@@ -1,0 +1,5 @@
+{
+ "scales_equal_canonical_export": true,
+ "windows": 256,
+ "logits_equal_canonical": 256
+}
