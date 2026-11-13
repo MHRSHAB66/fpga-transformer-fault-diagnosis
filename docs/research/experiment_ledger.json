@@ -82,10 +82,19 @@
   },
   {
    "id": "Q01",
-   "status": "proposed",
+   "status": "software-measured",
    "depends_on": [
     "F00"
-   ]
+   ],
+   "hypothesis": "Pre-normalisation quality flags plus the integer top-two margin reduce accepted wrong outputs under acquisition faults at >= 90 % clean coverage.",
+   "command": "python -m tools.export_fpga_testset_raw export --split val --out artifacts/results/fpga_rawinput_valset_20261113; python -m tools.research.q01_quality --out artifacts/research/Q01_20261113",
+   "outputs": [
+    "artifacts/research/Q01_20261113/summary.json",
+    "artifacts/research/Q01_20261113/run1_lag_padded_artifact/"
+   ],
+   "outcome": "2,048 raw windows per split, one non-tachometer channel perturbed per window, bit-exact C-model. Invariance controls hold (gain x2, +25 % offset: accuracy unchanged 97.90 % val). Accuracy under faults (val): clip30 97.75, bits8 97.31, hold 93.12, lag32 96.53 %. Gate on validation (>= 90 % clean coverage, >= 30 % fewer accepted wrong outputs over clip30/bits8/hold/lag32): margin 90.4 % / -78 %; flags 100 % / -73.5 %; flags+margin 90.4 % / -95.5 % (all pass; combined best). Flags catch value faults (hold, bits8 100 %, clip30 80 %) but, as expected, not the circular lag; the margin catches part of every fault. Test (reported once), flags+margin: clean coverage 89 % with 0 accepted wrong (45 without rejection), lag32 5 accepted wrong (74), accepted false-healthy 0 in every condition. First run had a padded lag that created a flat segment (artifact, caught by the run flag); kept in run1_lag_padded_artifact/.",
+   "limitations": "Modelled digital faults on recorded data (no real ADC); window-level, stateless (rejection lasts exactly while the fault is present); thresholds at clean-validation extremes give ~1 % flags on clean test windows.",
+   "next_action": "Q02 (optional): quality counters + margin as research status in hardware; the flags are cheap comparators on the raw words in the ingress."
   },
   {
    "id": "T01",
