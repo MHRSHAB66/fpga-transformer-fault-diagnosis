@@ -350,3 +350,10 @@ artifacts/results/fpga_rawinput_valset_*/fpga_valset_raw.*
 /seq256_b03/
 # Root-level Vitis HLS project of the research A06 core.
 /seq256_p8u/
+# Root-level Vitis HLS projects of the research B04 cores.
+/seq256_b04/
+/seq256_b04i/
+# Root-level Vitis HLS project of the research Q02 core.
+/seq256_q02/
+# Q02 ordered digital replay input (raw24 gz; hashed in artifacts/manifests/artifact_manifest.json).
+artifacts/research/Q02_*/*.i32.gz

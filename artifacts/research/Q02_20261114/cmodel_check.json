@@ -1,0 +1,594 @@
+{
+ "exact_all": true,
+ "decisions_equal_q01v2": true,
+ "per_condition": {
+  "val": {
+   "clean": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 0,
+    "low_margin": 196,
+    "accepted_flags_and_margin": 1852,
+    "wrong_class": 43
+   },
+   "gain2": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 6,
+    "low_margin": 197,
+    "accepted_flags_and_margin": 1845,
+    "wrong_class": 43
+   },
+   "offset": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 0,
+    "low_margin": 196,
+    "accepted_flags_and_margin": 1852,
+    "wrong_class": 43
+   },
+   "snr20": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 0,
+    "low_margin": 194,
+    "accepted_flags_and_margin": 1854,
+    "wrong_class": 45
+   },
+   "snr10": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 0,
+    "low_margin": 223,
+    "accepted_flags_and_margin": 1825,
+    "wrong_class": 66
+   },
+   "clip50": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 1448,
+    "low_margin": 192,
+    "accepted_flags_and_margin": 529,
+    "wrong_class": 42
+   },
+   "clip30": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 1643,
+    "low_margin": 201,
+    "accepted_flags_and_margin": 346,
+    "wrong_class": 46
+   },
+   "clip10": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 1824,
+    "low_margin": 221,
+    "accepted_flags_and_margin": 198,
+    "wrong_class": 55
+   },
+   "bits12": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 2048,
+    "low_margin": 193,
+    "accepted_flags_and_margin": 0,
+    "wrong_class": 45
+   },
+   "bits8": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 2048,
+    "low_margin": 219,
+    "accepted_flags_and_margin": 0,
+    "wrong_class": 55
+   },
+   "bits4": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 2048,
+    "low_margin": 234,
+    "accepted_flags_and_margin": 0,
+    "wrong_class": 64
+   },
+   "hold4": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 1760,
+    "low_margin": 197,
+    "accepted_flags_and_margin": 264,
+    "wrong_class": 73
+   },
+   "hold16": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 2048,
+    "low_margin": 312,
+    "accepted_flags_and_margin": 0,
+    "wrong_class": 141
+   },
+   "hold31": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 2048,
+    "low_margin": 396,
+    "accepted_flags_and_margin": 0,
+    "wrong_class": 267
+   },
+   "lag8": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 0,
+    "low_margin": 205,
+    "accepted_flags_and_margin": 1843,
+    "wrong_class": 53
+   },
+   "lag32": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 0,
+    "low_margin": 237,
+    "accepted_flags_and_margin": 1811,
+    "wrong_class": 71
+   },
+   "lag128": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 0,
+    "low_margin": 336,
+    "accepted_flags_and_margin": 1712,
+    "wrong_class": 141
+   }
+  },
+  "test": {
+   "clean": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 11,
+    "low_margin": 215,
+    "accepted_flags_and_margin": 1822,
+    "wrong_class": 45
+   },
+   "gain2": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 13,
+    "low_margin": 214,
+    "accepted_flags_and_margin": 1822,
+    "wrong_class": 46
+   },
+   "offset": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 11,
+    "low_margin": 215,
+    "accepted_flags_and_margin": 1822,
+    "wrong_class": 45
+   },
+   "snr20": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 0,
+    "low_margin": 218,
+    "accepted_flags_and_margin": 1830,
+    "wrong_class": 45
+   },
+   "snr10": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 0,
+    "low_margin": 226,
+    "accepted_flags_and_margin": 1822,
+    "wrong_class": 66
+   },
+   "clip50": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 1437,
+    "low_margin": 231,
+    "accepted_flags_and_margin": 514,
+    "wrong_class": 45
+   },
+   "clip30": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 1620,
+    "low_margin": 239,
+    "accepted_flags_and_margin": 340,
+    "wrong_class": 49
+   },
+   "clip10": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 1857,
+    "low_margin": 252,
+    "accepted_flags_and_margin": 169,
+    "wrong_class": 58
+   },
+   "bits12": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 2048,
+    "low_margin": 218,
+    "accepted_flags_and_margin": 0,
+    "wrong_class": 47
+   },
+   "bits8": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 2048,
+    "low_margin": 251,
+    "accepted_flags_and_margin": 0,
+    "wrong_class": 61
+   },
+   "bits4": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 2048,
+    "low_margin": 277,
+    "accepted_flags_and_margin": 0,
+    "wrong_class": 76
+   },
+   "hold4": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 1773,
+    "low_margin": 238,
+    "accepted_flags_and_margin": 242,
+    "wrong_class": 67
+   },
+   "hold16": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 2048,
+    "low_margin": 358,
+    "accepted_flags_and_margin": 0,
+    "wrong_class": 161
+   },
+   "hold31": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 2048,
+    "low_margin": 431,
+    "accepted_flags_and_margin": 0,
+    "wrong_class": 301
+   },
+   "lag8": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 11,
+    "low_margin": 241,
+    "accepted_flags_and_margin": 1796,
+    "wrong_class": 52
+   },
+   "lag32": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 11,
+    "low_margin": 291,
+    "accepted_flags_and_margin": 1746,
+    "wrong_class": 74
+   },
+   "lag128": {
+    "windows": 2048,
+    "logits_class_equal_canonical_cmodel": 2048,
+    "status_equal_reference": 2048,
+    "detail_equal_reference": 2048,
+    "margin_equal_reference": 2048,
+    "flagged": 11,
+    "low_margin": 379,
+    "accepted_flags_and_margin": 1659,
+    "wrong_class": 146
+   }
+  }
+ },
+ "q01v2_agreement": {
+  "val": {
+   "clean": {
+    "flags_accepted_q01v2": 2048,
+    "flags_accepted_q02": 2048,
+    "flags+margin_accepted_q01v2": 1852,
+    "flags+margin_accepted_q02": 1852
+   },
+   "gain2": {
+    "flags_accepted_q01v2": 2042,
+    "flags_accepted_q02": 2042,
+    "flags+margin_accepted_q01v2": 1845,
+    "flags+margin_accepted_q02": 1845
+   },
+   "offset": {
+    "flags_accepted_q01v2": 2048,
+    "flags_accepted_q02": 2048,
+    "flags+margin_accepted_q01v2": 1852,
+    "flags+margin_accepted_q02": 1852
+   },
+   "snr20": {
+    "flags_accepted_q01v2": 2048,
+    "flags_accepted_q02": 2048,
+    "flags+margin_accepted_q01v2": 1854,
+    "flags+margin_accepted_q02": 1854
+   },
+   "snr10": {
+    "flags_accepted_q01v2": 2048,
+    "flags_accepted_q02": 2048,
+    "flags+margin_accepted_q01v2": 1825,
+    "flags+margin_accepted_q02": 1825
+   },
+   "clip50": {
+    "flags_accepted_q01v2": 600,
+    "flags_accepted_q02": 600,
+    "flags+margin_accepted_q01v2": 529,
+    "flags+margin_accepted_q02": 529
+   },
+   "clip30": {
+    "flags_accepted_q01v2": 405,
+    "flags_accepted_q02": 405,
+    "flags+margin_accepted_q01v2": 346,
+    "flags+margin_accepted_q02": 346
+   },
+   "clip10": {
+    "flags_accepted_q01v2": 224,
+    "flags_accepted_q02": 224,
+    "flags+margin_accepted_q01v2": 198,
+    "flags+margin_accepted_q02": 198
+   },
+   "bits12": {
+    "flags_accepted_q01v2": 0,
+    "flags_accepted_q02": 0,
+    "flags+margin_accepted_q01v2": 0,
+    "flags+margin_accepted_q02": 0
+   },
+   "bits8": {
+    "flags_accepted_q01v2": 0,
+    "flags_accepted_q02": 0,
+    "flags+margin_accepted_q01v2": 0,
+    "flags+margin_accepted_q02": 0
+   },
+   "bits4": {
+    "flags_accepted_q01v2": 0,
+    "flags_accepted_q02": 0,
+    "flags+margin_accepted_q01v2": 0,
+    "flags+margin_accepted_q02": 0
+   },
+   "hold4": {
+    "flags_accepted_q01v2": 288,
+    "flags_accepted_q02": 288,
+    "flags+margin_accepted_q01v2": 264,
+    "flags+margin_accepted_q02": 264
+   },
+   "hold16": {
+    "flags_accepted_q01v2": 0,
+    "flags_accepted_q02": 0,
+    "flags+margin_accepted_q01v2": 0,
+    "flags+margin_accepted_q02": 0
+   },
+   "hold31": {
+    "flags_accepted_q01v2": 0,
+    "flags_accepted_q02": 0,
+    "flags+margin_accepted_q01v2": 0,
+    "flags+margin_accepted_q02": 0
+   },
+   "lag8": {
+    "flags_accepted_q01v2": 2048,
+    "flags_accepted_q02": 2048,
+    "flags+margin_accepted_q01v2": 1843,
+    "flags+margin_accepted_q02": 1843
+   },
+   "lag32": {
+    "flags_accepted_q01v2": 2048,
+    "flags_accepted_q02": 2048,
+    "flags+margin_accepted_q01v2": 1811,
+    "flags+margin_accepted_q02": 1811
+   },
+   "lag128": {
+    "flags_accepted_q01v2": 2048,
+    "flags_accepted_q02": 2048,
+    "flags+margin_accepted_q01v2": 1712,
+    "flags+margin_accepted_q02": 1712
+   }
+  },
+  "test": {
+   "clean": {
+    "flags_accepted_q01v2": 2037,
+    "flags_accepted_q02": 2037,
+    "flags+margin_accepted_q01v2": 1822,
+    "flags+margin_accepted_q02": 1822
+   },
+   "gain2": {
+    "flags_accepted_q01v2": 2035,
+    "flags_accepted_q02": 2035,
+    "flags+margin_accepted_q01v2": 1822,
+    "flags+margin_accepted_q02": 1822
+   },
+   "offset": {
+    "flags_accepted_q01v2": 2037,
+    "flags_accepted_q02": 2037,
+    "flags+margin_accepted_q01v2": 1822,
+    "flags+margin_accepted_q02": 1822
+   },
+   "snr20": {
+    "flags_accepted_q01v2": 2048,
+    "flags_accepted_q02": 2048,
+    "flags+margin_accepted_q01v2": 1830,
+    "flags+margin_accepted_q02": 1830
+   },
+   "snr10": {
+    "flags_accepted_q01v2": 2048,
+    "flags_accepted_q02": 2048,
+    "flags+margin_accepted_q01v2": 1822,
+    "flags+margin_accepted_q02": 1822
+   },
+   "clip50": {
+    "flags_accepted_q01v2": 611,
+    "flags_accepted_q02": 611,
+    "flags+margin_accepted_q01v2": 514,
+    "flags+margin_accepted_q02": 514
+   },
+   "clip30": {
+    "flags_accepted_q01v2": 428,
+    "flags_accepted_q02": 428,
+    "flags+margin_accepted_q01v2": 340,
+    "flags+margin_accepted_q02": 340
+   },
+   "clip10": {
+    "flags_accepted_q01v2": 191,
+    "flags_accepted_q02": 191,
+    "flags+margin_accepted_q01v2": 169,
+    "flags+margin_accepted_q02": 169
+   },
+   "bits12": {
+    "flags_accepted_q01v2": 0,
+    "flags_accepted_q02": 0,
+    "flags+margin_accepted_q01v2": 0,
+    "flags+margin_accepted_q02": 0
+   },
+   "bits8": {
+    "flags_accepted_q01v2": 0,
+    "flags_accepted_q02": 0,
+    "flags+margin_accepted_q01v2": 0,
+    "flags+margin_accepted_q02": 0
+   },
+   "bits4": {
+    "flags_accepted_q01v2": 0,
+    "flags_accepted_q02": 0,
+    "flags+margin_accepted_q01v2": 0,
+    "flags+margin_accepted_q02": 0
+   },
+   "hold4": {
+    "flags_accepted_q01v2": 275,
+    "flags_accepted_q02": 275,
+    "flags+margin_accepted_q01v2": 242,
+    "flags+margin_accepted_q02": 242
+   },
+   "hold16": {
+    "flags_accepted_q01v2": 0,
+    "flags_accepted_q02": 0,
+    "flags+margin_accepted_q01v2": 0,
+    "flags+margin_accepted_q02": 0
+   },
+   "hold31": {
+    "flags_accepted_q01v2": 0,
+    "flags_accepted_q02": 0,
+    "flags+margin_accepted_q01v2": 0,
+    "flags+margin_accepted_q02": 0
+   },
+   "lag8": {
+    "flags_accepted_q01v2": 2037,
+    "flags_accepted_q02": 2037,
+    "flags+margin_accepted_q01v2": 1796,
+    "flags+margin_accepted_q02": 1796
+   },
+   "lag32": {
+    "flags_accepted_q01v2": 2037,
+    "flags_accepted_q02": 2037,
+    "flags+margin_accepted_q01v2": 1746,
+    "flags+margin_accepted_q02": 1746
+   },
+   "lag128": {
+    "flags_accepted_q01v2": 2037,
+    "flags_accepted_q02": 2037,
+    "flags+margin_accepted_q01v2": 1659,
+    "flags+margin_accepted_q02": 1659
+   }
+  }
+ }
+}

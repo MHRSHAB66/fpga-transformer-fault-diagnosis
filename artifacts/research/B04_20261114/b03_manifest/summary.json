@@ -1,0 +1,93 @@
+{
+ "id": "B03",
+ "seed": 20261115,
+ "rows": 1408,
+ "scope": "logical single-bit injection in the FPGA datapath (research overlay); not radiation or configuration-memory testing",
+ "source": "cmodel",
+ "injection_off": {
+  "rows": 256,
+  "class_equal_canonical": 256,
+  "logits_equal_canonical": 256,
+  "integrity_nonzero": 0
+ },
+ "by_site_band": {
+  "site1/low": {
+   "events": 128,
+   "logits_changed": 97,
+   "class_changed": 0,
+   "detected": 128,
+   "silent": 0,
+   "detected_without_class_change": 128
+  },
+  "site1/mid": {
+   "events": 128,
+   "logits_changed": 118,
+   "class_changed": 1,
+   "detected": 128,
+   "silent": 0,
+   "detected_without_class_change": 127
+  },
+  "site1/high": {
+   "events": 128,
+   "logits_changed": 128,
+   "class_changed": 29,
+   "detected": 128,
+   "silent": 0,
+   "detected_without_class_change": 99
+  },
+  "site2/low": {
+   "events": 128,
+   "logits_changed": 20,
+   "class_changed": 0,
+   "detected": 128,
+   "silent": 0,
+   "detected_without_class_change": 128
+  },
+  "site2/mid": {
+   "events": 128,
+   "logits_changed": 112,
+   "class_changed": 7,
+   "detected": 128,
+   "silent": 0,
+   "detected_without_class_change": 121
+  },
+  "site2/high": {
+   "events": 128,
+   "logits_changed": 127,
+   "class_changed": 18,
+   "detected": 128,
+   "silent": 0,
+   "detected_without_class_change": 110
+  },
+  "site3/low": {
+   "events": 128,
+   "logits_changed": 128,
+   "class_changed": 0,
+   "detected": 128,
+   "silent": 0,
+   "detected_without_class_change": 128
+  },
+  "site3/mid": {
+   "events": 128,
+   "logits_changed": 128,
+   "class_changed": 5,
+   "detected": 128,
+   "silent": 0,
+   "detected_without_class_change": 123
+  },
+  "site3/high": {
+   "events": 128,
+   "logits_changed": 128,
+   "class_changed": 32,
+   "detected": 128,
+   "silent": 0,
+   "detected_without_class_change": 96
+  }
+ },
+ "totals": {
+  "events": 1152,
+  "class_changed": 92,
+  "detected": 1152,
+  "silent": 0
+ }
+}

@@ -12,7 +12,7 @@ confirmation set.
 
 | # | Claim | Level | Evidence |
 |---|---|---|---|
-| 1 | In the INT10 attention, 8-bit signed probabilities lose accuracy through probability-mass truncation, not through all-zero rows (0 zero rows on validation) | software-measured (validation, 195 files) | `artifacts/research/A02_20261113/summary.json` |
+| 1 | In the INT10 attention, 8-bit signed probabilities lose accuracy through probability-mass truncation, not through all-zero rows (0 zero rows for P8-signed on validation; only uniform INT8 shows any: rate 3.7e-6, 170 windows) | software-measured (validation, 195 files) | `artifacts/research/A02_20261113/summary.json` |
 | 2 | Weight precision is not the bottleneck (W8: −0.01 pp macro-F1); 8-bit unsigned probabilities cost nothing (+0.49 pp, CI [−0.18, 1.21]) | software-measured | same |
 | 3 | The softmax normalisation quotient is ≤ 511, so a 9-step divider is exact | proven + exhaustive (367,657,004 reachable pairs, native and ap_int) | `hls/research/a04_softmax_div/`, `artifacts/research/A04_20261113/exhaustive_*.txt` |
 | 4 | The exact divider saves 15.5 % LUT and 18.7 % FF of the whole raw-input core at equal DSP/BRAM/latency, with bit-identical outputs | post-route + physically measured (95,404/95,404 logits = canonical, 0 misses / 30,000) | `artifacts/research/A05_20261113/`, `artifacts/results/raw_core_board_*_20261113_14*` |

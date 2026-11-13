@@ -14,16 +14,48 @@
   "num_layers": 1,
   "dim_feedforward": 64,
   "num_classes": 4,
-  "golden": {
-    "count": 16,
-    "correct": 14
-  },
-  "ingress1024_golden": {
-    "count": 16,
-    "correct": 14,
-    "prediction_changes_vs_float_mean": 0
-  },
   "aggregation": "post-zscore non-overlapping mean, factor=4",
   "source_window_len": 1024,
-  "note": "Independent SEQ=256 export; SEQ=1024 artifacts are untouched."
+  "note": "Independent SEQ=256 export; SEQ=1024 artifacts are untouched.",
+  "golden": {
+    "count": 41,
+    "ties": 8,
+    "dir": "hls/f1_int10_seq256/golden_raw1024_argmax",
+    "sha256_in": "177de104f8844579a47b9f8d75885e7d8aa743be8089992179de80316eb62aa7"
+  },
+  "input_scale_note": "input_scale is the INT10 code scale used INSIDE the FPGA after its own z-score; this raw-input bundle sends raw24 codes and the host never applies it",
+  "research_variant": {
+    "id": "A05",
+    "bundle": "research_divq9_z7020_20261113",
+    "numeric": {
+      "weights": {
+        "bits": 10,
+        "signed": true,
+        "qmax": 511
+      },
+      "activations": {
+        "bits": 10,
+        "signed": true,
+        "qmax": 511
+      },
+      "attention_probabilities": {
+        "bits": 10,
+        "signed": true,
+        "qmax": 511,
+        "scale": "1/511",
+        "note": "softmax probabilities are non-negative; signed 10-bit code"
+      },
+      "softmax_quotient": "exact 9-step restoring divider div_q9 (quotient <= 511 proven; 367,657,004 reachable pairs checked)",
+      "scales": "artifacts/quantized/f_seq256_int10/integer_config.json (export scales)"
+    },
+    "input": {
+      "representation": "raw 24-bit ADC codes, one per little-endian int32 word; 8192 words per window, row-major [sample, channel] (word = sample*8 + channel), TLAST on word 8191",
+      "contract": "artifacts/preprocessing/raw_input_contract_v1.json",
+      "on_fpga_preprocessing": "per-window per-channel integer z-score -> INT10 codes (+-511) -> 4:1 non-overlapping mean aggregation (1024 -> 256 tokens) inside transformer_top",
+      "host_side_normalisation": "none (the host sends raw codes)",
+      "channels": "8 MAFAULDA channels in src/config.py order"
+    },
+    "bit_identical_to_canonical": true,
+    "numpy_backend": "canonical"
+  }
 }

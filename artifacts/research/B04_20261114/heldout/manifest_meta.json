@@ -1,0 +1,61 @@
+{
+ "seed": 20261116,
+ "windows": 256,
+ "rows": 1408,
+ "events_per_site_band": 128,
+ "sites": {
+  "1": {
+   "words": 2048,
+   "bit_bands": [
+    [
+     0,
+     3
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     6,
+     10
+    ]
+   ]
+  },
+  "2": {
+   "words": 8192,
+   "bit_bands": [
+    [
+     0,
+     10
+    ],
+    [
+     10,
+     21
+    ],
+    [
+     21,
+     32
+    ]
+   ]
+  },
+  "3": {
+   "words": 4,
+   "bit_bands": [
+    [
+     0,
+     3
+    ],
+    [
+     3,
+     6
+    ],
+    [
+     6,
+     10
+    ]
+   ]
+  }
+ },
+ "window_selection": "64 test windows per class drawn with this seed; overlap with other campaigns is reported separately (a different seed alone does not make the samples independent)",
+ "sha256": "e8d024fa59d9b24d29be4b2762b8e9e7b33c61441a0ea24e96161e06fbe4d3f6"
+}

@@ -1,0 +1,3 @@
+TEMP_START=50.938879394376
+META n_unique=4096 n_total=30200 warmup=200 sched=SCHED_FIFO_prio_50,_cpu_[1] class_source=fpga_register preload_s=11.51 preload_maxrss_kb=17412->148440
+SUMMARY {"n_unique": 4096, "n_total": 30200, "executed": 30200, "warmup": 200, "aborted": null, "sched": "SCHED_FIFO prio 50, cpu [1]", "class_source": "fpga_register", "preload_s": 11.512, "preload_maxrss_kb": [17412, 148440], "period_ms": 20.48, "acceptance_windows": 30000, "deadline_misses": 0, "response_ms": {"p50": 17.068, "p95": 17.356, "p99": 17.508, "p99.9": 17.634}, "response_ms_max": 17.724, "warmup_misses": 0, "involuntary_ctx_switches": 5, "voluntary_ctx_switches": 33206, "major_faults": 0, "temp_c": {"start": 50.938879394376, "max": 51.800164794764, "end": 51.308001708828}}

@@ -30,5 +30,39 @@
     "cls1": 0.01946580685905479,
     "cls_act": 0.01946580685905479,
     "logits": 0.10779884107882078
+  },
+  "research_variant": {
+    "id": "B03",
+    "bundle": "research_b03_z7020_20261113",
+    "numeric": {
+      "weights": {
+        "bits": 10,
+        "signed": true,
+        "qmax": 511
+      },
+      "activations": {
+        "bits": 10,
+        "signed": true,
+        "qmax": 511
+      },
+      "attention_probabilities": {
+        "bits": 10,
+        "signed": true,
+        "qmax": 511,
+        "scale": "1/511",
+        "note": "softmax probabilities are non-negative; signed 10-bit code"
+      },
+      "softmax_quotient": "integer division (num*qmax + den/2) / den",
+      "scales": "artifacts/quantized/f_seq256_int10/integer_config.json (export scales)"
+    },
+    "input": {
+      "representation": "raw 24-bit ADC codes, one per little-endian int32 word; 8192 words per window, row-major [sample, channel] (word = sample*8 + channel), TLAST on word 8191",
+      "contract": "artifacts/preprocessing/raw_input_contract_v1.json",
+      "on_fpga_preprocessing": "per-window per-channel integer z-score -> INT10 codes (+-511) -> 4:1 non-overlapping mean aggregation (1024 -> 256 tokens) inside transformer_top",
+      "host_side_normalisation": "none (the host sends raw codes)",
+      "channels": "8 MAFAULDA channels in src/config.py order"
+    },
+    "bit_identical_to_canonical": true,
+    "numpy_backend": "canonical"
   }
 }

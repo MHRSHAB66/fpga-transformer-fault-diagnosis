@@ -1,0 +1,178 @@
+{
+ "id": "B04i_recovery",
+ "rows": 576,
+ "manifest_meta": {
+  "seed": 20261118,
+  "windows": 256,
+  "rows": 576,
+  "events_per_site_band": 32,
+  "recovery_pairs": true,
+  "sites": {
+   "1": {
+    "words": 2048,
+    "bit_bands": [
+     [
+      0,
+      3
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      6,
+      10
+     ]
+    ]
+   },
+   "2": {
+    "words": 8192,
+    "bit_bands": [
+     [
+      0,
+      10
+     ],
+     [
+      10,
+      21
+     ],
+     [
+      21,
+      32
+     ]
+    ]
+   },
+   "3": {
+    "words": 4,
+    "bit_bands": [
+     [
+      0,
+      3
+     ],
+     [
+      3,
+      6
+     ],
+     [
+      6,
+      10
+     ]
+    ]
+   }
+  },
+  "window_selection": "64 test windows per class drawn with this seed; overlap with other campaigns is reported separately (a different seed alone does not make the samples independent)",
+  "sha256": "52591eb33683d77b7ad9aa0dcc38a5a5359e49324a3144dc890599aa663f180d"
+ },
+ "cmodel_meta": {
+  "cmodel_rows.txt": {
+   "exe": "G:\\aut\\project\\fpga_fault_diagnosis\\tmp\\csim\\batch_raw_b04i.exe",
+   "exe_sha256": "922d91198066b950828ad1511b50c984f1416da45a55205a780aeaac514bf33f",
+   "long_model": "MinGW LLP64 (32-bit long)",
+   "rows": 576
+  },
+  "cmodel_rows_lp64.txt": {
+   "exe": "G:\\aut\\project\\fpga_fault_diagnosis\\tmp\\csim\\batch_raw_b04i_lp64.exe",
+   "exe_sha256": "dc00c12228fc04756af15e9a562b248b4a25eb7288f7bfbee84fc5616f929f26",
+   "long_model": "LP64 (64-bit long, synthesized semantics)",
+   "rows": 576
+  }
+ },
+ "seed": 20261118,
+ "scope": "logical single-bit injection at the three defined sites, transient (one window, one bit); not radiation, configuration-memory or field upset-rate testing",
+ "canonical_reference": "artifacts/results/onchip_preprocess_20261109/csim_raw_argmax/csim_logits.txt",
+ "selected_reference": "cmodel_rows_lp64.txt (64-bit long = synthesized semantics)",
+ "cmodel_vs_lp64_differing_rows": [],
+ "source": "cmodel (cmodel_rows_lp64.txt (64-bit long = synthesized semantics))",
+ "injection_off": {
+  "rows": 288,
+  "class_equal_canonical": 288,
+  "logits_equal_canonical": 288,
+  "integrity_nonzero": 0
+ },
+ "by_site_band": {
+  "site1/low": {
+   "events": 32,
+   "logits_changed": 25,
+   "class_changed": 0,
+   "detected": 32,
+   "silent": 0,
+   "detected_without_class_change": 32
+  },
+  "site1/mid": {
+   "events": 32,
+   "logits_changed": 29,
+   "class_changed": 0,
+   "detected": 32,
+   "silent": 0,
+   "detected_without_class_change": 32
+  },
+  "site1/high": {
+   "events": 32,
+   "logits_changed": 32,
+   "class_changed": 11,
+   "detected": 32,
+   "silent": 0,
+   "detected_without_class_change": 21
+  },
+  "site2/low": {
+   "events": 32,
+   "logits_changed": 3,
+   "class_changed": 0,
+   "detected": 32,
+   "silent": 0,
+   "detected_without_class_change": 32
+  },
+  "site2/mid": {
+   "events": 32,
+   "logits_changed": 27,
+   "class_changed": 4,
+   "detected": 32,
+   "silent": 0,
+   "detected_without_class_change": 28
+  },
+  "site2/high": {
+   "events": 32,
+   "logits_changed": 32,
+   "class_changed": 2,
+   "detected": 32,
+   "silent": 0,
+   "detected_without_class_change": 30
+  },
+  "site3/low": {
+   "events": 32,
+   "logits_changed": 32,
+   "class_changed": 0,
+   "detected": 32,
+   "silent": 0,
+   "detected_without_class_change": 32
+  },
+  "site3/mid": {
+   "events": 32,
+   "logits_changed": 32,
+   "class_changed": 0,
+   "detected": 32,
+   "silent": 0,
+   "detected_without_class_change": 32
+  },
+  "site3/high": {
+   "events": 32,
+   "logits_changed": 32,
+   "class_changed": 11,
+   "detected": 32,
+   "silent": 0,
+   "detected_without_class_change": 21
+  }
+ },
+ "totals": {
+  "events": 288,
+  "logits_changed": 244,
+  "class_changed": 28,
+  "detected": 288,
+  "silent": 0,
+  "detected_without_class_change": 260,
+  "invalid_result_coverage": 1.0,
+  "corrupted_logit_coverage": 1.0,
+  "availability_cost_flags_without_class_change": 260,
+  "note": "a flag marks the window's result invalid before the deadline; it is NOT a correct classification of that window"
+ }
+}

@@ -13,31 +13,40 @@ into `long long` (sources are only read):
         -I ../../hls/f1_int10/gpp_csim/stubs transformer_top_b03_lp64.cpp batch_logits_b03.cpp \
         -o ../csim/batch_raw_b03_lp64.exe
     python -m tools.research.b03_campaign cmodel --out artifacts/research/B03_20261113 --lp64
+B04i (same, plus -DB04_INJECT; writes tmp/b04i_lp64):
+    python hls/research/b03_inject/make_lp64_cmodel.py --variant b04i
+    cd tmp/b04i_lp64 && g++ <same flags> -DB04_INJECT transformer_top_b04i_lp64.cpp batch_logits_b04.cpp \
+        -o ../csim/batch_raw_b04i_lp64.exe
 """
 from __future__ import annotations
 
+import argparse
 import re
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
-DST = REPO / "tmp/b03_lp64"
 VITIS = REPO / "hls/f1_int10_seq256/vitis"
-SOURCES = {
-    "transformer_top_b03_lp64.cpp": REPO / "hls/research/b03_inject/transformer_top_seq256_raw1024_b03_argmax.cpp",
-    "batch_logits_b03.cpp": REPO / "hls/research/b03_inject/batch_logits_b03.cpp",
-    "weights_int10.h": VITIS / "weights_int10.h",
-    "onchip_preprocess.h": VITIS / "onchip_preprocess.h",
-    "argmax_first_max.h": VITIS / "argmax_first_max.h",
-    "ap_types.h": VITIS / "ap_types.h",
+TOPS = {
+    "b03": ("transformer_top_b03_lp64.cpp", REPO / "hls/research/b03_inject/transformer_top_seq256_raw1024_b03_argmax.cpp",
+            "batch_logits_b03.cpp", REPO / "hls/research/b03_inject/batch_logits_b03.cpp"),
+    "b04i": ("transformer_top_b04i_lp64.cpp",
+             REPO / "hls/research/b04_integrity_fast/transformer_top_seq256_raw1024_b04_argmax.cpp",
+             "batch_logits_b04.cpp", REPO / "hls/research/b04_integrity_fast/batch_logits_b04.cpp"),
 }
+HEADERS = {name: VITIS / name for name in ("weights_int10.h", "onchip_preprocess.h", "argmax_first_max.h", "ap_types.h")}
 LONG = re.compile(r"(?<!long )\blong\b(?! long)")
 
 
 def main():
-    DST.mkdir(parents=True, exist_ok=True)
-    for name, src in SOURCES.items():
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--variant", choices=sorted(TOPS), default="b03")
+    args = ap.parse_args()
+    top_name, top, harness_name, harness = TOPS[args.variant]
+    dst = REPO / ("tmp/%s_lp64" % args.variant)
+    dst.mkdir(parents=True, exist_ok=True)
+    for name, src in {top_name: top, harness_name: harness, **HEADERS}.items():
         text = src.read_text()
-        (DST / name).write_text(LONG.sub("long long", text))
+        (dst / name).write_text(LONG.sub("long long", text))
         print(name, "long -> long long:", len(LONG.findall(text)))
 
 

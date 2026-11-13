@@ -1,0 +1,8 @@
+{
+ "deployment": "/home/xilinx/deployments/seq256_raw_argmax_z7020_20261109",
+ "board_bitstream_sha256": "57fff3aa92c49240938d0f6eef8f547882f26d1c0b5ba77bb087ad02d55bc310",
+ "board_run_dir": "/home/xilinx/raw_core_golden_20261114_001545",
+ "command": "G:\\aut\\project\\fpga_fault_diagnosis\\tools\\raw_core_board_test.py golden --name seq256_raw_argmax_z7020_20261109",
+ "git_head": "99617bc1dae4e3fa80336277800fb08086aada06",
+ "started": "2026-11-14T00:15:54"
+}

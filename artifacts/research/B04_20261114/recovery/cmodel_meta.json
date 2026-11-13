@@ -1,0 +1,14 @@
+{
+ "cmodel_rows.txt": {
+  "exe": "G:\\aut\\project\\fpga_fault_diagnosis\\tmp\\csim\\batch_raw_b04i.exe",
+  "exe_sha256": "922d91198066b950828ad1511b50c984f1416da45a55205a780aeaac514bf33f",
+  "long_model": "MinGW LLP64 (32-bit long)",
+  "rows": 576
+ },
+ "cmodel_rows_lp64.txt": {
+  "exe": "G:\\aut\\project\\fpga_fault_diagnosis\\tmp\\csim\\batch_raw_b04i_lp64.exe",
+  "exe_sha256": "dc00c12228fc04756af15e9a562b248b4a25eb7288f7bfbee84fc5616f929f26",
+  "long_model": "LP64 (64-bit long, synthesized semantics)",
+  "rows": 576
+ }
+}

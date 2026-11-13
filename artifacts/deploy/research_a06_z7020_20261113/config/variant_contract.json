@@ -1,0 +1,92 @@
+{
+ "bundle": "research_a06_z7020_20261113",
+ "schema": "research variant contract v1",
+ "id": "A06",
+ "title": "Unsigned 8-bit attention probabilities + exact 8-bit divider (W10/A10/P8u)",
+ "numeric": {
+  "weights": {
+   "bits": 10,
+   "signed": true,
+   "qmax": 511
+  },
+  "activations": {
+   "bits": 10,
+   "signed": true,
+   "qmax": 511
+  },
+  "attention_probabilities": {
+   "bits": 8,
+   "signed": false,
+   "qmax": 255,
+   "scale": "1/255"
+  },
+  "softmax_quotient": "exact 8-step restoring divider div_q8 (quotient <= 255)",
+  "scales": "artifacts/quantized/f_seq256_int10/integer_config.json (export scales)",
+  "context_requant": {
+   "name": "M_l0_ctx_p8u_q40",
+   "q40": 4322686742,
+   "m": 0.00393146068905375,
+   "rule": "m = (1/255 * s_v) / s_ctx, Q40 round-half-even"
+  },
+  "note": "weights and activations stay INT10 (this is NOT a W8/A8 implementation)"
+ },
+ "manifest_overrides": {
+  "attn_bits": 8,
+  "attn_signed": false,
+  "attn_qmax": 255
+ },
+ "reference": {
+  "bit_identical_to_canonical": false,
+  "numpy_backend": "unsupported",
+  "reconstruct": "python -m tools.check_variant_cmodel --ckpt artifacts/experiments/transformer_f1_seq256_pool4/kaggle_v3/seq256_pool4/scratch/best.pt --scales artifacts/quantized/f_seq256_int10/integer_config.json --exe tmp/csim/batch_raw_p8u.exe --n 600 --conditions clean snr0 --research-bits 10,10,8,1",
+  "golden": "artifacts/research/A06_20261113/golden_raw1024_p8u",
+  "cmodel_logits": "artifacts/research/A06_20261113/csim_p8u_fulltest/csim_logits.txt",
+  "note": "own reference: tools/research/precision_ablation.py make_model(state, 10, 10, 8, True)"
+ },
+ "outputs": {
+  "stream": "4 int32 logits (S2MM, TLAST on logit 3)",
+  "pred_class": "AXI-Lite register: FPGA argmax, lowest index on ties; class map 0 normal, 1 imbalance, 2 misalignment, 3 bearing_fault"
+ },
+ "source": {
+  "hls_top": "hls/research/a06_p8u/transformer_top_seq256_raw1024_p8u_argmax.cpp",
+  "generator": "hls/research/a06_p8u/make_a06_top.py",
+  "build": "powershell -File tools/build_raw_core.ps1 -Variant a06",
+  "build_package": "artifacts/research/A06_20261113/a06_build",
+  "hls_top_sha256": "66c2f308c5adb255b5e788b2504216ce6cd56abc2236511f01f65b7f15e496f5"
+ },
+ "timing": "post-route WNS +0.100 ns (default strategy)",
+ "input": {
+  "representation": "raw 24-bit ADC codes, one per little-endian int32 word; 8192 words per window, row-major [sample, channel] (word = sample*8 + channel), TLAST on word 8191",
+  "contract": "artifacts/preprocessing/raw_input_contract_v1.json",
+  "on_fpga_preprocessing": "per-window per-channel integer z-score -> INT10 codes (+-511) -> 4:1 non-overlapping mean aggregation (1024 -> 256 tokens) inside transformer_top",
+  "host_side_normalisation": "none (the host sends raw codes)",
+  "channels": "8 MAFAULDA channels in src/config.py order"
+ },
+ "golden": {
+  "dir": "artifacts/research/A06_20261113/golden_raw1024_p8u",
+  "count": 41,
+  "ties": 3,
+  "sha256_in": "177de104f8844579a47b9f8d75885e7d8aa743be8089992179de80316eb62aa7",
+  "sha256_expected": "a247c61a142f221931f68bdec009dc1e545d224bb1b11a85583d67dbff1cba0b",
+  "format": "golden_in.txt: header 'count 1024 8', then one window of raw24 codes per line"
+ },
+ "physical_validation": [
+  {
+   "what": "board golden (own goldens)",
+   "result": "41/41 exact incl. 3 ties",
+   "evidence": "artifacts/results/raw_core_board_golden_20261113_212942"
+  },
+  {
+   "what": "board full test",
+   "result": "95,404/95,404 = A06 C-model, accuracy 97.8848 %",
+   "evidence": "artifacts/results/raw_core_board_fulltest_20261113_213019"
+  },
+  {
+   "what": "hard real time",
+   "result": "0 misses / 30,000, max 16.69 ms, 30,200 outputs = A06 C-model",
+   "evidence": "artifacts/results/raw_core_board_rt_20261113_220122"
+  }
+ ],
+ "status": "physically validated on the MYIR Z-Turn XC7Z020",
+ "board": "MYIR Z-Turn MYS-7Z020-C-S, XC7Z020-1CLG400C, 100 MHz, PYNQ 2.4 / Python 3.6"
+}

@@ -416,6 +416,14 @@ class NumpyBackend:
     """
 
     def __init__(self):
+        # A research bundle whose numerics differ from the canonical core says so in
+        # config/variant_contract.json; never evaluate the canonical model in its place.
+        contract = _DRIVER_DIR.parent / "config" / "variant_contract.json"
+        if contract.exists():
+            ref = json.loads(contract.read_text())["reference"]
+            if ref.get("numpy_backend") != "canonical":
+                raise RuntimeError("this bundle's numerics differ from the canonical core; NumpyBackend "
+                                   "is unsupported here. Own reference: %s" % ref.get("reconstruct"))
         checkpoint = _checkpoint_path()
         if not checkpoint.exists():
             raise FileNotFoundError(

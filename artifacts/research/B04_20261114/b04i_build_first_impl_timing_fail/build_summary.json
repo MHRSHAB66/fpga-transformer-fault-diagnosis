@@ -1,0 +1,21 @@
+{
+ "vivado_project": "tmp/vb04i",
+ "hls_project": "seq256_b04i",
+ "post_route": {
+  "LUT": 37801.0,
+  "FF": 37182.0,
+  "BRAM": 76.5,
+  "DSP": 210.0
+ },
+ "timing": {
+  "WNS_ns": -1.731,
+  "TNS_ns": -53.599,
+  "failing_endpoints": 106,
+  "constraints_met": false,
+  "note": ""
+ },
+ "hls_latency_cycles": {
+  "min": 1506582,
+  "max": 1508664
+ }
+}

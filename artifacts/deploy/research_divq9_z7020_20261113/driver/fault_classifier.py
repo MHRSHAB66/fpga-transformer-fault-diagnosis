@@ -61,6 +61,9 @@ CLASS_REG = "pred_class"
 # Vote-variant IP only: AXI-Lite input vote_k and outputs vote_class / vote_count
 # (temporal majority vote over the last k window classes, computed in FPGA logic).
 VOTE_K_REG, VOTE_CLASS_REG, VOTE_COUNT_REG = "vote_k", "vote_class", "vote_count"
+# Research integrity overlay only (B02): AXI-Lite output integrity_status
+# (bit0 input-buffer signature, bit1 duplicated classifier tail, bit2 projection range).
+INTEGRITY_REG = "integrity_status"
 
 MODEL_CFG = {
     "input_dim": 8, "seq_len": 256, "num_classes": 4,
@@ -221,6 +224,8 @@ class HardwareBackend:
         self.vote_class_vld_offset = _reg_offset(regs, VOTE_CLASS_REG + "_ctrl")
         self.vote_count_offset = _reg_offset(regs, VOTE_COUNT_REG)
         self.vote_count_vld_offset = _reg_offset(regs, VOTE_COUNT_REG + "_ctrl")
+        self.integrity_offset = _reg_offset(regs, INTEGRITY_REG)
+        self.integrity_vld_offset = _reg_offset(regs, INTEGRITY_REG + "_ctrl")
 
         # Start the core (ap_ctrl_hs). auto_restart keeps it armed per window.
         self.ip.write(AP_CTRL_OFFSET, AP_AUTO_RESTART if auto_restart else AP_START)
@@ -251,6 +256,18 @@ class HardwareBackend:
                 raise RuntimeError("vote ap_vld not set after S2MM completion")
         return (int(self.ip.read(self.vote_class_offset)) & 0xFFFFFFFF,
                 int(self.ip.read(self.vote_count_offset)) & 0xFFFFFFFF)
+
+    @property
+    def has_integrity(self) -> bool:
+        return getattr(self, "integrity_offset", None) is not None
+
+    def read_integrity(self) -> int:
+        """integrity_status of the window just collected (research overlay); ap_vld must be set."""
+        if not self.has_integrity:
+            raise RuntimeError("overlay has no integrity_status register")
+        if self.integrity_vld_offset is not None and not (int(self.ip.read(self.integrity_vld_offset)) & 0x1):
+            raise RuntimeError("integrity_status ap_vld not set after S2MM completion")
+        return int(self.ip.read(self.integrity_offset)) & 0xFFFFFFFF
 
     def read_hw_class(self) -> int:
         """Class id computed by the FPGA logic for the window just collected.
@@ -399,6 +416,14 @@ class NumpyBackend:
     """
 
     def __init__(self):
+        # A research bundle whose numerics differ from the canonical core says so in
+        # config/variant_contract.json; never evaluate the canonical model in its place.
+        contract = _DRIVER_DIR.parent / "config" / "variant_contract.json"
+        if contract.exists():
+            ref = json.loads(contract.read_text())["reference"]
+            if ref.get("numpy_backend") != "canonical":
+                raise RuntimeError("this bundle's numerics differ from the canonical core; NumpyBackend "
+                                   "is unsupported here. Own reference: %s" % ref.get("reconstruct"))
         checkpoint = _checkpoint_path()
         if not checkpoint.exists():
             raise FileNotFoundError(

@@ -66,6 +66,17 @@ def new_run(step):
     return out, run
 
 
+def write_meta(out, dep, **extra):
+    """run_meta.json: which deployment/bitstream/reference produced this run (audit 2026-11-13)."""
+    import sys
+    bit = ssh("sha256sum %s/overlay/design_1_wrapper.bit" % dep, check=False).stdout.split()
+    head = subprocess.run(["git", "-C", str(REPO), "rev-parse", "HEAD"], capture_output=True, text=True).stdout.strip()
+    meta = {"deployment": dep, "board_bitstream_sha256": bit[0] if bit else None, "board_run_dir": extra.pop("run", None),
+            "command": " ".join(sys.argv), "git_head": head, "started": datetime.now().isoformat(timespec="seconds")}
+    meta.update({k: str(v) for k, v in extra.items()})
+    (out / "run_meta.json").write_text(json.dumps(meta, indent=1))
+
+
 def guarded(dep, run, cmd, logname, background=False):
     """Run <cmd> inside <dep>/driver with the guard watching it."""
     body = ("cd {dep}/driver; PYTHONPATH={dep}/driver:{run} {cmd} > {run}/{log}.out 2>&1 < /dev/null & "
@@ -103,6 +114,7 @@ def cmd_deploy(args):
 def cmd_golden(args):
     dep = "%s/%s" % (DEPLOYMENTS, args.name)
     out, run = new_run("golden")
+    write_meta(out, dep, run=run)
     rc = guarded(dep, run, "python3.6 -u {run}/verify_argmax_golden.py {dep}/overlay/design_1_wrapper.bit "
                  "{dep}/golden".format(run=run, dep=dep), "golden")
     fetch(run + "/golden.out", out)
@@ -119,6 +131,7 @@ def cmd_fulltest(args):
         ssh("mkdir -p %s" % board_gz.rsplit("/", 1)[0])
         scp([local_gz], board_gz)
     out, run = new_run("fulltest")
+    write_meta(out, dep, run=run, cmodel=args.cmodel, input=args.input or 'board clean raw test set', n=args.n)
     n = args.n
     pid = guarded(dep, run, "FPGA_RUNNER_VOTE_K={k} python3.6 -u {run}/fpga_live_runner.py {dep}/overlay/design_1_wrapper.bit {gz} "
                   "1024 8 {n} {run}/pred.txt".format(run=run, dep=dep, gz=board_gz, n=n, k=args.vote_k),
@@ -234,6 +247,7 @@ def cmd_recheck_votes(args):
 def cmd_rt(args):
     dep = "%s/%s" % (DEPLOYMENTS, args.name)
     out, run = new_run("rt")
+    write_meta(out, dep, run=run, n_total=args.n_total)
     # Started in the background on the board and polled, so a long (endurance)
     # run survives the SSH session and the PC sleeping; fetch the results later
     # from the printed run directory if this process stops polling.

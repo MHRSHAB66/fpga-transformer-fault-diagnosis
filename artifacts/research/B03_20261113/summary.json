@@ -1,16 +1,21 @@
 {
  "id": "B03",
- "seed": 20261115,
  "rows": 1408,
- "scope": "logical single-bit injection in the FPGA datapath (research overlay); not radiation or configuration-memory testing",
- "board_equals_cmodel_rows": 1405,
- "board_rows": 1408,
- "board_equals_cmodel_lp64_rows": 1408,
+ "manifest_meta": null,
+ "cmodel_meta": null,
+ "seed": "unrecorded in this directory (B03 manifest: seed 20261115)",
+ "scope": "logical single-bit injection at the three defined sites, transient (one window, one bit); not radiation, configuration-memory or field upset-rate testing",
+ "canonical_reference": "artifacts/results/onchip_preprocess_20261109/csim_raw_argmax/csim_logits.txt",
+ "selected_reference": "cmodel_rows_lp64.txt (64-bit long = synthesized semantics)",
  "cmodel_vs_lp64_differing_rows": [
   945,
   1002,
   1010
  ],
+ "board_rows": 1408,
+ "board_equals_cmodel_rows": 1405,
+ "board_equals_selected_reference_rows": 1408,
+ "board_meta": null,
  "source": "board",
  "injection_off": {
   "rows": 256,
@@ -94,8 +99,14 @@
  },
  "totals": {
   "events": 1152,
+  "logits_changed": 986,
   "class_changed": 93,
   "detected": 911,
-  "silent": 5
+  "silent": 5,
+  "detected_without_class_change": 823,
+  "invalid_result_coverage": 0.946236559139785,
+  "corrupted_logit_coverage": 0.8813387423935092,
+  "availability_cost_flags_without_class_change": 823,
+  "note": "a flag marks the window's result invalid before the deadline; it is NOT a correct classification of that window"
  }
 }

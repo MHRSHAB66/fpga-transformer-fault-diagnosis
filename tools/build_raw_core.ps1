@@ -12,7 +12,10 @@
 #   powershell -File tools/build_raw_core.ps1 -Variant b02    # research B02: selective integrity checks
 #   powershell -File tools/build_raw_core.ps1 -Variant b03    # research B03: B02 + programmable fault injection
 #   powershell -File tools/build_raw_core.ps1 -Variant a06    # research A06: 8-bit unsigned probabilities + exact divider
-param([ValidateSet("raw", "vote", "votena", "divq9", "b02", "b03", "a06")][string]$Variant = "raw")
+#   powershell -File tools/build_raw_core.ps1 -Variant b04    # research B04: fast checked projection + row checksum
+#   powershell -File tools/build_raw_core.ps1 -Variant b04i   # research B04i: B04 + programmable fault injection
+#   powershell -File tools/build_raw_core.ps1 -Variant q02    # research Q02: input-quality / decision-status registers
+param([ValidateSet("raw", "vote", "votena", "divq9", "b02", "b03", "a06", "b04", "b04i", "q02")][string]$Variant = "raw")
 $ErrorActionPreference = "Stop"
 $repo = Split-Path -Parent $PSScriptRoot
 $hls = "G:\Xilinx\Vitis_HLS\2020.2\bin\vitis_hls.bat"
@@ -31,6 +34,15 @@ $cfg = @{
     # research B03: B02 + programmable logical fault injection (hls/research/b03_inject)
     b03 = @{ hlsTcl = "..\..\research\b03_inject\run_b03_verify_and_synth.tcl"; hlsProj = "seq256_b03";
              sysTcl = "..\..\research\b03_inject\run_dma_system_b03.tcl"; sysProj = "vb03"; logs = "b03_core_build" }
+    # research B04: single-pipeline checked projection + per-row checksum (hls/research/b04_integrity_fast)
+    b04 = @{ hlsTcl = "..\..\research\b04_integrity_fast\run_b04_verify_and_synth.tcl"; hlsProj = "seq256_b04";
+             sysTcl = "..\..\research\b04_integrity_fast\run_dma_system_b04.tcl"; sysProj = "vb04"; logs = "b04_core_build" }
+    # research B04i: B04 + programmable logical fault injection (-DB04_INJECT)
+    b04i = @{ hlsTcl = "..\..\research\b04_integrity_fast\run_b04i_verify_and_synth.tcl"; hlsProj = "seq256_b04i";
+              sysTcl = "..\..\research\b04_integrity_fast\run_dma_system_b04i.tcl"; sysProj = "vb04i"; logs = "b04i_core_build" }
+    # research Q02: input-quality / decision-status metadata registers (hls/research/q02_quality)
+    q02 = @{ hlsTcl = "..\..\research\q02_quality\run_q02_verify_and_synth.tcl"; hlsProj = "seq256_q02";
+             sysTcl = "..\..\research\q02_quality\run_dma_system_q02.tcl"; sysProj = "vq02"; logs = "q02_core_build" }
     # research A06: unsigned 8-bit attention probabilities + exact 8-bit divider (hls/research/a06_p8u)
     a06 = @{ hlsTcl = "..\..\research\a06_p8u\run_a06_verify_and_synth.tcl"; hlsProj = "seq256_p8u";
              sysTcl = "..\..\research\a06_p8u\run_dma_system_a06.tcl"; sysProj = "vp8u"; logs = "a06_core_build" }

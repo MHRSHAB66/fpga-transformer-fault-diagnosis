@@ -1,0 +1,14 @@
+{
+ "research_b03_z7020_20261113": [
+  [
+   "board full test, injection off (95,404 clean test windows)",
+   "95,404/95,404 logits and class = canonical C-model, integrity_status 0 on all",
+   "artifacts/results/raw_core_board_fulltest_20261113_231912/"
+  ],
+  [
+   "hard real time, injection off",
+   "0 misses / 30,000, max 17.72 ms, 30,200 outputs = canonical",
+   "artifacts/results/raw_core_board_rt_20261113_235257/"
+  ]
+ ]
+}

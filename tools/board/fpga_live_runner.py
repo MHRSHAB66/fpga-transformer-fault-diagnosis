@@ -375,12 +375,15 @@ def main():
     if has_vote:
         be.set_vote_k(VOTE_K)
     has_integrity = getattr(be, "has_integrity", False)   # research B02 overlay only
+    has_quality = getattr(be, "has_quality", False)       # research Q02 overlay only
 
     def emit(src_idx, cls, logits, lat_ms, tc, extra=""):
         if has_vote:   # registers of the window just collected
             extra = " vote=%d,%d" % be.read_vote() + extra
         if has_integrity:
             extra = " integrity=%d" % be.read_integrity() + extra
+        if has_quality:
+            extra = "".join(" %s=%d" % kv for kv in sorted(be.read_quality().items())) + extra
         if TIMING:   # emission time since start: same meaning in both loops
             extra += " t_ms=%.3f" % ((time.perf_counter() - t_perf0) * 1000.0)
         # logits= : the 4 raw INT10 logits returned by the core (extra
