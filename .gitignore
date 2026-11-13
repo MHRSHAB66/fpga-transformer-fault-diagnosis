@@ -346,3 +346,5 @@ artifacts/research/*/*/bitstream/*.xsa
 /seq256_b02/
 # Raw-domain validation windows for research (Q01; tools/export_fpga_testset_raw.py --split val).
 artifacts/results/fpga_rawinput_valset_*/fpga_valset_raw.*
+# Root-level Vitis HLS project of the research B03 injection core.
+/seq256_b03/
