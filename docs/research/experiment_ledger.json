@@ -71,14 +71,14 @@
    "depends_on": [
     "F00"
    ],
-   "command": "python -m tools.research.fault_injection campaign --out artifacts/research/B01_20261113",
+   "command": "python -m tools.research.fault_injection campaign --out artifacts/research/B01_20261113; python -m tools.research.fault_injection weights|vote --out artifacts/research/B01_20261113",
    "outputs": [
     "artifacts/research/B01_20261113/summary.json",
     "artifacts/research/B01_20261113/injections.jsonl"
    ],
-   "outcome": "3,072 transient single-bit flips (8 groups x 3 bit bands x 128) on 256 validation windows (64/class); injection disabled = canonical logits on all 256. Silent class corruptions 75: G8 logits high bits 42, G1 input codes high bits 28, G2 projection accumulator mid bits 4, G3 QKV high 1. Attention scores/probabilities/context: 0 class changes in 3 x 384 injections. Proven-range check C2 flags 100 % of high-band flips in the 32-bit accumulators (G2/G6/G7), incl. all 14 class changes in G2-high; row-sum check C3 flags 65/384 probability flips. Gate (top-2 groups >= 60 % of silent corruptions): PASSED (93 %).",
+   "outcome": "3,072 transient single-bit flips (8 groups x 3 bit bands x 128) on 256 validation windows (64/class); injection disabled = canonical logits on all 256. Silent class corruptions 75: G8 logits high bits 42, G1 input codes high bits 28, G2 projection accumulator mid bits 4, G3 QKV high 1. Attention scores/probabilities/context: 0 class changes in 3 x 384 injections. Proven-range check C2 flags 100 % of high-band flips in the 32-bit accumulators (G2/G6/G7), incl. all 14 class changes in G2-high; row-sum check C3 flags 65/384 probability flips. Gate (top-2 groups >= 60 % of silent corruptions): PASSED (93 %). Persistent weight-read campaign (384 single-bit flips of one 10-bit weight for a whole window, all 9 layers): logits changed 236, class changed 0. Vote-state campaign (k=5, board clean class stream; 128 history-entry and 128 counter flips): stable decision changed 0 times; 35 history flips changed only the vote count.",
    "limitations": "Python INT10 reference with hardware widths; one window per event (no vote state); persistent weight-read and vote-state campaigns not yet run; logical emulation only.",
-   "next_action": "Add W (persistent weight) and V (vote state) campaigns; design minimal protection: parity on the input buffer, duplicated classifier tail/argmax, proven-range comparators; then B02 overlay decision"
+   "next_action": "Protection design focused on the two concentrated points: input-buffer parity (BRAM has spare bits) and a duplicated classifier tail/argmax compare; plus proven-range comparators on accumulators (already 100 % for high-band accumulator flips). Measure silent-corruption reduction on a held-out injection manifest before any B02 build."
   },
   {
    "id": "Q01",

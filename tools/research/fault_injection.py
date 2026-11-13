@@ -252,13 +252,116 @@ def summarize(records):
     return out
 
 
+WEIGHT_LAYERS = ["proj", "l0.wq", "l0.wk", "l0.wv", "l0.out", "l0.ff0", "l0.ff3", "cls1", "cls4"]
+
+
+def cmd_weights(args):
+    """Persistent weight-read corruption: one bit of one 10-bit weight code flipped
+    for the whole window (every use of that weight sees the corrupted value)."""
+    from tools.research.precision_ablation import CACHE, load_state, make_model
+    rng = np.random.default_rng(SEED + 1)
+    canon = json.loads((Path(__file__).resolve().parents[2] / "artifacts/quantized/f_seq256_int10/integer_config.json").read_text())["scales"]
+    model = make_model(load_state(), 10, 10, 10, False, scales=canon, diag=True)
+    inj = Injector(model)
+    x = np.load(CACHE / "x.npy", mmap_mode="r")
+    rows, y, _ = sample_windows(np.random.default_rng(SEED))
+    xw = np.ascontiguousarray(x[rows]).astype(np.float64)
+    clean = np.stack([inj.forward(xw[i:i + 1])[0][0] for i in range(len(rows))])
+    records = []
+    for band, (lo, hi) in bands(10).items():
+        for e in range(EVENTS):
+            layer = WEIGHT_LAYERS[int(rng.integers(len(WEIGHT_LAYERS)))]
+            W = model.qW[layer]
+            idx = int(rng.integers(W.size))
+            bit = int(rng.integers(lo, hi))
+            w = int(rng.integers(len(rows)))
+            orig = W.reshape(-1)[idx]
+            W.reshape(-1)[idx] = flip(orig, bit, 10)
+            try:
+                logits, taps = inj.forward(xw[w:w + 1])
+            finally:
+                W.reshape(-1)[idx] = orig
+            cls = int(np.argmax(logits[0]))
+            records.append({"layer": layer, "band": band, "element": idx, "bit": bit, "window_row": int(rows[w]),
+                            "logits_changed": bool((logits[0] != clean[w]).any()), "class_changed": cls != int(clean[w].argmax()),
+                            "C1_code_range": taps["code_range"], "C2_acc_range": taps["acc_range"], "C3_prob_rowsum": taps["prob_rowsum"],
+                            "weight_out_of_range": abs(flip(orig, bit, 10)) > 511})
+    out = {"by_band": {}, "by_layer": {}}
+    for key, sel in [("by_band", lambda r, k: r["band"] == k), ("by_layer", lambda r, k: r["layer"] == k)]:
+        keys = ("low", "mid", "high") if key == "by_band" else WEIGHT_LAYERS
+        for k in keys:
+            rs = [r for r in records if sel(r, k)]
+            det = [r["C1_code_range"] or r["C2_acc_range"] or r["C3_prob_rowsum"] or r["weight_out_of_range"] for r in rs]
+            out[key][k] = {"requested": len(rs), "logits_changed": sum(r["logits_changed"] for r in rs),
+                           "class_changed": sum(r["class_changed"] for r in rs), "detected_any": sum(det),
+                           "silent_class_corruption": sum(r["class_changed"] and not d for r, d in zip(rs, det))}
+    args.out.mkdir(parents=True, exist_ok=True)
+    (args.out / "weights_injections.jsonl").write_text("\n".join(json.dumps(r) for r in records) + "\n")
+    (args.out / "weights_summary.json").write_text(json.dumps(out, indent=1))
+    print(json.dumps(out, indent=1))
+
+
+def cmd_vote(args):
+    """Vote-state corruption on the board's clean class stream: flip one bit of one
+    history entry (2 bit) or of the window counter (4 bit) at a random time and
+    compare the stable decision with the clean vote until both agree again."""
+    from host.temporal_vote import VOTE_MAX, TemporalVote
+    rng = np.random.default_rng(SEED + 2)
+    run = Path(__file__).resolve().parents[2] / "artifacts/results/raw_core_board_fulltest_20261111_130927/fulltest.out"
+    cls = []
+    for line in run.read_text().splitlines():
+        if line.startswith("R "):
+            kv = dict(p.split("=", 1) for p in line.split()[1:])
+            cls.append((int(kv["idx"]), int(kv["cls"])))
+    cls = np.array([c for _, c in sorted(cls)])
+    labels = np.loadtxt(Path(__file__).resolve().parents[2] / "artifacts/results/fpga_rawinput_testset_20261109/labels.txt", dtype=np.int64)
+    records = []
+    for target in ("history", "seen"):
+        for e in range(EVENTS):
+            t0 = int(rng.integers(100, len(cls) - 100))
+            ref, bad = TemporalVote(), TemporalVote()
+            for t in range(t0 - 20, t0):
+                ref.push(int(cls[t]), 5); bad.push(int(cls[t]), 5)
+            if target == "history":
+                j = int(rng.integers(VOTE_MAX)); bit = int(rng.integers(2))
+                bad.history[-1 - j] = int(bad.history[-1 - j]) ^ (1 << bit)
+            else:   # the Python voter keeps len(history) as 'seen'; model a smaller count by dropping entries
+                bit = int(rng.integers(4)); seen = min(len(bad.history), VOTE_MAX) ^ (1 << bit)
+                bad.history = bad.history[-seen:] if 0 < seen < len(bad.history) else bad.history
+            diff, wrong, count_only, last = 0, 0, 0, -1
+            for t in range(t0, t0 + 30):
+                a, b = ref.push(int(cls[t]), 5), bad.push(int(cls[t]), 5)
+                if a[0] != b[0]:            # stable decision (class) differs
+                    diff += 1
+                    wrong += int(b[0] != labels[t]) - int(a[0] != labels[t])
+                    last = t - t0
+                elif a[1] != b[1]:
+                    count_only += 1
+            records.append({"target": target, "time": t0, "decision_windows_changed": diff,
+                            "extra_wrong_decision_windows": wrong, "count_only_windows": count_only,
+                            "last_differing_window": last})
+    out = {}
+    for tgt in ("history", "seen"):
+        rs = [r for r in records if r["target"] == tgt]
+        out[tgt] = {"events": len(rs), "events_with_changed_decision": sum(r["decision_windows_changed"] > 0 for r in rs),
+                    "max_windows_changed": max(r["decision_windows_changed"] for r in rs),
+                    "extra_wrong_decision_windows_total": sum(r["extra_wrong_decision_windows"] for r in rs),
+                    "events_with_count_only_change": sum(r["count_only_windows"] > 0 for r in rs),
+                    "max_recovery_windows": max(r["last_differing_window"] for r in rs) + 1}
+    args.out.mkdir(parents=True, exist_ok=True)
+    (args.out / "vote_state_summary.json").write_text(json.dumps({"k": 5, "note": "history entries expire after <= 15 windows; "
+        "counter corruption modelled as fewer valid entries", "summary": out}, indent=1))
+    print(json.dumps(out, indent=1))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
     sub = ap.add_subparsers(dest="cmd", required=True)
-    c = sub.add_parser("campaign")
-    c.add_argument("--out", type=Path, required=True)
+    for n in ("campaign", "weights", "vote"):
+        c = sub.add_parser(n)
+        c.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
-    cmd_campaign(args)
+    {"campaign": cmd_campaign, "weights": cmd_weights, "vote": cmd_vote}[args.cmd](args)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,22 @@
+{
+ "k": 5,
+ "note": "history entries expire after <= 15 windows; counter corruption modelled as fewer valid entries",
+ "summary": {
+  "history": {
+   "events": 128,
+   "events_with_changed_decision": 0,
+   "max_windows_changed": 0,
+   "extra_wrong_decision_windows_total": 0,
+   "events_with_count_only_change": 35,
+   "max_recovery_windows": 0
+  },
+  "seen": {
+   "events": 128,
+   "events_with_changed_decision": 0,
+   "max_windows_changed": 0,
+   "extra_wrong_decision_windows_total": 0,
+   "events_with_count_only_change": 0,
+   "max_recovery_windows": 0
+  }
+ }
+}

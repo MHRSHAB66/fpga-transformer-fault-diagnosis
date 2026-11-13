@@ -1,0 +1,90 @@
+{
+ "by_band": {
+  "low": {
+   "requested": 128,
+   "logits_changed": 56,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  },
+  "mid": {
+   "requested": 128,
+   "logits_changed": 74,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  },
+  "high": {
+   "requested": 128,
+   "logits_changed": 106,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  }
+ },
+ "by_layer": {
+  "proj": {
+   "requested": 47,
+   "logits_changed": 45,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  },
+  "l0.wq": {
+   "requested": 35,
+   "logits_changed": 32,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  },
+  "l0.wk": {
+   "requested": 34,
+   "logits_changed": 30,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  },
+  "l0.wv": {
+   "requested": 47,
+   "logits_changed": 36,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  },
+  "l0.out": {
+   "requested": 39,
+   "logits_changed": 26,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  },
+  "l0.ff0": {
+   "requested": 46,
+   "logits_changed": 23,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  },
+  "l0.ff3": {
+   "requested": 45,
+   "logits_changed": 15,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  },
+  "cls1": {
+   "requested": 48,
+   "logits_changed": 11,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  },
+  "cls4": {
+   "requested": 43,
+   "logits_changed": 18,
+   "class_changed": 0,
+   "detected_any": 0,
+   "silent_class_corruption": 0
+  }
+ }
+}
