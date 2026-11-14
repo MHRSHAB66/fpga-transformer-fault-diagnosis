@@ -9,5 +9,6 @@
   "g++ (GCC) 15.2.0"
  ],
  "vivado": "Vivado/Vitis HLS 2020.2 at G:/Xilinx (version banner of the build logs in tmp/*_core_build)",
- "board": "unavailable: Command 'ssh -i C:/Users/mine_pc/.ssh/id_zturn -o BatchMode=yes -o ConnectTimeout=5 root@192.168.2.99 \"uname -a; python3.6 --version; python3.6 -c 'import pynq; print(pynq.__version__)'; sha256sum /home/xilinx/raw_testset_20261109/fpga_testset_raw.i32.gz\"' timed out after 120 seconds"
+ "board": "Linux pynq 4.14.0-xilinx #1 SMP PREEMPT Wed Nov 13 03:44:45 UTC 2019 armv7l armv7l armv7l GNU/Linux\nPython 3.6.5\n2.4\nb5077de80001f7efcd1285974b1786be185e5d1bb111c9bab9c397168cd59be4  /home/xilinx/raw_testset_20261109/fpga_testset_raw.i32.gz\nresearch_a06_z7020_20261113\nresearch_b02_z7020_20261113\nresearch_b03_z7020_20261113\nresearch_b04i_z7020_20261114\nresearch_b04_z7020_20261114\nresearch_divq9_z7020_20261113\nresearch_q02_z7020_20261114\nseq256_argmax_review_d55cbdfe469f\nseq256_raw_argmax_z7020_20261109\nseq256_vote_noiseaug_z7020_20261111\nseq256_vote_z7020_20261110\nseq256_z7020_pynq_20261008_114947\nseq256_z7020_pynq_dma16_py36_20261008_131446",
+ "board_raw_testset_equals_local": true
 }
