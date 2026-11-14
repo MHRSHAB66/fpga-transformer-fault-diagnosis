@@ -1,0 +1,15 @@
+{
+ "windows": 95404,
+ "logits_class_equal_canonical": 95404,
+ "input_flagged": 364,
+ "low_margin": 10396,
+ "accepted_flags_and_margin": 84667,
+ "accepted_wrong_flags_and_margin": 166,
+ "wrong_total": 2127,
+ "input_flagged_per_class": [
+  4,
+  38,
+  36,
+  286
+ ]
+}

@@ -93,7 +93,7 @@
     "artifacts/research/Q01_20261113/run1_lag_padded_artifact/"
    ],
    "outcome": "2,048 raw windows per split, one non-tachometer channel perturbed per window, bit-exact C-model. Invariance controls hold (gain x2, +25 % offset: accuracy unchanged 97.90 % val). Accuracy under faults (val): clip30 97.75, bits8 97.31, hold 93.12, lag32 96.53 %. Gate on validation (>= 90 % clean coverage, >= 30 % fewer accepted wrong outputs over clip30/bits8/hold/lag32): margin 90.4 % / -78 %; flags 100 % / -73.5 %; flags+margin 90.4 % / -95.5 % (all pass; combined best). Flags catch value faults (hold, bits8 100 %, clip30 80 %) but, as expected, not the circular lag; the margin catches part of every fault. Test (reported once), flags+margin: clean coverage 89 % with 0 accepted wrong (45 without rejection), lag32 5 accepted wrong (74), accepted false-healthy 0 in every condition. First run had a padded lag that created a flat segment (artifact, caught by the run flag); kept in run1_lag_padded_artifact/.",
-   "limitations": "Modelled digital faults on recorded data (no real ADC); window-level, stateless (rejection lasts exactly while the fault is present); thresholds at clean-validation extremes give ~1 % flags on clean test windows. SUPERSEDED for the calibrated-confidence baseline and the gate assessment by Q01v2 (conf used logits/T instead of s_logits*logits/T; availability cost not reported).",
+   "limitations": "Modelled digital faults on recorded data (no real ADC); window-level, stateless (rejection lasts exactly while the fault is present); thresholds at clean-validation extremes give ~1 % flags on clean test windows. SUPERSEDED for the calibrated-confidence baseline and the gate assessment by Q01v2 (conf used logits/T instead of s_logits*logits/T; availability cost not reported). SUPERSEDED for the calibrated-confidence baseline and the gate assessment by Q01v2 (conf used logits/T instead of s_logits*logits/T; availability cost not reported).",
    "next_action": "Q02 (optional): quality counters + margin as research status in hardware; the flags are cheap comparators on the raw words in the ingress."
   },
   {
@@ -128,10 +128,21 @@
   },
   {
    "id": "Z01",
-   "status": "proposed",
+   "hypothesis": "All scarce physical evidence is archived with exact source/config/reference/input/output/timing identity and an off-repository verified copy.",
+   "status": "archived (off-repository copy on another partition of the same SSD; external copy pending)",
    "depends_on": [
     "F00"
-   ]
+   ],
+   "command": "python tools/build_artifact_manifest.py; python -m tools.research.z01_archive index; python -m tools.research.z01_archive backup --dest E:/fpga_fault_diagnosis_backup/Z01_20261114 --same-disk",
+   "outputs": [
+    "artifacts/research/Z01_20261114/archive_index.json",
+    "artifacts/research/Z01_20261114/environment.json",
+    "artifacts/research/Z01_20261114/archive_verify.json",
+    "E:/fpga_fault_diagnosis_backup/Z01_20261114/"
+   ],
+   "outcome": "See archive_verify.json (files, bytes, sha256 per file, git bundle of all refs verified).",
+   "limitations": "E: is a partition of the same physical NVMe SSD as the repository (G:): protects against repository loss, not disk failure. GitHub holds the tracked history only (not the large gitignored binaries).",
+   "next_action": "Copy E:/fpga_fault_diagnosis_backup/Z01_20261114 to an external drive or cloud storage (user action) and re-run the verify step there."
   },
   {
    "id": "A05",
@@ -162,7 +173,7 @@
    ],
    "outcome": "Protections chosen on the B01 pilot (94.4 % modelled reduction there) and confirmed on a held-out campaign (new seed: new windows and events; injection-off = canonical): silent class corruptions 76 -> 67 (range only), 16 (parity + duplicated tail), 7 (all three) = -90.8 %, above the frozen 80 % gate. Remaining: projection-accumulator mid bits 5, QKV 1, probability 1. Cost under faults: 1,084 flags on faults that did not change the class (availability, not false flags on clean data). Hardware variant B02 v1 (hls/research/b02_integrity/, generated from the canonical raw top): input-buffer XOR signature (write vs after projection read), cls4 + argmax evaluated twice and compared (HLS time-multiplexes both evaluations on ONE compute unit: a repeated computation, not two independent circuits; it does not cover persistent/common-mode faults of the shared unit or weights), projection accumulator range check (bound 719,316 from weights_int10.h); research register integrity_status. Context/FFN range checks left out (0 class changes there in B01). C-model: goldens 41/41 identical + status 0 (incl. edge windows); 95,404 test windows: logits and class identical to canonical, integrity_status 0 on all (0 false flags). Post-route (XC7Z020, 100 MHz): LUT 36,670 -> 37,035 (+1.0 %), FF 36,163 -> 36,606 (+1.2 %), DSP 210 (+0), BRAM 76.5 (+0), WNS +0.202 ns; HLS C-simulation 41/41 exact with integrity_status 0. Overhead gate (<= 5 % LUT, <= 2 DSP, timing) passed. Board (deployment research_b02_z7020_20261113): golden 41/41 incl. 8 ties; full test 95,404/95,404 logits and class = canonical C-model, accuracy 97.7705 %, integrity_status 0 on all 95,404 clean windows (0 false flags); hard real time 0 misses in 30,000, but response p50 17.07 / max 17.71 ms vs 15.96 / 16.63 canonical: +1.1 ms from the range check placed after each projection output in the non-pipelined outer loop (HLS latency 1,613,066 vs 1,502,098 cycles).",
    "limitations": "Detection on hardware measured separately in B03 (logical injection overlay, 2026-11-13); latency cost of the range check could be removed by checking in a separate pipelined pass.",
-   "next_action": "Optional: move the range check off the critical loop to remove the +1.1 ms; a finer projection-accumulator bound (per-output) could catch the mid-bit flips B03 leaves silent."
+   "next_action": "Superseded by B04 (same checks without the +1.1 ms, plus a row checksum)."
   },
   {
    "id": "A06",
@@ -182,7 +193,7 @@
    ],
    "outcome": "Different numerical model with its own reference (research p8u) and own goldens. div_q8 exhaustive: 0 mismatches over 367,657,004 reachable pairs (native and ap_int). C-model = research p8u reference on 600 clean + 600 SNR 0 dB windows; HLS C-simulation 41/41 against its own goldens. Test split (previously explored, selection was on validation): accuracy 97.8848 % vs canonical 97.7705 %, macro-F1 95.857 vs 95.669 (+0.19 pp), recall normal 87.54/87.21, imbalance 97.89/97.78, misalignment 98.93/99.09 (-0.16 pp), bearing 97.88/97.65; class agreement with canonical 94,908/95,404. Precision gate (<= 0.3 pp macro-F1 drop, <= 1 pp recall drop) passed. Post-route (XC7Z020, 100 MHz): LUT 36,670 -> 30,216 (-17.6 %), FF 36,163 -> 28,466 (-21.3 %), DSP 210, BRAM 76.5 unchanged, WNS +0.100 ns, HLS latency 1,502,073 cycles (canonical 1,502,098). Versus A05 (divider only) the 8-bit probabilities add only -2.4 % LUT / -3.2 % FF: almost all of the saving comes from the exact divider. Board (research_a06_z7020_20261113): golden 41/41 incl. 3 ties; full test 95,404/95,404 logits and class register = A06 C-model, accuracy 97.8848 %; hard real time 0 misses in 30,000 (p50 15.98 / max 16.69 ms), 30,200/30,200 outputs = A06 C-model.",
    "limitations": "Changes the numerical model (not bit-identical to the canonical deployment: 496 test windows change class); the accuracy difference against canonical is within the bootstrap noise seen on validation; the incremental hardware gain over A05 is small.",
-   "next_action": "None required. If a smaller core is wanted for the thesis, A05 (bit-identical) is the safer recommendation; A06 shows the probability width is not the bottleneck."
+   "next_action": "None required. If a smaller core is wanted for the thesis, A05 (bit-identical) is the safer recommendation; A06 shows the probability width is not the bottleneck. W8A8+P8u passed the A02 validation accuracy gate (macro-F1 -0.23 pp, worst recall -0.76 pp) but is NOT built: A06 is W10/A10/P8u only; a W8/A8 hardware variant needs a versioned 8-bit export, recalibrated scales, own goldens and an inexpensive HLS resource pilot first (conditional)."
   },
   {
    "id": "B03",
@@ -197,11 +208,13 @@
     "artifacts/research/B03_20261113/summary_cmodel_expectation.json",
     "artifacts/research/B03_20261113/board_rows.txt",
     "artifacts/research/B03_20261113/b03_build/",
-    "artifacts/results/raw_core_board_golden_20261113_221324/"
+    "artifacts/results/raw_core_board_golden_20261113_221324/",
+    "artifacts/results/raw_core_board_fulltest_20261113_231912/",
+    "artifacts/results/raw_core_board_rt_20261113_235257/"
    ],
-   "outcome": "Research overlay = B02 + three programmable injection points (AXI-Lite inj_site/inj_word/inj_bit, written while the core is idle, one ap_start per window): site 1 input-buffer 10-bit word, site 2 projection 32-bit accumulator before the range check, site 3 one logit of classifier tail copy A. Held-out manifest (seed 20261115): 256 test windows (64 per class) x 1 injection-off row + 3 sites x 3 bit bands x 128 events = 1,408 rows. Injection off: C-model full test 95,404/95,404 = canonical with integrity_status 0; board golden 41/41 incl. 8 ties; board injection-off rows 256/256 logits and class = canonical, 0 flags. Board run 1,408 rows in 24.6 s; board = bit-exact C-model on 1,405/1,408 rows and on 1,408/1,408 against a 64-bit-long C-model build: the 3 rows are bit-31 flips of the projection accumulator, where acc + b leaves 32 bits and the Windows (MinGW, 32-bit long) C-model wraps in requant(long) while the synthesized core (64-bit long) does not; all 3 were flagged on both. Physically measured (logical injection): 93 of 1,152 injected faults changed the class; 88 were flagged (94.6 %), 5 silent, all projection-accumulator bits 18-19 (value change 2^18-2^19 stays inside the proven bound 719,316). Site 1: 384/384 flagged by the input signature (30 class changes). Site 3: 384/384 flagged by the repeated tail evaluation (37 class changes; the site-3 flip corrupts one of the two time-multiplexed evaluations). Site 2: 143/384 flagged by the range check (high band 128/128, mid 15/128, low 0/128; low band changed no class). 816 flags on faults that did not change the class (availability cost under faults; 0 flags on clean data). Post-route (XC7Z020, 100 MHz): LUT 37,628 (+2.6 % vs canonical; +1.6 % vs B02 for the injection muxes and registers), FF 37,025 (B02 36,606), DSP 210, BRAM 76.5; default implementation failed timing (WNS -0.437 ns on an existing LayerNorm requant multiply path, kept in b03_build/first_impl_timing_fail/), re-implemented with Performance_ExplorePostRoutePhysOpt: WNS 0.000 ns (met, no margin). HLS latency 1,613,068 cycles (B02 1,613,066).",
+   "outcome": "Research overlay = B02 + three programmable injection points (AXI-Lite inj_site/inj_word/inj_bit, written while the core is idle, one ap_start per window): site 1 input-buffer 10-bit word, site 2 projection 32-bit accumulator before the range check, site 3 one logit of classifier tail copy A. Held-out manifest (seed 20261115): 256 test windows (64 per class) x 1 injection-off row + 3 sites x 3 bit bands x 128 events = 1,408 rows. Injection off: C-model full test 95,404/95,404 = canonical with integrity_status 0; board golden 41/41 incl. 8 ties; board injection-off rows 256/256 logits and class = canonical, 0 flags. Board run 1,408 rows in 24.6 s; board = bit-exact C-model on 1,405/1,408 rows and on 1,408/1,408 against a 64-bit-long C-model build: the 3 rows are bit-31 flips of the projection accumulator, where acc + b leaves 32 bits and the Windows (MinGW, 32-bit long) C-model wraps in requant(long) while the synthesized core (64-bit long) does not; all 3 were flagged on both. Physically measured (logical injection): 93 of 1,152 injected faults changed the class; 88 were flagged (94.6 %), 5 silent, all projection-accumulator bits 18-19 (value change 2^18-2^19 stays inside the proven bound 719,316). Site 1: 384/384 flagged by the input signature (30 class changes). Site 3: 384/384 flagged by the repeated tail evaluation (37 class changes; the site-3 flip corrupts one of the two time-multiplexed evaluations). Site 2: 143/384 flagged by the range check (high band 128/128, mid 15/128, low 0/128; low band changed no class). 816 flags on faults that did not change the class (availability cost under faults; 0 flags on clean data). Post-route (XC7Z020, 100 MHz): LUT 37,628 (+2.6 % vs canonical; +1.6 % vs B02 for the injection muxes and registers), FF 37,025 (B02 36,606), DSP 210, BRAM 76.5; default implementation failed timing (WNS -0.437 ns on an existing LayerNorm requant multiply path, kept in b03_build/first_impl_timing_fail/), re-implemented with Performance_ExplorePostRoutePhysOpt: WNS 0.000 ns (met, no margin). HLS latency 1,613,068 cycles (B02 1,613,066). Own-overlay acceptance (2026-11-13/14, injection registers 0): full test 95,404/95,404 = canonical C-model with integrity_status 0 on all (artifacts/results/raw_core_board_fulltest_20261113_231912); hard real time 0 misses / 30,000, max 17.72 ms, 30,200 outputs = canonical (artifacts/results/raw_core_board_rt_20261113_235257). Analysis re-run with the hardened analyzer: identical numbers; manifest reproduced from seed 20261115.",
    "limitations": "Logical injection at three chosen sites only (the sites B01 found vulnerable and B02 protects), one bit per window, transient; not radiation, configuration-memory upsets or timing faults. 128 events per site/band. The research overlay closes timing with zero slack. The Windows desktop C-model differs from the synthesized core only for values outside 32 bits (unreachable in clean operation, proven bound 719,316).",
-   "next_action": "Thesis/paper: report B03 as physically measured logical-injection coverage with its scope. Optional: per-output projection bounds to catch the bit 18-19 flips."
+   "next_action": "Superseded for detection by B04i (0 silent on the same manifest); B03 numbers stay as the B02-check reference."
   },
   {
    "id": "A04",
@@ -258,6 +271,67 @@
    "outcome": "Same windows/channels as Q01 (seed 20261113). Calibrated confidence with the frozen contract (T=1.42482, s_logits=0.107799): clean validation coverage 0.8999 (just below 90 %), accepted wrong -80.2 % -> gate not passed; superseded formula: threshold had saturated at 0.99999999 (behaved like the margin). Margin: coverage 0.9043, -78.0 %. Flags: coverage 1.0000, -73.5 %, zero accepted under bits8, hold16. Flags+margin: coverage 0.9043, -95.5 %, zero accepted under bits8, hold16. Normal-class clean validation coverage: flags+margin 48.9 %, flags 100 %. White noise 20/10 dB: flags accept 100 %. Bursts (validation, 6 per fault, 20 windows): flags flag bits/hold bursts in the first faulty window and accept the first clean window after; clip50/clip30 caught in 5/6 and 6/6 bursts; lag8/lag32 never flagged. Test (previously explored): flags+margin 0 accepted false-healthy over clean and the 4 gate faults.",
    "limitations": "Rejecting every window of a fault is refusing to classify, not better accuracy; the margin threshold costs about half of the clean normal-class windows; modelled digital faults on one channel, not a real acquisition chain.",
    "next_action": "Q02 hardware status registers (flags per channel + margin)."
+  },
+  {
+   "id": "B04",
+   "hypothesis": "The B02 checks can be written without the +1.1 ms (single pipelined projection) and a per-row checksum removes the remaining silent projection-accumulator faults, at bit-identical outputs, 0 clean false flags and no deadline misses.",
+   "status": "physically-measured (B04 clean acceptance; B04i logical injection)",
+   "depends_on": [
+    "B02",
+    "B03"
+   ],
+   "command": "python hls/research/b04_integrity_fast/make_b04_top.py; powershell -File tools/build_raw_core.ps1 -Variant b04; vivado -mode batch -source tools/vivado/rerun_impl_strategy.tcl -tclargs tmp/vb04/vb04.xpr Performance_ExplorePostRoutePhysOpt; python -m tools.research.collect_build --proj vb04 --hls seq256_b04 --out artifacts/research/B04_20261114/b04_build; (same for -Variant b04i -> b04i_build); python -m tools.research.variant_contracts; python tools/package_seq256_pynq_deploy.py --pkg artifacts/research/B04_20261114/b04_build --bundle artifacts/deploy/research_b04_z7020_20261114 --golden hls/f1_int10_seq256/golden_raw1024_argmax --contract artifacts/research/contracts/research_b04_z7020_20261114.json; board: tools.raw_core_board_test deploy/golden/fulltest/rt (B04) and tools.research.b03_campaign board/analyze for heldout, b03_manifest, recovery (B04i); exact lines in docs/research/reproduce.md",
+   "outputs": [
+    "docs/research/b04_integrity_mechanism.md",
+    "artifacts/research/B04_20261114/b04_build/",
+    "artifacts/research/B04_20261114/b04i_build/",
+    "artifacts/research/B04_20261114/b04_build_first_impl_timing_fail/",
+    "artifacts/research/B04_20261114/b04i_build_first_impl_timing_fail/",
+    "artifacts/research/B04_20261114/b04i_impl_netdelay_timing_fail/",
+    "artifacts/research/B04_20261114/b04i_impl_extratiming_timing_fail/",
+    "artifacts/research/B04_20261114/csim_b04_vs_canonical.json",
+    "artifacts/research/B04_20261114/heldout/summary.json",
+    "artifacts/research/B04_20261114/b03_manifest/summary.json",
+    "artifacts/research/B04_20261114/recovery/summary.json",
+    "artifacts/results/raw_core_board_golden_20261114_204203/",
+    "artifacts/results/raw_core_board_fulltest_20261114_204223/",
+    "artifacts/results/raw_core_board_rt_20261114_211153/",
+    "artifacts/results/raw_core_board_golden_20261114_212338/"
+   ],
+   "outcome": "Mechanism and width proof: docs/research/b04_integrity_mechanism.md (|acc| <= 718,977, |rowsum| <= 10,627,778 < 2^24 in 32-bit registers; exact distributivity; canonical requant untouched). HLS: projection 65,545 cycles II=1 (B02 172,032), whole core 1,506,580 cycles (canonical 1,502,098, B02 1,613,066). C-model: 95,404/95,404 logits+class = canonical, integrity 0. B04 (no injection hardware) post-route: LUT 37,677 (+2.7 % vs 36,670), FF 36,895 (+2.0 %), DSP 210, BRAM 76.5; default implementation WNS -0.737 ns (kept), Performance_ExplorePostRoutePhysOpt WNS +0.024 ns. Board: golden 41/41; full test 95,404/95,404 = canonical, integrity_status 0 on all (latency p50 16.08 ms vs 17.15 B02); hard real time 0 misses / 30,000, p50 16.01 / max 16.66 ms (B02 17.71, canonical A05 16.63), 30,200 outputs = canonical. B04i (same source, -DB04_INJECT): LUT 37,803, FF 37,192, DSP 210; default WNS -1.731, NetDelay_high -0.620, ExtraTimingOpt -0.805 (all kept), Explore retry +0.007 ns. Board: golden 41/41; B03 manifest (seed 20261115, the rows that motivated B04, not a confirmation): 1,408/1,408 = 64-bit-long C-model, 93/93 class-changing faults flagged, 0 silent (B03 overlay: 5 silent); separately frozen confirmation manifest (seed 20261116; 2 of its 256 windows and 3 of 1,408 rows also in the B03 manifest): 1,408/1,408 = C-model, 80/80 class-changing faults flagged, 0 silent; every one of the 1,152 injections flagged (1,072 without class change = availability cost under faults); recovery probes (seed 20261118): 288/288 clean windows right after an injected window exact and unflagged.",
+   "limitations": "Logical, transient, single-bit injection at three sites (input buffer word, projection accumulator, one logit of the first tail evaluation); no persistent, multi-bit, weight-ROM, vote-state, radiation or configuration-memory faults. The classifier tail is repeated on one time-multiplexed unit. Timing closed with small margins (+0.024 / +0.007 ns) after strategy re-runs. A flag marks the result invalid; it is not a correct classification.",
+   "next_action": "None required for the thesis; B04 supersedes B02 as the recommended integrity variant (same coverage plus checksum, no latency cost)."
+  },
+  {
+   "id": "Q02",
+   "hypothesis": "The Q01v2-selected input-quality flags and integer margin can be produced in FPGA logic as status metadata, exactly matching the research reference, with the canonical class unchanged, a reported route cost and no deadline misses (frozen Q02 go criteria).",
+   "status": "physically-measured (digital replay)",
+   "depends_on": [
+    "Q01v2"
+   ],
+   "command": "python hls/research/q02_quality/make_q02_top.py; python -m tools.research.q02_check cmodel --out artifacts/research/Q02_20261114; python -m tools.research.q02_check replay --out artifacts/research/Q02_20261114; powershell -File tools/build_raw_core.ps1 -Variant q02; python -m tools.research.collect_build --proj vq02 --hls seq256_q02 --out artifacts/research/Q02_20261114/q02_build; python tools/package_seq256_pynq_deploy.py --pkg artifacts/research/Q02_20261114/q02_build --bundle artifacts/deploy/research_q02_z7020_20261114 --golden hls/f1_int10_seq256/golden_raw1024_argmax --contract artifacts/research/contracts/research_q02_z7020_20261114.json; python -m tools.raw_core_board_test fulltest --name research_q02_z7020_20261114 --n 3840 --input artifacts/research/Q02_20261114/q02_burst_replay_test.i32.gz --cmodel artifacts/research/Q02_20261114/replay_cmodel_rows.txt; python -m tools.research.q02_check compare --out artifacts/research/Q02_20261114 --board artifacts/results/raw_core_board_fulltest_20261114_214206/fulltest.out --kind replay; python -m tools.raw_core_board_test fulltest --name research_q02_z7020_20261114; python -m tools.research.q02_check compare --out artifacts/research/Q02_20261114 --board artifacts/results/raw_core_board_fulltest_20261114_214407/fulltest.out --kind clean --cmodel artifacts/research/Q02_20261114/csim_q02_fulltest/csim_logits.txt; python -m tools.raw_core_board_test rt --name research_q02_z7020_20261114",
+   "outputs": [
+    "artifacts/research/Q02_20261114/cmodel_check.json",
+    "artifacts/research/Q02_20261114/replay_manifest.json",
+    "artifacts/research/Q02_20261114/board_compare_replay.json",
+    "artifacts/research/Q02_20261114/board_compare_clean.json",
+    "artifacts/research/Q02_20261114/csim_q02_fulltest_summary.json",
+    "artifacts/research/Q02_20261114/q02_build/",
+    "artifacts/results/raw_core_board_golden_20261114_214127/",
+    "artifacts/results/raw_core_board_fulltest_20261114_214206/",
+    "artifacts/results/raw_core_board_fulltest_20261114_214407/",
+    "artifacts/results/raw_core_board_rt_20261114_221435/"
+   ],
+   "outcome": "Registers: quality_detail (per-channel clip / constant-run / low-bit-occupancy flags), quality_status (any of the three + margin < 45), logit_margin; integer thresholds derived from the frozen Q01v2 clean-validation thresholds (asserted equivalent); counters in one extra II=1 pass over the raw buffer. C-model: 2 splits x 17 conditions x 2,048 windows: logits/class = canonical and all registers = independent Python reference on every window; accept/reject decisions identical to Q01v2. Post-route: LUT 37,803 (+3.1 %), FF 37,630 (+4.1 %), DSP 210, BRAM 76.5, WNS +0.147 ns (default strategy); HLS latency 1,510,299 cycles (+8,201 vs canonical). Board: golden 41/41; ordered digital replay of the 96 frozen test bursts (3,840 windows): 3,840/3,840 rows (logits, class, three registers) = C-model; from the board outputs, flags detect bits8/bits12/hold16/clip30 bursts 6/6, hold4 5/6, clip50 3/6, lag8 1/6, lag32 0/6, and the status recovers after 6/6 bursts of every type; clean full test 95,404/95,404 rows = C-model, 364 windows input-flagged (0.38 %; 286 of them bearing-fault windows), 10,396 low-margin, flags+margin accepts 84,667 windows with 166 wrong (2,127 wrong in total); hard real time 0 misses / 30,000, p50 16.04 / max 16.73 ms, 30,200 outputs = canonical.",
+   "limitations": "Digital replay of modelled faults: proves the integer path, not an analog front end, a real sensor or real acquisition faults. Flags do not see lag faults. Clean-test input flags (0.38 %) come from test windows outside the clean-validation extremes; the margin threshold rejects about half of the clean normal-class windows (Q01v2).",
+   "next_action": "Analog/real-sensor evaluation requires EQ_FRONTEND (pending equipment)."
   }
- ]
+ ],
+ "conditional_branches": {
+  "W8A8_P8u": "accuracy gate passed on validation; hardware not built; cheap HLS csynth pilot with 8-bit types first",
+  "amplitude_sigma_features": "conditional; discriminating software pilot before any hardware",
+  "deferred_normalization": "conditional; discriminating software pilot before any hardware",
+  "QAT": "conditional; separate later branch (changes training), not part of the frozen program",
+  "T01_short_event_question": "would need a new preregistered question; T01v2 gate failed"
+ }
 }

@@ -123,5 +123,14 @@ finding is real), **fixed now**, **already fixed**, **pending external dependenc
 
 ## B04 (new) and Q02 (new)
 
-See the ledger entries `B04` and `Q02` for results; mechanism and arithmetic proof of B04:
-`docs/research/b04_integrity_mechanism.md`.
+- **B04** (`docs/research/b04_integrity_mechanism.md`): the B02 checks without the +1.1 ms and with a
+  per-row checksum. Board: 95,404/95,404 = canonical, 0 false flags; real time max 16.66 ms (B02 17.71);
+  +2.7 % LUT. B04i (injection build): 0 silent class corruptions on the B03 manifest (B03: 5) and on a
+  separately frozen confirmation manifest (seed 20261116; overlap 2 of 256 windows, 3 of 1,408 rows —
+  recorded, so "held out" means a different frozen draw, not disjoint recordings); recovery probes 288/288
+  clean. Failed implementations kept: `artifacts/research/B04_20261114/*timing_fail/`; final WNS +0.024 /
+  +0.007 ns are small margins, not operating headroom.
+- **Q02**: quality/decision-status registers selected by Q01v2. Board digital replay 3,840/3,840 and clean
+  full test 95,404/95,404 rows equal the C-model/Python reference; 0 misses / 30,000; +3.1 % LUT. Digital
+  replay only (analog chain needs EQ_FRONTEND).
+- Ledger entries: `B04`, `Q02`, `Z01`; claims rows 7c, 7d, 10b.

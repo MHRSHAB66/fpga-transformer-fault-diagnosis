@@ -1,0 +1,6 @@
+{
+ "deployment": "/home/xilinx/deployments/research_b04i_z7020_20261114",
+ "board_run_dir": "/home/xilinx/b03_20261114_212359",
+ "board_bitstream_sha256": "60f35b89b5128134e40a13fce6774a9732135c6c6e43350bcb19126bddfd582f",
+ "runner": "tools/board/b03_inject_runner.py"
+}

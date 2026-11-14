@@ -1,0 +1,6 @@
+{
+ "run": "Q02 research_q02_z7020_20261114 hard real time",
+ "windows": 30200,
+ "class_equal_canonical_cmodel": 30200,
+ "logits_equal_canonical_cmodel": 30200
+}

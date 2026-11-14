@@ -1,0 +1,238 @@
+{
+ "kind": "replay",
+ "board": "artifacts\\results\\raw_core_board_fulltest_20261114_214206\\fulltest.out",
+ "rows": 3840,
+ "rows_equal_q02_cmodel": 3840,
+ "logits_class_equal": 3840,
+ "registers_equal": 3840,
+ "bursts_from_board": {
+  "flags": {
+   "clip50/d20": {
+    "bursts": 6,
+    "detected": 3,
+    "false_reject_pre": 6,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 3
+   },
+   "clip50/d3": {
+    "bursts": 6,
+    "detected": 4,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "clip30/d20": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "clip30/d3": {
+    "bursts": 6,
+    "detected": 4,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "bits12/d20": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "bits12/d3": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "bits8/d20": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "bits8/d3": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "hold4/d20": {
+    "bursts": 6,
+    "detected": 5,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "hold4/d3": {
+    "bursts": 6,
+    "detected": 3,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 1
+   },
+   "hold16/d20": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "hold16/d3": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "lag8/d20": {
+    "bursts": 6,
+    "detected": 1,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 3
+   },
+   "lag8/d3": {
+    "bursts": 6,
+    "detected": 0,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "lag32/d20": {
+    "bursts": 6,
+    "detected": 0,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 11
+   },
+   "lag32/d3": {
+    "bursts": 6,
+    "detected": 0,
+    "false_reject_pre": 0,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 1
+   }
+  },
+  "flags+margin": {
+   "clip50/d20": {
+    "bursts": 6,
+    "detected": 5,
+    "false_reject_pre": 22,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "clip50/d3": {
+    "bursts": 6,
+    "detected": 4,
+    "false_reject_pre": 4,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "clip30/d20": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 4,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "clip30/d3": {
+    "bursts": 6,
+    "detected": 5,
+    "false_reject_pre": 9,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "bits12/d20": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 6,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "bits12/d3": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 15,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "bits8/d20": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 1,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "bits8/d3": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 11,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "hold4/d20": {
+    "bursts": 6,
+    "detected": 5,
+    "false_reject_pre": 3,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "hold4/d3": {
+    "bursts": 6,
+    "detected": 4,
+    "false_reject_pre": 8,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "hold16/d20": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 13,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "hold16/d3": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 9,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "lag8/d20": {
+    "bursts": 6,
+    "detected": 6,
+    "false_reject_pre": 19,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "lag8/d3": {
+    "bursts": 6,
+    "detected": 2,
+    "false_reject_pre": 3,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   },
+   "lag32/d20": {
+    "bursts": 6,
+    "detected": 4,
+    "false_reject_pre": 10,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 1
+   },
+   "lag32/d3": {
+    "bursts": 6,
+    "detected": 3,
+    "false_reject_pre": 3,
+    "recovered": 6,
+    "accepted_wrong_in_burst": 0
+   }
+  }
+ }
+}

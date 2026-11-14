@@ -60,7 +60,23 @@
   "sha256_expected": "a24b7af7656c2e62058d027123d6cd2fe7f8d12a454dcdf9c13a1885fe7151fa",
   "format": "golden_in.txt: header 'count 1024 8', then one window of raw24 codes per line"
  },
- "physical_validation": [],
- "status": "built; physical validation pending",
+ "physical_validation": [
+  {
+   "what": "board golden",
+   "result": "41/41 exact incl. 8 ties, integrity 0",
+   "evidence": "artifacts/results/raw_core_board_golden_20261114_204203"
+  },
+  {
+   "what": "board full test (95,404 clean test windows)",
+   "result": "95,404/95,404 logits and class = canonical/B04 C-model, integrity_status 0 on all, latency p50 16.08 ms",
+   "evidence": "artifacts/results/raw_core_board_fulltest_20261114_204223"
+  },
+  {
+   "what": "hard real time",
+   "result": "0 misses / 30,000, p50 16.01, max 16.66 ms (B02: 17.71); 30,200 outputs = canonical",
+   "evidence": "artifacts/results/raw_core_board_rt_20261114_211153"
+  }
+ ],
+ "status": "physically validated on the MYIR Z-Turn XC7Z020",
  "board": "MYIR Z-Turn MYS-7Z020-C-S, XC7Z020-1CLG400C, 100 MHz, PYNQ 2.4 / Python 3.6"
 }

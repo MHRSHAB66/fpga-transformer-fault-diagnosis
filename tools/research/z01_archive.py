@@ -31,8 +31,9 @@ TRACKED_ROOTS = ["artifacts/research", "artifacts/deploy", "artifacts/calibratio
                  "hls/f1_int10/gpp_csim", "docs/research", "docs/reports", "tools", "pynq", "host", "src/quantize",
                  "src/data", "reports", "AGENTS.md", "CLAUDE.md", "requirements.txt"]
 RESULT_PREFIXES = ["artifacts/results/raw_core_board_", "artifacts/results/onchip_preprocess_20261109",
-                   "artifacts/results/fpga_rawinput_", "artifacts/results/noisy_testsets_", "artifacts/results/robustness_"]
-FAILURE_MARKERS = ("first_impl_timing_fail", "aborted", "artifact", "fail")
+                   "artifacts/results/fpga_rawinput_", "artifacts/results/noisy_testsets_", "artifacts/results/robustness_",
+                   "artifacts/results/seq256_dma_vote_z7020_20261110", "artifacts/results/hls_rt_dataflow_FAILED"]
+FAILURE_MARKERS = ("timing_fail", "_aborted", "lag_padded_artifact", "_failed")
 
 
 def sha256(p, chunk=1 << 20):
@@ -76,7 +77,8 @@ def collect():
         if (REPO / a["path"]).exists():
             files.add(a["path"])
     # untracked-but-kept research outputs (gitignored binaries, failure folders)
-    for root in ("artifacts/research", "artifacts/deploy"):
+    for root in ("artifacts/research", "artifacts/deploy", "artifacts/results/seq256_dma_vote_z7020_20261110",
+                 "artifacts/results/hls_rt_dataflow_FAILED"):
         for p in (REPO / root).rglob("*"):
             if p.is_file() and "__pycache__" not in p.parts:
                 files.add(p.relative_to(REPO).as_posix())

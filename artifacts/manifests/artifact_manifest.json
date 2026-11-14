@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-13T18:55:34.933001+00:00",
+  "generated_utc": "2026-11-14T18:58:22.080217+00:00",
   "note": "Integrity manifest for delivery artifacts. Binary/large items (.bit/.xsa, the multi-GB fpga_testset_in.*, raw .npz timings, multi-MB run dumps, board boot binaries) are gitignored and recorded here only (committed_in_git=false); copies live on disk, in the off-repo backup and on the board.",
   "repo_relative": true,
   "artifacts": [
@@ -776,8 +776,8 @@
     {
       "path": "artifacts/deploy/research_divq9_z7020_20261113/MANIFEST.sha256",
       "present": true,
-      "size_bytes": 1119,
-      "sha256": "7bc4d7126605ba59e07d9c5d6ef744a7992144d598e91172b3631e6c4c70237b",
+      "size_bytes": 1216,
+      "sha256": "936df0b9ba5bbe270adde68073cd013a48db2890a0a5aa553b9ecd85a7d049c1",
       "committed_in_git": true
     },
     {
@@ -818,8 +818,8 @@
     {
       "path": "artifacts/deploy/research_b02_z7020_20261113/MANIFEST.sha256",
       "present": true,
-      "size_bytes": 1119,
-      "sha256": "e13516514513d2f131e04ea5eb78c53a7678602803d513ca0c5451b3e1c2677a",
+      "size_bytes": 1216,
+      "sha256": "76c94943a86b37ba545e856039d6f6c27ece8af17270c7925fbe041cae35968c",
       "committed_in_git": true
     },
     {
@@ -986,8 +986,8 @@
     {
       "path": "artifacts/deploy/research_a06_z7020_20261113/MANIFEST.sha256",
       "present": true,
-      "size_bytes": 1119,
-      "sha256": "f37300bc4a7b2e07909a1e2aa6f3d2b42b9969b680940584db2bb1e6b3929900",
+      "size_bytes": 1216,
+      "sha256": "b4c24b941957f0ca529a4de3940810f800eeebabe6abec80645a5a11d03e63cf",
       "committed_in_git": true
     },
     {
@@ -1035,8 +1035,162 @@
     {
       "path": "artifacts/deploy/research_b03_z7020_20261113/MANIFEST.sha256",
       "present": true,
-      "size_bytes": 1119,
-      "sha256": "f6b1a0ccece6a4dcf1c74111396ea26cc1e38303ab5bb5975778f06ef0d2b564",
+      "size_bytes": 1216,
+      "sha256": "77f150deb354484b3efef8ec606cfedc317a112811ac05960d0ff1e10795702e",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/results/raw_core_board_fulltest_20261113_231912/fulltest.out",
+      "present": true,
+      "size_bytes": 7768414,
+      "sha256": "d0e906ef3b0fa57cecf1e47e3872962381a7e8584cbee28318a2e338e9c0a6e6",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_rt_20261113_235257/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "70ba299992910603d6c7cdf2eb21457e0087062ce086bf27904da5eed53fa81a",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/B04_20261114/b04_build/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "ed8b8039ddb49b40c70556be96539c2a8782690ad384f4a22773b2ac20d6e30b",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/B04_20261114/b04_build/bitstream/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1481501,
+      "sha256": "01c7ca7a98b9b0ced2d0af22e5f5c59454646baebc3c5f210ded19eb03138e78",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_b04_z7020_20261114/overlay/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "ed8b8039ddb49b40c70556be96539c2a8782690ad384f4a22773b2ac20d6e30b",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_b04_z7020_20261114/MANIFEST.sha256",
+      "present": true,
+      "size_bytes": 1216,
+      "sha256": "6b7778116508d7490ca2163b25de30fb0b2bd2ceb2aa83f5a31280c5cb588389",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/research/B04_20261114/b04i_build/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "60f35b89b5128134e40a13fce6774a9732135c6c6e43350bcb19126bddfd582f",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/B04_20261114/b04i_build/bitstream/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1499449,
+      "sha256": "be95ebdba16c414113cf6acc621bcd9906a5340f4fc720a2fb7e1a65dd964998",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_b04i_z7020_20261114/overlay/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "60f35b89b5128134e40a13fce6774a9732135c6c6e43350bcb19126bddfd582f",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_b04i_z7020_20261114/MANIFEST.sha256",
+      "present": true,
+      "size_bytes": 1216,
+      "sha256": "c9d46ea873d6f4bd3a39c67ffb06eb83dee7f429deade403869b23ab8ab69152",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/research/Q02_20261114/q02_build/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "e88f76a5f06a2a21ec9b3ed6a5532ce7b484d8671ea8ecba89a08b4e2a131bc5",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/Q02_20261114/q02_build/bitstream/seq256_dma_system.xsa",
+      "present": true,
+      "size_bytes": 1494113,
+      "sha256": "3aa63bd63f74b233cbf635b0d0dda728be0ec5c613b778b9d51f251afa911fbe",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_q02_z7020_20261114/overlay/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "e88f76a5f06a2a21ec9b3ed6a5532ce7b484d8671ea8ecba89a08b4e2a131bc5",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/deploy/research_q02_z7020_20261114/MANIFEST.sha256",
+      "present": true,
+      "size_bytes": 1216,
+      "sha256": "277a34da362c9d403d01be702c60c3056be5f050117bcee443f13e0590af54d9",
+      "committed_in_git": true
+    },
+    {
+      "path": "artifacts/research/B04_20261114/b04_build_first_impl_timing_fail/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "85007885203d6157dc6c19e05928d600093433d18f689c3c26d394544386abbc",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/B04_20261114/b04i_build_first_impl_timing_fail/bitstream/design_1_wrapper.bit",
+      "present": true,
+      "size_bytes": 4045676,
+      "sha256": "1afd4665437bac05a7e4552bb5e7954987126a0d0ced10de569ee8dfad87d732",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_fulltest_20261114_204223/fulltest.out",
+      "present": true,
+      "size_bytes": 7768213,
+      "sha256": "0611f7d016bfad9ff07cc601deb5303779003a933268270dbbced272163a3277",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_rt_20261114_211153/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "50f7f4227a5a71e19c8596ef3aafc471cf7058c32aaeb042134198c8a60eca5d",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_fulltest_20261114_214206/fulltest.out",
+      "present": true,
+      "size_bytes": 458459,
+      "sha256": "090840d3a252aff75d2915f857af2cc8fcc560d489a9e58bd2821c46543bc066",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_fulltest_20261114_214407/fulltest.out",
+      "present": true,
+      "size_bytes": 11455690,
+      "sha256": "17e22331f686633ae87b2f2533a15da8238aeddb4b3b1e404ac64ac0b153a112",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/results/raw_core_board_rt_20261114_221435/out/rt_raw.npz",
+      "present": true,
+      "size_bytes": 1360262,
+      "sha256": "9b1aeb80955d7fa3d70d695459992048ab516669b2a77276b3083b132dc025e3",
+      "committed_in_git": false
+    },
+    {
+      "path": "artifacts/research/Q02_20261114/q02_burst_replay_test.i32.gz",
+      "present": true,
+      "size_bytes": 93793176,
+      "sha256": "c728da13f4888ca3bb2472130ba23a9d909aef8bb58d5f02ff64678ea8e36a91",
       "committed_in_git": false
     }
   ]

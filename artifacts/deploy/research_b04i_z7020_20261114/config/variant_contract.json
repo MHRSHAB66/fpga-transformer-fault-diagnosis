@@ -61,7 +61,28 @@
   "sha256_expected": "a24b7af7656c2e62058d027123d6cd2fe7f8d12a454dcdf9c13a1885fe7151fa",
   "format": "golden_in.txt: header 'count 1024 8', then one window of raw24 codes per line"
  },
- "physical_validation": [],
- "status": "built; physical validation pending",
+ "physical_validation": [
+  {
+   "what": "board golden (injection off)",
+   "result": "41/41 exact incl. 8 ties, integrity 0",
+   "evidence": "artifacts/results/raw_core_board_golden_20261114_212338"
+  },
+  {
+   "what": "board injection, B03 manifest (seed 20261115, the rows that motivated B04)",
+   "result": "1,408/1,408 = 64-bit-long C-model; 93/93 class-changing faults flagged, 0 silent (B03: 5 silent)",
+   "evidence": "artifacts/research/B04_20261114/b03_manifest/summary.json"
+  },
+  {
+   "what": "board injection, separately frozen confirmation (seed 20261116; 2 of 256 windows shared with B03)",
+   "result": "1,408/1,408 = C-model; 80/80 class-changing faults flagged, 0 silent; all 1,152 injections flagged (1,072 without class change = availability cost)",
+   "evidence": "artifacts/research/B04_20261114/heldout/summary.json"
+  },
+  {
+   "what": "board recovery probes (seed 20261118)",
+   "result": "288/288 clean windows after an injected window exact and unflagged",
+   "evidence": "artifacts/research/B04_20261114/recovery/summary.json"
+  }
+ ],
+ "status": "physically validated on the MYIR Z-Turn XC7Z020",
  "board": "MYIR Z-Turn MYS-7Z020-C-S, XC7Z020-1CLG400C, 100 MHz, PYNQ 2.4 / Python 3.6"
 }

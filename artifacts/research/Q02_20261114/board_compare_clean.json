@@ -1,0 +1,13 @@
+{
+ "kind": "clean",
+ "board": "artifacts\\results\\raw_core_board_fulltest_20261114_214407\\fulltest.out",
+ "rows": 95404,
+ "rows_equal_q02_cmodel": 95404,
+ "logits_class_equal": 95404,
+ "registers_equal": 95404,
+ "input_flagged_windows": 364,
+ "low_margin_windows": 10396,
+ "accepted_flags_and_margin": 84667,
+ "accuracy": 0.9777053373024192,
+ "accepted_wrong_flags_and_margin": 166
+}

@@ -1,0 +1,8 @@
+{
+ "deployment": "/home/xilinx/deployments/research_q02_z7020_20261114",
+ "board_bitstream_sha256": "e88f76a5f06a2a21ec9b3ed6a5532ce7b484d8671ea8ecba89a08b4e2a131bc5",
+ "board_run_dir": "/home/xilinx/raw_core_golden_20261114_214127",
+ "command": "G:\\aut\\project\\fpga_fault_diagnosis\\tools\\raw_core_board_test.py golden --name research_q02_z7020_20261114",
+ "git_head": "9e15ca9cade9e31fceea05b54d506c6601ec1b78",
+ "started": "2026-11-14T21:41:37"
+}

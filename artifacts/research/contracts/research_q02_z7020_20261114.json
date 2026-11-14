@@ -60,7 +60,28 @@
   "sha256_expected": "a24b7af7656c2e62058d027123d6cd2fe7f8d12a454dcdf9c13a1885fe7151fa",
   "format": "golden_in.txt: header 'count 1024 8', then one window of raw24 codes per line"
  },
- "physical_validation": [],
- "status": "built; physical validation pending",
+ "physical_validation": [
+  {
+   "what": "board golden",
+   "result": "41/41 exact incl. 8 ties",
+   "evidence": "artifacts/results/raw_core_board_golden_20261114_214127"
+  },
+  {
+   "what": "board ordered digital burst replay (96 frozen test bursts, 3,840 windows)",
+   "result": "3,840/3,840 rows (logits, class, quality_status, quality_detail, logit_margin) = Q02 C-model",
+   "evidence": "artifacts/results/raw_core_board_fulltest_20261114_214206"
+  },
+  {
+   "what": "board full test (95,404 clean test windows)",
+   "result": "95,404/95,404 rows = Q02 C-model (class = canonical); 364 input-flagged (0.38 %), 10,396 low-margin",
+   "evidence": "artifacts/results/raw_core_board_fulltest_20261114_214407"
+  },
+  {
+   "what": "hard real time",
+   "result": "0 misses / 30,000, p50 16.04, max 16.73 ms; 30,200 outputs = canonical",
+   "evidence": "artifacts/results/raw_core_board_rt_20261114_221435"
+  }
+ ],
+ "status": "physically validated on the MYIR Z-Turn XC7Z020",
  "board": "MYIR Z-Turn MYS-7Z020-C-S, XC7Z020-1CLG400C, 100 MHz, PYNQ 2.4 / Python 3.6"
 }

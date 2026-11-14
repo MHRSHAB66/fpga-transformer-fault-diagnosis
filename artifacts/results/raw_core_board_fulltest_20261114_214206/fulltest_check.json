@@ -1,0 +1,19 @@
+{
+ "windows_received": 3840,
+ "requested": 3840,
+ "logits_equal_cmodel": 3840,
+ "class_equal_cmodel_register": 3840,
+ "accuracy": 0.38255208333333335,
+ "correct": 1469,
+ "latency_ms": {
+  "mean": 16.166,
+  "p50": 16.104,
+  "p95": 16.405,
+  "max": 30.271
+ },
+ "board_summary": "SUMMARY executed=3840 aborted=None wall_s=64.699 throughput=59.352 temp_start=51.800 temp_max=52.292 temp_end=51.923 prefetch=0 prefetch_kind=none underruns=0 qmin=None pace_hz=0 late_release=0 readahead_mb=0",
+ "wall_s_pc": 101.8,
+ "deployment": "/home/xilinx/deployments/research_q02_z7020_20261114",
+ "input": "/home/xilinx/raw_testset_perturbed_20261111/q02_burst_replay_test.i32.gz",
+ "cmodel_reference": "artifacts\\research\\Q02_20261114\\replay_cmodel_rows.txt"
+}

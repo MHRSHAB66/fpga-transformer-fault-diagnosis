@@ -1,5 +1,5 @@
 {
- "id": "B04i_recovery",
+ "id": "B04i",
  "rows": 576,
  "manifest_meta": {
   "seed": 20261118,
@@ -82,7 +82,16 @@
  "canonical_reference": "artifacts/results/onchip_preprocess_20261109/csim_raw_argmax/csim_logits.txt",
  "selected_reference": "cmodel_rows_lp64.txt (64-bit long = synthesized semantics)",
  "cmodel_vs_lp64_differing_rows": [],
- "source": "cmodel (cmodel_rows_lp64.txt (64-bit long = synthesized semantics))",
+ "board_rows": 576,
+ "board_equals_cmodel_rows": 576,
+ "board_equals_selected_reference_rows": 576,
+ "board_meta": {
+  "deployment": "/home/xilinx/deployments/research_b04i_z7020_20261114",
+  "board_run_dir": "/home/xilinx/b03_20261114_213545",
+  "board_bitstream_sha256": "60f35b89b5128134e40a13fce6774a9732135c6c6e43350bcb19126bddfd582f",
+  "runner": "tools/board/b03_inject_runner.py"
+ },
+ "source": "board",
  "injection_off": {
   "rows": 288,
   "class_equal_canonical": 288,
