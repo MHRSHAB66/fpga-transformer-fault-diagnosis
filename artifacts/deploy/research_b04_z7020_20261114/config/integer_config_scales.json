@@ -1,0 +1,68 @@
+{
+  "stage": "6f_full_integer_seq256_int10",
+  "model": "F_1layer_seq256_pool4",
+  "act_bits": 10,
+  "weight_bits": 10,
+  "attn_bits": 10,
+  "calibration": {
+    "split": "train",
+    "files": 20,
+    "windows": 4880
+  },
+  "scales": {
+    "input": 0.028626115354773118,
+    "embed": 0.03119662126492648,
+    "l0.q": 0.02656459376423415,
+    "l0.k": 0.03500061568174742,
+    "l0.v": 0.09966318690378266,
+    "l0.scores": 0.22861046411871194,
+    "l0.ctx": 0.09941242148544197,
+    "l0.attn_out": 0.24320813629044308,
+    "l0.res1": 0.2445557690902732,
+    "l0.ln1": 0.009952262072338808,
+    "l0.ff1": 0.024572610567762044,
+    "l0.ff_act": 0.013610562674771948,
+    "l0.ff2": 0.04106545804547291,
+    "l0.res2": 0.04166341126081,
+    "l0.ln2": 0.014049176460494622,
+    "pool": 0.005536069013558028,
+    "cls_ln": 0.006082556214721303,
+    "cls1": 0.01946580685905479,
+    "cls_act": 0.01946580685905479,
+    "logits": 0.10779884107882078
+  },
+  "research_variant": {
+    "id": "B04",
+    "bundle": "research_b04_z7020_20261114",
+    "numeric": {
+      "weights": {
+        "bits": 10,
+        "signed": true,
+        "qmax": 511
+      },
+      "activations": {
+        "bits": 10,
+        "signed": true,
+        "qmax": 511
+      },
+      "attention_probabilities": {
+        "bits": 10,
+        "signed": true,
+        "qmax": 511,
+        "scale": "1/511",
+        "note": "softmax probabilities are non-negative; signed 10-bit code"
+      },
+      "softmax_quotient": "integer division (num*qmax + den/2) / den",
+      "scales": "artifacts/quantized/f_seq256_int10/integer_config.json (export scales)"
+    },
+    "input": {
+      "representation": "raw 24-bit ADC codes, one per little-endian int32 word; 8192 words per window, row-major [sample, channel] (word = sample*8 + channel), TLAST on word 8191",
+      "contract": "artifacts/preprocessing/raw_input_contract_v1.json",
+      "on_fpga_preprocessing": "per-window per-channel integer z-score -> INT10 codes (+-511) -> 4:1 non-overlapping mean aggregation (1024 -> 256 tokens) inside transformer_top",
+      "host_side_normalisation": "none (the host sends raw codes)",
+      "channels": "8 MAFAULDA channels in src/config.py order"
+    },
+    "bit_identical_to_canonical": true,
+    "numpy_backend": "canonical"
+  }
+}

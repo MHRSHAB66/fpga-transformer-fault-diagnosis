@@ -1,0 +1,66 @@
+{
+ "bundle": "research_b04_z7020_20261114",
+ "schema": "research variant contract v1",
+ "numeric": {
+  "weights": {
+   "bits": 10,
+   "signed": true,
+   "qmax": 511
+  },
+  "activations": {
+   "bits": 10,
+   "signed": true,
+   "qmax": 511
+  },
+  "attention_probabilities": {
+   "bits": 10,
+   "signed": true,
+   "qmax": 511,
+   "scale": "1/511",
+   "note": "softmax probabilities are non-negative; signed 10-bit code"
+  },
+  "softmax_quotient": "integer division (num*qmax + den/2) / den",
+  "scales": "artifacts/quantized/f_seq256_int10/integer_config.json (export scales)"
+ },
+ "manifest_overrides": {},
+ "reference": {
+  "bit_identical_to_canonical": true,
+  "numpy_backend": "canonical",
+  "golden": "hls/f1_int10_seq256/golden_raw1024_argmax",
+  "cmodel_logits": "artifacts/results/onchip_preprocess_20261109/csim_raw_argmax/csim_logits.txt",
+  "note": "logits/class bit-identical to the canonical core; checks add metadata only"
+ },
+ "id": "B04",
+ "title": "Single-pipeline checked projection + per-row checksum (no injection hardware)",
+ "outputs": {
+  "stream": "4 int32 logits (S2MM, TLAST on logit 3)",
+  "pred_class": "AXI-Lite register: FPGA argmax, lowest index on ties; class map 0 normal, 1 imbalance, 2 misalignment, 3 bearing_fault",
+  "integrity_status": "integrity_status (AXI-Lite, metadata, never a class): bit0 input-buffer XOR signature (after ingress vs after projection), bit1 classifier tail evaluated twice and compared (time-multiplexed on ONE compute unit: detects transient upsets of one evaluation, not persistent/common-mode faults), bit2 projection accumulator outside its proven bound |acc+b| <= 719,316; bit3 per-row projection checksum (ABFT): sum_o acc[r][o] == sum_i x[r][i]*WSUM[i], exact integers"
+ },
+ "source": {
+  "hls_top": "hls/research/b04_integrity_fast/transformer_top_seq256_raw1024_b04_argmax.cpp",
+  "generator": "hls/research/b04_integrity_fast/make_b04_top.py",
+  "build": "powershell -File tools/build_raw_core.ps1 -Variant b04; vivado -mode batch -source tools/vivado/rerun_impl_strategy.tcl -tclargs tmp/vb04/vb04.xpr Performance_ExplorePostRoutePhysOpt",
+  "build_package": "artifacts/research/B04_20261114/b04_build",
+  "hls_top_sha256": "7539f876b7698db11a8793076a6c71f85f348135274bdf03dc8df9932f61d19a"
+ },
+ "timing": "default implementation WNS -0.737 ns (failed, kept in artifacts/research/B04_20261114/b04_build_first_impl_timing_fail); Performance_ExplorePostRoutePhysOpt: WNS +0.024 ns",
+ "input": {
+  "representation": "raw 24-bit ADC codes, one per little-endian int32 word; 8192 words per window, row-major [sample, channel] (word = sample*8 + channel), TLAST on word 8191",
+  "contract": "artifacts/preprocessing/raw_input_contract_v1.json",
+  "on_fpga_preprocessing": "per-window per-channel integer z-score -> INT10 codes (+-511) -> 4:1 non-overlapping mean aggregation (1024 -> 256 tokens) inside transformer_top",
+  "host_side_normalisation": "none (the host sends raw codes)",
+  "channels": "8 MAFAULDA channels in src/config.py order"
+ },
+ "golden": {
+  "dir": "hls/f1_int10_seq256/golden_raw1024_argmax",
+  "count": 41,
+  "ties": 8,
+  "sha256_in": "177de104f8844579a47b9f8d75885e7d8aa743be8089992179de80316eb62aa7",
+  "sha256_expected": "a24b7af7656c2e62058d027123d6cd2fe7f8d12a454dcdf9c13a1885fe7151fa",
+  "format": "golden_in.txt: header 'count 1024 8', then one window of raw24 codes per line"
+ },
+ "physical_validation": [],
+ "status": "built; physical validation pending",
+ "board": "MYIR Z-Turn MYS-7Z020-C-S, XC7Z020-1CLG400C, 100 MHz, PYNQ 2.4 / Python 3.6"
+}

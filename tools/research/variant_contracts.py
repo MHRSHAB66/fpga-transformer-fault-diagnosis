@@ -154,9 +154,12 @@ VARIANTS["research_b04_z7020_20261114"] = dict(
     outputs=dict(CLASS_OUT, integrity_status=INTEGRITY_B04),
     source={"hls_top": "hls/research/b04_integrity_fast/transformer_top_seq256_raw1024_b04_argmax.cpp",
             "generator": "hls/research/b04_integrity_fast/make_b04_top.py",
-            "build": "powershell -File tools/build_raw_core.ps1 -Variant b04",
+            "build": "powershell -File tools/build_raw_core.ps1 -Variant b04; vivado -mode batch -source "
+                     "tools/vivado/rerun_impl_strategy.tcl -tclargs tmp/vb04/vb04.xpr Performance_ExplorePostRoutePhysOpt",
             "build_package": "artifacts/research/B04_20261114/b04_build"},
-    validation=[], timing="see artifacts/research/B04_20261114/b04_build/vivado_reports")
+    validation=[], timing="default implementation WNS -0.737 ns (failed, kept in "
+                          "artifacts/research/B04_20261114/b04_build_first_impl_timing_fail); "
+                          "Performance_ExplorePostRoutePhysOpt: WNS +0.024 ns")
 VARIANTS["research_b04i_z7020_20261114"] = dict(
     B04_COMMON, id="B04i", title="B04 + programmable logical fault injection (research overlay, -DB04_INJECT)",
     outputs=dict(CLASS_OUT, integrity_status=INTEGRITY_B04, injection=INJECTION),
@@ -164,7 +167,22 @@ VARIANTS["research_b04i_z7020_20261114"] = dict(
             "generator": "hls/research/b04_integrity_fast/make_b04_top.py",
             "build": "powershell -File tools/build_raw_core.ps1 -Variant b04i",
             "build_package": "artifacts/research/B04_20261114/b04i_build"},
-    validation=[], timing="see artifacts/research/B04_20261114/b04i_build/vivado_reports")
+    validation=[], timing="default WNS -1.731 ns; re-runs NetDelay_high -0.620, ExtraTimingOpt -0.805 (all kept as '*_timing_fail'); Performance_ExplorePostRoutePhysOpt: WNS +0.007 ns (met, minimal margin)")
+QUALITY = ("quality_detail (bits 0-7 clip flag per channel, 8-15 constant-run flag, 16-23 low-bit-occupancy flag), "
+           "quality_status (bit0 any clip, bit1 any run, bit2 any low-bit, bit3 logit margin < 45), logit_margin "
+           "(top1 - top2 integer logit); thresholds from clean validation (Q01v2, frozen); metadata only, the class "
+           "is the FPGA argmax")
+VARIANTS["research_q02_z7020_20261114"] = dict(
+    numeric=CANONICAL_NUMERIC, manifest_overrides={},
+    reference=canonical_ref("logits/class bit-identical to the canonical core; quality registers = Python reference "
+                            "(tools/research/q02_check.py)"),
+    id="Q02", title="Input-quality and decision-status metadata registers (digital replay; no analog claim)",
+    outputs=dict(CLASS_OUT, quality=QUALITY),
+    source={"hls_top": "hls/research/q02_quality/transformer_top_seq256_raw1024_q02_argmax.cpp",
+            "generator": "hls/research/q02_quality/make_q02_top.py",
+            "build": "powershell -File tools/build_raw_core.ps1 -Variant q02",
+            "build_package": "artifacts/research/Q02_20261114/q02_build"},
+    validation=[], timing="post-route WNS +0.147 ns (default strategy)")
 
 EXTRA_EVIDENCE = OUT / "extra_evidence.json"   # appended by later runs: {bundle: [[what, result, path], ...]}
 

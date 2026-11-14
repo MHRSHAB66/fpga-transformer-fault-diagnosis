@@ -45,7 +45,7 @@
   "build_package": "artifacts/research/B04_20261114/b04i_build",
   "hls_top_sha256": "7539f876b7698db11a8793076a6c71f85f348135274bdf03dc8df9932f61d19a"
  },
- "timing": "see artifacts/research/B04_20261114/b04i_build/vivado_reports",
+ "timing": "default WNS -1.731 ns; re-runs NetDelay_high -0.620, ExtraTimingOpt -0.805 (all kept as '*_timing_fail'); Performance_ExplorePostRoutePhysOpt: WNS +0.007 ns (met, minimal margin)",
  "input": {
   "representation": "raw 24-bit ADC codes, one per little-endian int32 word; 8192 words per window, row-major [sample, channel] (word = sample*8 + channel), TLAST on word 8191",
   "contract": "artifacts/preprocessing/raw_input_contract_v1.json",
