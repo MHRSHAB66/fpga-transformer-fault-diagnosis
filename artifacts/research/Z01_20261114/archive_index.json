@@ -1,11 +1,11 @@
 {
-"generated": "2026-11-14T22:28:57",
-"files": 1052,
-"bytes": 7818473825,
+"generated": "2026-11-14T22:39:00",
+"files": 1050,
+"bytes": 7818269728,
 "categories": {
 "docs_and_results": {
-"files": 328,
-"bytes": 255136137
+"files": 326,
+"bytes": 254931806
 },
 "references_configs_goldens": {
 "files": 75,
@@ -29,7 +29,7 @@
 },
 "sources": {
 "files": 259,
-"bytes": 5554686
+"bytes": 5554920
 }
 },
 "entries": [
@@ -2911,18 +2911,6 @@
 "path": "artifacts/research/T01v2_20261114/summary.json",
 "bytes": 118682,
 "sha256": "8e5b7d0028cd51194cb725e005e50cc8c15872be9c7865e71fef12cece5322a2",
-"category": "docs_and_results"
-},
-{
-"path": "artifacts/research/Z01_20261114/archive_index.json",
-"bytes": 203222,
-"sha256": "9edec7d637573762e9135986b956bc62b4b7aa348d1e767215441489f716272e",
-"category": "docs_and_results"
-},
-{
-"path": "artifacts/research/Z01_20261114/environment.json",
-"bytes": 1109,
-"sha256": "14c8a2dffe9bfd4f97514e337692022731f029646ec6b2c3efc4e589bb751911",
 "category": "docs_and_results"
 },
 {
@@ -6209,8 +6197,8 @@
 },
 {
 "path": "tools/research/z01_archive.py",
-"bytes": 8711,
-"sha256": "0d02a0d07c2189fc40135e1a82874ece4fddf8394f7c492cad2e03658937742f",
+"bytes": 8945,
+"sha256": "b1dfac4af9b01db9859040a63e1f27635ec87cbcf097e7cad047edaf704f9ec9",
 "category": "sources"
 },
 {

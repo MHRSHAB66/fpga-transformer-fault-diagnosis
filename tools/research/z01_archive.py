@@ -82,7 +82,8 @@ def collect():
         for p in (REPO / root).rglob("*"):
             if p.is_file() and "__pycache__" not in p.parts:
                 files.add(p.relative_to(REPO).as_posix())
-    return sorted(f for f in files if (REPO / f).is_file())
+    # the archive record itself (index, environment, verify) is copied separately, not self-indexed
+    return sorted(f for f in files if (REPO / f).is_file() and not f.startswith("artifacts/research/Z01_"))
 
 
 def environment():
@@ -130,7 +131,8 @@ def cmd_backup(args):
     for e in index["entries"]:
         d = dest / "files" / e["path"]
         d.parent.mkdir(parents=True, exist_ok=True)
-        if not (d.exists() and d.stat().st_size == e["bytes"]):
+        src = REPO / e["path"]
+        if not (d.exists() and d.stat().st_size == e["bytes"] and int(d.stat().st_mtime) == int(src.stat().st_mtime)):
             shutil.copy2(REPO / e["path"], d)
     for name in ("archive_index.json", "environment.json"):
         shutil.copy2(OUT / name, dest / name)

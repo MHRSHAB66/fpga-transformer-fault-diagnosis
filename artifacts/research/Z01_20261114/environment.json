@@ -1,7 +1,7 @@
 {
- "generated": "2026-11-14T22:28:57",
- "git_head": "f5d38ade3e8be17ceb89282c911dee2badae5392",
- "git_status_short": " M AGENTS.md\n?? artifacts/research/Z01_20261114/\n?? artifacts/review/\n?? hls/f1_int10_seq256/vitis/rerun_impl_strategy.tcl\n?? reports/\n?? research_notes/\n",
+ "generated": "2026-11-14T22:39:00",
+ "git_head": "7da8e35e846d59979b883d50fc9a6ada5ec7b5c7",
+ "git_status_short": " M AGENTS.md\n M artifacts/research/Z01_20261114/archive_index.json\n M tools/research/z01_archive.py\n?? artifacts/research/Z01_20261114/archive_verify.json\n?? artifacts/review/\n?? hls/f1_int10_seq256/vitis/rerun_impl_strategy.tcl\n?? reports/\n?? research_notes/\n",
  "python": "3.12.2",
  "numpy": "2.2.3",
  "platform": "Windows-11-10.0.26300-SP0",
