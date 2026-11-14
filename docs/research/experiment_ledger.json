@@ -129,7 +129,7 @@
   {
    "id": "Z01",
    "hypothesis": "All scarce physical evidence is archived with exact source/config/reference/input/output/timing identity and an off-repository verified copy.",
-   "status": "archived (off-repository copy on another partition of the same SSD; external copy pending)",
+   "status": "archived and verified (same-disk copy; external copy pending user action)",
    "depends_on": [
     "F00"
    ],
@@ -140,7 +140,7 @@
     "artifacts/research/Z01_20261114/archive_verify.json",
     "E:/fpga_fault_diagnosis_backup/Z01_20261114/"
    ],
-   "outcome": "See archive_verify.json (files, bytes, sha256 per file, git bundle of all refs verified).",
+   "outcome": "Index: 1050 files, 7.82 GB (categories: docs_and_results 326, references_configs_goldens 75, replay_inputs_and_manifests 42, bit_hwh_xsa_and_route 140, failures_and_aborts 54, board_traces 154, sources 259), each with size and sha256; environment.json records git HEAD, Python/numpy, g++ 15.2.0, Vivado/Vitis HLS 2020.2 and the board runtime (Linux 4.14.0-xilinx, Python 3.6.5, PYNQ 2.4; board raw test set sha256 = local). Backup E:/fpga_fault_diagnosis_backup/Z01_20261114: 1050/1050 files re-hashed equal, git bundle of all refs verified (`git bundle verify` ok, sha256 98a1c9a63767b366). Failures and aborted runs are archived in their own category.",
    "limitations": "E: is a partition of the same physical NVMe SSD as the repository (G:): protects against repository loss, not disk failure. GitHub holds the tracked history only (not the large gitignored binaries).",
    "next_action": "Copy E:/fpga_fault_diagnosis_backup/Z01_20261114 to an external drive or cloud storage (user action) and re-run the verify step there."
   },

@@ -1,16 +1,13 @@
 {
  "dest": "E:\\fpga_fault_diagnosis_backup\\Z01_20261114",
- "verified": "2026-11-14T22:35:18",
+ "verified": "2026-11-14T22:41:50",
  "files_ok": 1050,
- "files_total": 1052,
- "mismatches": [
-  "artifacts/research/Z01_20261114/archive_index.json",
-  "artifacts/research/Z01_20261114/environment.json"
- ],
+ "files_total": 1050,
+ "mismatches": [],
  "git_bundle": "repository.bundle",
- "git_bundle_sha256": "d7462df7d45728a8f6f707186ec5aac5537e28a83fa426b36e2d0ec74a011e6c",
+ "git_bundle_sha256": "98a1c9a63767b366a05f668e8eb87fac84dd10cd633b53e7a0bac182794e468e",
  "git_bundle_verify_rc": 0,
- "git_bundle_verify": "pga-demo-ready-20261008\nab86044a165e1dd85561a344d53f760a17827267 refs/tags/fpga-demo-validated-20261008\n7da8e35e846d59979b883d50fc9a6ada5ec7b5c7 HEAD\nThe bundle records a complete history.\nThe bundle uses this hash algorithm: sha1\nE:/fpga_fault_diagnosis_backup/Z01_20261114/repository.bundle is okay",
+ "git_bundle_verify": "pga-demo-ready-20261008\nab86044a165e1dd85561a344d53f760a17827267 refs/tags/fpga-demo-validated-20261008\n806d0999c36d72a1360ac7db9edd196a4c9dc4ce HEAD\nThe bundle records a complete history.\nThe bundle uses this hash algorithm: sha1\nE:/fpga_fault_diagnosis_backup/Z01_20261114/repository.bundle is okay",
  "same_physical_disk_as_repo": true,
  "note": "copy on another partition of the SAME physical SSD protects against repository loss, not against disk failure; an external drive or cloud copy is still required"
 }
