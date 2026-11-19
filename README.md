@@ -1,7 +1,7 @@
 # FPGA Transformer Fault Diagnosis
 
 Real-time machinery condition monitoring using a lightweight Transformer
-classifier, prepared for FPGA execution, on the MAFAULDA vibration dataset.
+classifier deployed on FPGA hardware, using the MAFAULDA vibration dataset.
 
 **B.Sc. project — Mehrdad Sheikh Abbasi, Amirkabir University of Technology.**
 
@@ -15,12 +15,13 @@ MAFAULDA windows -> preprocessing/windowing -> lightweight Transformer (PyTorch)
   -> result sent to PC -> simple PC-side display
 ```
 
-The final target is a Transformer-based fault classifier prepared for FPGA, with
-its predictions shown on a computer. The pipeline is implemented end to end and
-the INT10 FPGA core has been run on a MYIR Z-Turn XC7Z020 board. **Current
-results, each with its evidence file:**
+The implemented system runs an INT10 Transformer inference core on a physical
+MYIR Z-Turn XC7Z020 board and presents its predictions on a computer.
+**Baseline deployed-system results, with evidence:**
 [`docs/reports/consolidated_results_20261022.md`](docs/reports/consolidated_results_20261022.md).
 Demo operation: [`docs/demo_runbook.md`](docs/demo_runbook.md).
+Later raw-input, temporal-vote, noise-robustness, and endurance studies:
+[`docs/reports/paper_readiness_review_20261110.md`](docs/reports/paper_readiness_review_20261110.md).
 
 ## Dataset
 
@@ -62,7 +63,7 @@ windows; evidence in the consolidated results):
 Figures: `docs/figures/final/` (regenerate with `python -m tools.plot_final_figures`).
 
 Per-stage detail: `docs/project_status.md`. Design decisions: `docs/DECISION_LOG.md`.
-Stage plan and constraints: `CLAUDE.md` / `AGENTS.md`.
+Project stage plan and engineering constraints: `AGENTS.md`.
 
 ## Installation
 

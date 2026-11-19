@@ -1,5 +1,7 @@
 # Next Steps: Stage 6 — Quantization & Fixed-Point Preparation
 
+> **Historical plan, superseded.** This was written before the hardware path was implemented. The active deployment uses INT10 (not the proposed INT8 target), and physical FPGA tests have been completed. Retained solely to document the original plan. See [`project_status.md`](project_status.md) and [`reports/consolidated_results_20261022.md`](reports/consolidated_results_20261022.md).
+
 The software phase (Stages 0–5) is complete. This document describes what Stage 6 involves
 and what must be done before hardware implementation can begin.
 

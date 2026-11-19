@@ -1,5 +1,7 @@
 # Long-run hard real-time validation and PREEMPT_RT feasibility — 2026-10-24
 
+> **Historical snapshot — RT-kernel status advanced later on 2026-10-24.** The "not booted" and "not available" statements below describe this earlier checkpoint. A candidate PREEMPT_RT kernel was subsequently booted once and physically compared with stock; see [`hard_rt_preempt_rt_comparison_20261024.md`](hard_rt_preempt_rt_comparison_20261024.md). This report's measured long-run data remain unchanged.
+
 > **Update (later on 2026-10-24, authorised):** the candidate below was then booted once and
 > compared physically — see `hard_rt_preempt_rt_comparison_20261024.md`. The text below is the
 > state at the time of writing and is kept unchanged.

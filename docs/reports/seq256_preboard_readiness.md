@@ -1,5 +1,7 @@
 # SEQ=256 INT10 — Pre-board readiness checklist
 
+> **Historical pre-board snapshot (2026-09-30), superseded.** "Board-pending" below describes the status at the time of this checklist, not the current status. Physical board validation has since been completed. See [`consolidated_results_20261022.md`](consolidated_results_20261022.md) and [`../project_status.md`](../project_status.md).
+
 **Date:** 2026-09-30 · **Model:** F_1layer_seq256_pool4 (INT10) ·
 **Provisional/generic part:** XC7Z020-CLG400-1 (not a selected board).
 

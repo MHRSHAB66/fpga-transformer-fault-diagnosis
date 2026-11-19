@@ -1,5 +1,7 @@
 # SEQ=256 INT10 HLS results
 
+> **Historical HLS/Vivado snapshot, before physical deployment.** The statement below that board validation is not done applies to this report's original test date only. Do not use it as a current board-status claim. See [`consolidated_results_20261022.md`](consolidated_results_20261022.md) for physical evidence.
+
 ## Qualification and evidence layers
 
 This report distinguishes four independent evidence layers. They must not be

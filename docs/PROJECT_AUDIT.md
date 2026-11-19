@@ -1,4 +1,6 @@
 # PROJECT AUDIT
+
+> **Historical audit (2026-06-14), not current project status.** This document preserves an early review and its then-open tasks. For current status use [`project_status.md`](project_status.md), and for post-board measurements use [`reports/consolidated_results_20261022.md`](reports/consolidated_results_20261022.md) and [`reports/paper_readiness_review_20261110.md`](reports/paper_readiness_review_20261110.md).
 **Date:** 2026-06-14
 **Auditor:** Claude (Sonnet 4.6)
 **Branch at audit time:** `day11-code-review-and-presentation-prep`
