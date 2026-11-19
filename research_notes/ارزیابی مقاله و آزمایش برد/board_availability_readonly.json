@@ -1,0 +1,7 @@
+{
+  "checked_utc": "2026-11-11T15:23:03.192630+00:00",
+  "read_only": true,
+  "returncode": 0,
+  "stdout": "2019-11-13T21:22:13Z\n 21:22:13 up  5:45,  1 user,  load average: 1.26, 1.14, 1.10\n16489    01:19:32 python3.6 -u /home/xilinx/raw_core_rt_20261111_173322/fpga_rt_acceptance.py /home/xilinx/deployments/seq256_vote_z7020_20261110/overlay/design_1_wrapper.bit /home/xilinx/raw_testset_20261109/fpga_testset_raw.i32.gz 4096 1400200 200 1 1 50 /home/xilinx/raw_core_rt_20261111_173322/out\n16490    01:19:32 /bin/bash /home/xilinx/raw_core_rt_20261111_173322/temp_guard.sh 16489 /home/xilinx/raw_core_rt_20261111_173322/rt_guard.log 75 1\nTEMP_START=55.98355102522\nMETA n_unique=4096 n_total=1400200 warmup=200 sched=SCHED_FIFO_prio_50,_cpu_[1] class_source=fpga_register preload_s=13.44 preload_maxrss_kb=17412->148556\n2019-11-13T21:22:10Z temp_c=55.614\n2019-11-13T21:22:12Z temp_c=55.737\n",
+  "stderr": ""
+}

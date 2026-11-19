@@ -1,0 +1,17 @@
+{
+ "passed": true,
+ "checks": {
+  "zero_margin_evid_never_switches": true,
+  "zero_margin_timeout_switches_after_h": true,
+  "late_detection_is_after_only": true,
+  "during_detection": true,
+  "unrecovered_counted": true,
+  "none_when_never": true,
+  "short_event_below_required_evidence_none": true,
+  "step_unresolved_timeout": true,
+  "step_beyond_horizon_unresolved": true,
+  "manifest_reproducible": true,
+  "boundary_violation_detected": true,
+  "identical_event_ids_across_policies": true
+ }
+}

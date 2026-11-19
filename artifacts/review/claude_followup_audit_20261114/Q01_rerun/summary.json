@@ -1,0 +1,6384 @@
+{
+ "id": "Q01v2",
+ "supersedes": "artifacts/research/Q01_20261113 (conf baseline and gate)",
+ "calibration": {
+  "file": "artifacts/calibration/conf_temperature_v1/temperature.json",
+  "T": 1.42482066327489,
+  "s_logits": 0.10779884107882078,
+  "formula": "max softmax(s_logits * logits_int / T)"
+ },
+ "cmodel": "tmp/csim/batch_raw_argmax.exe (canonical raw-input argmax top, g++)",
+ "thresholds_from_clean_validation": {
+  "margin_min": 45.0,
+  "conf_min": 0.9672813154807267,
+  "conf_superseded_q01_min": 0.9999999999999807,
+  "clipped": [
+   1e-09,
+   1e-09,
+   1e-09,
+   1e-09,
+   1e-09,
+   1e-09,
+   1e-09,
+   1e-09
+  ],
+  "longest": [
+   2,
+   1,
+   1,
+   3,
+   1,
+   1,
+   1,
+   1
+  ],
+  "lowbits": [
+   0.9951171865,
+   0.998046874,
+   0.998046874,
+   0.9970703115,
+   0.9970703115,
+   0.9951171865,
+   0.998046874,
+   0.998046874
+  ]
+ },
+ "conditions": [
+  "clean",
+  "gain2",
+  "offset",
+  "snr20",
+  "snr10",
+  "clip50",
+  "clip30",
+  "clip10",
+  "bits12",
+  "bits8",
+  "bits4",
+  "hold4",
+  "hold16",
+  "hold31",
+  "lag8",
+  "lag32",
+  "lag128"
+ ],
+ "gate_set": [
+  "clip30",
+  "bits8",
+  "hold16",
+  "lag32"
+ ],
+ "report": {
+  "val": {
+   "none": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 43,
+     "risk_accepted": 0.02099609375,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 43,
+     "risk_accepted": 0.02099609375,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 43,
+     "risk_accepted": 0.02099609375,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 45,
+     "risk_accepted": 0.02197265625,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 66,
+     "risk_accepted": 0.0322265625,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 42,
+     "risk_accepted": 0.0205078125,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9794921875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 46,
+     "risk_accepted": 0.0224609375,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 55,
+     "risk_accepted": 0.02685546875,
+     "accepted_false_healthy": 5,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 45,
+     "risk_accepted": 0.02197265625,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 55,
+     "risk_accepted": 0.02685546875,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 64,
+     "risk_accepted": 0.03125,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.96875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 73,
+     "risk_accepted": 0.03564453125,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.96435546875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 141,
+     "risk_accepted": 0.06884765625,
+     "accepted_false_healthy": 9,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 267,
+     "risk_accepted": 0.13037109375,
+     "accepted_false_healthy": 25,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.86962890625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 53,
+     "risk_accepted": 0.02587890625,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97412109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 71,
+     "risk_accepted": 0.03466796875,
+     "accepted_false_healthy": 9,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.96533203125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 141,
+     "risk_accepted": 0.06884765625,
+     "accepted_false_healthy": 9,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "conf": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 1843,
+     "rejected": 205,
+     "coverage": 0.89990234375,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004340748779164406,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 170,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9266862170087976,
+      0.907258064516129,
+      0.9048027444253859
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 1844,
+     "rejected": 204,
+     "coverage": 0.900390625,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004338394793926247,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 169,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9296187683284457,
+      0.907258064516129,
+      0.9048027444253859
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 1843,
+     "rejected": 205,
+     "coverage": 0.89990234375,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004340748779164406,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 170,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9266862170087976,
+      0.907258064516129,
+      0.9048027444253859
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 1844,
+     "rejected": 204,
+     "coverage": 0.900390625,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004338394793926247,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 167,
+     "wrong_rejected": 37,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4444444444444444,
+      0.9266862170087976,
+      0.9112903225806451,
+      0.9056603773584906
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 1818,
+     "rejected": 230,
+     "coverage": 0.8876953125,
+     "accepted_wrong": 15,
+     "risk_accepted": 0.00825082508250825,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 179,
+     "wrong_rejected": 51,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.17777777777777778,
+      0.8885630498533724,
+      0.9455645161290323,
+      0.8902229845626072
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 1846,
+     "rejected": 202,
+     "coverage": 0.9013671875,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004333694474539545,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 168,
+     "wrong_rejected": 34,
+     "accuracy_all": 0.9794921875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5111111111111111,
+      0.9266862170087976,
+      0.8991935483870968,
+      0.9099485420240138
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 1835,
+     "rejected": 213,
+     "coverage": 0.89599609375,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004359673024523161,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 175,
+     "wrong_rejected": 38,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5333333333333333,
+      0.9090909090909091,
+      0.8891129032258065,
+      0.9090909090909091
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 1817,
+     "rejected": 231,
+     "coverage": 0.88720703125,
+     "accepted_wrong": 10,
+     "risk_accepted": 0.00550357732526142,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 186,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5333333333333333,
+      0.8885630498533724,
+      0.8830645161290323,
+      0.902229845626072
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 1846,
+     "rejected": 202,
+     "coverage": 0.9013671875,
+     "accepted_wrong": 9,
+     "risk_accepted": 0.004875406283856988,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 166,
+     "wrong_rejected": 36,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9178885630498533,
+      0.9092741935483871,
+      0.9090909090909091
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 1814,
+     "rejected": 234,
+     "coverage": 0.8857421875,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004410143329658214,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 187,
+     "wrong_rejected": 47,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4444444444444444,
+      0.8914956011730205,
+      0.8911290322580645,
+      0.8987993138936535
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 1800,
+     "rejected": 248,
+     "coverage": 0.87890625,
+     "accepted_wrong": 10,
+     "risk_accepted": 0.005555555555555556,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 194,
+     "wrong_rejected": 54,
+     "accuracy_all": 0.96875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4444444444444444,
+      0.873900293255132,
+      0.875,
+      0.8987993138936535
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 1846,
+     "rejected": 202,
+     "coverage": 0.9013671875,
+     "accepted_wrong": 21,
+     "risk_accepted": 0.011375947995666305,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 150,
+     "wrong_rejected": 52,
+     "accuracy_all": 0.96435546875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5333333333333333,
+      0.9149560117302052,
+      0.9193548387096774,
+      0.9039451114922813
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 1720,
+     "rejected": 328,
+     "coverage": 0.83984375,
+     "accepted_wrong": 34,
+     "risk_accepted": 0.019767441860465116,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 221,
+     "wrong_rejected": 107,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5333333333333333,
+      0.844574780058651,
+      0.8286290322580645,
+      0.8550600343053173
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 1635,
+     "rejected": 413,
+     "coverage": 0.79833984375,
+     "accepted_wrong": 117,
+     "risk_accepted": 0.07155963302752294,
+     "accepted_false_healthy": 8,
+     "correct_rejected": 263,
+     "wrong_rejected": 150,
+     "accuracy_all": 0.86962890625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5777777777777777,
+      0.782991202346041,
+      0.7782258064516129,
+      0.8198970840480274
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 1836,
+     "rejected": 212,
+     "coverage": 0.896484375,
+     "accepted_wrong": 7,
+     "risk_accepted": 0.003812636165577342,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 166,
+     "wrong_rejected": 46,
+     "accuracy_all": 0.97412109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4444444444444444,
+      0.9002932551319648,
+      0.8971774193548387,
+      0.9125214408233276
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 1796,
+     "rejected": 252,
+     "coverage": 0.876953125,
+     "accepted_wrong": 12,
+     "risk_accepted": 0.0066815144766146995,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 193,
+     "wrong_rejected": 59,
+     "accuracy_all": 0.96533203125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.28888888888888886,
+      0.8504398826979472,
+      0.875,
+      0.9082332761578045
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 1705,
+     "rejected": 343,
+     "coverage": 0.83251953125,
+     "accepted_wrong": 29,
+     "risk_accepted": 0.017008797653958945,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 231,
+     "wrong_rejected": 112,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.17777777777777778,
+      0.7155425219941349,
+      0.8084677419354839,
+      0.902229845626072
+     ]
+    }
+   },
+   "conf_superseded_q01": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 1852,
+     "rejected": 196,
+     "coverage": 0.904296875,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 161,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9296187683284457,
+      0.9173387096774194,
+      0.9073756432246999
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 1851,
+     "rejected": 197,
+     "coverage": 0.90380859375,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004321988114532685,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 162,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9296187683284457,
+      0.9173387096774194,
+      0.9065180102915952
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 1852,
+     "rejected": 196,
+     "coverage": 0.904296875,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 161,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9296187683284457,
+      0.9173387096774194,
+      0.9073756432246999
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 1854,
+     "rejected": 194,
+     "coverage": 0.9052734375,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004314994606256742,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 157,
+     "wrong_rejected": 37,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9266862170087976,
+      0.9233870967741935,
+      0.9073756432246999
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 1825,
+     "rejected": 223,
+     "coverage": 0.89111328125,
+     "accepted_wrong": 15,
+     "risk_accepted": 0.00821917808219178,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 172,
+     "wrong_rejected": 51,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.24444444444444444,
+      0.8944281524926686,
+      0.9475806451612904,
+      0.8910806174957119
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 1854,
+     "rejected": 194,
+     "coverage": 0.9052734375,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004314994606256742,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 160,
+     "wrong_rejected": 34,
+     "accuracy_all": 0.9794921875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5555555555555556,
+      0.9266862170087976,
+      0.9092741935483871,
+      0.9108061749571184
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 1847,
+     "rejected": 201,
+     "coverage": 0.90185546875,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004331348132106118,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 163,
+     "wrong_rejected": 38,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5777777777777777,
+      0.9090909090909091,
+      0.905241935483871,
+      0.9108061749571184
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 1826,
+     "rejected": 222,
+     "coverage": 0.8916015625,
+     "accepted_wrong": 11,
+     "risk_accepted": 0.006024096385542169,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 178,
+     "wrong_rejected": 44,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5777777777777777,
+      0.8914956011730205,
+      0.8931451612903226,
+      0.9030874785591767
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 1855,
+     "rejected": 193,
+     "coverage": 0.90576171875,
+     "accepted_wrong": 10,
+     "risk_accepted": 0.005390835579514825,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 158,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9237536656891495,
+      0.9173387096774194,
+      0.9116638078902229
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 1829,
+     "rejected": 219,
+     "coverage": 0.89306640625,
+     "accepted_wrong": 10,
+     "risk_accepted": 0.005467468562055768,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 174,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4666666666666667,
+      0.9002932551319648,
+      0.905241935483871,
+      0.902229845626072
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 1813,
+     "rejected": 235,
+     "coverage": 0.88525390625,
+     "accepted_wrong": 12,
+     "risk_accepted": 0.006618863761720904,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 183,
+     "wrong_rejected": 52,
+     "accuracy_all": 0.96875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4666666666666667,
+      0.8797653958944281,
+      0.8870967741935484,
+      0.902229845626072
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 1851,
+     "rejected": 197,
+     "coverage": 0.90380859375,
+     "accepted_wrong": 21,
+     "risk_accepted": 0.011345218800648298,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 145,
+     "wrong_rejected": 52,
+     "accuracy_all": 0.96435546875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5777777777777777,
+      0.9149560117302052,
+      0.9233870967741935,
+      0.9048027444253859
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 1735,
+     "rejected": 313,
+     "coverage": 0.84716796875,
+     "accepted_wrong": 37,
+     "risk_accepted": 0.02132564841498559,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 209,
+     "wrong_rejected": 104,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5777777777777777,
+      0.8475073313782991,
+      0.8467741935483871,
+      0.8576329331046312
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 1652,
+     "rejected": 396,
+     "coverage": 0.806640625,
+     "accepted_wrong": 121,
+     "risk_accepted": 0.07324455205811138,
+     "accepted_false_healthy": 10,
+     "correct_rejected": 250,
+     "wrong_rejected": 146,
+     "accuracy_all": 0.86962890625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5777777777777777,
+      0.7917888563049853,
+      0.7923387096774194,
+      0.8259005145797599
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 1843,
+     "rejected": 205,
+     "coverage": 0.89990234375,
+     "accepted_wrong": 7,
+     "risk_accepted": 0.0037981551817688553,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 159,
+     "wrong_rejected": 46,
+     "accuracy_all": 0.97412109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9002932551319648,
+      0.905241935483871,
+      0.9133790737564322
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 1811,
+     "rejected": 237,
+     "coverage": 0.88427734375,
+     "accepted_wrong": 14,
+     "risk_accepted": 0.007730535615681944,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 180,
+     "wrong_rejected": 57,
+     "accuracy_all": 0.96533203125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.35555555555555557,
+      0.8533724340175953,
+      0.8891129032258065,
+      0.9116638078902229
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 1711,
+     "rejected": 337,
+     "coverage": 0.83544921875,
+     "accepted_wrong": 30,
+     "risk_accepted": 0.017533606078316773,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 226,
+     "wrong_rejected": 111,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.2222222222222222,
+      0.718475073313783,
+      0.8104838709677419,
+      0.9039451114922813
+     ]
+    }
+   },
+   "margin": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 1852,
+     "rejected": 196,
+     "coverage": 0.904296875,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 161,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9296187683284457,
+      0.9173387096774194,
+      0.9073756432246999
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 1851,
+     "rejected": 197,
+     "coverage": 0.90380859375,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004321988114532685,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 162,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9296187683284457,
+      0.9173387096774194,
+      0.9065180102915952
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 1852,
+     "rejected": 196,
+     "coverage": 0.904296875,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 161,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9296187683284457,
+      0.9173387096774194,
+      0.9073756432246999
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 1854,
+     "rejected": 194,
+     "coverage": 0.9052734375,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004314994606256742,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 157,
+     "wrong_rejected": 37,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9266862170087976,
+      0.9233870967741935,
+      0.9073756432246999
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 1825,
+     "rejected": 223,
+     "coverage": 0.89111328125,
+     "accepted_wrong": 15,
+     "risk_accepted": 0.00821917808219178,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 172,
+     "wrong_rejected": 51,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.24444444444444444,
+      0.8944281524926686,
+      0.9475806451612904,
+      0.8910806174957119
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 1856,
+     "rejected": 192,
+     "coverage": 0.90625,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004310344827586207,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 158,
+     "wrong_rejected": 34,
+     "accuracy_all": 0.9794921875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5555555555555556,
+      0.9296187683284457,
+      0.9112903225806451,
+      0.9108061749571184
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 1847,
+     "rejected": 201,
+     "coverage": 0.90185546875,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004331348132106118,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 163,
+     "wrong_rejected": 38,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5777777777777777,
+      0.9090909090909091,
+      0.905241935483871,
+      0.9108061749571184
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 1827,
+     "rejected": 221,
+     "coverage": 0.89208984375,
+     "accepted_wrong": 11,
+     "risk_accepted": 0.0060207991242474,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 177,
+     "wrong_rejected": 44,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5777777777777777,
+      0.8914956011730205,
+      0.8951612903225806,
+      0.9030874785591767
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 1855,
+     "rejected": 193,
+     "coverage": 0.90576171875,
+     "accepted_wrong": 10,
+     "risk_accepted": 0.005390835579514825,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 158,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9237536656891495,
+      0.9173387096774194,
+      0.9116638078902229
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 1829,
+     "rejected": 219,
+     "coverage": 0.89306640625,
+     "accepted_wrong": 10,
+     "risk_accepted": 0.005467468562055768,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 174,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4666666666666667,
+      0.9002932551319648,
+      0.905241935483871,
+      0.902229845626072
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 1814,
+     "rejected": 234,
+     "coverage": 0.8857421875,
+     "accepted_wrong": 12,
+     "risk_accepted": 0.006615214994487321,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 182,
+     "wrong_rejected": 52,
+     "accuracy_all": 0.96875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4666666666666667,
+      0.8797653958944281,
+      0.8891129032258065,
+      0.902229845626072
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 1851,
+     "rejected": 197,
+     "coverage": 0.90380859375,
+     "accepted_wrong": 21,
+     "risk_accepted": 0.011345218800648298,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 145,
+     "wrong_rejected": 52,
+     "accuracy_all": 0.96435546875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5777777777777777,
+      0.9149560117302052,
+      0.9233870967741935,
+      0.9048027444253859
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 1736,
+     "rejected": 312,
+     "coverage": 0.84765625,
+     "accepted_wrong": 37,
+     "risk_accepted": 0.02131336405529954,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 208,
+     "wrong_rejected": 104,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5777777777777777,
+      0.8504398826979472,
+      0.8467741935483871,
+      0.8576329331046312
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 1652,
+     "rejected": 396,
+     "coverage": 0.806640625,
+     "accepted_wrong": 121,
+     "risk_accepted": 0.07324455205811138,
+     "accepted_false_healthy": 10,
+     "correct_rejected": 250,
+     "wrong_rejected": 146,
+     "accuracy_all": 0.86962890625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5777777777777777,
+      0.7917888563049853,
+      0.7923387096774194,
+      0.8259005145797599
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 1843,
+     "rejected": 205,
+     "coverage": 0.89990234375,
+     "accepted_wrong": 7,
+     "risk_accepted": 0.0037981551817688553,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 159,
+     "wrong_rejected": 46,
+     "accuracy_all": 0.97412109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9002932551319648,
+      0.905241935483871,
+      0.9133790737564322
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 1811,
+     "rejected": 237,
+     "coverage": 0.88427734375,
+     "accepted_wrong": 14,
+     "risk_accepted": 0.007730535615681944,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 180,
+     "wrong_rejected": 57,
+     "accuracy_all": 0.96533203125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.35555555555555557,
+      0.8533724340175953,
+      0.8891129032258065,
+      0.9116638078902229
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 1712,
+     "rejected": 336,
+     "coverage": 0.8359375,
+     "accepted_wrong": 31,
+     "risk_accepted": 0.018107476635514017,
+     "accepted_false_healthy": 3,
+     "correct_rejected": 226,
+     "wrong_rejected": 110,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.2222222222222222,
+      0.7214076246334311,
+      0.8104838709677419,
+      0.9039451114922813
+     ]
+    }
+   },
+   "flags": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 43,
+     "risk_accepted": 0.02099609375,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 2042,
+     "rejected": 6,
+     "coverage": 0.9970703125,
+     "accepted_wrong": 43,
+     "risk_accepted": 0.021057786483839373,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 6,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      0.9948542024013722
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 43,
+     "risk_accepted": 0.02099609375,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 45,
+     "risk_accepted": 0.02197265625,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 66,
+     "risk_accepted": 0.0322265625,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 600,
+     "rejected": 1448,
+     "coverage": 0.29296875,
+     "accepted_wrong": 16,
+     "risk_accepted": 0.02666666666666667,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 1422,
+     "wrong_rejected": 26,
+     "accuracy_all": 0.9794921875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4,
+      0.3343108504398827,
+      0.3951612903225806,
+      0.2332761578044597
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 405,
+     "rejected": 1643,
+     "coverage": 0.19775390625,
+     "accepted_wrong": 12,
+     "risk_accepted": 0.02962962962962963,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1609,
+     "wrong_rejected": 34,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.3111111111111111,
+      0.2434017595307918,
+      0.2157258064516129,
+      0.17238421955403088
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 224,
+     "rejected": 1824,
+     "coverage": 0.109375,
+     "accepted_wrong": 7,
+     "risk_accepted": 0.03125,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1776,
+     "wrong_rejected": 48,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.13333333333333333,
+      0.11436950146627566,
+      0.10685483870967742,
+      0.10806174957118353
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 2003,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1993,
+     "wrong_rejected": 55,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1984,
+     "wrong_rejected": 64,
+     "accuracy_all": 0.96875,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 288,
+     "rejected": 1760,
+     "coverage": 0.140625,
+     "accepted_wrong": 6,
+     "risk_accepted": 0.020833333333333332,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1693,
+     "wrong_rejected": 67,
+     "accuracy_all": 0.96435546875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.13333333333333333,
+      0.13196480938416422,
+      0.14516129032258066,
+      0.14150943396226415
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1907,
+     "wrong_rejected": 141,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1781,
+     "wrong_rejected": 267,
+     "accuracy_all": 0.86962890625,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 53,
+     "risk_accepted": 0.02587890625,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97412109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 71,
+     "risk_accepted": 0.03466796875,
+     "accepted_false_healthy": 9,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.96533203125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 141,
+     "risk_accepted": 0.06884765625,
+     "accepted_false_healthy": 9,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "flags+margin": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 1852,
+     "rejected": 196,
+     "coverage": 0.904296875,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 161,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9296187683284457,
+      0.9173387096774194,
+      0.9073756432246999
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 1845,
+     "rejected": 203,
+     "coverage": 0.90087890625,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004336043360433604,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 168,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9296187683284457,
+      0.9173387096774194,
+      0.9013722126929674
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 1852,
+     "rejected": 196,
+     "coverage": 0.904296875,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004319654427645789,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 161,
+     "wrong_rejected": 35,
+     "accuracy_all": 0.97900390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9296187683284457,
+      0.9173387096774194,
+      0.9073756432246999
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 1854,
+     "rejected": 194,
+     "coverage": 0.9052734375,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004314994606256742,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 157,
+     "wrong_rejected": 37,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9266862170087976,
+      0.9233870967741935,
+      0.9073756432246999
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 1825,
+     "rejected": 223,
+     "coverage": 0.89111328125,
+     "accepted_wrong": 15,
+     "risk_accepted": 0.00821917808219178,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 172,
+     "wrong_rejected": 51,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.24444444444444444,
+      0.8944281524926686,
+      0.9475806451612904,
+      0.8910806174957119
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 529,
+     "rejected": 1519,
+     "coverage": 0.25830078125,
+     "accepted_wrong": 2,
+     "risk_accepted": 0.003780718336483932,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1479,
+     "wrong_rejected": 40,
+     "accuracy_all": 0.9794921875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.2,
+      0.31378299120234604,
+      0.3487903225806452,
+      0.2058319039451115
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 346,
+     "rejected": 1702,
+     "coverage": 0.1689453125,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1656,
+     "wrong_rejected": 46,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.17777777777777778,
+      0.21700879765395895,
+      0.17338709677419356,
+      0.15265866209262435
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 198,
+     "rejected": 1850,
+     "coverage": 0.0966796875,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1795,
+     "wrong_rejected": 55,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.08888888888888889,
+      0.0967741935483871,
+      0.0907258064516129,
+      0.09948542024013722
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 2003,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1993,
+     "wrong_rejected": 55,
+     "accuracy_all": 0.97314453125,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1984,
+     "wrong_rejected": 64,
+     "accuracy_all": 0.96875,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 264,
+     "rejected": 1784,
+     "coverage": 0.12890625,
+     "accepted_wrong": 2,
+     "risk_accepted": 0.007575757575757576,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1713,
+     "wrong_rejected": 71,
+     "accuracy_all": 0.96435546875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.06666666666666667,
+      0.12609970674486803,
+      0.1350806451612903,
+      0.12950257289879932
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1907,
+     "wrong_rejected": 141,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1781,
+     "wrong_rejected": 267,
+     "accuracy_all": 0.86962890625,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 1843,
+     "rejected": 205,
+     "coverage": 0.89990234375,
+     "accepted_wrong": 7,
+     "risk_accepted": 0.0037981551817688553,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 159,
+     "wrong_rejected": 46,
+     "accuracy_all": 0.97412109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4888888888888889,
+      0.9002932551319648,
+      0.905241935483871,
+      0.9133790737564322
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 1811,
+     "rejected": 237,
+     "coverage": 0.88427734375,
+     "accepted_wrong": 14,
+     "risk_accepted": 0.007730535615681944,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 180,
+     "wrong_rejected": 57,
+     "accuracy_all": 0.96533203125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.35555555555555557,
+      0.8533724340175953,
+      0.8891129032258065,
+      0.9116638078902229
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 1712,
+     "rejected": 336,
+     "coverage": 0.8359375,
+     "accepted_wrong": 31,
+     "risk_accepted": 0.018107476635514017,
+     "accepted_false_healthy": 3,
+     "correct_rejected": 226,
+     "wrong_rejected": 110,
+     "accuracy_all": 0.93115234375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.2222222222222222,
+      0.7214076246334311,
+      0.8104838709677419,
+      0.9039451114922813
+     ]
+    }
+   }
+  },
+  "test": {
+   "none": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 45,
+     "risk_accepted": 0.02197265625,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 46,
+     "risk_accepted": 0.0224609375,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 45,
+     "risk_accepted": 0.02197265625,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 45,
+     "risk_accepted": 0.02197265625,
+     "accepted_false_healthy": 3,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 66,
+     "risk_accepted": 0.0322265625,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 45,
+     "risk_accepted": 0.02197265625,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 49,
+     "risk_accepted": 0.02392578125,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97607421875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 58,
+     "risk_accepted": 0.0283203125,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9716796875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 47,
+     "risk_accepted": 0.02294921875,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97705078125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 61,
+     "risk_accepted": 0.02978515625,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97021484375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 76,
+     "risk_accepted": 0.037109375,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.962890625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 67,
+     "risk_accepted": 0.03271484375,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.96728515625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 161,
+     "risk_accepted": 0.07861328125,
+     "accepted_false_healthy": 6,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.92138671875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 301,
+     "risk_accepted": 0.14697265625,
+     "accepted_false_healthy": 20,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.85302734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 52,
+     "risk_accepted": 0.025390625,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.974609375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 74,
+     "risk_accepted": 0.0361328125,
+     "accepted_false_healthy": 5,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9638671875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 146,
+     "risk_accepted": 0.0712890625,
+     "accepted_false_healthy": 12,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9287109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    }
+   },
+   "conf": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 1823,
+     "rejected": 225,
+     "coverage": 0.89013671875,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 180,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5,
+      0.8621700879765396,
+      0.9054820415879017,
+      0.9138240574506283
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 1823,
+     "rejected": 225,
+     "coverage": 0.89013671875,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 179,
+     "wrong_rejected": 46,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5,
+      0.8621700879765396,
+      0.9054820415879017,
+      0.9138240574506283
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 1823,
+     "rejected": 225,
+     "coverage": 0.89013671875,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 180,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5,
+      0.8621700879765396,
+      0.9054820415879017,
+      0.9138240574506283
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 1824,
+     "rejected": 224,
+     "coverage": 0.890625,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 179,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5,
+      0.8533724340175953,
+      0.9149338374291115,
+      0.9129263913824057
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 1817,
+     "rejected": 231,
+     "coverage": 0.88720703125,
+     "accepted_wrong": 4,
+     "risk_accepted": 0.002201430930104568,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 169,
+     "wrong_rejected": 62,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.34375,
+      0.8387096774193549,
+      0.9338374291115312,
+      0.9111310592459605
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 1810,
+     "rejected": 238,
+     "coverage": 0.8837890625,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 193,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.515625,
+      0.8533724340175953,
+      0.8827977315689981,
+      0.914721723518851
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 1805,
+     "rejected": 243,
+     "coverage": 0.88134765625,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 194,
+     "wrong_rejected": 49,
+     "accuracy_all": 0.97607421875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5,
+      0.8504398826979472,
+      0.8733459357277883,
+      0.9165170556552962
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 1788,
+     "rejected": 260,
+     "coverage": 0.873046875,
+     "accepted_wrong": 1,
+     "risk_accepted": 0.0005592841163310962,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 203,
+     "wrong_rejected": 57,
+     "accuracy_all": 0.9716796875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.46875,
+      0.8387096774193549,
+      0.8657844990548205,
+      0.9102333931777379
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 1823,
+     "rejected": 225,
+     "coverage": 0.89013671875,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 178,
+     "wrong_rejected": 47,
+     "accuracy_all": 0.97705078125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5,
+      0.8592375366568915,
+      0.9054820415879017,
+      0.914721723518851
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 1785,
+     "rejected": 263,
+     "coverage": 0.87158203125,
+     "accepted_wrong": 2,
+     "risk_accepted": 0.0011204481792717086,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 204,
+     "wrong_rejected": 59,
+     "accuracy_all": 0.97021484375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.453125,
+      0.8328445747800587,
+      0.8752362948960303,
+      0.9057450628366248
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 1761,
+     "rejected": 287,
+     "coverage": 0.85986328125,
+     "accepted_wrong": 6,
+     "risk_accepted": 0.0034071550255536627,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 217,
+     "wrong_rejected": 70,
+     "accuracy_all": 0.962890625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.4375,
+      0.8123167155425219,
+      0.8601134215500945,
+      0.8985637342908438
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 1799,
+     "rejected": 249,
+     "coverage": 0.87841796875,
+     "accepted_wrong": 6,
+     "risk_accepted": 0.0033351862145636463,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 188,
+     "wrong_rejected": 61,
+     "accuracy_all": 0.96728515625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.484375,
+      0.8240469208211144,
+      0.9149338374291115,
+      0.900359066427289
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 1675,
+     "rejected": 373,
+     "coverage": 0.81787109375,
+     "accepted_wrong": 47,
+     "risk_accepted": 0.028059701492537312,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 259,
+     "wrong_rejected": 114,
+     "accuracy_all": 0.92138671875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.484375,
+      0.7800586510263929,
+      0.8109640831758034,
+      0.8518850987432675
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 1603,
+     "rejected": 445,
+     "coverage": 0.78271484375,
+     "accepted_wrong": 123,
+     "risk_accepted": 0.07673112913287586,
+     "accepted_false_healthy": 8,
+     "correct_rejected": 267,
+     "wrong_rejected": 178,
+     "accuracy_all": 0.85302734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.546875,
+      0.7448680351906158,
+      0.7731568998109641,
+      0.8123877917414721
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 1797,
+     "rejected": 251,
+     "coverage": 0.87744140625,
+     "accepted_wrong": 1,
+     "risk_accepted": 0.0005564830272676684,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 200,
+     "wrong_rejected": 51,
+     "accuracy_all": 0.974609375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.46875,
+      0.8328445747800587,
+      0.8865784499054821,
+      0.9102333931777379
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 1749,
+     "rejected": 299,
+     "coverage": 0.85400390625,
+     "accepted_wrong": 5,
+     "risk_accepted": 0.002858776443682104,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 230,
+     "wrong_rejected": 69,
+     "accuracy_all": 0.9638671875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.375,
+      0.7888563049853372,
+      0.8487712665406427,
+      0.9039497307001796
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 1659,
+     "rejected": 389,
+     "coverage": 0.81005859375,
+     "accepted_wrong": 32,
+     "risk_accepted": 0.019288728149487643,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 275,
+     "wrong_rejected": 114,
+     "accuracy_all": 0.9287109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.25,
+      0.6392961876832844,
+      0.7939508506616257,
+      0.9021543985637342
+     ]
+    }
+   },
+   "conf_superseded_q01": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 1833,
+     "rejected": 215,
+     "coverage": 0.89501953125,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 170,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8621700879765396,
+      0.9149338374291115,
+      0.9165170556552962
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 1834,
+     "rejected": 214,
+     "coverage": 0.8955078125,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 168,
+     "wrong_rejected": 46,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8621700879765396,
+      0.9168241965973535,
+      0.9165170556552962
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 1833,
+     "rejected": 215,
+     "coverage": 0.89501953125,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 170,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8621700879765396,
+      0.9149338374291115,
+      0.9165170556552962
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 1830,
+     "rejected": 218,
+     "coverage": 0.8935546875,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 173,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8533724340175953,
+      0.9168241965973535,
+      0.9156193895870736
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 1822,
+     "rejected": 226,
+     "coverage": 0.8896484375,
+     "accepted_wrong": 5,
+     "risk_accepted": 0.0027442371020856204,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 165,
+     "wrong_rejected": 61,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.375,
+      0.841642228739003,
+      0.9357277882797732,
+      0.9120287253141831
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 1817,
+     "rejected": 231,
+     "coverage": 0.88720703125,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 186,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8533724340175953,
+      0.8922495274102079,
+      0.9156193895870736
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 1809,
+     "rejected": 239,
+     "coverage": 0.88330078125,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 190,
+     "wrong_rejected": 49,
+     "accuracy_all": 0.97607421875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8504398826979472,
+      0.8771266540642723,
+      0.9165170556552962
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 1796,
+     "rejected": 252,
+     "coverage": 0.876953125,
+     "accepted_wrong": 1,
+     "risk_accepted": 0.0005567928730512249,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 195,
+     "wrong_rejected": 57,
+     "accuracy_all": 0.9716796875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5,
+      0.8387096774193549,
+      0.8752362948960303,
+      0.9111310592459605
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 1830,
+     "rejected": 218,
+     "coverage": 0.8935546875,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 171,
+     "wrong_rejected": 47,
+     "accuracy_all": 0.97705078125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8592375366568915,
+      0.9130434782608695,
+      0.9156193895870736
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 1795,
+     "rejected": 253,
+     "coverage": 0.87646484375,
+     "accepted_wrong": 2,
+     "risk_accepted": 0.0011142061281337048,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 194,
+     "wrong_rejected": 59,
+     "accuracy_all": 0.97021484375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.515625,
+      0.8328445747800587,
+      0.8809073724007561,
+      0.9084380610412927
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 1770,
+     "rejected": 278,
+     "coverage": 0.8642578125,
+     "accepted_wrong": 6,
+     "risk_accepted": 0.003389830508474576,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 208,
+     "wrong_rejected": 70,
+     "accuracy_all": 0.962890625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.46875,
+      0.8123167155425219,
+      0.8695652173913043,
+      0.900359066427289
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 1810,
+     "rejected": 238,
+     "coverage": 0.8837890625,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004419889502762431,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 179,
+     "wrong_rejected": 59,
+     "accuracy_all": 0.96728515625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8240469208211144,
+      0.9243856332703214,
+      0.9030520646319569
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 1690,
+     "rejected": 358,
+     "coverage": 0.8251953125,
+     "accepted_wrong": 47,
+     "risk_accepted": 0.027810650887573965,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 244,
+     "wrong_rejected": 114,
+     "accuracy_all": 0.92138671875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.7800586510263929,
+      0.8223062381852552,
+      0.8572710951526032
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 1616,
+     "rejected": 432,
+     "coverage": 0.7890625,
+     "accepted_wrong": 126,
+     "risk_accepted": 0.07797029702970297,
+     "accepted_false_healthy": 8,
+     "correct_rejected": 257,
+     "wrong_rejected": 175,
+     "accuracy_all": 0.85302734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.546875,
+      0.7448680351906158,
+      0.782608695652174,
+      0.8195691202872532
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 1807,
+     "rejected": 241,
+     "coverage": 0.88232421875,
+     "accepted_wrong": 1,
+     "risk_accepted": 0.0005534034311012728,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 190,
+     "wrong_rejected": 51,
+     "accuracy_all": 0.974609375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5,
+      0.8328445747800587,
+      0.8979206049149339,
+      0.9120287253141831
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 1756,
+     "rejected": 292,
+     "coverage": 0.857421875,
+     "accepted_wrong": 5,
+     "risk_accepted": 0.0028473804100227792,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 223,
+     "wrong_rejected": 69,
+     "accuracy_all": 0.9638671875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.40625,
+      0.7888563049853372,
+      0.8563327032136105,
+      0.9048473967684022
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 1668,
+     "rejected": 380,
+     "coverage": 0.814453125,
+     "accepted_wrong": 37,
+     "risk_accepted": 0.022182254196642687,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 271,
+     "wrong_rejected": 109,
+     "accuracy_all": 0.9287109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.296875,
+      0.6451612903225806,
+      0.7977315689981096,
+      0.9039497307001796
+     ]
+    }
+   },
+   "margin": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 1833,
+     "rejected": 215,
+     "coverage": 0.89501953125,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 170,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8621700879765396,
+      0.9149338374291115,
+      0.9165170556552962
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 1834,
+     "rejected": 214,
+     "coverage": 0.8955078125,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 168,
+     "wrong_rejected": 46,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8621700879765396,
+      0.9168241965973535,
+      0.9165170556552962
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 1833,
+     "rejected": 215,
+     "coverage": 0.89501953125,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 170,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8621700879765396,
+      0.9149338374291115,
+      0.9165170556552962
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 1830,
+     "rejected": 218,
+     "coverage": 0.8935546875,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 173,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8533724340175953,
+      0.9168241965973535,
+      0.9156193895870736
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 1822,
+     "rejected": 226,
+     "coverage": 0.8896484375,
+     "accepted_wrong": 5,
+     "risk_accepted": 0.0027442371020856204,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 165,
+     "wrong_rejected": 61,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.375,
+      0.841642228739003,
+      0.9357277882797732,
+      0.9120287253141831
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 1817,
+     "rejected": 231,
+     "coverage": 0.88720703125,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 186,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8533724340175953,
+      0.8922495274102079,
+      0.9156193895870736
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 1809,
+     "rejected": 239,
+     "coverage": 0.88330078125,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 190,
+     "wrong_rejected": 49,
+     "accuracy_all": 0.97607421875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8504398826979472,
+      0.8771266540642723,
+      0.9165170556552962
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 1796,
+     "rejected": 252,
+     "coverage": 0.876953125,
+     "accepted_wrong": 1,
+     "risk_accepted": 0.0005567928730512249,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 195,
+     "wrong_rejected": 57,
+     "accuracy_all": 0.9716796875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5,
+      0.8387096774193549,
+      0.8752362948960303,
+      0.9111310592459605
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 1830,
+     "rejected": 218,
+     "coverage": 0.8935546875,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 171,
+     "wrong_rejected": 47,
+     "accuracy_all": 0.97705078125,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8592375366568915,
+      0.9130434782608695,
+      0.9156193895870736
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 1797,
+     "rejected": 251,
+     "coverage": 0.87744140625,
+     "accepted_wrong": 2,
+     "risk_accepted": 0.0011129660545353367,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 192,
+     "wrong_rejected": 59,
+     "accuracy_all": 0.97021484375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.515625,
+      0.8328445747800587,
+      0.8846880907372401,
+      0.9084380610412927
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 1771,
+     "rejected": 277,
+     "coverage": 0.86474609375,
+     "accepted_wrong": 6,
+     "risk_accepted": 0.0033879164313946925,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 207,
+     "wrong_rejected": 70,
+     "accuracy_all": 0.962890625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.46875,
+      0.8123167155425219,
+      0.8714555765595463,
+      0.900359066427289
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 1810,
+     "rejected": 238,
+     "coverage": 0.8837890625,
+     "accepted_wrong": 8,
+     "risk_accepted": 0.004419889502762431,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 179,
+     "wrong_rejected": 59,
+     "accuracy_all": 0.96728515625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8240469208211144,
+      0.9243856332703214,
+      0.9030520646319569
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 1690,
+     "rejected": 358,
+     "coverage": 0.8251953125,
+     "accepted_wrong": 47,
+     "risk_accepted": 0.027810650887573965,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 244,
+     "wrong_rejected": 114,
+     "accuracy_all": 0.92138671875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.7800586510263929,
+      0.8223062381852552,
+      0.8572710951526032
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 1617,
+     "rejected": 431,
+     "coverage": 0.78955078125,
+     "accepted_wrong": 126,
+     "risk_accepted": 0.07792207792207792,
+     "accepted_false_healthy": 8,
+     "correct_rejected": 256,
+     "wrong_rejected": 175,
+     "accuracy_all": 0.85302734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.546875,
+      0.7448680351906158,
+      0.7844990548204159,
+      0.8195691202872532
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 1807,
+     "rejected": 241,
+     "coverage": 0.88232421875,
+     "accepted_wrong": 1,
+     "risk_accepted": 0.0005534034311012728,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 190,
+     "wrong_rejected": 51,
+     "accuracy_all": 0.974609375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.5,
+      0.8328445747800587,
+      0.8979206049149339,
+      0.9120287253141831
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 1757,
+     "rejected": 291,
+     "coverage": 0.85791015625,
+     "accepted_wrong": 5,
+     "risk_accepted": 0.0028457598178713715,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 222,
+     "wrong_rejected": 69,
+     "accuracy_all": 0.9638671875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.40625,
+      0.7888563049853372,
+      0.8563327032136105,
+      0.9057450628366248
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 1669,
+     "rejected": 379,
+     "coverage": 0.81494140625,
+     "accepted_wrong": 38,
+     "risk_accepted": 0.022768124625524265,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 271,
+     "wrong_rejected": 108,
+     "accuracy_all": 0.9287109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.3125,
+      0.6451612903225806,
+      0.7977315689981096,
+      0.9039497307001796
+     ]
+    }
+   },
+   "flags": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 2037,
+     "rejected": 11,
+     "coverage": 0.99462890625,
+     "accepted_wrong": 45,
+     "risk_accepted": 0.022091310751104567,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 11,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.984375,
+      0.9912023460410557,
+      0.994328922495274,
+      0.9964093357271095
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 2035,
+     "rejected": 13,
+     "coverage": 0.99365234375,
+     "accepted_wrong": 46,
+     "risk_accepted": 0.022604422604422605,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 13,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.984375,
+      0.9912023460410557,
+      0.994328922495274,
+      0.9946140035906643
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 2037,
+     "rejected": 11,
+     "coverage": 0.99462890625,
+     "accepted_wrong": 45,
+     "risk_accepted": 0.022091310751104567,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 11,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.984375,
+      0.9912023460410557,
+      0.994328922495274,
+      0.9964093357271095
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 45,
+     "risk_accepted": 0.02197265625,
+     "accepted_false_healthy": 3,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 2048,
+     "rejected": 0,
+     "coverage": 1.0,
+     "accepted_wrong": 66,
+     "risk_accepted": 0.0322265625,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 0,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 611,
+     "rejected": 1437,
+     "coverage": 0.29833984375,
+     "accepted_wrong": 16,
+     "risk_accepted": 0.02618657937806874,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 1408,
+     "wrong_rejected": 29,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.3125,
+      0.31378299120234604,
+      0.42344045368620037,
+      0.2333931777378815
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 428,
+     "rejected": 1620,
+     "coverage": 0.208984375,
+     "accepted_wrong": 16,
+     "risk_accepted": 0.037383177570093455,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 1587,
+     "wrong_rejected": 33,
+     "accuracy_all": 0.97607421875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.25,
+      0.24633431085043989,
+      0.24763705103969755,
+      0.17684021543985637
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 191,
+     "rejected": 1857,
+     "coverage": 0.09326171875,
+     "accepted_wrong": 5,
+     "risk_accepted": 0.02617801047120419,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1804,
+     "wrong_rejected": 53,
+     "accuracy_all": 0.9716796875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.140625,
+      0.07038123167155426,
+      0.0661625708884688,
+      0.11041292639138241
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 2001,
+     "wrong_rejected": 47,
+     "accuracy_all": 0.97705078125,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1987,
+     "wrong_rejected": 61,
+     "accuracy_all": 0.97021484375,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1972,
+     "wrong_rejected": 76,
+     "accuracy_all": 0.962890625,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 275,
+     "rejected": 1773,
+     "coverage": 0.13427734375,
+     "accepted_wrong": 5,
+     "risk_accepted": 0.01818181818181818,
+     "accepted_false_healthy": 1,
+     "correct_rejected": 1711,
+     "wrong_rejected": 62,
+     "accuracy_all": 0.96728515625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.1875,
+      0.10557184750733138,
+      0.13988657844990549,
+      0.13734290843806105
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1887,
+     "wrong_rejected": 161,
+     "accuracy_all": 0.92138671875,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1747,
+     "wrong_rejected": 301,
+     "accuracy_all": 0.85302734375,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 2037,
+     "rejected": 11,
+     "coverage": 0.99462890625,
+     "accepted_wrong": 52,
+     "risk_accepted": 0.025527736867943053,
+     "accepted_false_healthy": 4,
+     "correct_rejected": 11,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.974609375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.984375,
+      0.9912023460410557,
+      0.994328922495274,
+      0.9964093357271095
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 2037,
+     "rejected": 11,
+     "coverage": 0.99462890625,
+     "accepted_wrong": 74,
+     "risk_accepted": 0.03632793323514973,
+     "accepted_false_healthy": 5,
+     "correct_rejected": 11,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9638671875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.984375,
+      0.9912023460410557,
+      0.994328922495274,
+      0.9964093357271095
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 2037,
+     "rejected": 11,
+     "coverage": 0.99462890625,
+     "accepted_wrong": 146,
+     "risk_accepted": 0.07167403043691703,
+     "accepted_false_healthy": 12,
+     "correct_rejected": 11,
+     "wrong_rejected": 0,
+     "accuracy_all": 0.9287109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.984375,
+      0.9912023460410557,
+      0.994328922495274,
+      0.9964093357271095
+     ]
+    }
+   },
+   "flags+margin": {
+    "clean": {
+     "windows": 2048,
+     "accepted": 1822,
+     "rejected": 226,
+     "coverage": 0.8896484375,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 181,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.515625,
+      0.8533724340175953,
+      0.9092627599243857,
+      0.9129263913824057
+     ]
+    },
+    "gain2": {
+     "windows": 2048,
+     "accepted": 1822,
+     "rejected": 226,
+     "coverage": 0.8896484375,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 180,
+     "wrong_rejected": 46,
+     "accuracy_all": 0.9775390625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.515625,
+      0.8533724340175953,
+      0.9111531190926276,
+      0.9120287253141831
+     ]
+    },
+    "offset": {
+     "windows": 2048,
+     "accepted": 1822,
+     "rejected": 226,
+     "coverage": 0.8896484375,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 181,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.515625,
+      0.8533724340175953,
+      0.9092627599243857,
+      0.9129263913824057
+     ]
+    },
+    "snr20": {
+     "windows": 2048,
+     "accepted": 1830,
+     "rejected": 218,
+     "coverage": 0.8935546875,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 173,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.53125,
+      0.8533724340175953,
+      0.9168241965973535,
+      0.9156193895870736
+     ]
+    },
+    "snr10": {
+     "windows": 2048,
+     "accepted": 1822,
+     "rejected": 226,
+     "coverage": 0.8896484375,
+     "accepted_wrong": 5,
+     "risk_accepted": 0.0027442371020856204,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 165,
+     "wrong_rejected": 61,
+     "accuracy_all": 0.9677734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.375,
+      0.841642228739003,
+      0.9357277882797732,
+      0.9120287253141831
+     ]
+    },
+    "clip50": {
+     "windows": 2048,
+     "accepted": 514,
+     "rejected": 1534,
+     "coverage": 0.2509765625,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1489,
+     "wrong_rejected": 45,
+     "accuracy_all": 0.97802734375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.15625,
+      0.2668621700879765,
+      0.3610586011342155,
+      0.1992818671454219
+     ]
+    },
+    "clip30": {
+     "windows": 2048,
+     "accepted": 340,
+     "rejected": 1708,
+     "coverage": 0.166015625,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1659,
+     "wrong_rejected": 49,
+     "accuracy_all": 0.97607421875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.109375,
+      0.19941348973607037,
+      0.1776937618147448,
+      0.15350089766606823
+     ]
+    },
+    "clip10": {
+     "windows": 2048,
+     "accepted": 169,
+     "rejected": 1879,
+     "coverage": 0.08251953125,
+     "accepted_wrong": 1,
+     "risk_accepted": 0.005917159763313609,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1822,
+     "wrong_rejected": 57,
+     "accuracy_all": 0.9716796875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.09375,
+      0.06158357771260997,
+      0.04914933837429111,
+      0.10412926391382406
+     ]
+    },
+    "bits12": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 2001,
+     "wrong_rejected": 47,
+     "accuracy_all": 0.97705078125,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "bits8": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1987,
+     "wrong_rejected": 61,
+     "accuracy_all": 0.97021484375,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "bits4": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1972,
+     "wrong_rejected": 76,
+     "accuracy_all": 0.962890625,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "hold4": {
+     "windows": 2048,
+     "accepted": 242,
+     "rejected": 1806,
+     "coverage": 0.1181640625,
+     "accepted_wrong": 0,
+     "risk_accepted": 0.0,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1739,
+     "wrong_rejected": 67,
+     "accuracy_all": 0.96728515625,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.078125,
+      0.08797653958944282,
+      0.11909262759924386,
+      0.12926391382405744
+     ]
+    },
+    "hold16": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1887,
+     "wrong_rejected": 161,
+     "accuracy_all": 0.92138671875,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "hold31": {
+     "windows": 2048,
+     "accepted": 0,
+     "rejected": 2048,
+     "coverage": 0.0,
+     "accepted_wrong": 0,
+     "risk_accepted": null,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 1747,
+     "wrong_rejected": 301,
+     "accuracy_all": 0.85302734375,
+     "zero_accepted": true,
+     "coverage_per_class": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+     ]
+    },
+    "lag8": {
+     "windows": 2048,
+     "accepted": 1796,
+     "rejected": 252,
+     "coverage": 0.876953125,
+     "accepted_wrong": 1,
+     "risk_accepted": 0.0005567928730512249,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 201,
+     "wrong_rejected": 51,
+     "accuracy_all": 0.974609375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.484375,
+      0.8240469208211144,
+      0.8922495274102079,
+      0.9084380610412927
+     ]
+    },
+    "lag32": {
+     "windows": 2048,
+     "accepted": 1746,
+     "rejected": 302,
+     "coverage": 0.8525390625,
+     "accepted_wrong": 5,
+     "risk_accepted": 0.0028636884306987398,
+     "accepted_false_healthy": 0,
+     "correct_rejected": 233,
+     "wrong_rejected": 69,
+     "accuracy_all": 0.9638671875,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.390625,
+      0.7800586510263929,
+      0.8506616257088847,
+      0.9021543985637342
+     ]
+    },
+    "lag128": {
+     "windows": 2048,
+     "accepted": 1659,
+     "rejected": 389,
+     "coverage": 0.81005859375,
+     "accepted_wrong": 38,
+     "risk_accepted": 0.022905364677516575,
+     "accepted_false_healthy": 2,
+     "correct_rejected": 281,
+     "wrong_rejected": 108,
+     "accuracy_all": 0.9287109375,
+     "zero_accepted": false,
+     "coverage_per_class": [
+      0.3125,
+      0.6363636363636364,
+      0.7920604914933838,
+      0.900359066427289
+     ]
+    }
+   }
+  }
+ },
+ "bursts": {
+  "val": {
+   "none": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 1,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 2,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 10,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 3,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    }
+   },
+   "conf": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 18,
+     "rejected_fraction_in_burst": 0.08333333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 2
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 16
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 11,
+     "rejected_fraction_in_burst": 0.041666666666666664,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 1,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 3
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 2
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 4,
+     "rejected_fraction_in_burst": 0.14166666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 12,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 7
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 10,
+     "rejected_fraction_in_burst": 0.125,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 6
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 9
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 14,
+     "rejected_fraction_in_burst": 0.058333333333333334,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 2
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 11,
+     "recovered": 6,
+     "recovery_delay_max": 3,
+     "rejected_after_burst": 21
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 8,
+     "rejected_fraction_in_burst": 0.24166666666666667,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 3
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 8,
+     "rejected_fraction_in_burst": 0.2,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 9,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 10
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 18,
+     "rejected_fraction_in_burst": 0.025,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 5,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 3
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 2
+    }
+   },
+   "conf_superseded_q01": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 18,
+     "rejected_fraction_in_burst": 0.08333333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 5,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 2
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 16
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 11,
+     "rejected_fraction_in_burst": 0.041666666666666664,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 1,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 3
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 4,
+     "rejected_fraction_in_burst": 0.13333333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 9,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 7
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 10,
+     "rejected_fraction_in_burst": 0.125,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 6
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 9
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 14,
+     "rejected_fraction_in_burst": 0.058333333333333334,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 1
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 11,
+     "recovered": 6,
+     "recovery_delay_max": 3,
+     "rejected_after_burst": 21
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 8,
+     "rejected_fraction_in_burst": 0.23333333333333334,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 3
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 8,
+     "rejected_fraction_in_burst": 0.18333333333333332,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 8,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 10
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 18,
+     "rejected_fraction_in_burst": 0.025,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 5,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 3
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    }
+   },
+   "margin": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 18,
+     "rejected_fraction_in_burst": 0.08333333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 5,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 2
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 16
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 11,
+     "rejected_fraction_in_burst": 0.041666666666666664,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 1,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 3
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 4,
+     "rejected_fraction_in_burst": 0.13333333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 9,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 7
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 10,
+     "rejected_fraction_in_burst": 0.125,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 6
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 9
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 14,
+     "rejected_fraction_in_burst": 0.058333333333333334,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 1
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 11,
+     "recovered": 6,
+     "recovery_delay_max": 3,
+     "rejected_after_burst": 21
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 8,
+     "rejected_fraction_in_burst": 0.23333333333333334,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 3
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 8,
+     "rejected_fraction_in_burst": 0.18333333333333332,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 8,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 10
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 18,
+     "rejected_fraction_in_burst": 0.025,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 5,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 3
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    }
+   },
+   "flags": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 5,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.75,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 16,
+     "rejected_fraction_in_burst": 0.725,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 1,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 1,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 3,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    }
+   },
+   "flags+margin": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 18,
+     "rejected_fraction_in_burst": 0.7583333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 5,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 2
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 16
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 16,
+     "rejected_fraction_in_burst": 0.7416666666666667,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 1,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 3
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 10,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 7
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 6
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 9
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 1
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 12,
+     "recovered": 6,
+     "recovery_delay_max": 3,
+     "rejected_after_burst": 21
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 3
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 8,
+     "rejected_fraction_in_burst": 0.18333333333333332,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 8,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 11
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 18,
+     "rejected_fraction_in_burst": 0.025,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 5,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 4
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    }
+   }
+  },
+  "test": {
+   "none": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 8,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 3,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 2,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 2,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 1,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 19,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 3,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 11,
+     "accepted_false_healthy_in_burst": 5,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    }
+   },
+   "conf": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 13,
+     "rejected_fraction_in_burst": 0.30833333333333335,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 16,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 15
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 10
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 9,
+     "rejected_fraction_in_burst": 0.1,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 5,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 5
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 11,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 24
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 15,
+     "rejected_fraction_in_burst": 0.08333333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 5
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.2222222222222222,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 16,
+     "recovered": 6,
+     "recovery_delay_max": 11,
+     "rejected_after_burst": 41
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 19,
+     "rejected_fraction_in_burst": 0.041666666666666664,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 1,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 11,
+     "recovered": 6,
+     "recovery_delay_max": 15,
+     "rejected_after_burst": 32
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 14,
+     "rejected_fraction_in_burst": 0.06666666666666667,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 10,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 17
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 4,
+     "rejected_fraction_in_burst": 0.425,
+     "accepted_wrong_in_burst": 3,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 15,
+     "recovered": 6,
+     "recovery_delay_max": 5,
+     "rejected_after_burst": 14
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 9,
+     "recovered": 6,
+     "recovery_delay_max": 3,
+     "rejected_after_burst": 25
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 5,
+     "onset_delay_max": 6,
+     "rejected_fraction_in_burst": 0.35,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 19,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 25
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.2222222222222222,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 17
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 6,
+     "rejected_fraction_in_burst": 0.23333333333333334,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 11,
+     "recovered": 6,
+     "recovery_delay_max": 5,
+     "rejected_after_burst": 16
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 2,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 6
+    }
+   },
+   "conf_superseded_q01": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 13,
+     "rejected_fraction_in_burst": 0.3,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 16,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 15
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 10
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 9,
+     "rejected_fraction_in_burst": 0.1,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 5
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 9,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 24
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 15,
+     "rejected_fraction_in_burst": 0.08333333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 5
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.2222222222222222,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 15,
+     "recovered": 6,
+     "recovery_delay_max": 11,
+     "rejected_after_burst": 38
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 19,
+     "rejected_fraction_in_burst": 0.041666666666666664,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 1,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 11,
+     "recovered": 6,
+     "recovery_delay_max": 9,
+     "rejected_after_burst": 28
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 14,
+     "rejected_fraction_in_burst": 0.06666666666666667,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 8,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 16
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 4,
+     "rejected_fraction_in_burst": 0.4,
+     "accepted_wrong_in_burst": 3,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 13,
+     "recovered": 6,
+     "recovery_delay_max": 5,
+     "rejected_after_burst": 13
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.05555555555555555,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 9,
+     "recovered": 6,
+     "recovery_delay_max": 3,
+     "rejected_after_burst": 25
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 5,
+     "onset_delay_max": 6,
+     "rejected_fraction_in_burst": 0.3333333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 19,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 24
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.2222222222222222,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 17
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 6,
+     "rejected_fraction_in_burst": 0.21666666666666667,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 10,
+     "recovered": 6,
+     "recovery_delay_max": 5,
+     "rejected_after_burst": 16
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 2,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 6
+    }
+   },
+   "margin": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 13,
+     "rejected_fraction_in_burst": 0.3,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 16,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 15
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 10
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 9,
+     "rejected_fraction_in_burst": 0.1,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 5
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.1111111111111111,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 9,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 24
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 15,
+     "rejected_fraction_in_burst": 0.08333333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 5
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.2222222222222222,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 15,
+     "recovered": 6,
+     "recovery_delay_max": 11,
+     "rejected_after_burst": 38
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 19,
+     "rejected_fraction_in_burst": 0.041666666666666664,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 1,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 11,
+     "recovered": 6,
+     "recovery_delay_max": 9,
+     "rejected_after_burst": 28
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 14,
+     "rejected_fraction_in_burst": 0.06666666666666667,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 8,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 16
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 4,
+     "rejected_fraction_in_burst": 0.4,
+     "accepted_wrong_in_burst": 3,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 13,
+     "recovered": 6,
+     "recovery_delay_max": 5,
+     "rejected_after_burst": 13
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.05555555555555555,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 9,
+     "recovered": 6,
+     "recovery_delay_max": 3,
+     "rejected_after_burst": 25
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 5,
+     "onset_delay_max": 6,
+     "rejected_fraction_in_burst": 0.3333333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 19,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 24
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.2222222222222222,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 17
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 6,
+     "rejected_fraction_in_burst": 0.21666666666666667,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 10,
+     "recovered": 6,
+     "recovery_delay_max": 5,
+     "rejected_after_burst": 16
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 2,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 6
+    }
+   },
+   "flags": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.475,
+     "accepted_wrong_in_burst": 3,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 7
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.6666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 8,
+     "rejected_fraction_in_burst": 0.8416666666666667,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.6666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 5,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.8333333333333334,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.5,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 1,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 1,
+     "onset_delay_max": 11,
+     "rejected_fraction_in_burst": 0.008333333333333333,
+     "accepted_wrong_in_burst": 3,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 11,
+     "accepted_false_healthy_in_burst": 5,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 0,
+     "onset_delay_max": null,
+     "rejected_fraction_in_burst": 0.0,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 0,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 0
+    }
+   },
+   "flags+margin": {
+    "clip50/d20": {
+     "bursts": 6,
+     "detected": 5,
+     "onset_delay_max": 13,
+     "rejected_fraction_in_burst": 0.625,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 22,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 22
+    },
+    "clip50/d3": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.6666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 10
+    },
+    "clip30/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 8,
+     "rejected_fraction_in_burst": 0.8583333333333333,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 4,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 5
+    },
+    "clip30/d3": {
+     "bursts": 6,
+     "detected": 5,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.7777777777777778,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 9,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 25
+    },
+    "bits12/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 6,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 5
+    },
+    "bits12/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 15,
+     "recovered": 6,
+     "recovery_delay_max": 11,
+     "rejected_after_burst": 38
+    },
+    "bits8/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 1,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "bits8/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 11,
+     "recovered": 6,
+     "recovery_delay_max": 9,
+     "rejected_after_burst": 28
+    },
+    "hold4/d20": {
+     "bursts": 6,
+     "detected": 5,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 0.8333333333333334,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 1
+    },
+    "hold4/d3": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.6111111111111112,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 8,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 16
+    },
+    "hold16/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 13,
+     "recovered": 6,
+     "recovery_delay_max": 5,
+     "rejected_after_burst": 13
+    },
+    "hold16/d3": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 0,
+     "rejected_fraction_in_burst": 1.0,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 9,
+     "recovered": 6,
+     "recovery_delay_max": 3,
+     "rejected_after_burst": 25
+    },
+    "lag8/d20": {
+     "bursts": 6,
+     "detected": 6,
+     "onset_delay_max": 11,
+     "rejected_fraction_in_burst": 0.3416666666666667,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 19,
+     "recovered": 6,
+     "recovery_delay_max": 1,
+     "rejected_after_burst": 24
+    },
+    "lag8/d3": {
+     "bursts": 6,
+     "detected": 2,
+     "onset_delay_max": 1,
+     "rejected_fraction_in_burst": 0.2222222222222222,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 18
+    },
+    "lag32/d20": {
+     "bursts": 6,
+     "detected": 4,
+     "onset_delay_max": 6,
+     "rejected_fraction_in_burst": 0.21666666666666667,
+     "accepted_wrong_in_burst": 1,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 10,
+     "recovered": 6,
+     "recovery_delay_max": 5,
+     "rejected_after_burst": 16
+    },
+    "lag32/d3": {
+     "bursts": 6,
+     "detected": 3,
+     "onset_delay_max": 2,
+     "rejected_fraction_in_burst": 0.16666666666666666,
+     "accepted_wrong_in_burst": 0,
+     "accepted_false_healthy_in_burst": 0,
+     "false_reject_pre": 3,
+     "recovered": 6,
+     "recovery_delay_max": 0,
+     "rejected_after_burst": 6
+    }
+   }
+  }
+ },
+ "gate_Q01_on_validation": {
+  "none": {
+   "clean_val_coverage": 1.0,
+   "accepted_wrong_reduction_vs_none": 0.0,
+   "zero_accepted_conditions": [],
+   "nuisance_coverage": {
+    "snr20": 1.0,
+    "snr10": 1.0
+   },
+   "passes_frozen_gate": false
+  },
+  "conf": {
+   "clean_val_coverage": 0.89990234375,
+   "accepted_wrong_reduction_vs_none": 0.8019169329073482,
+   "zero_accepted_conditions": [],
+   "nuisance_coverage": {
+    "snr20": 0.900390625,
+    "snr10": 0.8876953125
+   },
+   "passes_frozen_gate": false
+  },
+  "conf_superseded_q01": {
+   "clean_val_coverage": 0.904296875,
+   "accepted_wrong_reduction_vs_none": 0.7795527156549521,
+   "zero_accepted_conditions": [],
+   "nuisance_coverage": {
+    "snr20": 0.9052734375,
+    "snr10": 0.89111328125
+   },
+   "passes_frozen_gate": true
+  },
+  "margin": {
+   "clean_val_coverage": 0.904296875,
+   "accepted_wrong_reduction_vs_none": 0.7795527156549521,
+   "zero_accepted_conditions": [],
+   "nuisance_coverage": {
+    "snr20": 0.9052734375,
+    "snr10": 0.89111328125
+   },
+   "passes_frozen_gate": true
+  },
+  "flags": {
+   "clean_val_coverage": 1.0,
+   "accepted_wrong_reduction_vs_none": 0.7348242811501597,
+   "zero_accepted_conditions": [
+    "bits8",
+    "hold16"
+   ],
+   "nuisance_coverage": {
+    "snr20": 1.0,
+    "snr10": 1.0
+   },
+   "passes_frozen_gate": true
+  },
+  "flags+margin": {
+   "clean_val_coverage": 0.904296875,
+   "accepted_wrong_reduction_vs_none": 0.9552715654952076,
+   "zero_accepted_conditions": [
+    "bits8",
+    "hold16"
+   ],
+   "nuisance_coverage": {
+    "snr20": 0.9052734375,
+    "snr10": 0.89111328125
+   },
+   "passes_frozen_gate": true
+  }
+ },
+ "notes": [
+  "test split previously explored: reported once, not an independent confirmation",
+  "flags/margin/confidence are status metadata; the class is always the FPGA argmax",
+  "a method with zero_accepted under a fault refuses to classify there; that is not higher accuracy"
+ ]
+}

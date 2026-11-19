@@ -1,0 +1,787 @@
+{
+  "schema_version": "1.0",
+  "review_date": "2026-11-11",
+  "timezone": "Asia/Tehran",
+  "purpose": "Candidate experiments, not authorization to replace the canonical deployment or evidence that proposed gates have passed.",
+  "global_status": "research_plan_no_new_board_jobs",
+  "constraints": {
+    "canonical_split_and_class_map_immutable": true,
+    "validation_only_selection": true,
+    "test_previously_explored": true,
+    "board_availability_rechecked_this_review": false,
+    "extra_equipment_assumed": false,
+    "raw_window_samples": 1024,
+    "channels": 8,
+    "sample_rate_hz": 50000,
+    "window_period_ms": 20.48,
+    "transformer_tokens": 256,
+    "gates_are_provisional_not_results": true,
+    "timing_boundary": "Scheduled prepared-RAM window release to FPGA raw-class completion; acquisition and screen time are separate boundaries.",
+    "hardware_rules": "Preserve original overlay. Run no competing job; establish idle and preserve active-run evidence before any reload. New variants require explicit versioned scope, reference, golden data and artifact identity.",
+    "statistical_unit": "File or recording; report paired file-level uncertainty and denominators. Repeated windows do not manufacture independent evidence."
+  },
+  "paper_paths": {
+    "A": [
+      "A01",
+      "A02",
+      "A03",
+      "A04",
+      "A05"
+    ],
+    "B": [
+      "B01",
+      "B02",
+      "B03",
+      "Q01",
+      "Q02"
+    ],
+    "support_or_reserve": [
+      "T01",
+      "S01"
+    ]
+  },
+  "experiments": [
+    {
+      "id": "F00",
+      "phase": "offline_pilot",
+      "title": "Freeze identity, protocol, file-level selection and gate definitions",
+      "status": "planned",
+      "board_required": false,
+      "retrain": false,
+      "new_bitstream": false,
+      "abi_change": false,
+      "depends_on": [],
+      "effort_estimate_workdays": [
+        0.5,
+        1
+      ],
+      "metrics": [
+        "Source/model/scales/input/bitstream hashes",
+        "Validation and calibration file identity",
+        "Timing and acceptance definitions"
+      ],
+      "go_criteria": [
+        "Canonical artifacts remain immutable",
+        "All proposed changes have declared scope",
+        "Active board job is preserved"
+      ],
+      "scope_change": "Research manifests only",
+      "run_command": null,
+      "outputs": [
+        "frozen_baseline_manifest.json",
+        "preregistered_protocol.json"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "A01",
+      "phase": "offline_pilot",
+      "title": "Actual softmax flat-row numerical reproduction",
+      "status": "completed_toy_pilot_only",
+      "board_required": false,
+      "retrain": false,
+      "new_bitstream": false,
+      "abi_change": false,
+      "depends_on": [],
+      "effort_estimate_workdays": null,
+      "metrics": [
+        "Encoded probability",
+        "Row code sum",
+        "Zero rows"
+      ],
+      "actual_evidence": "At T256 equal scores, actual IntegerTransformer._softmax returns all zero for signed8, code1 for signed9 and code2 for signed10. No trained-data causal or accuracy conclusion follows.",
+      "go_criteria": [
+        "Use as mechanism hypothesis only; proceed to real validation discrimination"
+      ],
+      "scope_change": "No production model or dataset changes",
+      "run_command": "python -c \"import runpy; from pathlib import Path; runpy.run_path(str(next(Path('research_notes').glob('*/hardware_pilot.py'))), run_name='__main__')\"",
+      "outputs": [
+        "hardware_pilot.py",
+        "hardware_pilot.json"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "A02",
+      "phase": "offline_pilot",
+      "title": "Disentangle weight, activation and attention-probability precision",
+      "status": "planned",
+      "board_required": false,
+      "retrain": false,
+      "new_bitstream": false,
+      "abi_change": false,
+      "depends_on": [
+        "F00",
+        "A01"
+      ],
+      "effort_estimate_workdays": [
+        2,
+        5
+      ],
+      "comparators": [
+        "INT10 baseline",
+        "Uniform INT8",
+        "Weights8 only",
+        "Linear activations8 only",
+        "Signed probability8 only",
+        "Signed probability9",
+        "Unsigned probability8 Qmax255",
+        "Selected W8/A8 with probability9 or10"
+      ],
+      "metrics": [
+        "Zero-row fraction by file/head",
+        "Coded mass",
+        "Entropy and nonzero count",
+        "Context error",
+        "Per-class recall",
+        "Macro-F1"
+      ],
+      "go_criteria": [
+        "Demonstrated numerical effect on real validation data",
+        "Macro-F1 loss <=0.3 percentage points",
+        "No class recall loss >1 percentage point"
+      ],
+      "stop_criteria": [
+        "Flat-row mechanism absent or unrelated to changed predictions: reject the causal story",
+        "No candidate passes class metrics"
+      ],
+      "scope_change": "Research-only numerical contract, separate scales/export and golden outputs; no canonical replacement",
+      "run_command": null,
+      "outputs": [
+        "precision_ablation_validation.json",
+        "attention_numeric_profile.npz",
+        "selected_numeric_contract.json"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "A03",
+      "phase": "go_gate",
+      "title": "Prove exact legal widths and boundary-equivalent requantization",
+      "status": "planned_full_proof_existing_bounds_are_candidate_evidence",
+      "board_required": false,
+      "retrain": false,
+      "new_bitstream": false,
+      "abi_change": false,
+      "depends_on": [
+        "F00"
+      ],
+      "effort_estimate_workdays": [
+        1,
+        3
+      ],
+      "metrics": [
+        "Legal-domain accumulator/product bounds",
+        "Exact logit differences",
+        "Boundary rounding and saturation"
+      ],
+      "assumptions": [
+        "Clamped internal codes [-511,511], not all ap_int<10> bit patterns",
+        "Positive current Q40 scale constants",
+        "Exact current weight header hashes"
+      ],
+      "go_criteria": [
+        "Explicit proof per changed intermediate",
+        "Bit-exact outputs including negative/tie/rail cases"
+      ],
+      "scope_change": "Exact implementation specialization; same model, arithmetic meaning, ABI and goldens",
+      "run_command": null,
+      "outputs": [
+        "range_proofs.json",
+        "exact_operator_boundary_checks.json"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "A04",
+      "phase": "go_gate",
+      "title": "Single expensive operator HLS and post-route discrimination",
+      "status": "planned",
+      "board_required": false,
+      "retrain": false,
+      "new_bitstream": true,
+      "abi_change": false,
+      "depends_on": [
+        "A03"
+      ],
+      "effort_estimate_workdays": [
+        2,
+        4
+      ],
+      "comparators": [
+        "Generic current operator",
+        "Exact widths/constant specialization",
+        "Exact conservative early saturation"
+      ],
+      "metrics": [
+        "LUT/FF/BRAM/DSP after route",
+        "Timing",
+        "Cycles",
+        "CSim exactness"
+      ],
+      "go_criteria": [
+        "No numerical disagreement",
+        "Credible integrated >=10% DSP or >=15% useful timing/latency improvement"
+      ],
+      "stop_criteria": [
+        "Tools already infer same mapping",
+        "Compensating resource or timing failure"
+      ],
+      "scope_change": "Isolated research implementation; no DSP savings asserted in advance",
+      "run_command": null,
+      "outputs": [
+        "operator_comparison.json",
+        "operator_route_reports/"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "A05",
+      "phase": "physical_finalist",
+      "title": "Physical Pareto of selected exact and mixed designs",
+      "status": "planned_conditional",
+      "board_required": true,
+      "retrain": false,
+      "new_bitstream": true,
+      "abi_change": false,
+      "depends_on": [
+        "F00",
+        "A02",
+        "A04"
+      ],
+      "effort_estimate_workdays": [
+        3,
+        8
+      ],
+      "comparators": [
+        "Frozen production baseline",
+        "Exact specialization if gate passes",
+        "Selected mixed variant if gate passes",
+        "Combined variant only if both are useful"
+      ],
+      "metrics": [
+        "Per-variant integer-reference exactness",
+        "Route totals and timing",
+        "Raw-result cycles",
+        "Declared deadline misses",
+        "Validation-selected held-out class metrics"
+      ],
+      "go_criteria": [
+        "Every version matches its own reference",
+        "Mixed candidate >=15% post-route resource or latency objective improvement",
+        "Canonical class/protocol semantics preserved"
+      ],
+      "scope_change": "Mixed precision changes numeric contract and goldens explicitly. QAT, if needed, is a separately selected later branch, not included here.",
+      "run_command": null,
+      "outputs": [
+        "precision_physical_pareto.json",
+        "physical_variant_manifests/",
+        "exact_raw_traces/"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "B01",
+      "phase": "offline_pilot",
+      "title": "3072-case deterministic logical vulnerability pilot",
+      "status": "planned_not_executed",
+      "board_required": false,
+      "retrain": false,
+      "new_bitstream": false,
+      "abi_change": false,
+      "depends_on": [
+        "F00"
+      ],
+      "effort_estimate_workdays": [
+        2,
+        4
+      ],
+      "design": "256 validation windows across files/classes; 8 stage groups x3 bit bands x128 deterministic injections. Define exact target widths and transient/persistent/state families.",
+      "metrics": [
+        "Requested/reached/perturbed counts",
+        "Changed logits/raw class/stable class",
+        "Detected/invalid",
+        "Silent class corruptions"
+      ],
+      "go_criteria": [
+        "Useful vulnerability separation supporting cheap selected checks",
+        "No-fault instrumented C-model matches original"
+      ],
+      "scope_change": "Exact research C-model hooks; no CRAM, radiation or natural upset-rate claim",
+      "run_command": null,
+      "outputs": [
+        "injection_pilot_manifest.json",
+        "vulnerability_map.json",
+        "checker_selection.json"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "B02",
+      "phase": "go_gate",
+      "title": "One programmable debug overlay with selected integrity checks",
+      "status": "planned_conditional",
+      "board_required": false,
+      "retrain": false,
+      "new_bitstream": true,
+      "abi_change": true,
+      "depends_on": [
+        "B01"
+      ],
+      "effort_estimate_workdays": [
+        3,
+        6
+      ],
+      "comparators": [
+        "Instrumentation-only",
+        "Range checks",
+        "Argmax/state protection",
+        "Vulnerability-selected protection"
+      ],
+      "metrics": [
+        "Instrumentation-disabled exactness",
+        "False flags",
+        "Checker detection",
+        "Route cost and timing"
+      ],
+      "go_criteria": [
+        "Injection-disabled exactness on all original clean/golden inputs",
+        "<=5% extra LUT and <=2 extra DSP",
+        "Timing closure",
+        "Zero false flags on original 95404 clean inputs"
+      ],
+      "scope_change": "Versioned debug registers and integrity/status metadata; weight-read XOR is logical emulation, not physical configuration-memory mutation",
+      "run_command": null,
+      "outputs": [
+        "debug_register_contract.json",
+        "checker_route_reports/",
+        "debug_overlay_manifest.json"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "B03",
+      "phase": "physical_finalist",
+      "title": "Held-out physical injection and bounded recovery",
+      "status": "planned_conditional",
+      "board_required": true,
+      "retrain": false,
+      "new_bitstream": true,
+      "abi_change": true,
+      "depends_on": [
+        "B02"
+      ],
+      "effort_estimate_workdays": [
+        1,
+        3
+      ],
+      "metrics": [
+        "Silent corruption reduction with denominators/intervals",
+        "Flags tied to frame IDs",
+        "Invalid-result coverage",
+        "Latency/misses",
+        "Temporal recovery losses"
+      ],
+      "go_criteria": [
+        ">=80% silent raw/stable class corruption reduction on untouched confirmation manifest if sample counts support conclusion",
+        "Physical outputs match instrumented C-model",
+        "Zero normal-operation deadline misses over predefined 30000 scored windows"
+      ],
+      "limitations": [
+        "Invalid frames are not successful classifications",
+        "Full inference retry cannot be assumed to fit 20.48ms",
+        "No radiation-hardening or field-MTTF inference"
+      ],
+      "scope_change": "Research-only invalid/status and state-recovery policy; preserve production overlay reloadability",
+      "run_command": null,
+      "outputs": [
+        "physical_injection_trace.npz",
+        "integrity_confirmation.json",
+        "recovery_trace.json"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "Q01",
+      "phase": "offline_pilot",
+      "title": "Front-end transfer boundary and quality-plus-margin selection",
+      "status": "planned",
+      "board_required": false,
+      "retrain": false,
+      "new_bitstream": false,
+      "abi_change": false,
+      "depends_on": [
+        "F00"
+      ],
+      "effort_estimate_workdays": [
+        1,
+        3
+      ],
+      "comparators": [
+        "No rejection",
+        "Existing temperature confidence",
+        "Top-two integer margin",
+        "Pre-normalization quality flags",
+        "Combined flags and margin"
+      ],
+      "corruptions": [
+        "Positive gain/DC affine control",
+        "Raw24 clipping",
+        "Reduced ADC bits",
+        "Intermittent hold",
+        "Single-channel lag"
+      ],
+      "metrics": [
+        "Reference numeric deviation vs true-label error separately",
+        "Risk/coverage",
+        "False healthy",
+        "Input fault detection",
+        "Reject duration/recovery"
+      ],
+      "go_criteria": [
+        ">=90% clean coverage",
+        ">=30% relative reduction in wrong accepted corruption outputs",
+        "No hidden false-healthy or long-rejection penalty"
+      ],
+      "stop_criteria": [
+        "Unrealistic corruption only produces effect",
+        "Margin alone dominates combined method: prefer simpler method"
+      ],
+      "scope_change": "Validation-only thresholds, channel-specific tach safeguards; no new fifth class or conformal guarantee",
+      "run_command": null,
+      "outputs": [
+        "front_end_boundary_map.json",
+        "risk_coverage.json",
+        "frozen_quality_thresholds.json"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "Q02",
+      "phase": "physical_finalist",
+      "title": "Physical input-boundary pack and versioned status output",
+      "status": "planned_conditional",
+      "board_required": true,
+      "retrain": false,
+      "new_bitstream": true,
+      "abi_change": true,
+      "depends_on": [
+        "Q01"
+      ],
+      "effort_estimate_workdays": [
+        2,
+        5
+      ],
+      "metrics": [
+        "Exact counters/margin/status",
+        "Flag/frame association",
+        "Resource/timing delta",
+        "Burst onset/recovery and accepted wrong decisions"
+      ],
+      "go_criteria": [
+        "Exact research-reference matching",
+        "Original four-class argmax preserved",
+        "Declared deadline retained",
+        "Report actual route cost"
+      ],
+      "scope_change": "Separate input_quality/decision_status metadata; digital replay proves integer path, not analog front-end or real sensor performance",
+      "run_command": null,
+      "outputs": [
+        "physical_quality_boundary_trace.npz",
+        "status_abi_contract.json",
+        "quality_route_reports/"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "T01",
+      "phase": "offline_pilot_then_conditional_physical_finalist",
+      "title": "Finite-horizon evidence at matched false-switch budget",
+      "status": "planned_reserve",
+      "board_required": "finalist_only",
+      "retrain": false,
+      "new_bitstream": "finalist_only",
+      "abi_change": "research_state_metadata",
+      "depends_on": [
+        "F00"
+      ],
+      "effort_estimate_workdays": [
+        5,
+        10
+      ],
+      "comparators": [
+        "Raw",
+        "Continuous k1/5/9/15 vote",
+        "Hysteresis",
+        "Fixed leaky evidence",
+        "Finite-horizon evidence"
+      ],
+      "metrics": [
+        "Matched false-switch rate and horizon",
+        "p95 detection delay",
+        "Unresolved events",
+        "Short events",
+        "Macro-F1",
+        "State exactness and physical cost"
+      ],
+      "go_criteria": [
+        ">=20% lower p95 delay versus best fixed-k baseline",
+        "No unresolved increase",
+        "<=0.5 percentage point macro-F1 regression",
+        "<=1% extra LUT and no new DSP",
+        "Original per-window deadline preserved"
+      ],
+      "stop_criteria": [
+        "Simple hysteresis is equivalent"
+      ],
+      "scope_change": "All windows still classified in FPGA; synthetic recording joins are not physical onset; no inherited iid-SPRT guarantee",
+      "run_command": null,
+      "outputs": [
+        "causal_transition_protocol.json",
+        "temporal_pilot.json",
+        "conditional_physical_state_trace.npz"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "S01",
+      "phase": "physical_finalist",
+      "title": "Interference envelope, then conditional bounded-stream wrapper",
+      "status": "planned",
+      "board_required": true,
+      "retrain": false,
+      "new_bitstream": "only_if_wrapper_gate_passes",
+      "abi_change": "wrapper_counters_only_if_selected",
+      "depends_on": [
+        "F00"
+      ],
+      "effort_estimate_workdays": [
+        1,
+        3
+      ],
+      "optional_wrapper_extra_workdays": [
+        3,
+        7
+      ],
+      "comparators": [
+        "Idle",
+        "Compute-only",
+        "Bounded memory read",
+        "Write/copy",
+        "Cache thrash",
+        "Actual transport/logging",
+        "Selected isolation policy"
+      ],
+      "metrics": [
+        "Release jitter",
+        "DMA/core response",
+        "Queue/high-water and age",
+        "Misses",
+        "Gap/overflow",
+        "Exact outputs"
+      ],
+      "go_criteria": [
+        "For admitted operating point: zero wrong outputs/gap/overflow/misses over 30000 scored windows",
+        "Finite bounded queue",
+        "Mitigation claim requires admitted-envelope expansion or >=25% lower worst measured response at matched load"
+      ],
+      "stop_criteria": [
+        "Declared failure/temperature guard triggers",
+        "No realistic contention issue: archive evidence without regulator project"
+      ],
+      "scope_change": "No latest-only dropping disguised as lossless; optional PL-paced replay is laboratory input, not real sensor acquisition",
+      "run_command": null,
+      "outputs": [
+        "interference_operating_points.json",
+        "timing_and_queue_trace.npz",
+        "conditional_wrapper_build/"
+      ],
+      "queue": "current_board_and_pc"
+    },
+    {
+      "id": "Z01",
+      "phase": "archive",
+      "title": "Preserve scarce physical evidence and choose one paper story",
+      "status": "planned",
+      "board_required": "capture_before_return_then_offline_analysis",
+      "retrain": false,
+      "new_bitstream": false,
+      "abi_change": false,
+      "depends_on": [
+        "F00"
+      ],
+      "conditional_dependencies": [
+        "A05",
+        "B03",
+        "Q02",
+        "T01",
+        "S01"
+      ],
+      "effort_estimate_workdays": [
+        1,
+        2
+      ],
+      "metrics": [
+        "Artifact completeness",
+        "Hash reproducibility",
+        "Failure evidence retained",
+        "Paper claim/evidence mapping"
+      ],
+      "go_criteria": [
+        "Selected physical variants archived with exact source/config/reference/input/output/timing identity",
+        "Production overlay remains usable",
+        "One coherent central question selected based on measured effect"
+      ],
+      "scope_change": "Archive only; unselected branches are not mandatory tasks",
+      "run_command": null,
+      "outputs": [
+        "bit_hwh_xsa_and_route/",
+        "source_tool_runtime_hashes.json",
+        "raw24_ordered_replay_and_references/",
+        "logits_classes_status_state_timing_guard/",
+        "failures_and_aborts/",
+        "claim_evidence_map.json"
+      ],
+      "queue": "current_board_and_pc"
+    }
+  ],
+  "execution_note": "run_command is null where no reviewed runnable harness yet exists. Output names describe planned artifacts and do not assert those files exist. Gates must be frozen before confirmation runs. Effort estimates overlap and are not promises or measured tool runtime.",
+  "confirmed_user_constraints": {
+    "board_access_window_weeks": [
+      3,
+      4
+    ],
+    "extra_equipment_currently_available": false,
+    "multimeter": "possibly_available_not_confirmed",
+    "faculty_equipment_access": "possible_request_not_yet_confirmed",
+    "equipment_absence_policy": "Keep scientifically useful ideas pending; prioritize current-board-plus-PC experiments, request faculty equipment in parallel. Missing gear does not scientifically falsify a hypothesis."
+  },
+  "immediate_current_equipment_pilots": [
+    "A02",
+    "A03/A04 single-operator probe",
+    "B01"
+  ],
+  "phased_schedule": [
+    {
+      "week": 1,
+      "current_equipment": [
+        "F00",
+        "A02",
+        "A03",
+        "A04 initial probe",
+        "B01",
+        "Q01"
+      ],
+      "faculty_queue": "Request and confirm power logging, ADC/generator, independent timing and optional controlled rig/temperature access.",
+      "decision": "Pick finalists based on scientific gates."
+    },
+    {
+      "week": 2,
+      "current_equipment": [
+        "A04/A05 selected build",
+        "B02 only if B01 passes",
+        "S01 baseline"
+      ],
+      "faculty_queue": "Power pilot if appropriate instrument arrives; calibrate ADC/generator loopback if available.",
+      "decision": "Stop ineffective builds; preserve canonical baseline."
+    },
+    {
+      "week": 3,
+      "current_equipment": [
+        "A05/B03/Q02 selected physical finalists",
+        "Z01 mandatory capture"
+      ],
+      "faculty_queue": "Perform equipment-dependent measurements only when protocol and calibration are ready.",
+      "decision": "Complete one defensible physical story; if access ends at 3 weeks, finalize archive now."
+    },
+    {
+      "week": 4,
+      "conditional_on_board_extension": true,
+      "current_equipment": [
+        "Confirmation and debugging buffer",
+        "T01 physical only if offline gate wins",
+        "Z01 final archive/demo"
+      ],
+      "faculty_queue": "Complete ready equipment-backed confirmations without displacing final archive.",
+      "decision": "Freeze claims; avoid starting a major new branch."
+    }
+  ],
+  "schedule_caveat": "Engineering planning estimate, not guaranteed elapsed time. Prioritize one main paper path and one backup; tool runtimes, training and route iteration remain uncertain.",
+  "faculty_equipment_queue": [
+    {
+      "id": "EQ_POWER",
+      "status": "proposed_access_unconfirmed",
+      "equipment_request": [
+        "Logging DC supply or time-stamped DC power meter",
+        "Calibrated shunt plus suitable DAQ as alternative"
+      ],
+      "question": "Measured whole-board idle/loaded/active energy per accepted window at fixed workload.",
+      "multimeter_role": "Steady-state voltage/current and an initial mean estimate if range, burden and accuracy are known; a basic nonlogging meter does not establish per-window energy or transient peaks.",
+      "scientific_controls": [
+        "Same input and timing boundary",
+        "Calibration/instrument uncertainty and sample rate",
+        "Total and idle-subtracted energy separately"
+      ],
+      "access_gate": "Confirm suitable instrument and calibrated measurement setup; otherwise retain pending, not scientifically rejected."
+    },
+    {
+      "id": "EQ_FRONTEND",
+      "status": "proposed_access_unconfirmed",
+      "equipment_request": [
+        "Compatible multichannel ADC/DAQ",
+        "Calibrated signal generator or compatible digital replay source"
+      ],
+      "question": "Actual acquisition-chain gain/clipping/lag transfer versus modeled raw24 input.",
+      "scientific_controls": [
+        "Known input reference and calibration",
+        "Document voltage/interface/sample alignment",
+        "Separate digital replay from analog performance"
+      ],
+      "access_gate": "Confirm ingress and equipment compatibility; current raw24 model alone does not prove analog behavior."
+    },
+    {
+      "id": "EQ_TIMING",
+      "status": "optional_access_unconfirmed",
+      "equipment_request": [
+        "Logic analyzer or oscilloscope appropriate for signals"
+      ],
+      "question": "Independent edge/timestamp check of defined compute/transport boundaries.",
+      "scientific_controls": [
+        "Pin and voltage compatibility",
+        "Explicit pulse semantics and instrumentation overhead",
+        "Independent reference clock or documented uncertainty"
+      ],
+      "access_gate": "Useful optional validation; not a prerequisite for numerical pilots."
+    },
+    {
+      "id": "EQ_THERMAL",
+      "status": "optional_access_unconfirmed",
+      "equipment_request": [
+        "Controlled temperature environment and calibrated temperature observation"
+      ],
+      "question": "Measured operating envelope within board/component rated conditions.",
+      "scientific_controls": [
+        "Predeclared rated temperature limits",
+        "Continuous guard and safe stop",
+        "No overclocking or undervoltage"
+      ],
+      "access_gate": "Proceed only with documented safe controlled setup; no improvised heating."
+    },
+    {
+      "id": "EQ_MACHINE",
+      "status": "optional_access_unconfirmed",
+      "equipment_request": [
+        "Approved machinery rig",
+        "Calibrated sensors/acquisition",
+        "Documented healthy/fault labels and operating conditions"
+      ],
+      "question": "Independent external-machine transfer evidence.",
+      "scientific_controls": [
+        "Keep external dataset separate from MAFAULDA test",
+        "Record speed/condition/calibration and label provenance",
+        "Unlabelled replay does not establish classification accuracy"
+      ],
+      "access_gate": "Confirm rig, labels, operating permission and calibration; retain as a conditional extension."
+    }
+  ]
+}

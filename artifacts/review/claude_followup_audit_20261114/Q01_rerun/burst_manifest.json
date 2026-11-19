@@ -1,0 +1,1931 @@
+{
+"seed": 20261117,
+"recording_windows": 244,
+"bursts": {
+"val": [
+{
+"burst_id": 0,
+"fault": "clip50",
+"rec": 133,
+"start": 32500,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 1,
+"fault": "clip50",
+"rec": 154,
+"start": 37628,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 2,
+"fault": "clip50",
+"rec": 188,
+"start": 46016,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 3,
+"fault": "clip50",
+"rec": 140,
+"start": 34290,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 2
+},
+{
+"burst_id": 4,
+"fault": "clip50",
+"rec": 130,
+"start": 31733,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 5,
+"fault": "clip50",
+"rec": 91,
+"start": 22351,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 6,
+"fault": "clip50",
+"rec": 57,
+"start": 14055,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 3
+},
+{
+"burst_id": 7,
+"fault": "clip50",
+"rec": 77,
+"start": 18789,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 2
+},
+{
+"burst_id": 8,
+"fault": "clip50",
+"rec": 121,
+"start": 29675,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 9,
+"fault": "clip50",
+"rec": 127,
+"start": 31130,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 10,
+"fault": "clip50",
+"rec": 125,
+"start": 30540,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 11,
+"fault": "clip50",
+"rec": 71,
+"start": 17337,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 12,
+"fault": "clip30",
+"rec": 60,
+"start": 14767,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 13,
+"fault": "clip30",
+"rec": 27,
+"start": 6638,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 14,
+"fault": "clip30",
+"rec": 165,
+"start": 40437,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 15,
+"fault": "clip30",
+"rec": 174,
+"start": 42544,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 16,
+"fault": "clip30",
+"rec": 17,
+"start": 4207,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 17,
+"fault": "clip30",
+"rec": 38,
+"start": 9349,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 18,
+"fault": "clip30",
+"rec": 0,
+"start": 173,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 19,
+"fault": "clip30",
+"rec": 99,
+"start": 24165,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 20,
+"fault": "clip30",
+"rec": 124,
+"start": 30362,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 3
+},
+{
+"burst_id": 21,
+"fault": "clip30",
+"rec": 122,
+"start": 29777,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 1
+},
+{
+"burst_id": 22,
+"fault": "clip30",
+"rec": 55,
+"start": 13451,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 3
+},
+{
+"burst_id": 23,
+"fault": "clip30",
+"rec": 114,
+"start": 27880,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 2
+},
+{
+"burst_id": 24,
+"fault": "bits12",
+"rec": 161,
+"start": 39392,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 25,
+"fault": "bits12",
+"rec": 82,
+"start": 20146,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 26,
+"fault": "bits12",
+"rec": 47,
+"start": 11661,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 27,
+"fault": "bits12",
+"rec": 23,
+"start": 5680,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 1
+},
+{
+"burst_id": 28,
+"fault": "bits12",
+"rec": 44,
+"start": 10853,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 29,
+"fault": "bits12",
+"rec": 91,
+"start": 22355,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 30,
+"fault": "bits12",
+"rec": 11,
+"start": 2709,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 31,
+"fault": "bits12",
+"rec": 19,
+"start": 4677,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 32,
+"fault": "bits12",
+"rec": 152,
+"start": 37260,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 33,
+"fault": "bits12",
+"rec": 192,
+"start": 47046,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 34,
+"fault": "bits12",
+"rec": 47,
+"start": 11635,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 35,
+"fault": "bits12",
+"rec": 192,
+"start": 46879,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 2
+},
+{
+"burst_id": 36,
+"fault": "bits8",
+"rec": 49,
+"start": 12044,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 37,
+"fault": "bits8",
+"rec": 128,
+"start": 31318,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 38,
+"fault": "bits8",
+"rec": 144,
+"start": 35314,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 39,
+"fault": "bits8",
+"rec": 142,
+"start": 34798,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 40,
+"fault": "bits8",
+"rec": 24,
+"start": 5912,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 41,
+"fault": "bits8",
+"rec": 165,
+"start": 40365,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 42,
+"fault": "bits8",
+"rec": 137,
+"start": 33547,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 43,
+"fault": "bits8",
+"rec": 188,
+"start": 45886,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 44,
+"fault": "bits8",
+"rec": 117,
+"start": 28633,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 45,
+"fault": "bits8",
+"rec": 76,
+"start": 18631,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 46,
+"fault": "bits8",
+"rec": 147,
+"start": 35957,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 47,
+"fault": "bits8",
+"rec": 150,
+"start": 36701,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 48,
+"fault": "hold4",
+"rec": 123,
+"start": 30176,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 49,
+"fault": "hold4",
+"rec": 62,
+"start": 15214,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 50,
+"fault": "hold4",
+"rec": 79,
+"start": 19291,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 51,
+"fault": "hold4",
+"rec": 135,
+"start": 33125,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 52,
+"fault": "hold4",
+"rec": 17,
+"start": 4351,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 53,
+"fault": "hold4",
+"rec": 41,
+"start": 10095,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 54,
+"fault": "hold4",
+"rec": 134,
+"start": 32715,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 55,
+"fault": "hold4",
+"rec": 147,
+"start": 35942,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 56,
+"fault": "hold4",
+"rec": 56,
+"start": 13705,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 57,
+"fault": "hold4",
+"rec": 189,
+"start": 46167,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 58,
+"fault": "hold4",
+"rec": 136,
+"start": 33275,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 59,
+"fault": "hold4",
+"rec": 182,
+"start": 44549,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 60,
+"fault": "hold16",
+"rec": 40,
+"start": 9896,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 61,
+"fault": "hold16",
+"rec": 11,
+"start": 2848,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 62,
+"fault": "hold16",
+"rec": 133,
+"start": 32569,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 63,
+"fault": "hold16",
+"rec": 45,
+"start": 11151,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 64,
+"fault": "hold16",
+"rec": 97,
+"start": 23769,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 65,
+"fault": "hold16",
+"rec": 106,
+"start": 26016,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 66,
+"fault": "hold16",
+"rec": 15,
+"start": 3793,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 67,
+"fault": "hold16",
+"rec": 2,
+"start": 630,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 68,
+"fault": "hold16",
+"rec": 57,
+"start": 13917,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 69,
+"fault": "hold16",
+"rec": 97,
+"start": 23871,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 70,
+"fault": "hold16",
+"rec": 120,
+"start": 29451,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 71,
+"fault": "hold16",
+"rec": 67,
+"start": 16442,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 72,
+"fault": "lag8",
+"rec": 42,
+"start": 10374,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 73,
+"fault": "lag8",
+"rec": 17,
+"start": 4211,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 74,
+"fault": "lag8",
+"rec": 127,
+"start": 31154,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 3
+},
+{
+"burst_id": 75,
+"fault": "lag8",
+"rec": 148,
+"start": 36229,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 76,
+"fault": "lag8",
+"rec": 48,
+"start": 11808,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 77,
+"fault": "lag8",
+"rec": 27,
+"start": 6666,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 78,
+"fault": "lag8",
+"rec": 173,
+"start": 42314,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 79,
+"fault": "lag8",
+"rec": 85,
+"start": 20907,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 1
+},
+{
+"burst_id": 80,
+"fault": "lag8",
+"rec": 115,
+"start": 28252,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 81,
+"fault": "lag8",
+"rec": 156,
+"start": 38198,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 82,
+"fault": "lag8",
+"rec": 118,
+"start": 28992,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 83,
+"fault": "lag8",
+"rec": 130,
+"start": 31842,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 84,
+"fault": "lag32",
+"rec": 85,
+"start": 20887,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 85,
+"fault": "lag32",
+"rec": 49,
+"start": 12079,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 86,
+"fault": "lag32",
+"rec": 122,
+"start": 29853,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 87,
+"fault": "lag32",
+"rec": 153,
+"start": 37513,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 88,
+"fault": "lag32",
+"rec": 188,
+"start": 45952,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 89,
+"fault": "lag32",
+"rec": 77,
+"start": 18954,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 1
+},
+{
+"burst_id": 90,
+"fault": "lag32",
+"rec": 140,
+"start": 34176,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 91,
+"fault": "lag32",
+"rec": 184,
+"start": 44981,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 1
+},
+{
+"burst_id": 92,
+"fault": "lag32",
+"rec": 14,
+"start": 3511,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 93,
+"fault": "lag32",
+"rec": 77,
+"start": 18946,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 94,
+"fault": "lag32",
+"rec": 151,
+"start": 36961,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 95,
+"fault": "lag32",
+"rec": 56,
+"start": 13791,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+}
+],
+"test": [
+{
+"burst_id": 0,
+"fault": "clip50",
+"rec": 256,
+"start": 62552,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 1
+},
+{
+"burst_id": 1,
+"fault": "clip50",
+"rec": 226,
+"start": 55210,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 2,
+"fault": "clip50",
+"rec": 326,
+"start": 79697,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 1
+},
+{
+"burst_id": 3,
+"fault": "clip50",
+"rec": 203,
+"start": 49634,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 4,
+"fault": "clip50",
+"rec": 381,
+"start": 93161,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 5,
+"fault": "clip50",
+"rec": 228,
+"start": 55639,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 6,
+"fault": "clip50",
+"rec": 246,
+"start": 60084,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 7,
+"fault": "clip50",
+"rec": 52,
+"start": 12759,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 2
+},
+{
+"burst_id": 8,
+"fault": "clip50",
+"rec": 194,
+"start": 47413,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 1
+},
+{
+"burst_id": 9,
+"fault": "clip50",
+"rec": 167,
+"start": 40896,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 10,
+"fault": "clip50",
+"rec": 3,
+"start": 849,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 3
+},
+{
+"burst_id": 11,
+"fault": "clip50",
+"rec": 90,
+"start": 22031,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 1
+},
+{
+"burst_id": 12,
+"fault": "clip30",
+"rec": 54,
+"start": 13362,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 13,
+"fault": "clip30",
+"rec": 330,
+"start": 80647,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 14,
+"fault": "clip30",
+"rec": 124,
+"start": 30450,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 15,
+"fault": "clip30",
+"rec": 80,
+"start": 19585,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 1
+},
+{
+"burst_id": 16,
+"fault": "clip30",
+"rec": 35,
+"start": 8709,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 17,
+"fault": "clip30",
+"rec": 56,
+"start": 13822,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 18,
+"fault": "clip30",
+"rec": 140,
+"start": 34187,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 19,
+"fault": "clip30",
+"rec": 42,
+"start": 10253,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 20,
+"fault": "clip30",
+"rec": 100,
+"start": 24558,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 21,
+"fault": "clip30",
+"rec": 345,
+"start": 84265,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 22,
+"fault": "clip30",
+"rec": 330,
+"start": 80553,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 1
+},
+{
+"burst_id": 23,
+"fault": "clip30",
+"rec": 272,
+"start": 66481,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 24,
+"fault": "bits12",
+"rec": 19,
+"start": 4764,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 25,
+"fault": "bits12",
+"rec": 259,
+"start": 63348,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 2
+},
+{
+"burst_id": 26,
+"fault": "bits12",
+"rec": 107,
+"start": 26174,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 27,
+"fault": "bits12",
+"rec": 362,
+"start": 88347,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 28,
+"fault": "bits12",
+"rec": 284,
+"start": 69301,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 29,
+"fault": "bits12",
+"rec": 114,
+"start": 27851,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 30,
+"fault": "bits12",
+"rec": 306,
+"start": 74684,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 31,
+"fault": "bits12",
+"rec": 131,
+"start": 32081,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 2
+},
+{
+"burst_id": 32,
+"fault": "bits12",
+"rec": 108,
+"start": 26422,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 1
+},
+{
+"burst_id": 33,
+"fault": "bits12",
+"rec": 31,
+"start": 7730,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 34,
+"fault": "bits12",
+"rec": 315,
+"start": 76872,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 35,
+"fault": "bits12",
+"rec": 42,
+"start": 10267,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 36,
+"fault": "bits8",
+"rec": 363,
+"start": 88648,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 37,
+"fault": "bits8",
+"rec": 85,
+"start": 20794,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 38,
+"fault": "bits8",
+"rec": 186,
+"start": 45507,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 39,
+"fault": "bits8",
+"rec": 172,
+"start": 42013,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 40,
+"fault": "bits8",
+"rec": 321,
+"start": 78388,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 41,
+"fault": "bits8",
+"rec": 262,
+"start": 64094,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 42,
+"fault": "bits8",
+"rec": 281,
+"start": 68609,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 43,
+"fault": "bits8",
+"rec": 31,
+"start": 7626,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 44,
+"fault": "bits8",
+"rec": 139,
+"start": 33969,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 45,
+"fault": "bits8",
+"rec": 251,
+"start": 61429,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 2
+},
+{
+"burst_id": 46,
+"fault": "bits8",
+"rec": 139,
+"start": 34082,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 3
+},
+{
+"burst_id": 47,
+"fault": "bits8",
+"rec": 230,
+"start": 56260,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 48,
+"fault": "hold4",
+"rec": 332,
+"start": 81169,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 3
+},
+{
+"burst_id": 49,
+"fault": "hold4",
+"rec": 187,
+"start": 45753,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 50,
+"fault": "hold4",
+"rec": 108,
+"start": 26520,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 51,
+"fault": "hold4",
+"rec": 1,
+"start": 380,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 52,
+"fault": "hold4",
+"rec": 51,
+"start": 12469,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 1
+},
+{
+"burst_id": 53,
+"fault": "hold4",
+"rec": 195,
+"start": 47744,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 54,
+"fault": "hold4",
+"rec": 95,
+"start": 23279,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 55,
+"fault": "hold4",
+"rec": 130,
+"start": 31909,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 56,
+"fault": "hold4",
+"rec": 41,
+"start": 10097,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 1
+},
+{
+"burst_id": 57,
+"fault": "hold4",
+"rec": 301,
+"start": 73600,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 58,
+"fault": "hold4",
+"rec": 56,
+"start": 13779,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 1
+},
+{
+"burst_id": 59,
+"fault": "hold4",
+"rec": 116,
+"start": 28459,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 60,
+"fault": "hold16",
+"rec": 174,
+"start": 42579,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 2
+},
+{
+"burst_id": 61,
+"fault": "hold16",
+"rec": 295,
+"start": 72152,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 62,
+"fault": "hold16",
+"rec": 221,
+"start": 54083,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 63,
+"fault": "hold16",
+"rec": 134,
+"start": 32780,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 4
+},
+{
+"burst_id": 64,
+"fault": "hold16",
+"rec": 288,
+"start": 70381,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 65,
+"fault": "hold16",
+"rec": 60,
+"start": 14819,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 66,
+"fault": "hold16",
+"rec": 328,
+"start": 80053,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 67,
+"fault": "hold16",
+"rec": 337,
+"start": 82305,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 68,
+"fault": "hold16",
+"rec": 223,
+"start": 54552,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 3
+},
+{
+"burst_id": 69,
+"fault": "hold16",
+"rec": 125,
+"start": 30633,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 1
+},
+{
+"burst_id": 70,
+"fault": "hold16",
+"rec": 311,
+"start": 76013,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 71,
+"fault": "hold16",
+"rec": 121,
+"start": 29668,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 72,
+"fault": "lag8",
+"rec": 288,
+"start": 70411,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 1
+},
+{
+"burst_id": 73,
+"fault": "lag8",
+"rec": 271,
+"start": 66261,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 74,
+"fault": "lag8",
+"rec": 334,
+"start": 81575,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 75,
+"fault": "lag8",
+"rec": 323,
+"start": 79006,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 76,
+"fault": "lag8",
+"rec": 50,
+"start": 12239,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 77,
+"fault": "lag8",
+"rec": 52,
+"start": 12707,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 78,
+"fault": "lag8",
+"rec": 187,
+"start": 45773,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 4
+},
+{
+"burst_id": 79,
+"fault": "lag8",
+"rec": 328,
+"start": 80131,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 2
+},
+{
+"burst_id": 80,
+"fault": "lag8",
+"rec": 88,
+"start": 21525,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 81,
+"fault": "lag8",
+"rec": 131,
+"start": 32112,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 6
+},
+{
+"burst_id": 82,
+"fault": "lag8",
+"rec": 214,
+"start": 52243,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 7
+},
+{
+"burst_id": 83,
+"fault": "lag8",
+"rec": 207,
+"start": 50571,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 1
+},
+{
+"burst_id": 84,
+"fault": "lag32",
+"rec": 375,
+"start": 91524,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 85,
+"fault": "lag32",
+"rec": 42,
+"start": 10356,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 7
+},
+{
+"burst_id": 86,
+"fault": "lag32",
+"rec": 275,
+"start": 67202,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 1
+},
+{
+"burst_id": 87,
+"fault": "lag32",
+"rec": 14,
+"start": 3447,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 2
+},
+{
+"burst_id": 88,
+"fault": "lag32",
+"rec": 249,
+"start": 60899,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 6
+},
+{
+"burst_id": 89,
+"fault": "lag32",
+"rec": 107,
+"start": 26311,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 90,
+"fault": "lag32",
+"rec": 60,
+"start": 14792,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 3
+},
+{
+"burst_id": 91,
+"fault": "lag32",
+"rec": 281,
+"start": 68746,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 5
+},
+{
+"burst_id": 92,
+"fault": "lag32",
+"rec": 165,
+"start": 40375,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 93,
+"fault": "lag32",
+"rec": 201,
+"start": 49150,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+},
+{
+"burst_id": 94,
+"fault": "lag32",
+"rec": 83,
+"start": 20275,
+"length": 40,
+"onset": 10,
+"duration": 20,
+"channel": 5
+},
+{
+"burst_id": 95,
+"fault": "lag32",
+"rec": 73,
+"start": 17835,
+"length": 40,
+"onset": 10,
+"duration": 3,
+"channel": 3
+}
+]
+},
+"sha256": "193d8d0d1b646c824264cefa83818cba1c2227413e558b8ef9ba98b601be195b"
+}

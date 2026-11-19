@@ -1,5 +1,13 @@
 # AGENTS.md
 
+## Efficient Repository Exploration
+
+- Locate filenames with `rg --files` and symbols with scoped `rg -n` searches before reading file contents.
+- Read only task-relevant files and line ranges; do not reread unchanged files without a reason.
+- Start in the smallest relevant directory. Avoid repository-wide scans unless needed; expand scope when correctness requires it.
+- Exclude generated artifacts, datasets, dependencies, build outputs, caches, and logs from routine searches; include specific excluded files when the task needs them.
+- Use this short project map only when needed: `src/config.py` (configuration), `src/data/` (input pipeline), `src/models/` (models), `src/train_transformer_baseline.py` (training), `src/evaluate/` (evaluation), `docs/project_status.md` (integration status), `artifacts/` (generated results). Update it only when these entry points change.
+
 ## Project Definition
 
 **Project title:** Design and Implementation of a Real-Time Machinery Condition Monitoring System Using a Transformer Neural Network on FPGA

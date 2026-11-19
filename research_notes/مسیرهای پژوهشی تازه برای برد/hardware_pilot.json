@@ -1,0 +1,266 @@
+{
+  "review_date": "2026-11-11",
+  "board_access": false,
+  "training_or_dataset_access": false,
+  "actual_reproduction": "python -c \"import runpy; from pathlib import Path; runpy.run_path(str(next(Path('research_notes').glob('*/hardware_pilot.py'))), run_name='__main__')\"",
+  "assumptions": [
+    "All internal linear inputs are clamped to [-511,511] by approved reference; ap_int<10> bit pattern -512 is not included in this legal-domain proof.",
+    "Weights/bias/scales are the exact checked-in header constants, not noiseaug exports.",
+    "Row softmax dummy has exp(0)=32768, all score entries=0, no mask and no trained model.",
+    "No resource/timing/accuracy claims follow from these pilots."
+  ],
+  "hashes": {
+    "hls\\f1_int10_seq256\\vitis\\weights_int10.h": "fae860741774b0b6048768357dd21a4de61a3abcac576a780b6a9f9c142ef4ac",
+    "src\\quantize\\integer_model.py": "991c3cc4acf1ad2c0418761220afe9dd92742de52aaa906f7a1d93a551888b97"
+  },
+  "layer_bounds": [
+    {
+      "layer": "proj",
+      "bound_including_bias": 719316,
+      "sufficient_signed_accumulator_bits": 21,
+      "multiplier_q40": 3233788076,
+      "unsigned_multiplier_bits": 32,
+      "sufficient_signed_product_bits": 53,
+      "conservative_saturation_threshold": 174084,
+      "sufficient_signed_unsaturated_input_bits": 19
+    },
+    {
+      "layer": "l0_wq",
+      "bound_including_bias": 1748369,
+      "sufficient_signed_accumulator_bits": 22,
+      "multiplier_q40": 2485799219,
+      "unsigned_multiplier_bits": 32,
+      "sufficient_signed_product_bits": 53,
+      "conservative_saturation_threshold": 226467,
+      "sufficient_signed_unsaturated_input_bits": 19
+    },
+    {
+      "layer": "l0_wk",
+      "bound_including_bias": 1339961,
+      "sufficient_signed_accumulator_bits": 22,
+      "multiplier_q40": 2334081050,
+      "unsigned_multiplier_bits": 32,
+      "sufficient_signed_product_bits": 53,
+      "conservative_saturation_threshold": 241187,
+      "sufficient_signed_unsaturated_input_bits": 19
+    },
+    {
+      "layer": "l0_wv",
+      "bound_including_bias": 1760425,
+      "sufficient_signed_accumulator_bits": 22,
+      "multiplier_q40": 939642433,
+      "unsigned_multiplier_bits": 30,
+      "sufficient_signed_product_bits": 52,
+      "conservative_saturation_threshold": 599111,
+      "sufficient_signed_unsaturated_input_bits": 21
+    },
+    {
+      "layer": "l0_out",
+      "bound_including_bias": 2149582,
+      "sufficient_signed_accumulator_bits": 23,
+      "multiplier_q40": 1272372994,
+      "unsigned_multiplier_bits": 31,
+      "sufficient_signed_product_bits": 53,
+      "conservative_saturation_threshold": 442441,
+      "sufficient_signed_unsaturated_input_bits": 20
+    },
+    {
+      "layer": "l0_ff0",
+      "bound_including_bias": 2564229,
+      "sufficient_signed_accumulator_bits": 23,
+      "multiplier_q40": 1097187831,
+      "unsigned_multiplier_bits": 31,
+      "sufficient_signed_product_bits": 53,
+      "conservative_saturation_threshold": 513085,
+      "sufficient_signed_unsaturated_input_bits": 20
+    },
+    {
+      "layer": "l0_ff3",
+      "bound_including_bias": 3861416,
+      "sufficient_signed_accumulator_bits": 23,
+      "multiplier_q40": 1480211159,
+      "unsigned_multiplier_bits": 31,
+      "sufficient_signed_product_bits": 54,
+      "conservative_saturation_threshold": 380318,
+      "sufficient_signed_unsaturated_input_bits": 20
+    },
+    {
+      "layer": "cls1",
+      "bound_including_bias": 2203881,
+      "sufficient_signed_accumulator_bits": 23,
+      "multiplier_q40": 892181392,
+      "unsigned_multiplier_bits": 30,
+      "sufficient_signed_product_bits": 52,
+      "conservative_saturation_threshold": 630982,
+      "sufficient_signed_unsaturated_input_bits": 21
+    },
+    {
+      "layer": "cls4",
+      "bound_including_bias": 1218424,
+      "sufficient_signed_accumulator_bits": 22,
+      "multiplier_q40": 1420356417,
+      "unsigned_multiplier_bits": 31,
+      "sufficient_signed_product_bits": 52,
+      "conservative_saturation_threshold": 396345,
+      "sufficient_signed_unsaturated_input_bits": 20
+    }
+  ],
+  "actual_softmax_equal_score_pilot": [
+    {
+      "tokens": 128,
+      "score_shape": [
+        1,
+        1,
+        128,
+        128
+      ],
+      "signed_attention_bits": 8,
+      "first_code": 1,
+      "first_row_sum": 128,
+      "zero_rows": 0
+    },
+    {
+      "tokens": 128,
+      "score_shape": [
+        1,
+        1,
+        128,
+        128
+      ],
+      "signed_attention_bits": 9,
+      "first_code": 2,
+      "first_row_sum": 256,
+      "zero_rows": 0
+    },
+    {
+      "tokens": 128,
+      "score_shape": [
+        1,
+        1,
+        128,
+        128
+      ],
+      "signed_attention_bits": 10,
+      "first_code": 4,
+      "first_row_sum": 512,
+      "zero_rows": 0
+    },
+    {
+      "tokens": 256,
+      "score_shape": [
+        1,
+        1,
+        256,
+        256
+      ],
+      "signed_attention_bits": 8,
+      "first_code": 0,
+      "first_row_sum": 0,
+      "zero_rows": 256
+    },
+    {
+      "tokens": 256,
+      "score_shape": [
+        1,
+        1,
+        256,
+        256
+      ],
+      "signed_attention_bits": 9,
+      "first_code": 1,
+      "first_row_sum": 256,
+      "zero_rows": 0
+    },
+    {
+      "tokens": 256,
+      "score_shape": [
+        1,
+        1,
+        256,
+        256
+      ],
+      "signed_attention_bits": 10,
+      "first_code": 2,
+      "first_row_sum": 512,
+      "zero_rows": 0
+    },
+    {
+      "tokens": 512,
+      "score_shape": [
+        1,
+        1,
+        512,
+        512
+      ],
+      "signed_attention_bits": 8,
+      "first_code": 0,
+      "first_row_sum": 0,
+      "zero_rows": 512
+    },
+    {
+      "tokens": 512,
+      "score_shape": [
+        1,
+        1,
+        512,
+        512
+      ],
+      "signed_attention_bits": 9,
+      "first_code": 0,
+      "first_row_sum": 0,
+      "zero_rows": 512
+    },
+    {
+      "tokens": 512,
+      "score_shape": [
+        1,
+        1,
+        512,
+        512
+      ],
+      "signed_attention_bits": 10,
+      "first_code": 1,
+      "first_row_sum": 512,
+      "zero_rows": 0
+    },
+    {
+      "tokens": 1024,
+      "score_shape": [
+        1,
+        1,
+        1024,
+        1024
+      ],
+      "signed_attention_bits": 8,
+      "first_code": 0,
+      "first_row_sum": 0,
+      "zero_rows": 1024
+    },
+    {
+      "tokens": 1024,
+      "score_shape": [
+        1,
+        1,
+        1024,
+        1024
+      ],
+      "signed_attention_bits": 9,
+      "first_code": 0,
+      "first_row_sum": 0,
+      "zero_rows": 1024
+    },
+    {
+      "tokens": 1024,
+      "score_shape": [
+        1,
+        1,
+        1024,
+        1024
+      ],
+      "signed_attention_bits": 10,
+      "first_code": 0,
+      "first_row_sum": 0,
+      "zero_rows": 1024
+    }
+  ]
+}
