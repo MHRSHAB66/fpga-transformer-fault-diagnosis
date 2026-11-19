@@ -47,8 +47,8 @@ Files are grouped into 4 classes: `normal`, `imbalance`, `misalignment`,
 | 10–11 | done | Results to PC over the USB-UART and over SSH/TCP Ethernet; Replay/Live viewer |
 | 12 | done (prepared windows) | Integration and validation; see the consolidated results for limits |
 
-Key results of the deployed system (MYIR Z-Turn XC7Z020, 95,404 unseen test
-windows; evidence in the consolidated results):
+Key results of the **baseline** deployed system (MYIR Z-Turn XC7Z020;
+see the consolidated results for test conditions and evidence):
 
 | Metric | Value |
 |---|---|
@@ -56,13 +56,24 @@ windows; evidence in the consolidated results):
 | Board output vs Python INT10 reference | identical on all windows, incl. all 4 logits |
 | Sustained throughput (board) | 60.9 windows/s vs 48.83 required (50 kHz, 1,024 stride) |
 | Hard deadline, board side (RAM input, SCHED_FIFO) | 0 misses in 100,000 windows, max 16.56 ms of 20.48 ms |
-| FPGA resources (post-route, 100 MHz) | LUT 59.7 %, FF 29.1 %, BRAM 50.4 %, DSP 95.5 % (raw-input core with on-FPGA preprocessing: LUT 68.9 %, BRAM 54.6 %, same DSP) |
-| Raw-input core (z-score + INT10 inside the FPGA) | 97.7705 % on the board, 95,404/95,404 logits = C-model, hard RT 0 misses / 30,000 |
-| Same model on the board's ARM CPU | ~219 ms per window (FPGA ~14x faster) |
+| FPGA resources (post-route, 100 MHz) | LUT 59.7 %, FF 29.1 %, BRAM 50.4 %, DSP 95.5 % |
+
+Later, separately validated variants and additional experiments (not the same
+measurement as the baseline rows above):
+
+| Experiment | Result | Evidence |
+|---|---|---|
+| Raw-input core (on-FPGA z-score + INT10) | 97.7705 % on 95,404 board windows; all logits match C-model; post-route LUT 68.9 %, BRAM 54.6 % | `docs/reports/onchip_preprocessing_20261109.md` |
+| Temporal vote, deployed-model weights, continuous stream, k=5 | 99.084 % *system* accuracy (per-window model: 97.7705 %) | `docs/reports/paper_readiness_review_20261110.md` section 6 |
+| Noise-augmented variant with its own FPGA bitstream, 0-dB input, vote k=5 | 93.835 % system accuracy (per-window: 90.1304 %) | `docs/reports/paper_readiness_review_20261110.md` section 5 |
+| Board-boundary endurance, RAM input, SCHED_FIFO | 0 deadline misses in 1,400,000 windows; worst 19.25 ms of 20.48 ms | `docs/reports/paper_readiness_review_20261110.md` section 7 |
+| Same model on the board's ARM CPU | ~219 ms/window (FPGA ~14x faster in the cited comparison) | `docs/reports/cpu_baseline_20261109.md` |
 
 Figures: `docs/figures/final/` (regenerate with `python -m tools.plot_final_figures`).
 
 Per-stage detail: `docs/project_status.md`. Design decisions: `docs/DECISION_LOG.md`.
+[Hardware versions and evidence index](docs/reports/hardware_evidence_index.md) distinguishes
+HLS estimates, Vivado post-route results, and physical board measurements.
 Project stage plan and engineering constraints: `AGENTS.md`.
 
 ## Installation
@@ -84,41 +95,50 @@ scripts; install it manually only if you run those.
 
 All commands run from the project root.
 
-**Data validation (no training):**
+**Run automated tests (no model training):**
 ```bash
-python -m src.tools.test_tail_window       # windowing unit checks (numpy only)
+python -m unittest discover -s tests
 ```
-Stage-2 preprocessing is finalized; its one-off validation/export tools
-(`test_pipeline.py`, `pipeline_validation.py`) now live under `archive/`.
-The exported config remains at `artifacts/results/preprocessing_config.json`.
+These tests need the project's Python dependencies; some hardware-dependent tests
+use mocks. This does **not** replace testing on the physical board. Historical
+one-off preprocessing scripts, including `test_tail_window.py`, are under
+`archive/`. The saved preprocessing config is
+`artifacts/results/preprocessing_config.json`.
 
 **Train the Transformer baseline:**
 ```bash
 python -m src.train_transformer_baseline
 ```
-Saves the best checkpoint plus an embedded reproducibility snapshot
-(`model_config`, `training_config`, `preprocessing_config`).
+Training creates a timestamped `artifacts/runs/<run_name>/` directory, prints
+its path, and stores the best checkpoint alongside the model, training, and
+preprocessing configuration snapshots.
 
-**Evaluate a saved checkpoint:**
+**Evaluate that checkpoint:**
 ```bash
-python -m src.evaluate.evaluate_model
+python -m src.evaluate.evaluate_model --checkpoint "artifacts/runs/REPLACE_WITH_RUN_DIR/checkpoints/transformer_best.pt"
 ```
-Loads `artifacts/checkpoints/transformer_baseline_best.pt`, reports accuracy,
-precision/recall/F1 and confusion matrices. Uses the checkpoint's embedded
-`model_config` when present, otherwise falls back to `src/config.py`.
+Replace `REPLACE_WITH_RUN_DIR` with the actual directory printed by training.
+The evaluator writes a fresh timestamped evaluation under `artifacts/runs/` and
+uses the checkpoint's recorded `model_config` when available. The evaluator's
+older default checkpoint path remains available for backward compatibility,
+but is not where new training runs are saved.
 
 ## Artifacts
 
+A fresh run is organized as follows (the actual run directory is timestamped):
+
 ```
-artifacts/checkpoints/transformer_baseline_best.pt           # best model weights + config snapshot
-artifacts/checkpoints/transformer_baseline_model_config.json # standalone architecture config
-artifacts/results/transformer_baseline_metrics.json          # training metrics
-artifacts/results/transformer_experiment_config.json         # full experiment snapshot
-artifacts/results/transformer_evaluation.json                # evaluation metrics
-artifacts/results/*.png                                       # loss/accuracy/confusion-matrix plots
-artifacts/cache/                                              # per-file preprocessing cache (git-ignored)
+artifacts/runs/<run_name>/
+  checkpoints/transformer_best.pt       # model weights and config snapshot
+  checkpoints/transformer_baseline_model_config.json  # architecture snapshot
+  results/metrics.json                  # training + evaluation metrics
+  results/transformer_experiment_config.json         # experiment configuration
+  results/history.json                  # training history
+  plots/                                # training and confusion-matrix figures
+  logs/                                 # runtime summaries
 ```
 
-Configuration constants live in `src/config.py`. Reproducibility snapshots are
-built from it by `src/experiment_config.py`, so saved configs always match the
-run.
+Historical experiment outputs, FPGA build reports, hardware deployments and
+board tests use other directories under `artifacts/`. See the
+[hardware evidence index](docs/reports/hardware_evidence_index.md) for the
+hardware-report locations and source labels.

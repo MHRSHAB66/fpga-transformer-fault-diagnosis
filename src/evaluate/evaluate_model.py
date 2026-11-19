@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 from datetime import datetime
 from pathlib import Path
@@ -111,7 +112,8 @@ def evaluate_saved_model(checkpoint_path=None, output_dir=None, max_files=None):
     if not checkpoint_path.exists():
         raise FileNotFoundError(
             f"Checkpoint not found at {checkpoint_path}. "
-            "Run `python -m src.train_transformer_baseline` first."
+            "Training writes artifacts/runs/<run_name>/checkpoints/transformer_best.pt. "
+            "Pass that file with --checkpoint when running this module."
         )
 
     train_loader, val_loader, test_loader, stats = build_dataloaders(max_files=max_files)
@@ -249,4 +251,14 @@ def evaluate_saved_model(checkpoint_path=None, output_dir=None, max_files=None):
 
 
 if __name__ == "__main__":
-    evaluate_saved_model()
+    parser = argparse.ArgumentParser(description="Evaluate a saved Transformer checkpoint")
+    parser.add_argument(
+        "--checkpoint", type=Path, default=None,
+        help="Path to a checkpoint saved by training (recommended for new runs).",
+    )
+    parser.add_argument(
+        "--output-dir", type=Path, default=None,
+        help="Optional directory for evaluation outputs.",
+    )
+    args = parser.parse_args()
+    evaluate_saved_model(checkpoint_path=args.checkpoint, output_dir=args.output_dir)

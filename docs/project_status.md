@@ -2,7 +2,10 @@
 
 **Project:** Real-Time Machinery Condition Monitoring Using a Transformer Neural Network on FPGA  
 **Student:** Mehrdad Sheikh Abbasi, B.Sc., Amirkabir University of Technology  
-**Last updated:** 2026-11-11 (paper study; temporal vote in FPGA logic validated on the board). Earlier: 2026-11-09 evening (UART path, preprocessing in the FPGA, CPU baseline, SD image; earlier the same day the final review: all 2026-10-22..24 work committed, off-repo backup, ROC/AUC + final figures, artifact manifest; remaining board work planned). Reports: `docs/reports/consolidated_results_20261022.md` (canonical numbers, §8 ROC/AUC), `docs/reports/hard_rt_calibration_power_20261024.md`, `docs/reports/gui_demo_timing_20261023.md`. Figures: `docs/figures/final/`. Demo runbook: `docs/demo_runbook.md`.
+**Documentation reconciled:** 2026-11-20 (existing board evidence; no new experiment run). **Prior update:** 2026-11-11 (paper study; temporal vote in FPGA logic validated on the board). Earlier: 2026-11-09 evening (UART path, preprocessing in the FPGA, CPU baseline, SD image; earlier the same day the final review: all 2026-10-22..24 work committed, off-repo backup, ROC/AUC + final figures, artifact manifest; remaining board work planned). Reports: `docs/reports/consolidated_results_20261022.md` (canonical numbers, §8 ROC/AUC), `docs/reports/hard_rt_calibration_power_20261024.md`, `docs/reports/gui_demo_timing_20261023.md`. Figures: `docs/figures/final/`. Demo runbook: `docs/demo_runbook.md`.
+
+Evidence index for HLS, post-route, and physical runs:
+[`docs/reports/hardware_evidence_index.md`](reports/hardware_evidence_index.md).
 
 ---
 
@@ -214,8 +217,12 @@ deployed-system numbers by the runbook.
   97.9 %, unseen middle severity 95.7 %, unseen highest severity 74.1 %.
 - Noise-augmented training; its INT10 export (C-model = Python reference): clean
   97.40 % (normal recall 96.6 %), 0 dB 90.1 % vs 82.8 % for the deployed model.
-  A second bitstream with these weights is a paper study; the deployed model is
-  unchanged.
+  **Second bitstream physically validated on 2026-11-11** with the raw-input + vote
+  core (`seq256_vote_noiseaug_z7020_20261111`). On 95,404 noisy (0-dB) windows:
+  per-window accuracy 90.1304 %, system accuracy with vote k=5 93.835 %, and
+  95,404/95,404 logits matched the C-model. The approved deployed-model weights
+  remain unchanged; this is a separate experimental variant.
+  Evidence: `docs/reports/paper_readiness_review_20261110.md` section 5.
 - Temporal majority vote in FPGA logic (AXI-Lite `vote_k`/`vote_class`/`vote_count`):
   +241 LUT / +186 FF, timing met (WNS +0.135 ns). On the board (deployment
   `seq256_vote_z7020_20261110`): golden 41/41, full test logits = C-model on all
@@ -223,18 +230,28 @@ deployed-system numbers by the runbook.
   99.084 % at k = 5, hard real time 0 misses in 30,000 (max 16.66 ms).
   New figures in `docs/figures/paper/` (`python -m tools.plot_paper_figures`).
 
-**Remaining with the board (until ≈ 2026-12-09):** board run of the noise-augmented
-second bitstream; daytime endurance runs; UI refresh (Mehrdad will describe it),
-then a recorded demo video; power/energy if an inline DC meter is found (the board
-runs from a 5 V / 3 A adapter).
+**Additional board tests completed (2026-11-11; see paper-readiness review section 7):**
+- Endurance with the vote overlay and RAM inputs every 20.48 ms under SCHED_FIFO:
+  one 300,000-window run and one 1,400,000-window run (7 h 58 min), both with
+  zero recorded deadline misses; the latter's max response was 19.25 ms.
+  This is a board-boundary test, not sensor-to-PC hard-real-time validation.
+
+**Remaining / not yet evidenced as of this documentation reconciliation:**
+- Measured board power and energy per inference (external power measurement
+  needed; Vivado power estimates are not measurements).
+- Confirm completion and archive evidence of the final UI refresh and recorded
+  demo video; do not report them complete without evidence.
+- Optional direct physical sensor integration and end-to-end hard real-time
+  validation including the PC GUI.
 
 **Still pending / future work:**
 - Legacy live demo path (gzip from SD, SSH, GUI) remains AVERAGE-THROUGHPUT VERIFIED,
   HARD REAL-TIME NOT VERIFIED; the RAM mode covers the board boundary only — a sensor
   input path is future work.
-- Power/energy measurement once an inline meter or logging supply is available.
-- Optional: longer `ram_realtime_demo` run (100,000 windows); unexplained post-boot
-  warm-up (≈59 °C) seen only after the RT boot.
+- Optional: a separate **GUI-specific** `ram_realtime_demo` 100,000-window run;
+  the longer board-boundary endurance study above does not validate GUI timing.
+  Historical unexplained post-boot warm-up (≈59 °C) needs investigation only
+  if it recurs.
 - Optional live sensor input path (Stage 9; on-board preprocessing done 2026-11-09).
 
 Claims: physical-board results (bit-exactness, latency, hard real time at the
