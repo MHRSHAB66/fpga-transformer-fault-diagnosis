@@ -1,0 +1,10 @@
+[{"stream_name":"stdout","time":5.145402972,"data":"cpu_count 4 ckpt /kaggle/input/datasets/mehrdadsheikhabbasi/fpga-fault-seq256-pool4-ckpt/best.pt\n"}
+,{"stream_name":"stdout","time":17.746974941,"data":"[INFO] Found 1951 CSV files in /kaggle/input/datasets/vuxuancu/mafaulda-full/mafaulda\n"}
+,{"stream_name":"stdout","time":843.894545071,"data":"[eval] val shard 2/4: 49 files, 11956 windows, 826s\n"}
+,{"stream_name":"stderr","time":846.777613682,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":846.777649092,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":847.100771609,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":847.100804729,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":847.920886328,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":849.005930942,"data":"[NbConvertApp] Writing 520431 bytes to __results__.html\n"}
+]

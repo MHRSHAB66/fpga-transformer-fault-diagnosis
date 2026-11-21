@@ -21,6 +21,7 @@ deployed artifact.
 from __future__ import annotations
 
 import atexit
+import contextlib
 import json
 import math
 import os
@@ -56,6 +57,34 @@ SINGLE_MULTIPLIERS = ["proj", "l0_wq", "l0_wk", "l0_wv", "l0_out", "l0_ff0", "l0
 LINEAR_DIN = {"proj": 8, "l0_wq": 32, "l0_wk": 32, "l0_wv": 32, "l0_out": 32,
               "l0_ff0": 32, "l0_ff3": 64, "cls1": 32, "cls4": 16}
 SEQ, HD, D = 256, 8, 32
+
+
+@contextlib.contextmanager
+def int10_bits():
+    """IntegerTransformer reads integer_model.ACT_BITS at CALL time: hold it at 10."""
+    import src.quantize.integer_model as im
+    saved = (im.ACT_BITS, im.W_BITS, im.ATTN_BITS)
+    im.ACT_BITS = im.W_BITS = im.ATTN_BITS = 10
+    try:
+        yield im
+    finally:
+        im.ACT_BITS, im.W_BITS, im.ATTN_BITS = saved
+
+
+_REF: dict = {}
+
+
+def reference_model():
+    """The real Python INT10 reference (deployed checkpoint + export scales)."""
+    if "m" not in _REF:
+        import torch
+        ck = torch.load(CHECKPOINT, map_location="cpu", weights_only=False)
+        state = {k: v.cpu().numpy() for k, v in ck["model_state_dict"].items()}
+        cfg = {"input_dim": 8, "seq_len": 256, "num_classes": 4, "d_model": 32, "nhead": 4,
+               "num_layers": 1, "dim_feedforward": 64, "dropout": 0.1}
+        with int10_bits() as im:
+            _REF["m"] = im.IntegerTransformer(state, cfg, _export_scales())
+    return _REF["m"]
 
 
 def max_abs_acc(name: str) -> int:
@@ -273,33 +302,39 @@ class Q40VsPythonReferenceTests(unittest.TestCase):
                 self.assertEqual(bad.size, 0,
                                  f"{name}: acc={acc[bad[:3]]} q40={q[bad[:3]]} float={f[bad[:3]]}")
 
+    @unittest.skipUnless(CHECKPOINT.exists(), "SEQ=256 checkpoint not present")
     def test_residual_exhaustive(self):
+        # IntegerTransformer._add (the real reference) on ALL 1023^2 code pairs
+        # vs the Q40 residual oracle with the header constants
+        m, s = reference_model(), _export_scales()
         a, b = np.meshgrid(np.arange(-511, 512), np.arange(-511, 512))
         a, b = a.ravel().astype(np.int64), b.ravel().astype(np.int64)
-        for which in ("add_l0_res1", "add_l0_res2"):
+        for which, sa, sb, so in (("add_l0_res1", s["embed"], s["l0.attn_out"], s["l0.res1"]),
+                                  ("add_l0_res2", s["l0.ln1"], s["l0.ff2"], s["l0.res2"])):
             r0q, r1q = H[which + "_q40"]
-            r0, r1 = map(float, H[which])
             q = np.clip(c.div_round_even_np(a * r0q + b * r1q, c.Q40_ONE), -511, 511)
-            f = np.clip(np.round(a * r0 + b * r1), -511, 511).astype(np.int64)
+            with int10_bits():
+                f = m._add(a, sa, b, sb, so)
             self.assertEqual(int((q != f).sum()), 0, which)
 
+    @unittest.skipUnless(CHECKPOINT.exists(), "SEQ=256 checkpoint not present")
     def test_layernorm_random_rows(self):
-        # reference LN (float64 affine, integer mean/var/rsqrt) vs Q40 LN oracle
+        # IntegerTransformer._layernorm (the real reference) vs the Q40 LN oracle;
+        # 5,000 random rows per LN at five amplitude levels (SAMPLED, not exhaustive)
+        m, s = reference_model(), _export_scales()
         rng = np.random.default_rng(9)
-        lut = build_rsqrt_lut()
-        for n in ("l0_ln1", "l0_ln2", "cls_ln"):
+        lns = (("l0_ln1", "encoder_layers.0.attention_norm", s["l0.res1"], s["l0.ln1"]),
+               ("l0_ln2", "encoder_layers.0.feedforward_norm", s["l0.res2"], s["l0.ln2"]),
+               ("cls_ln", "classifier.0", s["pool"], s["cls_ln"]))
+        for n, key, si, so in lns:
+            amp = rng.choice([1, 5, 30, 150, 511], size=(5000, 1))
+            rows = np.clip(np.round(rng.uniform(-1, 1, (5000, D)) * amp), -511, 511).astype(np.int64)
+            with int10_bits():
+                ref = m._layernorm(rows, si, m.f[key + ".weight"], m.f[key + ".bias"], so)
             gq, bq = H[f"ln_gm_{n}_q40"], H[f"ln_bt_{n}_q40"]
-            g = np.array(H[f"ln_gm_{n}"], dtype=np.float64)
-            bt = np.array(H[f"ln_bt_{n}"], dtype=np.float64)
-            for _ in range(5000):
-                sc = int(rng.choice([1, 5, 30, 150, 511]))
-                x = rng.integers(-sc, sc + 1, D).astype(np.int64)
-                mean = int(np.round(x.sum() / D))
-                cc = x - mean
-                var = int(np.round(float((cc ** 2).sum()) / D))
-                inv = int(rsqrt_fxp(np.array([var]), lut)[0][0])
-                ref = np.clip(np.round(cc * inv * g + bt), -511, 511).astype(np.int64)
-                self.assertEqual(ref.tolist(), c.layernorm_q40(x, gq, bq, 0, RSQRT_LUT), n)
+            epsq = int(round(1e-5 / (si * si)))
+            self.assertEqual(epsq, 0, n)
+            self.assertEqual(ref.tolist(), [c.layernorm_q40(r, gq, bq, epsq, RSQRT_LUT) for r in rows], n)
 
     def test_float_reference_is_not_q40_in_general(self):
         # Documented limitation: the float path is an implementation of the same
@@ -318,7 +353,8 @@ class WidthBoundTests(unittest.TestCase):
 
     def test_mac_accumulators_fit_ap_int32_and_win_long(self):
         # acc_t = ap_int<32>; requant() also takes `long`, which is 32-bit on
-        # LLP64 (Windows/MinGW). All reachable |acc| must stay below 2^31.
+        # LLP64 (Windows/MinGW g++ used here: sizeof(long) == 4) and 64-bit on
+        # LP64 Linux. All reachable |acc| must stay below 2^31 for both.
         for name in SINGLE_MULTIPLIERS:
             self.assertLess(max_abs_acc(name), 1 << 31, name)
 
@@ -529,26 +565,45 @@ class EndToEndTopTests(HarnessMixin, unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        import torch
-        import src.quantize.integer_model as im
-        from src.quantize.evaluate_integer_bits import set_bits
-        cls.saved = (im.ACT_BITS, im.W_BITS, im.ATTN_BITS)
-        ck = torch.load(CHECKPOINT, map_location="cpu", weights_only=False)
-        state = {k: v.cpu().numpy() for k, v in ck["model_state_dict"].items()}
-        set_bits(10)
         cls.scales = _export_scales()
-        cfg = {"input_dim": 8, "seq_len": 256, "num_classes": 4, "d_model": 32, "nhead": 4,
-               "num_layers": 1, "dim_feedforward": 64, "dropout": 0.1}
-        cls.model = im.IntegerTransformer(state, cfg, cls.scales)
-
-    @classmethod
-    def tearDownClass(cls):
-        import src.quantize.integer_model as im
-        im.ACT_BITS, im.W_BITS, im.ATTN_BITS = cls.saved
+        cls.model = reference_model()
 
     def _ref(self, w1024, agg=aggregate_round_div):
         s = self.scales["input"]
-        return self.model.infer_int(agg(w1024[None], 4).astype(np.float64) * s)[0]
+        with int10_bits():
+            return self.model.infer_int(agg(w1024[None], 4).astype(np.float64) * s)[0]
+
+    def test_header_constants_are_the_reference_runtime_constants(self):
+        # Non-circularity: the doubles/ints the exhaustive tests read from
+        # weights_int10.h are bit-identical to what IntegerTransformer computes.
+        from src.quantize.integer_model import layer_positions
+        m, s = self.model, self.scales
+        p = layer_positions(0)
+        plan = {"proj": (s["input"], s["embed"]), "l0.wq": (s["embed"], s[p["q"]]),
+                "l0.wk": (s["embed"], s[p["k"]]), "l0.wv": (s["embed"], s[p["v"]]),
+                "l0.out": (s[p["ctx"]], s[p["attn_out"]]), "l0.ff0": (s[p["ln1"]], s[p["ff1"]]),
+                "l0.ff3": (s[p["ff_act"]], s[p["ff2"]]), "cls1": (s["cls_ln"], s["cls1"]),
+                "cls4": (s["cls_act"], s["logits"])}
+        for n, (si, so) in plan.items():
+            h = n.replace(".", "_")
+            self.assertEqual(float(H["M_" + h][0]), (si * m.sW[n]) / so, n)
+            self.assertEqual(H["W_" + h], m.qW[n].ravel().tolist(), n)
+            self.assertEqual(H["b_" + h], np.round(m.bias[n] / (si * m.sW[n])).astype(int).tolist(), n)
+        self.assertEqual(float(H["M_l0_scores"][0]),
+                         (s[p["q"]] * s[p["k"]]) / (math.sqrt(m.head_dim) * s[p["scores"]]))
+        self.assertEqual(float(H["M_l0_ctx"][0]), ((1.0 / 511) * s[p["v"]]) / s[p["ctx"]])
+        self.assertEqual(float(H["M_pool"][0]), s[p["ln2"]] / (SEQ * s["pool"]))
+        self.assertEqual([float(v) for v in H["add_l0_res1"]],
+                         [s["embed"] / s[p["res1"]], s[p["attn_out"]] / s[p["res1"]]])
+        self.assertEqual([float(v) for v in H["add_l0_res2"]],
+                         [s[p["ln1"]] / s[p["res2"]], s[p["ff2"]] / s[p["res2"]]])
+        for n, key, so in (("l0_ln1", "encoder_layers.0.attention_norm", s[p["ln1"]]),
+                           ("l0_ln2", "encoder_layers.0.feedforward_norm", s[p["ln2"]]),
+                           ("cls_ln", "classifier.0", s["cls_ln"])):
+            self.assertEqual([float(v) for v in H["ln_gm_" + n]],
+                             (m.f[key + ".weight"] / ((1 << 15) * so)).tolist(), n)
+            self.assertEqual([float(v) for v in H["ln_bt_" + n]], (m.f[key + ".bias"] / so).tolist(), n)
+        self.assertEqual(H["pe_codes"], np.round(m.pe / s["embed"]).astype(int).ravel().tolist())
 
     def test_tie_heavy_windows(self):
         rng = np.random.default_rng(8)
@@ -567,6 +622,12 @@ class EndToEndTopTests(HarnessMixin, unittest.TestCase):
         want = [" ".join(map(str, self._ref(w))) for w in wins]
         for k in self.kinds():
             self.assertEqual(run_harness(k, lines), want, k)
+
+        # discriminating power: half-to-even aggregation would change the logits
+        def agg_half_even(x, f):
+            return np.round(x.reshape(x.shape[0], -1, f, x.shape[-1]).sum(2) / f).astype(np.int64)
+        alt = [" ".join(map(str, self._ref(w, agg_half_even))) for w in wins]
+        self.assertGreaterEqual(sum(a != b for a, b in zip(alt, want)), 3)
 
     def test_ingress_golden_vectors(self):
         rows = (INGRESS_GOLDEN / "golden_in.txt").read_text().split("\n")[1:]

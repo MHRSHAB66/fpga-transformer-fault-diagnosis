@@ -1,0 +1,13 @@
+float    acc=0.97976 f1=0.96342 normal=0.9033 changed=154
+s42_n12  acc=0.98060 f1=0.96379 normal=0.8902 changed=103
+s42_n20  acc=0.98098 f1=0.96476 normal=0.8975 changed=0
+s42_n40  acc=0.98100 f1=0.96495 normal=0.8992 changed=94
+s42_n80  acc=0.98134 f1=0.96460 normal=0.9008 changed=168
+s1_n12   acc=0.98146 f1=0.96430 normal=0.9123 changed=178
+s1_n20   acc=0.98148 f1=0.96431 normal=0.9123 changed=183
+s1_n40   acc=0.98157 f1=0.96453 normal=0.9115 changed=180
+s1_n80   acc=0.98153 f1=0.96484 normal=0.9172 changed=180
+s2_n12   acc=0.98129 f1=0.96508 normal=0.8992 changed=135
+s2_n20   acc=0.98081 f1=0.96404 normal=0.8967 changed=133
+s2_n40   acc=0.98167 f1=0.96383 normal=0.9098 changed=212
+s2_n80   acc=0.98159 f1=0.96463 normal=0.9139 changed=198

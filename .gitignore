@@ -357,3 +357,8 @@ artifacts/results/fpga_rawinput_valset_*/fpga_valset_raw.*
 /seq256_q02/
 # Q02 ordered digital replay input (raw24 gz; hashed in artifacts/manifests/artifact_manifest.json).
 artifacts/research/Q02_*/*.i32.gz
+
+# Day-2 calibration-sensitivity evidence: small logs (<2 KB each) and the 22 KB
+# per-window prediction file are committed on purpose (see the report evidence table).
+!/artifacts/experiments/day2_calibration_sensitivity_20261120/**/*.log
+!/artifacts/experiments/day2_calibration_sensitivity_20261120/val_predictions.npz

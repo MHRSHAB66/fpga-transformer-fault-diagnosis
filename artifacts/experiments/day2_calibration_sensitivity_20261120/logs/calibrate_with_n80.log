@@ -1,0 +1,12 @@
+[calib] s42_n12  files=12 windows=2928 load=4s collect=33s rss=523MB
+[calib] s42_n20  files=20 windows=4880 load=7s collect=53s rss=540MB
+[calib] s42_n40  files=40 windows=9760 load=14s collect=106s rss=605MB
+[calib] s42_n80  files=80 windows=19520 load=29s collect=209s rss=760MB
+[calib] s1_n12   files=12 windows=2928 load=4s collect=30s rss=525MB
+[calib] s1_n20   files=20 windows=4880 load=7s collect=53s rss=538MB
+[calib] s1_n40   files=40 windows=9760 load=14s collect=106s rss=605MB
+[calib] s1_n80   files=80 windows=19520 load=29s collect=277s rss=760MB
+[calib] s2_n12   files=12 windows=2928 load=4s collect=33s rss=524MB
+[calib] s2_n20   files=20 windows=4880 load=7s collect=53s rss=538MB
+[calib] s2_n40   files=40 windows=9760 load=14s collect=131s rss=605MB
+[calib] s2_n80   files=80 windows=19520 load=28s collect=413s rss=760MB

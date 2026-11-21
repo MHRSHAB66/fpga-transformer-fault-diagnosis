@@ -1,0 +1,351 @@
+{
+ "experiment": "day2_calibration_sensitivity_20261120",
+ "written_utc": "2026-11-21T14:12:42+00:00",
+ "report": "docs/reports/day2_quantization_validation_20261120.md",
+ "deployed_reference": {
+  "integer_config": "artifacts/quantized/f_seq256_int10/integer_config.json",
+  "integer_config_sha256_lf": "e3160f87a0259c3dadcc4acdad9b72f993071a4d532644f66d69cf48962c35ba",
+  "weights_header_sha256": "fae860741774b0b6048768357dd21a4de61a3abcac576a780b6a9f9c142ef4ac",
+  "hls_top_sha256": "b0853b39574ce6f32423c24e56f633d2b346c45e74b278583c6b2d80e77f0631"
+ },
+ "kaggle_runs": [
+  {
+   "kernel": "mehrdadsheikhabbasi/fpga-fault-day2-calib-sens-shard-0",
+   "version": 2,
+   "status": "COMPLETE",
+   "last_run_time_utc": "2026-11-20 17:24:01",
+   "machine": "CPU, os.cpu_count()=4",
+   "output": "kaggle_val/val_shard0.json.gz",
+   "log": "kaggle_val/shard0.kaggle.log",
+   "summary_line": "[eval] val shard 0/4: 49 files, 11956 windows, 1572s"
+  },
+  {
+   "kernel": "mehrdadsheikhabbasi/fpga-fault-day2-calib-sens-shard-1",
+   "version": 1,
+   "status": "COMPLETE",
+   "last_run_time_utc": "2026-11-20 17:29:13",
+   "machine": "CPU, os.cpu_count()=4",
+   "output": "kaggle_val/val_shard1.json.gz",
+   "log": "kaggle_val/shard1.kaggle.log",
+   "summary_line": "[eval] val shard 1/4: 49 files, 11956 windows, 1579s"
+  },
+  {
+   "kernel": "mehrdadsheikhabbasi/fpga-fault-day2-calib-sens-shard-2",
+   "version": 1,
+   "status": "COMPLETE",
+   "last_run_time_utc": "2026-11-20 17:29:18",
+   "machine": "CPU, os.cpu_count()=4",
+   "output": "kaggle_val/val_shard2.json.gz",
+   "log": "kaggle_val/shard2.kaggle.log",
+   "summary_line": "[eval] val shard 2/4: 49 files, 11956 windows, 826s"
+  },
+  {
+   "kernel": "mehrdadsheikhabbasi/fpga-fault-day2-calib-sens-shard-3",
+   "version": 1,
+   "status": "COMPLETE",
+   "last_run_time_utc": "2026-11-20 17:29:22",
+   "machine": "CPU, os.cpu_count()=4",
+   "output": "kaggle_val/val_shard3.json.gz",
+   "log": "kaggle_val/shard3.kaggle.log",
+   "summary_line": "[eval] val shard 3/4: 48 files, 11712 windows, 1511s"
+  }
+ ],
+ "local_runs": {
+  "calibration_sets.json": "logs/calibrate_with_n80.log (12-config run that wrote it); logs/calibrate.log is the earlier 9-config run (identical scales)",
+  "combine": "logs/combine_val.log"
+ },
+ "commands": {
+  "tests": "python -m pytest tests/test_int10_numeric_contract.py -q",
+  "calibrate": "python -m src.quantize.calibration_sensitivity calibrate --seeds 42 1 2 --sizes 12 20 40 80 --workers 4 --out artifacts/experiments/day2_calibration_sensitivity_20261120",
+  "kaggle_build": "python kaggle/day2_calib_sensitivity/build_kernels.py",
+  "kaggle_push": "kaggle kernels push -p kaggle/day2_calib_sensitivity/shard{0,1,2,3}",
+  "combine": "python -m src.quantize.calibration_sensitivity combine --calib artifacts/experiments/day2_calibration_sensitivity_20261120/calibration_sets.json --shards artifacts/experiments/day2_calibration_sensitivity_20261120/kaggle_val/val_shard*.json.gz --out artifacts/experiments/day2_calibration_sensitivity_20261120",
+  "audit_recompute": "python -m tools.audit_day2_calibration --reproduce-files 2",
+  "audit_q40_alternatives": "python -m tools.audit_day2_q40_alternatives --scan-files 12",
+  "manifest": "python -m tools.day2_evidence_manifest"
+ },
+ "numeric_tests": {
+  "junit": "audit/pytest_int10_contract.xml",
+  "junit_sha256": "0d58e855b0650ffc838f9f62bf8f1e7b000f19f7f95ff5fc5f11176f5f99f81e",
+  "timestamp": "2026-11-21T17:42:08.645467+03:30",
+  "tests": 32,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "seconds": 32.562,
+  "harness_builds_available": {
+   "native": true,
+   "ap": true
+  },
+  "gxx": "g++.EXE (GCC) 15.2.0",
+  "sizeof_long_on_this_gxx": 4,
+  "xilinx_include": "G:\\Xilinx\\Vitis_HLS\\2020.2\\include",
+  "python": "3.12.2",
+  "numpy": "2.2.3",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "cases": [
+   {
+    "test": "QuantizeInt10Tests::test_calibration_max_maps_to_511",
+    "seconds": 0.002,
+    "result": "passed"
+   },
+   {
+    "test": "QuantizeInt10Tests::test_clipping_is_saturation_not_wraparound",
+    "seconds": 0.001,
+    "result": "passed"
+   },
+   {
+    "test": "QuantizeInt10Tests::test_halfway_and_boundaries_round_half_even",
+    "seconds": 0.001,
+    "result": "passed"
+   },
+   {
+    "test": "QuantizeInt10Tests::test_symmetric_range",
+    "seconds": 0.001,
+    "result": "passed"
+   },
+   {
+    "test": "DivRoundEvenOracleTests::test_hand_cases",
+    "seconds": 0.001,
+    "result": "passed"
+   },
+   {
+    "test": "DivRoundEvenOracleTests::test_header_q40_constants_follow_export_rule",
+    "seconds": 0.004,
+    "result": "passed"
+   },
+   {
+    "test": "DivRoundEvenOracleTests::test_vectorised_matches_scalar",
+    "seconds": 0.027,
+    "result": "passed"
+   },
+   {
+    "test": "Q40RequantVsHlsTests::test_deployed_multipliers_edge_cases",
+    "seconds": 5.574,
+    "result": "passed"
+   },
+   {
+    "test": "Q40RequantVsHlsTests::test_exact_ties_and_signed_multipliers",
+    "seconds": 0.025,
+    "result": "passed"
+   },
+   {
+    "test": "Q40RequantVsHlsTests::test_random_div_and_mul",
+    "seconds": 0.055,
+    "result": "passed"
+   },
+   {
+    "test": "Q40RequantVsHlsTests::test_residual_q40",
+    "seconds": 0.069,
+    "result": "passed"
+   },
+   {
+    "test": "Q40VsPythonReferenceTests::test_float_reference_is_not_q40_in_general",
+    "seconds": 0.002,
+    "result": "passed"
+   },
+   {
+    "test": "Q40VsPythonReferenceTests::test_layernorm_random_rows",
+    "seconds": 6.414,
+    "result": "passed"
+   },
+   {
+    "test": "Q40VsPythonReferenceTests::test_requant_exhaustive_reachable_range",
+    "seconds": 13.946,
+    "result": "passed"
+   },
+   {
+    "test": "Q40VsPythonReferenceTests::test_residual_exhaustive",
+    "seconds": 0.209,
+    "result": "passed"
+   },
+   {
+    "test": "WidthBoundTests::test_mac_accumulators_fit_ap_int32_and_win_long",
+    "seconds": 0.003,
+    "result": "passed"
+   },
+   {
+    "test": "WidthBoundTests::test_q40_products_fit_int64",
+    "seconds": 0.003,
+    "result": "passed"
+   },
+   {
+    "test": "WidthBoundTests::test_softmax_and_lut_widths",
+    "seconds": 0.003,
+    "result": "passed"
+   },
+   {
+    "test": "LutContentTests::test_exp_table",
+    "seconds": 0.003,
+    "result": "passed"
+   },
+   {
+    "test": "LutContentTests::test_gelu_approximation_vs_erf",
+    "seconds": 0.004,
+    "result": "passed"
+   },
+   {
+    "test": "LutContentTests::test_gelu_tables_rebuild_bit_exact",
+    "seconds": 0.003,
+    "result": "passed"
+   },
+   {
+    "test": "LutLookupVsHlsTests::test_attention_head_bit_exact",
+    "seconds": 0.09,
+    "result": "passed"
+   },
+   {
+    "test": "LutLookupVsHlsTests::test_gelu_lookup_and_clamp",
+    "seconds": 0.053,
+    "result": "passed"
+   },
+   {
+    "test": "LutLookupVsHlsTests::test_layernorm_bit_exact_incl_zero_and_tiny_variance",
+    "seconds": 0.146,
+    "result": "passed"
+   },
+   {
+    "test": "LutLookupVsHlsTests::test_rsqrt_bit_exact_and_accuracy",
+    "seconds": 0.633,
+    "result": "passed"
+   },
+   {
+    "test": "LutLookupVsHlsTests::test_softmax_oracle_vs_python_reference",
+    "seconds": 0.074,
+    "result": "passed"
+   },
+   {
+    "test": "AggregationTests::test_boundaries",
+    "seconds": 0.002,
+    "result": "passed"
+   },
+   {
+    "test": "AggregationTests::test_round_half_away_from_zero_all_group_sums",
+    "seconds": 0.217,
+    "result": "passed"
+   },
+   {
+    "test": "AggregationTests::test_ties_differ_from_half_even",
+    "seconds": 0.002,
+    "result": "passed"
+   },
+   {
+    "test": "EndToEndTopTests::test_header_constants_are_the_reference_runtime_constants",
+    "seconds": 0.004,
+    "result": "passed"
+   },
+   {
+    "test": "EndToEndTopTests::test_ingress_golden_vectors",
+    "seconds": 3.532,
+    "result": "passed"
+   },
+   {
+    "test": "EndToEndTopTests::test_tie_heavy_windows",
+    "seconds": 1.257,
+    "result": "passed"
+   }
+  ]
+ },
+ "files": [
+  {
+   "path": "audit/audit_recompute.json",
+   "bytes": 14447,
+   "sha256": "29619fd264bfa5ada8169161fed302b3c9a54912b0fb986d8aa51c1f69a83780"
+  },
+  {
+   "path": "audit/pytest_int10_contract.xml",
+   "bytes": 4434,
+   "sha256": "0d58e855b0650ffc838f9f62bf8f1e7b000f19f7f95ff5fc5f11176f5f99f81e"
+  },
+  {
+   "path": "audit/q40_equivalence_alternatives.json",
+   "bytes": 13338,
+   "sha256": "74e6ad44c40ca518acda4eeb09d232a0bb37e9c273eeb42f6bc7cdb2db143c23"
+  },
+  {
+   "path": "calibration_sets.json",
+   "bytes": 66544,
+   "sha256": "1ddfff1b574c987dccd70efd779be027ccb721a6bd79f562c1767c47037e0a65"
+  },
+  {
+   "path": "kaggle_val/shard0.kaggle.log",
+   "bytes": 1232,
+   "sha256": "ef74df3770958d4c235e1e1c50067ae0f3965cf9b04e75a90256e51b60a52ffd"
+  },
+  {
+   "path": "kaggle_val/shard1.kaggle.log",
+   "bytes": 1232,
+   "sha256": "851652eacf5ea75756c1cb8fc394806510991b98cb4d6a5b9a13f46788173c92"
+  },
+  {
+   "path": "kaggle_val/shard2.kaggle.log",
+   "bytes": 1225,
+   "sha256": "874ac6738cd4118fcef5aeb6b1b9976703c05569651c425dd858e66f610fcfe8"
+  },
+  {
+   "path": "kaggle_val/shard3.kaggle.log",
+   "bytes": 1232,
+   "sha256": "1c1263c63531bfc04dfeb177148d0d932a7d60497b529c0309781aec17647278"
+  },
+  {
+   "path": "kaggle_val/val_shard0.json.gz",
+   "bytes": 19867,
+   "sha256": "9c1a519a1ab2f43f916b79c25cb756fd01d3b1bd7db6522258deca860a1e456c"
+  },
+  {
+   "path": "kaggle_val/val_shard1.json.gz",
+   "bytes": 20025,
+   "sha256": "df70933d2878bde298c881a8f1ed23783327cdba4da77f552d64bc6379a72c66"
+  },
+  {
+   "path": "kaggle_val/val_shard2.json.gz",
+   "bytes": 20253,
+   "sha256": "c61469cbb0debc24465d69092f0fd1eaa8b2b7402a1b23de937d276b8bb3f20f"
+  },
+  {
+   "path": "kaggle_val/val_shard3.json.gz",
+   "bytes": 18959,
+   "sha256": "cfe86c67b4101251cdc173cd072f1eb1e643a75af6eca1c9535d72c50c4eee5f"
+  },
+  {
+   "path": "logs/calibrate.log",
+   "bytes": 626,
+   "sha256": "4377d95ad9120da0ca1e0582d0f7b28bfd9a1b99a61b8856892e7028769b2076"
+  },
+  {
+   "path": "logs/calibrate_with_n80.log",
+   "bytes": 843,
+   "sha256": "e77d679cd29f88a6c4ae7d6461898628ac95b5d9ef3e077e266f1c293f344765"
+  },
+  {
+   "path": "logs/combine_val.log",
+   "bytes": 764,
+   "sha256": "3ce398fb4d1efc5be07a2acc95fb2a572e3ba2715dc92252c72b8cf112d1619c"
+  },
+  {
+   "path": "scales_vs_canonical.csv",
+   "bytes": 22112,
+   "sha256": "9705036a0e1e3a604ed4b55917d344ab5d5fa6af773f790a0961789265c93a39"
+  },
+  {
+   "path": "val_metrics.csv",
+   "bytes": 3393,
+   "sha256": "5897ca82d12becab0b9e260e3a272f328f61a49c62a0f3c160faaaa5a12b04ff"
+  },
+  {
+   "path": "val_predictions.npz",
+   "bytes": 21691,
+   "sha256": "362ac64ea5c82a3b1d996fe49a04752db1e1c984c866f981b30815ce3ab31483"
+  },
+  {
+   "path": "val_saturation.csv",
+   "bytes": 16780,
+   "sha256": "2cee800c038a23e0e36c5fa292eec670e28a690307f6f49bd7c6f86a0e5d35ae"
+  },
+  {
+   "path": "val_summary.json",
+   "bytes": 69869,
+   "sha256": "dec6c85e1fd928aadc19d0afb8eb9c18cd5195a30d27487cf86a8167907739ef"
+  }
+ ]
+}
