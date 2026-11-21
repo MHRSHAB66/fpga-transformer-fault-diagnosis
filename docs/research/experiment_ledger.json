@@ -1,6 +1,6 @@
 {
  "schema": "ledger v1: one entry per experiment; status in {proposed, implemented, running, software-measured, simulated, synthesized, post-route, physically-measured, independently-confirmed, stopped, rejected}",
- "updated": "2026-11-14",
+ "updated": "2026-11-20",
  "protocol": "artifacts/research/F00_20261113/preregistered_protocol.json",
  "baseline_identity": "artifacts/research/F00_20261113/frozen_baseline_manifest.json",
  "entries": [
@@ -325,6 +325,25 @@
    "outcome": "Registers: quality_detail (per-channel clip / constant-run / low-bit-occupancy flags), quality_status (any of the three + margin < 45), logit_margin; integer thresholds derived from the frozen Q01v2 clean-validation thresholds (asserted equivalent); counters in one extra II=1 pass over the raw buffer. C-model: 2 splits x 17 conditions x 2,048 windows: logits/class = canonical and all registers = independent Python reference on every window; accept/reject decisions identical to Q01v2. Post-route: LUT 37,803 (+3.1 %), FF 37,630 (+4.1 %), DSP 210, BRAM 76.5, WNS +0.147 ns (default strategy); HLS latency 1,510,299 cycles (+8,201 vs canonical). Board: golden 41/41; ordered digital replay of the 96 frozen test bursts (3,840 windows): 3,840/3,840 rows (logits, class, three registers) = C-model; from the board outputs, flags detect bits8/bits12/hold16/clip30 bursts 6/6, hold4 5/6, clip50 3/6, lag8 1/6, lag32 0/6, and the status recovers after 6/6 bursts of every type; clean full test 95,404/95,404 rows = C-model, 364 windows input-flagged (0.38 %; 286 of them bearing-fault windows), 10,396 low-margin, flags+margin accepts 84,667 windows with 166 wrong (2,127 wrong in total); hard real time 0 misses / 30,000, p50 16.04 / max 16.73 ms, 30,200 outputs = canonical.",
    "limitations": "Digital replay of modelled faults: proves the integer path, not an analog front end, a real sensor or real acquisition faults. Flags do not see lag faults. Clean-test input flags (0.38 %) come from test windows outside the clean-validation extremes; the margin threshold rejects about half of the clean normal-class windows (Q01v2).",
    "next_action": "Analog/real-sensor evaluation requires EQ_FRONTEND (pending equipment)."
+  },
+  {
+   "id": "D2CAL",
+   "hypothesis": "The deployed 20-file (seed 42) train-only max-abs calibration of the SEQ=256 INT10 model is adequate: other nested draws of 12/20/40/80 train files (seeds 42, 1, 2) do not change validation accuracy, macro-F1 or class recall by a resolvable amount; deployed numeric contract (Q40, rounding, widths) covered by bit-exact tests.",
+   "status": "software-measured",
+   "depends_on": [],
+   "command": "python -m pytest tests/test_int10_numeric_contract.py -q; python -m src.quantize.calibration_sensitivity calibrate --seeds 42 1 2 --sizes 12 20 40 80 --workers 4 --out artifacts/experiments/day2_calibration_sensitivity_20261120; python kaggle/day2_calib_sensitivity/build_kernels.py; kaggle kernels push -p kaggle/day2_calib_sensitivity/shard{0..3}; python -m src.quantize.calibration_sensitivity combine --calib artifacts/experiments/day2_calibration_sensitivity_20261120/calibration_sets.json --shards artifacts/experiments/day2_calibration_sensitivity_20261120/kaggle_val/val_shard*.json.gz --out artifacts/experiments/day2_calibration_sensitivity_20261120",
+   "outputs": [
+    "artifacts/experiments/day2_calibration_sensitivity_20261120/calibration_sets.json",
+    "artifacts/experiments/day2_calibration_sensitivity_20261120/val_summary.json",
+    "artifacts/experiments/day2_calibration_sensitivity_20261120/val_metrics.csv",
+    "artifacts/experiments/day2_calibration_sensitivity_20261120/val_saturation.csv",
+    "artifacts/experiments/day2_calibration_sensitivity_20261120/scales_vs_canonical.csv",
+    "artifacts/experiments/day2_calibration_sensitivity_20261120/val_predictions.npz",
+    "docs/reports/day2_quantization_validation_20261120.md"
+   ],
+   "outcome": "Canonical seed-42/20-file scales reproduced bit-for-bit (and historical 12-file). Validation (195 files, 47,580 windows): canonical 98.098 % / macro-F1 96.476 %; all 11 alternatives 98.060-98.167 %, every file-level bootstrap 95 % CI of the accuracy and macro-F1 difference includes 0; 94-212 changed predictions. Scales are outlier-driven and not converged even at 80 files (l0.scores up to +175 %); larger sets reduce pool/cls1 saturation without measurable accuracy effect. Numeric tests 31/31 PASS incl. native and ap_int builds of the deployed HLS top; float64 reference == Q40 over all reachable accumulators for the deployed constants.",
+   "limitations": "Validation-only (test NOT RUN). Normal class has 5 validation files. Accuracy uses the float64 reference; bit-equality with Q40 proven only for the deployed constants, not for the 11 alternative scale sets (no HLS export made). Max-abs calibration only; percentile calibration not tested.",
+   "next_action": "None required; keep deployed scales. A larger/percentile calibration is a candidate only if a re-export happens for other reasons (needs its own validation, export, C-model and board check)."
   }
  ],
  "conditional_branches": {

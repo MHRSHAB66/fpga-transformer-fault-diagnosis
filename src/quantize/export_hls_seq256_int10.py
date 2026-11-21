@@ -3,22 +3,32 @@ Export the independently trained SEQ=256/pool4 F_1layer int10 model to a new
 HLS data contract without modifying the verified SEQ=1024 export.
 
 F_1layer (1 encoder layer, d_model=32, nhead=4, ffn=64) is the FPGA-winner
-architecture; the full-test int10 accuracy is 97.11% (see
-kaggle/int10_shard/int10_fulltest_combined.json). HLS ap_int<10> makes the
+architecture. Accuracy of THIS deployed SEQ=256/pool4 INT10 model (20-file train
+calibration below, full test, 95,404 windows): 97.7684 % (Python reference ==
+g++ C-model == physical board; docs/reports/consolidated_results_20261022.md,
+rows C/E). [Corrected 2026-11-20: this header previously quoted 97.11 %, which
+belongs to the historical, never-deployed SEQ=1024 INT10 variant,
+kaggle/int10_shard/int10_fulltest_combined.json.] HLS ap_int<10> makes the
 narrow width free in hardware.
 
 This script:
-  1. loads the F checkpoint and remaps TuningTransformer state_dict keys to the
-     names IntegerTransformer expects (same 1:1 adapter used in the sweep);
+  1. loads the F checkpoint (SEQ=256 pool4 TransformerBaseline state_dict);
   2. set_bits(10) BEFORE building the model so weights quantize at 10 bits;
-  3. calibrates activation scales on a TRAIN subset (train-only, as always);
-  4. writes every HLS constant to hls/f1_int10/data + int10 golden vectors to
-     hls/f1_int10/golden, reusing the exact writer/plan helpers from export_hls
-     so the F export is byte-for-byte consistent with the A_baseline contract.
+  3. calibrates activation scales on a TRAIN subset (train-only: 20 files,
+     random_state=42, float 4:1 mean, max-abs/511);
+  4. writes every HLS constant to hls/f1_int10_seq256/data, golden vectors to
+     hls/f1_int10_seq256/golden{,_ingress1024} and the scales to
+     artifacts/quantized/f_seq256_int10/integer_config.json.
+
+Real coefficients are written as float text (M_*.txt, add_*, ln_gm/ln_bt);
+vitis/gen_weights_header.py turns them into the signed Q40 integers the
+deployed core uses (round-half-even). See src/quantize/int10_contract.py.
+Day-2 calibration-size sensitivity (evaluation only, scales unchanged):
+docs/reports/day2_quantization_validation_20261120.md.
 
 Run
 ---
-    python -m src.quantize.export_hls_f_int10
+    python -m src.quantize.export_hls_seq256_int10
 """
 from __future__ import annotations
 

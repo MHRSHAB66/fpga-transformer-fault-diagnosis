@@ -26,6 +26,21 @@ Numeric scheme (see ``integer_ops.py`` for the primitives)
 
 The scales come from a calibration JSON produced by ``calibrate_integer.py``.
 This module never retrains, re-splits, or edits the checkpoint.
+
+Note for the deployed SEQ=256 INT10 model (added 2026-11-20, documentation only)
+-------------------------------------------------------------------------------
+- The widths above are module defaults; the INT10 paths call
+  ``evaluate_integer_bits.set_bits(10)`` before construction, so activations,
+  weights and softmax probabilities are all +-511.
+- ``IntegerTransformer`` is an integer-TENSOR reference: every activation is an
+  int64 array of codes, but per-operation constants are float64 and several
+  steps (requant, residual add, LayerNorm affine, LN mean/variance division) are
+  computed as float64 multiply + ``np.round`` (ties to even). The deployed HLS
+  core performs the same steps in fixed point (signed Q40 coefficients +
+  ``div_round_even``). Equality of the two is established for the deployed
+  constants by tests/test_int10_numeric_contract.py and on all 95,404 test
+  windows (docs/reports/consolidated_results_20261022.md).
+- ``collect`` / ``float_logits`` are float-only (calibration and float reference).
 """
 
 from __future__ import annotations

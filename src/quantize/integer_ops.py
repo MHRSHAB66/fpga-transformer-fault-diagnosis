@@ -21,6 +21,21 @@ document and self-test that mapping.
 
 Run the self-tests:
     python -m src.quantize.integer_ops
+
+Deployed-contract note (added 2026-11-20, documentation only)
+--------------------------------------------------------------
+- ``quantize_multiplier`` / ``apply_multiplier`` (M0 * 2^-31 * 2^shift, round
+  half away from zero) are a LEGACY helper. The deployed SEQ=256 INT10 HLS core
+  does not use them: it stores each coefficient as a signed Q40 integer
+  (``round_half_even(M * 2^40)``, vitis/gen_weights_header.py) and rounds
+  ``acc * Mq / 2^40`` with ``div_round_even`` (ties to even). The exact oracle of
+  that contract is ``src/quantize/int10_contract.py``.
+- ``requant_float`` (float64 multiply + ``np.round``, ties to even) is what the
+  Python reference uses. For the deployed constants it is bit-identical to Q40
+  over every reachable accumulator (tests/test_int10_numeric_contract.py); that
+  is a property of these constants, not of the two algorithms in general.
+- The self-tests below use int16/GELU-16 toy settings, not the deployed INT10
+  scales; INT10 coverage lives in tests/test_int10_numeric_contract.py.
 """
 
 from __future__ import annotations
